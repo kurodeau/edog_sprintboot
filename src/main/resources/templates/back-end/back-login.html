@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>EDog</title>
+
+    <style></style>
+    <script src="loadcss.js"></script>
+  </head>
+
+  <body>
+    <!-- ======= Header, 後臺登入應該不需要Header ======= -->
+
+    <!-- ======= Sidebar, 後臺登入應該不需要Sidebar ======= -->
+
+    <!-- ======= Main ======= -->
+    <main>
+      <div class="container">
+        <section
+          class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+        >
+          <div class="container">
+            <div class="row justify-content-center">
+              <div
+                class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center"
+              >
+                <!-- Start Logo -->
+                <div class="d-flex justify-content-center py-1">
+                  <img
+                    src="/assets/image/Medium.png"
+                    alt=""
+                    style="width: auto; height: 80%"
+                  />
+                </div>
+                <!-- End Logo -->
+
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="pt-3 pb-2">
+                      <h5 class="card-title text-center pb-0 fs-4">
+                        後臺管理者登入
+                      </h5>
+                      <p class="text-center small"></p>
+                    </div>
+
+                    <form class="row g-3 needs-validation" novalidate>
+                      <div class="col-12">
+                        <label for="yourUsername" class="form-label"
+                          >使用者名稱</label
+                        >
+                        <div class="input-group has-validation">
+                          <!--
+                        <span class="input-group-text" id="inputGroupPrepend">@</span> -->
+                          <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            id="yourUsername"
+                            required
+                          />
+                          <div class="invalid-feedback">
+                            請輸入後臺管理者名稱
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="yourPassword" class="form-label"
+                          >密碼</label
+                        >
+                        <input
+                          type="password"
+                          name="password"
+                          class="form-control"
+                          id="yourPassword"
+                          required
+                        />
+                        <div class="invalid-feedback">請輸入後臺管理者密碼</div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="remember"
+                            value="true"
+                            id="rememberMe"
+                          />
+                          <label class="form-check-label" for="rememberMe"
+                            >記住登入資訊</label
+                          >
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <button
+                          class="btn btn-primary w-100"
+                          type="submit"
+                          style="background-color: var(--admin-red_tint)"
+                        >
+                          登入
+                        </button>
+                      </div>
+                    </form>
+                    <div class="for-room" style="height: 30px"></div>
+                  </div>
+                </div>
+
+                <!-- 隱藏並保留版型著作來源 -->
+                <!--  <div class="credits">  -->
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+                <!--  Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+              </div> -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <!-- End #main -->
+    <!-- End Main -->
+
+    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+    <!-- Vendor & Main JS Files -->
+    <script src="loadjs.js"></script>
+
+    <!-- Local JS File -->
+    <script></script>
+  </body>
+</html>

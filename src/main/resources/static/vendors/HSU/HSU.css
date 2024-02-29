@@ -1,0 +1,286 @@
+/*--------------------------------------------------------------
+# forum
+--------------------------------------------------------------*/
+
+.forum-article-link {
+  text-decoration: none; /* 移除連結的下劃線 */
+  color: inherit; /* 保持連結的文字顏色與父元素一致 */
+}
+
+.forum-article {
+  border: 2px solid var(--sec-section-outline);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px; /* 調整頭像大小 */
+  height: 40px;
+  border-radius: 50%;
+}
+
+.avatar-name {
+  font-size: 16px; /* 調整作者名稱字體大小 */
+  font-weight: bold;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.category-options {
+  /* 這裡放上點點的樣式 */
+}
+
+.category-name {
+  margin-left: 5px;
+}
+
+.article-title {
+  font-size: 24px; /* 調整標題字體大小 */
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.article-content {
+  margin-bottom: 10px;
+}
+
+.interaction-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interaction-item {
+  margin-right: 15px;
+}
+
+.time {
+  font-size: 12px; /* 調整時間字體大小 */
+  color: var(--text-placeholder);
+}
+/*--------------------------------------------------------------
+  # 頁籤
+  --------------------------------------------------------------*/
+.tab_list_block {
+  position: relative;
+  z-index: 2;
+}
+.tab_list {
+  list-style: none;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+.tab_list > li {
+  display: inline-block;
+}
+.tab_list > li > a {
+  text-decoration: none;
+  display: inline-block;
+
+  /*   border-bottom: 1px solid black; */
+  padding: 2px 20px;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+  color: #ccc;
+}
+.tab_list > li > a.-on {
+  border-bottom: 2px solid rgb(77, 86, 171);
+  color: black;
+}
+.tab_contents {
+  border: 1px solid black;
+  position: relative;
+  top: -1px;
+
+  z-index: 1;
+}
+hr {
+  margin-top: 0;
+}
+div.tab {
+  padding: 10px;
+  display: none;
+}
+div.tab.-on {
+  display: block;
+}
+/*--------------------------------------------------------------
+  # 完整文章
+  --------------------------------------------------------------*/
+.hash_tag {
+  list-style: none; /* 移除預設的列表樣式 */
+  padding: 0; /* 移除預設的內邊距 */
+  margin-top: 20px;
+}
+.hash_tag > li {
+  display: inline-block;
+  margin-right: 10px; /* 設置列表項之間的右邊距 */
+}
+.article .interaction-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* 靠右對齊 */
+}
+.article-section {
+  display: flex;
+  align-items: center;
+}
+
+/*--------------------------------------------------------------
+  # 留言
+  --------------------------------------------------------------*/
+.message {
+  margin-left: 50px;
+}
+.message-section {
+  display: flex;
+  align-items: center;
+}
+.message-item {
+  margin-right: 15px;
+}
+.hide-message {
+  text-decoration: none;
+  color: inherit;
+}
+.my-reply {
+  border: none;
+  outline: none;
+  background-color: #f6f6f6;
+}
+.toggle-message {
+  border: none;
+  outline: none;
+  background-color: #f6f6f6;
+  color: #9c9c9c;
+  font-size: 15px;
+}
+.message-reply {
+  margin-top: 10px;
+}
+
+.message-reply.collapsed p {
+  display: none;
+}
+.message-reply.collapsed div {
+  display: none;
+}
+.message-reply {
+  margin-left: 40px;
+}
+.send {
+  float: right;
+  background-color: #e39a9a; /* 背景顏色 */
+  color: white; /* 文字顏色 */
+  border: none; /* 移除邊框 */
+  padding: 5px 15px; /* 內邊距 */
+  text-align: center; /* 文字置中 */
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px; /* 文字大小 */
+  border-radius: 5px; /* 圓角 */
+  cursor: pointer; /* 游標樣式，顯示為手指 */
+}
+.send:hover {
+  background-color: #c97777; /* 滑鼠懸停時的背景顏色 */
+  color: white; /* 滑鼠懸停時的文字顏色 */
+}
+/*--------------------------------------------------------------
+  # 發文
+  --------------------------------------------------------------*/
+form {
+  display: flex;
+  flex-direction: column;
+}
+#title {
+  border: none;
+  outline: none;
+}
+#content {
+  border: none;
+  outline: none;
+}
+.dashed-hr {
+  border: 0;
+  border-top: 2px dashed #ffffff;
+  margin: 0px;
+}
+/*--------------------------------------------------------------
+  # RWD
+  --------------------------------------------------------------*/
+
+/* Small screens and up (576px and above) */
+@media (min-width: 576px) {
+  .img-md-main {
+    max-width: 100%; /* Adjust as needed */
+  }
+  .img-md-sub {
+    max-width: 100%; /* Adjust as needed */
+  }
+}
+
+/* Medium screens and up (768px and above) */
+@media (min-width: 768px) {
+  .img-md-main {
+    max-width: 100%; /* Adjust as needed */
+  }
+  .img-md-sub {
+    max-width: 100%; /* Adjust as needed */
+  }
+}
+
+/* Large screens and up (992px and above) */
+@media (min-width: 992px) {
+  .img-md-main {
+    max-width: 100%; /* Adjust as needed */
+  }
+  .img-md-sub {
+    max-width: 100%; /* Adjust as needed */
+  }
+}
+
+/* Large screens and up (1199px and above) */
+@media (max-width: 1199px) {
+  .sidebar {
+    left: -300px;
+  }
+
+  .toggle-sidebar.sidebar {
+    left: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .main,
+  .footer {
+    margin-left: 300px;
+  }
+
+  .sidebar {
+    left: 0px;
+  }
+
+  .toggle-sidebar.main,
+  .toggle-sidebar.footer {
+    margin-left: 0;
+  }
+
+  .toggle-sidebar.sidebar {
+    left: -300px;
+  }
+}

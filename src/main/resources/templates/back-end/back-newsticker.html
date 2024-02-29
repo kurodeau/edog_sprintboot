@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>EDog</title>
+
+  <script src="loadcss.js"></script>
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header class="fixed-top">
+    <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+          <!-- Start NavBar  -->
+          <!-- NavBar--LeftSide  -->
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+              <i class="bi bi-list"></i>
+              <a class="nav-link cancel-default-behavior" aria-current="page" href="#">選單</a>
+            </li>
+          </ul>
+
+          <!-- NavBar--RightSide  -->
+          <ul class="navbar-nav ms-auto mb-2">
+            <li class="nav-item">
+              <a class="nav-link" href="#">[當前登入管理者名稱]</a>
+            </li>
+            <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">登出</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End NavBar  -->
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <!-- start帳戶管理 -->
+  <aside class="sidebar sidebar-layout-seller">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#seller-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-person"></i>
+          <span>使用者帳號</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="seller-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="seller-check-payment.html">
+              <i class="bi bi-circle"></i><span>管理買家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>管理賣家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>審核新賣家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>管理賣家等級資料</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End帳戶管理 -->
+
+      <!-- Start訂單管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-grid"></i>
+          <span>訂單管理</span>
+        </a>
+      </li>
+      <!-- End訂單管理 -->
+
+      <!-- Start廣告管理 -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bag"></i>
+          <span>廣告</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="product-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>廣告管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>廣告審核</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End廣告管理 -->
+
+      <!-- Strat優惠券管理 -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#service-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-ticket"></i><span>優惠券</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>優惠券管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>優惠券新增</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End優惠券管理 -->
+
+      <!-- Strat匯款資訊 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-credit-card"></i>
+          <span>匯款資訊</span>
+        </a>
+      </li>
+      <!-- End匯款資訊 -->
+
+      <!-- Start論壇管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-grid"></i>
+          <span>論壇管理</span>
+        </a>
+      </li>
+      <!-- End論壇管理 -->
+
+      <!-- Start搜尋關鍵字管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-pin"></i>
+          <span>搜尋關鍵字管理</span>
+        </a>
+      </li>
+      <!-- End搜尋關鍵字管理 -->
+
+      <!-- Start走馬燈管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-lightning"></i>
+          <span>走馬燈管理</span>
+        </a>
+      </li>
+      <!-- End走馬燈管理 -->
+    </ul>
+  </aside>
+
+  <!-- ======= Main ======= -->
+  <main class="main main-layout-seller">
+    <div class="pagetitle">
+      <h1>走馬燈清單</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>編號</th>
+                    <th>內容</th>
+                    <th>排序</th>
+                    <th data-type="date" data-format="YYYY/DD/MM" data-sortable="true">
+                      開始顯示
+                    </th>
+                    <th data-type="date" data-format="YYYY/DD/MM" data-sortable="true">
+                      結束顯示
+                    </th>
+                    <th data-type="date" data-format="YYYY/DD/MM" data-sortable="true">
+                      新增時間
+                    </th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr>
+                    <td class="">101</td>
+                    <td class="" style="width: 300px;">測試篩選九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</td>
+                    <td class="">1</td>
+                    <td class="" data-format="YYYY/DD/MM">2024/03/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2025/02/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2024/02/22</td>
+                    <td>
+                      <button class="btn-func">
+                        不顯示
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="">102</td>
+                    <td class="" style="width: 300px;">這是走馬燈的內容九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</td>
+                    <td class="">1</td>
+                    <td class="" data-format="YYYY/DD/MM">2022/03/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2025/02/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2024/02/19</td>
+                    <td>
+                      <button class="btn-func">
+                        顯示
+                      </button>
+                    </td>
+                  </tr>
+                  
+
+                  <tr>
+                    <td class="">103</td>
+                    <td class="" style="width: 300px;">這是走馬燈的內容九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十</td>
+                    <td class="">10</td>
+                    <td class="" data-format="YYYY/DD/MM">2024/03/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2026/02/01</td>
+                    <td class="" data-format="YYYY/DD/MM">2024/02/23</td>
+                    <td>
+                      <button class="btn-func">
+                        不顯示
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- End Main -->
+
+  <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+  <!-- Vendor & Main JS Files -->
+  <script src="loadjs.js"></script>
+
+  <!-- Local JS File -->
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+  <script>
+    // 定義一個自定義事件，用於通知 TwCitySelector 腳本
+    var loadjsCompletedEvent = new Event("loadjsCompleted");
+
+    window.onload = function () {
+      // 監聽自定義事件，當 loadjs 完成時觸發
+      (function () {
+        "use strict";
+
+        /**
+         * Easy selector helper function
+         */
+        const select = (el, all = false) => {
+          el = el.trim();
+          if (all) {
+            return [...document.querySelectorAll(el)];
+          } else {
+            return document.querySelector(el);
+          }
+        };
+
+        /**
+         * Easy event listener function
+         */
+        const on = (type, el, listener, all = false) => {
+          if (all) {
+            select(el, all).forEach((e) =>
+              e.addEventListener(type, listener)
+            );
+          } else {
+            select(el, all).addEventListener(type, listener);
+          }
+        };
+
+        /**
+         * Easy on scroll event listener
+         */
+        const onscroll = (el, listener) => {
+          el.addEventListener("scroll", listener);
+        };
+
+        /**
+         * Initiate Datatables
+         */
+        const datatables = select(".datatable", true);
+        datatables.forEach((datatable) => {
+          new simpleDatatables.DataTable(datatable, {
+            perPageSelect: [5, 10, 15, ["All", -1]],
+            columns: [
+              {
+                select: 2,
+                sortSequence: ["desc", "asc"],
+              },
+              {
+                select: 3,
+                sortSequence: ["desc"],
+              },
+              {
+                select: 4,
+                cellClass: "green",
+                headerClass: "red",
+              },
+            ],
+          });
+        });
+      })();
+    };
+  </script>
+  <!-- simpletable -->
+</body>
+
+</html>

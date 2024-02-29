@@ -1,0 +1,228 @@
+/**
+* Template Name: NiceAdmin
+* Updated: Jan 09 2024 with Bootstrap v5.3.2
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+*/
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+:root {
+  --user-yellow_tint: #fff7d4;
+  --user-yellow_normal: #ead28d;
+  --user-yellow_yellow_dark: #9f780b;
+
+  --seller-green_normal: #d3ddb7;
+  --seller-green_dark: #476d0c;
+  --seller-green_light: #f0ffcf;
+  --seller-green_tint: #647540;
+
+  --text-main: #000000;
+  --text-light: #ffffff;
+  --text-placeholder: #a4a6b6;
+  --text-sideBar: #333f48;
+  --text-shop: #3c5a99;
+
+  --sec-section-dark: #1c2331;
+  --sec-section-light: #dddbdb;
+  --sec-section-secTitle: #f6f6f6;
+  --sec-section-outline: #cbcbcb;
+  --sec-section-dark: #989898;
+
+  --status-focus: #115ccc;
+  --status-error: #e05e73;
+  --status-disabled: #7c7e82;
+  --status-disabledbgc: #7c7e82;
+
+  --poster-blue_tint: #cfe7ef;
+  --poster-blue: #92c6d7;
+  --poster-blue_dark: #4a7c83;
+
+  --admin-red_dark: #6a0000;
+  --admin-red: #b63e48;
+  --admin-red_tint: #f8d3c4;
+}
+
+/*--------------------------------------------------------------
+# Main
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Page Title
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+
+.header .toggle-sidebar-btn {
+  font-size: 32px;
+  padding-left: 10px;
+  cursor: pointer;
+  color: #012970;
+}
+
+/*--------------------------------------------------------------
+# Sidebar
+--------------------------------------------------------------*/
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 996;
+  transition: all 0.3s;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #aab7cf transparent;
+  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+  background-color: #fff;
+}
+
+@media (max-width: 1199px) {
+  .sidebar {
+    left: -300px;
+  }
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #fff;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #aab7cf;
+}
+
+@media (min-width: 1200px) {
+  #main,
+  #footer {
+    margin-left: 300px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .toggle-sidebar .sidebar {
+    left: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .toggle-sidebar #main,
+  .toggle-sidebar #footer {
+    margin-left: 0;
+  }
+
+  .toggle-sidebar .sidebar {
+    left: -300px;
+  }
+}
+
+.sidebar-nav {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-nav .nav-item {
+  margin-bottom: 5px;
+}
+
+.sidebar-nav .nav-heading {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 10px 0 5px 15px;
+}
+
+.sidebar-nav .nav-link {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--seller-green_tint);
+  transition: 0.3;
+  background: var(--sec-section-secTitle);
+  padding: 10px 15px;
+  border-radius: 4px;
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 16px;
+  margin-right: 10px;
+  color: var(--seller-green_tint);
+}
+
+.sidebar-nav .nav-link.collapsed {
+  color: #012970;
+  background: #fff;
+}
+
+.sidebar-nav .nav-link.collapsed i {
+  color: #899bbd;
+}
+
+.sidebar-nav .nav-link:hover {
+  color: var(--seller-green_tint);
+  background: var(--sec-section-secTitle);
+}
+
+.sidebar-nav .nav-link:hover i {
+  color: var(--seller-green_tint);
+}
+
+.sidebar-nav .nav-link .bi-chevron-down {
+  margin-right: 0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.sidebar-nav .nav-link:not(.collapsed) .bi-chevron-down {
+  transform: rotate(180deg);
+}
+
+.sidebar-nav .nav-content {
+  padding: 5px 0 0 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sidebar-nav .nav-content a {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #012970;
+  transition: 0.3;
+  padding: 10px 0 10px 40px;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.sidebar-nav .nav-content a i {
+  font-size: 6px;
+  margin-right: 8px;
+  line-height: 0;
+  border-radius: 50%;
+}
+
+.sidebar-nav .nav-content a:hover,
+.sidebar-nav .nav-content a.active {
+  color: var(--seller-green_tint);
+  background-color: var(--sec-section-secTitle);
+}
+
+.sidebar-nav .nav-content a.active i {
+  background-color: var(--seller-green_tint);
+}

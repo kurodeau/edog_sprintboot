@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>EDog</title>
+
+  <script src="loadcss.js"></script>
+  <style>
+    :root {
+      --back-gray-normal: rgb(129, 129, 129);
+    }
+
+    /*--------------------------------------------------------------
+# user-list
+--------------------------------------------------------------*/
+    .user-row-custom {
+      width: 100%;
+      margin: 0px;
+      padding: 20px;
+      align-items: center;
+      background-color: var(--sec-section-light);
+      border: 1px solid var(--sec-section-outline);
+    }
+
+    /*--------------------------------------------------------------
+# user
+--------------------------------------------------------------*/
+    .card.card-user-custom {
+      /* min-height: 400px; */
+      height: auto;
+      /* width: 400%; */
+      /* background-color: red; */
+    }
+
+    .product-card .card-body {
+      color: var(--text-shop);
+      text-decoration: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header class="fixed-top">
+    <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+          <!-- Start NavBar  -->
+          <!-- NavBar--LeftSide  -->
+          <ul class="navbar-nav me-auto mb-2">
+            <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+              <i class="bi bi-list"></i>
+              <a class="nav-link cancel-default-behavior" aria-current="page" href="#">選單</a>
+            </li>
+          </ul>
+
+          <!-- NavBar--RightSide  -->
+          <ul class="navbar-nav ms-auto mb-2">
+            <li class="nav-item">
+              <a class="nav-link" href="#">[當前登入管理者名稱]</a>
+            </li>
+            <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">登出</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End NavBar  -->
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <!-- start帳戶管理 -->
+  <aside class="sidebar sidebar-layout-seller">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#seller-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-person"></i>
+          <span>使用者帳號</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="seller-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="seller-check-payment.html">
+              <i class="bi bi-circle"></i><span>管理買家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>管理賣家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>審核新賣家資料</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>更新賣家等級資料</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End帳戶管理 -->
+
+      <!-- Start訂單管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-grid"></i>
+          <span>訂單管理</span>
+        </a>
+      </li>
+      <!-- End訂單管理 -->
+
+      <!-- Start廣告管理 -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bag"></i>
+          <span>廣告</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="product-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>廣告管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>廣告審核</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End廣告管理 -->
+
+      <!-- Strat優惠券管理 -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#service-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-ticket"></i><span>優惠券</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>優惠券管理</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>優惠券新增</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- End優惠券管理 -->
+
+      <!-- Strat匯款資訊 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-credit-card"></i>
+          <span>匯款資訊</span>
+        </a>
+      </li>
+      <!-- End匯款資訊 -->
+
+      <!-- Start論壇管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-grid"></i>
+          <span>論壇管理</span>
+        </a>
+      </li>
+      <!-- End論壇管理 -->
+
+      <!-- Start搜尋關鍵字管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="#">
+          <i class="bi bi-pin"></i>
+          <span>搜尋關鍵字管理</span>
+        </a>
+      </li>
+      <!-- End搜尋關鍵字管理 -->
+
+      <!-- Start走馬燈管理 -->
+      <li class="nav-item">
+        <a class="nav-link nav-seller-entry" href="back-newsticker.html">
+          <i class="bi bi-lightning"></i>
+          <span>走馬燈管理</span>
+        </a>
+      </li>
+      <!-- End走馬燈管理 -->
+
+    </ul>
+  </aside>
+
+
+  <!-- ======= Main ======= -->
+  <main class="main main-layout-seller">
+    <div class="container-fluid seller-container">
+      <h1>管理買家資料</h1>
+      <div class="card card-user-custom" style="
+      ">
+        <div class="card-body" style="
+          overflow-x: auto;
+          ">
+          </ul>
+          <div class="tab-content pt-2" id="borderedTabContent">
+            <div class="tab-pane show active" id="bordered-overall" role="tabpanel" aria-labelledby="overall-tab">
+              <div class="container mt-3 container-list-custom">
+                <div class="row user-row-custom" style="
+                display:flex;
+                flex-wrap:nowrap">
+                  <div class="col-1">買家編號</div>
+                  <div class="col-2">Email</div>
+                  <div class="col-1">第三方狀態</div>
+                  <div class="col-2">用戶名稱</div>
+                  <div class="col-2">電話</div>
+                  <div class="col-2">手機</div>
+                  <div class="col-1">生日</div>
+                  <div class="col-2">密碼</div>
+                  <div class="col-3">地址</div>
+                  <div class="col-1">信箱驗證</div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">寵物名稱</div>
+                  <div class="col-2">寵物圖片</div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">疫苗接種一</div>
+                  <div class="col-2">接種時間一</div>
+                  <div class="col-2">疫苗接種二</div>
+                  <div class="col-2">註冊時間二</div>
+                  <div class="col-1">用戶狀態</div>
+                  <div class="col-1">操作</div>
+                </div>
+
+                <!-- Item 1 -->
+                <div class="row item-row-custom" style="
+                display:flex;
+                flex-wrap:nowrap;
+                border: 200%;">
+                  <div class="col-1">買家編號</div>
+                  <div class="col-2">Email</div>
+                  <div class="col-1">第三方狀態</div>
+                  <div class="col-2">用戶名稱</div>
+                  <div class="col-2">電話</div>
+                  <div class="col-2">手機</div>
+                  <div class="col-1">生日</div>
+                  <div class="col-2">密碼</div>
+                  <div class="col-3">地址</div>
+                  <div class="col-1">信箱驗證</div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">寵物名稱</div>
+                  <!-- 寵物圖片 -->
+                  <div class="col-2">
+                    <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                  </div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">疫苗接種一</div>
+                  <div class="col-2">接種時間一</div>
+                  <div class="col-2">疫苗接種二</div>
+                  <div class="col-2">註冊時間二</div>
+                  <div class="col-1">用戶狀態</div>
+                  <div class="col-1 d-flex flex-column align-items-center">
+                    <button class="product align-self-start btn-func">
+                      編輯
+                    </button>
+                    <button class="product align-self-start btn-func">
+                      上架
+                    </button>
+                    <button class="product align-self-start btn-func">
+                      刪除
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="row item-row-custom" style="
+                display:flex;
+                flex-wrap:nowrap">
+                  <div class="col-1">買家編號</div>
+                  <div class="col-2">Email</div>
+                  <div class="col-1">第三方狀態</div>
+                  <div class="col-2">用戶名稱</div>
+                  <div class="col-2">電話</div>
+                  <div class="col-2">手機</div>
+                  <div class="col-1">生日</div>
+                  <div class="col-2">密碼</div>
+                  <div class="col-3">地址</div>
+                  <div class="col-1">信箱驗證</div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">寵物名稱</div>
+                  <!-- 寵物圖片 -->
+                  <div class="col-2">
+                    <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                  </div>
+                  <div class="col-1">註冊時間</div>
+                  <div class="col-2">疫苗接種一</div>
+                  <div class="col-2">接種時間一</div>
+                  <div class="col-2">疫苗接種二</div>
+                  <div class="col-2">註冊時間二</div>
+                  <div class="col-1">用戶狀態</div>
+                  <div class="col-1 d-flex flex-column align-items-center">
+                    <button class="product align-self-start btn-func">
+                      編輯
+                    </button>
+                    <button class="product align-self-start btn-func">
+                      上架
+                    </button>
+                    <button class="product align-self-start btn-func">
+                      刪除
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--試用table改不動==-->
+      <table class="table table" style="
+      width: auto;
+      overflow-x: auto;
+      display: none;
+      ">
+        <thead>
+          <tr>
+            <!-- <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th> -->
+
+            <th class="th1">買家編號</th>
+            <th class="col-2">Email</th>
+            <th class="col-1">第三方狀態</th>
+            <th class="col-2">用戶名稱</th>
+            <th class="col-2">電話</th>
+            <th class="col-2">手機</th>
+            <th class="col-1">生日</th>
+            <th class="col-2">密碼</th>
+            <th class="col-3">地址</th>
+            <th class="col-1">信箱驗證</th>
+            <th class="col-1">註冊時間</th>
+            <th class="col-2">寵物名稱</th>
+            <th class="col-2">寵物圖片</th>
+            <th class="col-1">註冊時間</th>
+            <th class="col-2">疫苗接種一</th>
+            <th class="col-2">接種時間一</th>
+            <th class="col-2">疫苗接種二</th>
+            <th class="col-2">註冊時間二</th>
+            <th class="col-1">用戶狀態</th>
+            <th class="col-1">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="a">
+            <td class="col-1">買家編號</td>
+            <td class="col-2">Email</td>
+            <td class="col-1">第三方狀態</td>
+            <td class="col-2">用戶名稱</td>
+            <td class="col-2">電話</td>
+            <td class="col-2">手機</td>
+            <td class="col-1">生日</td>
+            <td class="col-2">密碼</td>
+            <td class="col-3">地址</td>
+            <td class="col-1">信箱驗證</td>
+            <td class="col-1">註冊時間</td>
+            <td class="col-2">寵物名稱</td>
+            <!-- 寵物圖片 -->
+            <td class="col-2">
+              <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+            </td>
+            <td class="col-1">註冊時間</td>
+            <td class="col-2">疫苗接種一</td>
+            <td class="col-2">接種時間一</td>
+            <td class="col-2">疫苗接種二</td>
+            <td class="col-2">註冊時間二</td>
+            <td class="col-1">用戶狀態</td>
+            <td class="col-1 d-flex flex-column align-items-center">
+              <button class="product align-self-start btn-func">
+                編輯
+              </button>
+              <button class="product align-self-start btn-func">
+                上架
+              </button>
+              <button class="product align-self-start btn-func">
+                刪除
+              </button>
+            </ditdv>
+          </tr>
+
+
+
+
+        </tbody>
+      </table>
+  </main>
+  <!-- End Main -->
+
+  <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+  <!-- Vendor & Main JS Files -->
+  <script src="loadjs.js"></script>
+
+  <!-- Local JS File -->
+  <script></script>
+</body>
+
+</html>
