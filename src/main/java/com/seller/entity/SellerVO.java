@@ -121,7 +121,7 @@ public class SellerVO implements java.io.Serializable {
 	}
 
 	@NotEmpty(message = "公司統編請勿空白")
-	@Size(max=5,message="不能超過{max}碼")
+	@Size(max = 5, message = "不能超過{max}碼")
 	public String getSellerTaxId() {
 		return sellerTaxId;
 	}
@@ -147,7 +147,6 @@ public class SellerVO implements java.io.Serializable {
 	public void setSellerContact(String sellerContact) {
 		this.sellerContact = sellerContact;
 	}
-	
 
 	@NotEmpty(message = "公司電話請勿空白")
 	@Size(max = 10, message = "公司電話請勿超過十碼")
@@ -159,7 +158,6 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerCompanyPhone = sellerCompanyPhone;
 	}
 
-	
 	@NotEmpty(message = "公司分機請勿空白")
 	@Size(max = 10, message = "公司分機請勿超過十碼")
 	public String getSellerCompanyExtension() {
@@ -170,7 +168,6 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerCompanyExtension = sellerCompanyExtension;
 	}
 
-	
 	@NotEmpty(message = "手機請勿空白")
 	@Pattern(regexp = "^09\\d\\d[0-9]{6}$", message = "手機格式錯誤")
 	public String getSellerMobile() {
@@ -202,7 +199,6 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerPassword = sellerPassword;
 	}
 
-	
 	@NotEmpty(message = "銀行帳號請勿留白")
 	@Pattern(regexp = "\\d{5,14}", message = "銀行帳號應為數字")
 	public String getSellerBankAccount() {
@@ -231,11 +227,11 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerBankAccountNumber = sellerBankAccountNumber;
 	}
 
-//	@NotNull(message="雇用日期: 請勿空白")	
-//	@Future(message="日期必須是在今日(不含)之後")
-//	@Past(message="日期必須是在今日(含)之前")
-//	@DateTimeFormat(pattern="yyyy-MM-dd") 
-//	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
+	// @NotNull(message="雇用日期: 請勿空白")
+	// @Future(message="日期必須是在今日(不含)之後")
+	// @Past(message="日期必須是在今日(含)之前")
+	// @DateTimeFormat(pattern="yyyy-MM-dd")
+	// @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@NotNull(message = "創建日期: 請勿空白")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getSellerCreateTime() {

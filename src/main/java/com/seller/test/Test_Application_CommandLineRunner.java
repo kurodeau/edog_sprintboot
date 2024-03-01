@@ -72,7 +72,7 @@
 //        repository.save(updatedSellerVO);
 //
 //        // ● 刪除
-//        // repository.deleteById(1); // Assuming the ID of the record to delete
+//         repository.deleteByTheId(1); // Assuming the ID of the record to delete
 //
 //        // ● 查詢-findByPrimaryKey
 //        Optional<SellerVO> optional = repository.findById(1); // Assuming the ID of an existing record

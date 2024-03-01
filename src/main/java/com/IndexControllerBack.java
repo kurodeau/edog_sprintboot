@@ -1,16 +1,13 @@
 package com;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ad.model.AdService;
-import com.ad.model.AdVO;
+import com.user.model.UserService;
 
 //@PropertySource("classpath:application.properties") 
 // 於https://start.spring.io 建立Spring Boot專案時
@@ -22,20 +19,12 @@ import com.ad.model.AdVO;
 @RequestMapping("/back")
 public class IndexControllerBack {
 	
-	@Autowired
-	AdService adSvc;
-	
 	
 	 @GetMapping("/back-main")
 	   public String backMain(
 	            Model model) {
 	        return "/back-end/back-main"; 
 	 }
-	 
-	 
-	 
-	 
-
 
 
 }

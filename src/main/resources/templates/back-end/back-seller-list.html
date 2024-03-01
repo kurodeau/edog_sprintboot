@@ -97,7 +97,7 @@
 							<td th:text="${sellerVO.isConfirm} ? 'Yes' : 'No'"></td>
 							<td><a class="btn"
 								th:href="@{getOne_For_Update(id=${sellerVO.sellerId})}">編輯</a>
-								<button type="button" class="btn"
+								<button type="button" class="btn btn-del"
 									th:attr="data-delete-id=${sellerVO.sellerId}"
 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button>
 							</td>
@@ -191,7 +191,7 @@
 				table.clear().draw();
 			}
 
-			$(".btn-func").on("click", function() {
+			$(".btn-del").on("click", function() {
 				let deleteId = $(this).data("delete-id");
 				console.log("deleteId in Btn: " + deleteId);
 				$("#confirmDeleteBtn").attr("data-delete-id", deleteId);
@@ -205,10 +205,15 @@
 
 				let myModalEl = document.getElementById("deleteModal");
 				let modal = bootstrap.Modal.getInstance(myModalEl);
+				
+				
+				let currentLoc = window.location.href;
+				currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+	console.log(currentLoc);
 
 				// Your AJAX request for deletion
 				$.ajax({
-					url : "/back-seller-list?id=" + deleteId,
+					url : currentLoc+"/delete?id=" + deleteId,
 					method : "DELETE",
 					success : function(response) {
 						if (response.success) {

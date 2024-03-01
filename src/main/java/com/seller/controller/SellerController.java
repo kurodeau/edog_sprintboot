@@ -16,12 +16,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
@@ -30,13 +30,13 @@ import com.sellerLv.service.SellerLvService;
 import com.user.model.UserVO;
 
 @Controller
-@ComponentScan(basePackages = {"com.seller", "com.sellerLv"})
+@ComponentScan(basePackages = { "com.seller", "com.sellerLv" })
 @RequestMapping("/back/seller")
 public class SellerController extends HttpServlet {
 
 	@Autowired
 	SellerService sellerSvc;
-	
+
 	@Autowired
 	SellerLvService sellerLvSvc;
 
@@ -45,21 +45,20 @@ public class SellerController extends HttpServlet {
 	 * <form:select path="deptno" id="deptno" items="${deptListData}"
 	 * itemValue="deptno" itemLabel="dname" />
 	 */
-	 @ModelAttribute("sellerLvListData")
-	 protected List<SellerLvVO> referenceListData() {
-	 List<SellerLvVO> list = sellerLvSvc.getAll();
+	@ModelAttribute("sellerLvListData")
+	protected List<SellerLvVO> referenceListData() {
+		List<SellerLvVO> list = sellerLvSvc.getAll();
 		System.out.println("==============================");
-	    list.forEach(data -> System.out.println(data));
+		list.forEach(data -> System.out.println(data));
 		System.out.println("==============================");
-	 return list;
-	 }
-	
-	
-	@ModelAttribute("sellerListData") 
+		return list;
+	}
+
+	@ModelAttribute("sellerListData")
 	protected List<SellerVO> referenceListData(Model model) {
 		List<SellerVO> list = sellerSvc.getAll();
 		System.out.println("==============================");
-	    list.forEach(data -> System.out.println(data));
+		list.forEach(data -> System.out.println(data));
 		System.out.println("==============================");
 
 		return list;
@@ -77,36 +76,53 @@ public class SellerController extends HttpServlet {
 		model.addAttribute("sellerVO", sellerVO);
 		return "back-end/back-seller-add";
 	}
-	
+
 	@GetMapping("getOne_For_Update")
 	public String getOneSeller(@RequestParam("id") Integer sellerId, ModelMap model) {
-	    SellerVO sellerVO = sellerSvc.getById(sellerId);
-	    model.addAttribute("sellerVO", sellerVO);
-	    System.out.println("==============XXXXXXXXXXXXXX");
-	    System.out.println("getOne_For_Update");
-	    System.out.println(sellerVO);
-	    System.out.println("==============XXXXXXXXXXXXXX");
+		SellerVO sellerVO = sellerSvc.getById(sellerId);
+		model.addAttribute("sellerVO", sellerVO);
+		System.out.println("==============XXXXXXXXXXXXXX");
+		System.out.println("getOne_For_Update");
+		System.out.println(sellerVO);
+		System.out.println("==============XXXXXXXXXXXXXX");
 
-	    return "back-end/back-seller-edit";
+		return "back-end/back-seller-edit";
 	}
-	
+
 	@PostMapping("update")
-	public String updateSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model) throws IOException {
+	public String updateSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model)
+			throws IOException {
 
 		if (result.hasErrors()) {
-		    System.out.println("==============XXXXXXXXXXXXXX");
-		    System.out.println("updateSeller");
-		    System.out.println(result);
-		    System.out.println("==============XXXXXXXXXXXXXX");
-		    return "back-end/back-seller-edit";
+			System.out.println("==============XXXXXXXXXXXXXX");
+			System.out.println("updateSeller");
+			System.out.println(result);
+			System.out.println("==============XXXXXXXXXXXXXX");
+			return "back-end/back-seller-edit";
 		}
-		
+
 		sellerSvc.updateSeller(sellerVO);
 		model.addAttribute("success", "- (修改成功)");
 		sellerVO = sellerSvc.getById(Integer.valueOf(sellerVO.getSellerId()));
 		model.addAttribute("userVO", sellerVO);
-		
-	    return "redirect:/back/seller/listAll";
+
+		return "redirect:/back/seller/listAll";
+	}
+
+	@DeleteMapping("delete")
+	public String delete(@RequestParam("id") Integer sellerId, ModelMap model) throws IOException {
+
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
+
+		/*************************** 2.開始新增資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		sellerSvc.deleteSeller(sellerId);
+		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+
+		return "redirect:/seller/listAllSeller";
+		// 一定要用Redirect，不然會會導致資料重複送
+		// 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/user/listAllUser")
 	}
 
 	@PostMapping("insert")
