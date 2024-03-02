@@ -31,12 +31,6 @@ public class IndexControllerBack {
 	            Model model) {
 	        return "/back-end/back-main"; 
 	 }
-	 
-	 
-	 
-	 
-
-
 
 }
 
