@@ -45,16 +45,8 @@
 		<div class="container-fluid seller-container">
 			<h1>新增走馬燈資料</h1>
 
-			<form class="row g-3" id="myForm" action="insert" method="post"
-				enctype="multipart/form-data">
-
-                <!-- 不允許編輯ID, 自增建
-				<div class="col-md-12">
-					<label for="inputNewsTickerId" class="form-label">走馬燈編號</label> <input
-						type="text" class="form-control" id="inputNewsTickerId"
-						name="newsTickerId" value=${newsTickerVO.newsTickerId} readonly />
-				</div>
-				 -->
+			<form class="row g-3" id="myForm" th:action="@{insert}" method="post"
+				enctype="multipart/form-data" th:object="${newsTickerVO}">
 
 				<div class="col-md-12">
 					<label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
@@ -79,13 +71,15 @@
 						<input type="date" class="form-control" name="endTime">
 					</div>
 				</div>
-
+				
+ <!-- 
 				<div class="col-md-3">
 					<label for="inputIsDisplay" class="form-label">是否顯示</label> <select
 						class="isDisplay form-select" name="isDisplay" id="inputIsDisplay">
 						<option value="No"></option>
 					</select>
 				</div>
+ -->
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">

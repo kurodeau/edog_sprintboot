@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.newsticker.model.NewsTickerVO;
-import com.seller.entity.SellerVO;
 import com.newsticker.model.NewsTickerService;
 
 @Controller
@@ -50,7 +49,6 @@ public class NewsTickerController {
 		System.out.println("==============================");
 	    list.forEach(data -> System.out.println(data));
 		System.out.println("==============================");
-		
 		return list;
 	}
 	
@@ -61,8 +59,6 @@ public class NewsTickerController {
 		model.addAttribute("newsTickerVO", newsTickerVO);
 		return "back-end/back-newsticker-add";
 	}
-	
-	
 	
 	// /back/newsTicker/listAllGet
 	@GetMapping("listAllGet")
@@ -182,17 +178,7 @@ public class NewsTickerController {
 //		return "back-end/emp/listAllEmp"; // 刪除完成後轉交listAllEmp.html
 //	}
 
-//	/*
-//	 * 第一種作法 Method used to populate the List Data in view. 如 : 
-//	 * <form:select path="deptno" id="deptno" items="${deptListData}" itemValue="deptno" itemLabel="dname" />
-//	 */
-//	@ModelAttribute("deptListData")
-//	protected List<DeptVO> referenceListData() {
-//		// DeptService deptSvc = new DeptService();
-//		List<DeptVO> list = deptSvc.getAll();
-//		return list;
-//	}
-//
+
 //	/*
 //	 * 【 第二種作法 】 Method used to populate the Map Data in view. 如 : 
 //	 * <form:select path="deptno" id="deptno" items="${depMapData}" />
@@ -207,16 +193,16 @@ public class NewsTickerController {
 //		return map;
 //	}
 //
-//	// 去除BindingResult中某個欄位的FieldError紀錄
-//	public BindingResult removeFieldError(EmpVO empVO, BindingResult result, String removedFieldname) {
-//		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
-//				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
-//				.collect(Collectors.toList());
-//		result = new BeanPropertyBindingResult(empVO, "empVO");
-//		for (FieldError fieldError : errorsListToKeep) {
-//			result.addError(fieldError);
-//		}
-//		return result;
-//	}
+	// 去除BindingResult中某個欄位的FieldError紀錄
+	public BindingResult removeFieldError(NewsTickerVO newsTickerVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
+				.collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(newsTickerVO, "newsTickerVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
 
 }

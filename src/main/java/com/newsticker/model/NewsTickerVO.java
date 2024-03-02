@@ -48,7 +48,7 @@ public class NewsTickerVO implements java.io.Serializable {
 	private Integer sort;
 	private Date startTime;
 	private Date endTime;
-	private Boolean isDisplay;	
+	private Boolean isDisplay = true;	
 
 	@Id //@Id代表這個屬性是這個Entity的唯一識別屬性，並且對映到Table的主鍵 
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //@GeneratedValue的generator屬性指定要用哪個generator //【strategy的GenerationType, 有四種值: AUTO, IDENTITY, SEQUENCE, TABLE】 
