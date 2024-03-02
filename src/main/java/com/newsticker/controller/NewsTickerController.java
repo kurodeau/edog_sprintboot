@@ -91,11 +91,10 @@ public class NewsTickerController {
 	/*
 	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("insert")
+	@PostMapping("insertNewsTicker")
 //	public String insert(@Valid NewsTickerVO newsTickerVO, BindingResult result, ModelMap model,
 //			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
 	public String insert(@Valid NewsTickerVO newsTickerVO){
-
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 //		result = removeFieldError(newsTickerVO, result, "upFiles");
@@ -112,13 +111,15 @@ public class NewsTickerController {
 //			return "back-end/emp/addEmp";
 //		}
 		/*************************** 2.開始新增資料 *****************************************/
-		// EmpService empSvc = new EmpService();
+		// EmpService empSvc = new EmpService();\
+		System.out.println("SSSSSSSS"+newsTickerVO);
+
 		newsTickerSvc.addNewsTicker(newsTickerVO);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<NewsTickerVO> list = newsTickerSvc.getAll();
 //		model.addAttribute("empListData", list);
 //		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/back-end/back-newsticker"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
+		return "redirect:/back/newsTicker/listAllGet"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}
 
 	/*
