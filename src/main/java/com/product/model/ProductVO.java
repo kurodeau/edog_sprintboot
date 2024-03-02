@@ -26,7 +26,6 @@ public class ProductVO {
 
 
     private Integer productId;   
-    private Integer sellerId;    
     private byte[] productCoverImg;
     private String productName;    
     private BigDecimal productPrice;
@@ -54,14 +53,6 @@ public class ProductVO {
 		this.productId = productId;
 	}
 	
-	@Column(name = "sellerId")
-	public Integer getSellerId() {
-		return sellerId;
-	}
-
-	public void setSellerId(Integer sellerId) {
-		this.sellerId = sellerId;
-	}
 
 	@Column(name = "productCoverImg" ,columnDefinition = "longblob")
 	public byte[] getProductCoverImg() {
@@ -163,18 +154,18 @@ public class ProductVO {
 	}
 
 	@ManyToOne
-    @JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
+	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	public SellerVO getSellerVO() {
-		return sellerVO;
+	    return sellerVO;
 	}
 
-	public void setSeller(SellerVO sellerVO) {
-		this.sellerVO = sellerVO;
+	public void setSellerVO(SellerVO sellerVO) {
+	    this.sellerVO = sellerVO;
 	}
 
 	@Override
 	public String toString() {
-		return "ProductVO [productId=" + productId + ", sellerId=" + sellerId + ", productCoverImg="
+		return "ProductVO [productId=" + productId + ", productCoverImg="
 				+ productCoverImg != null && productCoverImg.length > 0 ? "Has Pic" : "No Pic"+ ", productName=" + productName + ", productPrice=" + productPrice
 				+ ", productStockQuantity=" + productStockQuantity + ", productDetails=" + productDetails
 				+ ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime + ", totalStars="
