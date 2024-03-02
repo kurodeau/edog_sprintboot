@@ -25,7 +25,13 @@ public class IndexControllerBack {
 	            Model model) {
 	        return "/back-end/back-main"; 
 	 }
-
+	 
+//	 //測試進入後台會員page
+//	 @GetMapping("/back-newsTicker")
+//	   public String backBuybacknewsTickerer(
+//	            Model model) {
+//	        return "back-end/back-newsTicker"; 
+//	 }
 
 }
 
