@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="tw-ZN">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+	</header>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="back-end/aside-back.html"></aside>
+	<!-- ======= Main ======= -->
+
+
+
+	<main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+			<h1>廣告列表</h1>
+			<div class="card card-product-custom">
+				<div class="card-body">
+					<!-- Bordered Tabs -->
+					<ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab"
+						role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link active" id="overall-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-overall"
+								type="button" role="tab" aria-controls="overall"
+								aria-selected="true">全部</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="soldout-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-soldout"
+								type="button" role="tab" aria-controls="soldout"
+								aria-selected="false">審核中</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="unlisted-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-unlisted"
+								type="button" role="tab" aria-controls="unlisted"
+								aria-selected="false">未上架</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="listed-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-listed"
+								type="button" role="tab" aria-controls="listed"
+								aria-selected="false">已上架</button>
+						</li>
+					</ul>
+
+					<div class="tab-content pt-2" id="borderedTabContent">
+						<!-- 全部  廣告-->
+						<div class="tab-pane show active" id="bordered-overall"
+							role="tabpanel" aria-labelledby="overall-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"  style="padding-left: 0; padding-right: 0;"	>
+									<div class="col-2" >廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<!-- Item 3 -->
+								<div class="row item-row-custom" th:each="adVO : ${adListData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1">
+										<div class="d-flex flex-column align-items-center">
+											<!-- 審核中的表單 -->
+											<form method="post" action="/edit">
+												<button type="submit"
+													class="product align-self-start btn-func">編輯</button>
+												<input type="hidden" name="empno" value="${empVO.empno}">
+											</form>
+											<form method="post" action="/upload">
+												<button type="submit"
+													class="product align-self-start btn-func">上架</button>
+												<input type="hidden" name="empno" value="${empVO.empno}">
+											</form>
+											<form method="post" action="/delete">
+												<button type="submit"
+													class="product align-self-start btn-func">刪除</button>
+												<input type="hidden" name="empno" value="${empVO.empno}">
+											</form>
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+						</div>
+
+						<!-- 全部  審核中-->
+						<div class="tab-pane" id="bordered-soldout" role="tabpanel"
+							aria-labelledby="soldout-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"  style="padding-left: 0; padding-right: 0;"	>
+									<div class="col-2" >廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListReviewData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+
+
+									<div class="col-1 d-flex flex-column align-items-center">
+										<!-- 審核中的表單 -->
+										<form method="post" action="/edit">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/upload">
+											<button type="submit"
+												class="product align-self-start btn-func">上架</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/delete">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<!-- 全部  未上架-->
+						<div class="tab-pane" id="bordered-unlisted" role="tabpanel"
+							aria-labelledby="unlisted-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"  style="padding-left: 0; padding-right: 0;"	>
+									<div class="col-2" >廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListUnLaunchData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1 d-flex flex-column align-items-center">
+										<!-- 審核中的表單 -->
+										<form method="post" action="/edit">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/upload">
+											<button type="submit"
+												class="product align-self-start btn-func">上架</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/delete">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+						<!-- 全部  已上架-->
+
+						<div class="tab-pane" id="bordered-listed" role="tabpanel"
+							aria-labelledby="listed-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"  style="padding-left: 0; padding-right: 0;"	>
+									<div class="col-2" >廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListLaunchData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1 d-flex flex-column align-items-center">
+										<!-- 審核中的表單 -->
+										<form method="post" action="/edit">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/upload">
+											<button type="submit"
+												class="product align-self-start btn-func">上架</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+										<form method="post" action="/delete">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="empno" value="${empVO.empno}">
+										</form>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+					<!-- End Bordered Tabs -->
+				</div>
+			</div>
+		</div>
+	</main>
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout on">
+		<div
+			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">關於我們</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">人才招募</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+				</ul>
+			</div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">常見問題</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">Q&A</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row footer-container-custom">
+			<div class="col-3"></div>
+
+			<div class="col-auto">
+				<a href="/"
+					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+					<svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+				</a>
+				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
+					© 2023 CatTom.版權所有。</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer -->
+
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="fragment-js"></div>
+
+
+
+
+</body>
+</html>
