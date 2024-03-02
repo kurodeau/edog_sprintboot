@@ -32,7 +32,7 @@ public class AdnoController {
 	AdService adSvc;
 	
 	@GetMapping("adlist")
-    public String selleradsadd(Model model){
+    public String selleradlist(Model model){
         return "front-end/seller/seller-ads-all";
     }
 	
@@ -103,7 +103,7 @@ public class AdnoController {
 //	    model.addAttribute("empVO", new EmpVO());
 //    	EmpService empSvc = new EmpService();
 		List<AdVO> list = adSvc.getAll();
-		model.addAttribute("empListData", list); // for select_page.html 第97 109行用
+		model.addAttribute("adListData", list); // for select_page.html 第97 109行用
 		
 		String message = strBuilder.toString();
 	    return new ModelAndView("front-end/seller/seller-ads-all", "errorMessage", "請修正以下錯誤:<br>"+message);
