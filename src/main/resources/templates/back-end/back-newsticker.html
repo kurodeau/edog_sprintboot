@@ -42,7 +42,7 @@
 		<div class="seller-container">
 			<div class="pagetitle">
 				<h1>走馬燈清單</h1>
-				<a class="btn" href="addNewsTicker">新增走馬燈</a>
+				<a class="btn" th:href="@{addNewsTicker}">新增走馬燈</a>
 			</div>
 			<table id="example" class="table table-striped table-bordered"
 				style="width: 100%">
@@ -63,23 +63,25 @@
 					<th:block th:each="newsTickerVO : ${newsTickerListData}">
 						<tr>
 							<td th:text="${newsTickerVO.newsTickerId}"></td>
-							<td th:text="${newsTickerVO.newsTickerContent}"></td>
+							<td th:text="${newsTickerVO.newsTickerContent}"
+								style="max-width: 265px;
+								       overflow: hidden;
+								       text-overflow: ellipsis;
+								       white-space: nowrap;"></td>
 							<td th:text="${newsTickerVO.sort}"></td>
 							<td
 								th:text="${#dates.format(newsTickerVO.startTime, 'yyyy/MM/dd')}"></td>
 							<td
 								th:text="${#dates.format(newsTickerVO.endTime, 'yyyy/MM/dd')}"></td>
 							<td th:text="${newsTickerVO.isDisplay} ? 'Yes' : 'No'"></td>
- 
-                            <td>
-							    <a class="btn"
+
+							<td><a class="btn"
 								th:href="@{getOne_For_Update(newsTickerId=${newsTickerVO.newsTickerId})}">編輯</a>
-							<!-- 還有沒有這個, 先註解
+								<!-- 還有沒有這個, 先註解
 								<button type="button" class="btn"
 									th:attr="data-delete-id=${newsTickerVO.newsTickerId}"
 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button>
-							    -->
-							</td>
+							    --></td>
 						</tr>
 					</th:block>
 

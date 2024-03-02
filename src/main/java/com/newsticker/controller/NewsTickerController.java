@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.newsticker.model.NewsTickerVO;
-import com.seller.entity.SellerVO;
 import com.newsticker.model.NewsTickerService;
 
 @Controller
@@ -50,7 +49,6 @@ public class NewsTickerController {
 		System.out.println("==============================");
 	    list.forEach(data -> System.out.println(data));
 		System.out.println("==============================");
-		
 		return list;
 	}
 	
@@ -61,8 +59,6 @@ public class NewsTickerController {
 		model.addAttribute("newsTickerVO", newsTickerVO);
 		return "back-end/back-newsticker-add";
 	}
-	
-	
 	
 	// /back/newsTicker/listAllGet
 	@GetMapping("listAllGet")
@@ -95,11 +91,10 @@ public class NewsTickerController {
 	/*
 	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("insert")
+	@PostMapping("insertNewsTicker")
 //	public String insert(@Valid NewsTickerVO newsTickerVO, BindingResult result, ModelMap model,
 //			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
 	public String insert(@Valid NewsTickerVO newsTickerVO){
-
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 //		result = removeFieldError(newsTickerVO, result, "upFiles");
@@ -116,13 +111,15 @@ public class NewsTickerController {
 //			return "back-end/emp/addEmp";
 //		}
 		/*************************** 2.開始新增資料 *****************************************/
-		// EmpService empSvc = new EmpService();
+		// EmpService empSvc = new EmpService();\
+		System.out.println("SSSSSSSS"+newsTickerVO);
+
 		newsTickerSvc.addNewsTicker(newsTickerVO);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<NewsTickerVO> list = newsTickerSvc.getAll();
 //		model.addAttribute("empListData", list);
 //		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/back-end/back-newsticker"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
+		return "redirect:/back/newsTicker/listAllGet"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}
 
 	/*
@@ -182,17 +179,7 @@ public class NewsTickerController {
 //		return "back-end/emp/listAllEmp"; // 刪除完成後轉交listAllEmp.html
 //	}
 
-//	/*
-//	 * 第一種作法 Method used to populate the List Data in view. 如 : 
-//	 * <form:select path="deptno" id="deptno" items="${deptListData}" itemValue="deptno" itemLabel="dname" />
-//	 */
-//	@ModelAttribute("deptListData")
-//	protected List<DeptVO> referenceListData() {
-//		// DeptService deptSvc = new DeptService();
-//		List<DeptVO> list = deptSvc.getAll();
-//		return list;
-//	}
-//
+
 //	/*
 //	 * 【 第二種作法 】 Method used to populate the Map Data in view. 如 : 
 //	 * <form:select path="deptno" id="deptno" items="${depMapData}" />
@@ -207,16 +194,16 @@ public class NewsTickerController {
 //		return map;
 //	}
 //
-//	// 去除BindingResult中某個欄位的FieldError紀錄
-//	public BindingResult removeFieldError(EmpVO empVO, BindingResult result, String removedFieldname) {
-//		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
-//				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
-//				.collect(Collectors.toList());
-//		result = new BeanPropertyBindingResult(empVO, "empVO");
-//		for (FieldError fieldError : errorsListToKeep) {
-//			result.addError(fieldError);
-//		}
-//		return result;
-//	}
+	// 去除BindingResult中某個欄位的FieldError紀錄
+	public BindingResult removeFieldError(NewsTickerVO newsTickerVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
+				.collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(newsTickerVO, "newsTickerVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
 
 }
