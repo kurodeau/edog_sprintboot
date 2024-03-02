@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +22,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 import com.sellerLv.entity.SellerLvVO;
@@ -48,18 +54,18 @@ public class SellerController extends HttpServlet {
 	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
-		System.out.println("==============================");
-		list.forEach(data -> System.out.println(data));
-		System.out.println("==============================");
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
 		return list;
 	}
 
 	@ModelAttribute("sellerListData")
 	protected List<SellerVO> referenceListData(Model model) {
 		List<SellerVO> list = sellerSvc.getAll();
-		System.out.println("==============================");
-		list.forEach(data -> System.out.println(data));
-		System.out.println("==============================");
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
 
 		return list;
 	}
@@ -81,10 +87,10 @@ public class SellerController extends HttpServlet {
 	public String getOneSeller(@RequestParam("id") Integer sellerId, ModelMap model) {
 		SellerVO sellerVO = sellerSvc.getById(sellerId);
 		model.addAttribute("sellerVO", sellerVO);
-		System.out.println("==============XXXXXXXXXXXXXX");
-		System.out.println("getOne_For_Update");
-		System.out.println(sellerVO);
-		System.out.println("==============XXXXXXXXXXXXXX");
+//		System.out.println("==============XXXXXXXXXXXXXX");
+//		System.out.println("getOne_For_Update");
+//		System.out.println(sellerVO);
+//		System.out.println("==============XXXXXXXXXXXXXX");
 
 		return "back-end/back-seller-edit";
 	}
@@ -94,10 +100,10 @@ public class SellerController extends HttpServlet {
 			throws IOException {
 
 		if (result.hasErrors()) {
-			System.out.println("==============XXXXXXXXXXXXXX");
-			System.out.println("updateSeller");
-			System.out.println(result);
-			System.out.println("==============XXXXXXXXXXXXXX");
+//			System.out.println("==============XXXXXXXXXXXXXX");
+//			System.out.println("updateSeller");
+//			System.out.println(result);
+//			System.out.println("==============XXXXXXXXXXXXXX");
 			return "back-end/back-seller-edit";
 		}
 
@@ -142,6 +148,44 @@ public class SellerController extends HttpServlet {
 		// 一定要用Redirect，不然會會導致資料重複送
 		// 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/user/listAllUser")
 	}
+	
+	
+	 // Add this method to handle AJAX requests
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<String> handleAjaxRequest(@RequestBody JsonNode jsonNode) {
+	    try {
+	    	SellerVO sellerVO = new SellerVO();
+
+	        String username = jsonNode.get("username").asText();
+            String password = jsonNode.get("password").asText();
+            
+            System.out.println("=======register===========");
+            System.out.println(username);
+            System.out.println("=======register===========");
+
+	    	sellerVO.setSellerEmail(username);
+	    	sellerVO.setSellerPassword(password);
+
+	    	// For Testing
+			sellerVO.setSellerBankAccount("123456789");
+			sellerVO.setSellerMobile("0988319004");
+			sellerVO.setSellerContact("JohnDoe");
+			sellerVO.setSellerTaxId("123");
+			
+			sellerVO.setSellerCompanyPhone("987654321");
+			sellerVO.setSellerCompany("ABC Company");
+			sellerVO.setSellerCompanyExtension("123");
+			
+	        sellerSvc.saveUserDetails(sellerVO);
+
+	        return ResponseEntity.status(HttpStatus.OK).body("{\"success\":true}");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                             .body("{\"success\":false, \"error\":\"" + e.getMessage() + "\"}");
+	    }
+	}
+
 
 	// 去除BindingResult中某個欄位的FieldError紀錄
 	public BindingResult removeFieldError(UserVO userVO, BindingResult result, String removedFieldname) {
@@ -153,5 +197,8 @@ public class SellerController extends HttpServlet {
 		}
 		return result;
 	}
+	
+	
+	
 
 }

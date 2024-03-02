@@ -2,13 +2,11 @@ package com.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.seller.service.SellerService;
 
 @Configuration
 //開啟SpringSecurity的自訂義配置，SpringBoot 中可省略
@@ -55,17 +53,15 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	http
-        // 禁用 CSRF 保护，特别是对于一些无需保护的端点或应用程序
-        .csrf(csrf -> csrf.disable())
-        
-        // 配置 HTTP 请求的授权规则
-        .authorizeHttpRequests(authorize -> authorize
-            .anyRequest().authenticated()
-        );
-        //.formLogin(withDefaults())
+    	 http
+         .authorizeRequests(authorize -> authorize
+             .antMatchers("/back/seller/register").permitAll() // Permit access to the specific URL
+             .antMatchers("/**").permitAll() // Permit access to the specific URL
+             .anyRequest().authenticated()
+         )
+         .formLogin();
 
-        
+     http.csrf().disable();
         // 配置表单登录
         
         // 配置基本身份验证

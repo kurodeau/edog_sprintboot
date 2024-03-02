@@ -12,35 +12,49 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.seller.entity.SellerVO;
+import com.seller.repositary.SellerRepository;
 import com.seller.service.SellerService;
+import com.seller.service.SellerServiceImpl;
 
 @Component
 public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetailsManager {
 
-	private SellerService sellerSvc;
-	
-	
-	
-
-
 	@Autowired
-	public void setSellerService(SellerService sellervice) {
-		this.sellerSvc = sellervice;
-	}
-	
+	SellerRepository sellerRepo;
 
-	public DBUserDetailsManagerSeller(SellerService sellerSvc) {
-		super();
-		this.sellerSvc = sellerSvc;
-	}
+	
+//	private SellerService sellerSvc =new SellerServiceImpl();;
+//	private SellerService sellerSvc;
+//
+//	@Autowired
+//	public void setSellerService(SellerService sellervice) {
+//		this.sellerSvc = sellervice;
+//	}
+//	
+
+//	public DBUserDetailsManagerSeller(SellerService sellerSvc) {
+//		super();
+//		this.sellerSvc = sellerSvc;
+//	}
 	
 //	private final SellerService sellerSvc = new SellerService() ;
 
 
 	@Override
 	public void createUser(UserDetails user) {
-		// TODO Auto-generated method stub
+		
+	 	
+	}
+	
+	public void createUser(UserDetails user,SellerVO sellerVO) {
+		System.out.println("SSSSsdsasYYYasdasdasXXXXXXXXXXXXXXXXXXXXXXXXX");
 
+		sellerVO.setSellerEmail(user.getUsername());
+		sellerVO.setSellerPassword(user.getPassword());
+		sellerVO.setIsConfirm(true);
+	
+				
+		sellerRepo.save(sellerVO);
 	}
 
 	@Override
@@ -48,7 +62,9 @@ public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetai
 		SellerVO sellerVO = new SellerVO();
 		sellerVO.setSellerEmail(user.getUsername());
 		sellerVO.setSellerPassword(user.getPassword());
-		sellerSvc.addSeller(sellerVO);
+		
+		
+		sellerRepo.save(sellerVO);
 	}
 
 	@Override
@@ -65,7 +81,7 @@ public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetai
 
 	@Override
 	public boolean userExists(String username) {
-		SellerVO targetUser = sellerSvc.findUserEmail(username);
+		SellerVO targetUser = sellerRepo.findByEmail(username);
 		return targetUser != null;
 	}
 
@@ -75,15 +91,19 @@ public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetai
 	// 把用戶輸入的密碼和SQL中或的密名進行驗證
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+		System.out.println("=======loadUserByUsername============");
+		System.out.println(username);
+		System.out.println("=======loadUserByUsername============");
 		
-		SellerVO targetUser = sellerSvc.findUserEmail(username);
+		
+		SellerVO targetUser =  sellerRepo.findByEmail(username);
 		
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		
-		System.out.println("===================");
+		System.out.println("=======loadUserByUsername============");
 		System.out.println(targetUser);
-		System.out.println("===================");
+		System.out.println("=======loadUserByUsername============");
 
 		
 		

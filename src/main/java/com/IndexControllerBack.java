@@ -20,11 +20,6 @@ import com.user.model.UserService;
 public class IndexControllerBack {
 	
 	
-	 @GetMapping("/back-main")
-	   public String backMain(
-	            Model model) {
-	        return "/back-end/back-main"; 
-	 }
 
 
 }

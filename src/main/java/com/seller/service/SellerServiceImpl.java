@@ -18,15 +18,18 @@ import com.seller.repositary.SellerRepository;
 public class SellerServiceImpl implements SellerService {
 
 	private DBUserDetailsManagerSeller dbUserDetailsManagerSeller;
-
-
+	private SellerRepository repo;
+	
 	@Autowired
 	public void setDbUserDetailsManagerSeller(DBUserDetailsManagerSeller dbUserDetailsManagerSeller) {
 		this.dbUserDetailsManagerSeller = dbUserDetailsManagerSeller;
 	}
 
 	@Autowired
-	private SellerRepository repo;
+	public void setSellerRepository(SellerRepository repo) {
+		this.repo = repo;
+	}
+
 
 	public void addSeller(@NonNull SellerVO sellerVO) {
 		repo.save(sellerVO);
@@ -57,12 +60,16 @@ public class SellerServiceImpl implements SellerService {
 		return repo.findByEmail(email);
 	}
 
-	// public void saveUserDetails(SellerVO sellerVO) {
-	// UserDetails userdetails =
-	// User.withDefaultPasswordEncoder().username("Test").password("pasword").roles("USER")
-	// .build();
-	//
-	// dbUserDetailsManagerSeller.createUser(userdetails);
-	// }
+	 public void saveUserDetails(SellerVO sellerVO) {
+	 UserDetails userdetails =
+//	 User.withDefaultPasswordEncoder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("USER")
+//	 .build();
+
+	 User.withDefaultPasswordEncoder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("USER")
+	 .build();
+	 
+
+	 dbUserDetailsManagerSeller.createUser(userdetails,sellerVO);
+	 }
 
 }

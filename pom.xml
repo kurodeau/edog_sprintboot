@@ -174,8 +174,8 @@
 		<!-- ●以下為 資料庫驅動程式 預備使用● -->
 
 		<!-- Oracle JDBC驅動程式 ojdbc8.jar -->
-		<!-- Oracle JDBC Driver compatible with JDK8, JDK11, JDK12, JDK13, JDK14 
-			 and JDK15 -->
+		<!-- Oracle JDBC Driver compatible with JDK8, JDK11, JDK12, JDK13, JDK14
+		and JDK15 -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
@@ -220,6 +220,13 @@
 			<artifactId>bootstrap</artifactId>
 			<version>4.2.1</version>
 		</dependency>
+<!--ˋ自己新增 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.5</version> <!-- 請使用最新版本 -->
+		</dependency>
+
 
 	</dependencies>
 

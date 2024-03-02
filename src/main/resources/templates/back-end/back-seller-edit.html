@@ -435,8 +435,8 @@
               id="inputIsConfirm"
               th:value="${sellerVO.isConfirm}"
             >
-              <option value="true">通過</option>
-              <option value="false">未通過</option>
+              <option value="true"  th:selected="${sellerVO.isConfirm}">通過</option>
+              <option value="false"  th:selected="${!sellerVO.isConfirm}">未通過</option>
             </select>
           </div>
 

@@ -21,4 +21,7 @@ public interface SellerService {
     Integer getCount();
 
     SellerVO findUserEmail(String email);
+
+    
+     void saveUserDetails(SellerVO sellerVO);
 }
