@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -165,7 +165,7 @@
   <!-- ======= Main ======= -->
   <main class="main main-layout-seller">
     <div class="container-fluid seller-container">
-      <h1>編輯買家資料</h1>
+      <h1>新增買家資料</h1>
 
       <!-- <nav class="mt-5 mb-4">
         <ol class="breadcrumb">
@@ -175,15 +175,14 @@
 
       <form class="row g-3" id="myForm" action="testrecap" method="post" enctype="multipart/form-data">
 
-        <div class="col-md-12">
+        <div class="col-md-12" style="display: none;">
           <label for="inputMemberId" class="form-label">買家編號</label>
-          <input type="text" class="form-control" id="inputMemberId" name="memberId" value="3001" readonly />
+          <input type="text" class="form-control" id="inputMemberId" name="memberId" readonly />
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12" style="display: none;">
           <label for="inputThirdFrom" class="form-label">第三方登入</label>
-          <input type="text" class="form-control" id="inputThirdFrom" name="thirdFrom" placeholder="還不知道要不要做第三方登入,先放著"
-            readonly />
+          <input type="text" class="form-control" id="inputThirdFrom" name="thirdFrom" placeholder="還不知道要不要做第三方登入,先放著" readonly />
         </div>
 
         <div class="col-md-12">
@@ -191,9 +190,20 @@
           <input type="text" class="form-control" id="inputMemberEmail" name="memberEmail" value="123zxc@gmail.com" />
         </div>
 
+        <!-- <nav class="custom-mt-6 mb-2">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">密碼設定</li>
+          </ol>
+        </nav> -->
+
         <div class="col-md-12">
           <label for="inputPassword" class="form-label">密碼</label>
           <input type="text" class="form-control" id="inputPassword" name="password" value="pass1234" />
+        </div>
+        
+        <div class="col-md-12">
+          <label for="inputPassword" class="form-label">確認密碼</label>
+          <input type="text" class="form-control" id="inputPassword" name="password" placeholder="輸入相同密碼"/>
         </div>
 
         <div class="col-md-12">
@@ -228,75 +238,82 @@
             placeholder="請輸入地址" />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-3" style="display: none;">
           <label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
           <select class="isMemberEmail form-select" name="isMemberEmail" id="inputIsMemberEmail">
-            <option value="true">已審核</option>
+            <option value="true" selected>已審核</option>
             <option value="false">未審核</option>
           </select>
         </div>
 
-        <!-- <div class="col mb-3">
+        <div class="col mb-3" style="display: none;">
           <label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
           <div class="col-sm-3">
-            <input type="date" class="form-control" name="memberRegistrationTime" value="1987-03-21" readonly>
+            <input type="date" class="form-control" name="memberRegistrationTime" readonly>
           </div>
-        </div> -->
+        </div>
 
         <div class="col-md-12">
           <label for="inputPetName" class="form-label">寵物名稱</label>
           <input type="text" class="form-control" id="inputPetName" name="petName" value="木木鴞" />
         </div>
 
-        <!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
-        <form
-          class="row g-3"
-          id="imageForm"
-          method="post"
-          enctype="multipart/form-data"
-        >
-          <div class="upload__box">
-            <div class="upload__btn-box">
-              <label for="mainImage" class="btn btn-sellerdark"
-                >更新寵物圖片</label
+                <!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
+                <form
+                class="row g-3"
+                id="imageForm"
+                method="post"
+                enctype="multipart/form-data"
               >
-              <input
-                type="file"
-                data-max_length="1"
-                class="form-control upload__inputfile"
-                id="mainImage"
-                name="mainImage"
-              />
-              <div class="valid-feedback">Looks Good!</div>
-              <div id="mainImageFeedback" class="invalid-feedback">
-                Please provide a valid Picture.
-              </div>
-            </div>
-            <div class="upload__img--wrap"></div>
-          </div>
-
-          <!--不需要上傳多張圖片-->
-          <!-- <div class="upload__box">
-            <div class="upload__btn-box">
-              <label for="subImages" class="btn btn-sellerdark">
-                請選擇其他圖片</label
-              >
-              <input
-                type="file"
-                multiple=""
-                data-max_length="5"
-                class="form-control upload__inputfile"
-                id="subImages"
-                name="subImages"
-              />
-              <div class="valid-feedback">Looks Good!</div>
-              <div id="subImagesFeedback" class="invalid-feedback">
-                Please provide a valid Picture.
-              </div>
-            </div>
-            <div class="upload__img--wrap"></div>
-          </div> -->
-        </form>
+                <div class="upload__box">
+                  <div class="upload__btn-box">
+                    <label for="mainImage" class="btn btn-sellerdark"
+                      >更新寵物圖片</label
+                    >
+                    <input
+                      type="file"
+                      data-max_length="1"
+                      class="form-control upload__inputfile"
+                      id="mainImage"
+                      name="mainImage"
+                    />
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div id="mainImageFeedback" class="invalid-feedback">
+                      Please provide a valid Picture.
+                    </div>
+                  </div>
+                  <div class="upload__img--wrap"></div>
+                </div>
+      
+                <div class="col mb-3" style="display: none;">
+                  <label for="inputPetImgUploadTime" class="col-sm-2 col-form-label">寵物圖片更新時間</label>
+                  <div class="col-sm-3">
+                    <input type="date" class="form-control" name="petImgUploadTime" value="2000-03-21" readonly>
+                  </div>
+                </div>
+      
+                <!--不需要上傳多張圖片-->
+                <!-- <div class="upload__box">
+                  <div class="upload__btn-box">
+                    <label for="subImages" class="btn btn-sellerdark">
+                      請選擇其他圖片</label
+                    >
+                    <input
+                      type="file"
+                      multiple=""
+                      data-max_length="5"
+                      class="form-control upload__inputfile"
+                      id="subImages"
+                      name="subImages"
+                    />
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div id="subImagesFeedback" class="invalid-feedback">
+                      Please provide a valid Picture.
+                    </div>
+                  </div>
+                  <div class="upload__img--wrap"></div>
+                </div> -->
+              </form>
 
         <div class="col-md-12">
           <label for="inputPetVaccName1" class="form-label">施打疫苗1</label>
@@ -305,7 +322,7 @@
 
         <div class="col-mb-3">
           <label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
-          <div class="col-sm-2">
+          <div class="col-sm-12">
             <input type="date" class="form-control" name="petVaccTime1" value="1987-03-21">
           </div>
         </div>
@@ -317,37 +334,26 @@
 
         <div class="col-mb-3">
           <label for="inputPetVaccTime2" class="col-sm-2 col-form-label">施打時間2</label>
-          <div class="col-sm-2">
+          <div class="col-sm-12">
             <input type="date" class="form-control" name="petVaccTime2">
           </div>
         </div>
 
-        <!-- <div class="col mb-3">
-          <label for="inputPetImgUploadTime" class="col-sm-2 col-form-label">寵物圖片更新時間</label>
-          <div class="col-sm-3">
-            <input type="date" class="form-control" name="petImgUploadTime" value="2000-03-21" readonly>
-          </div>
-        </div> -->
-
-        <!-- <nav class="custom-mt-6 mb-2">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">密碼設定</li>
-          </ol>
-        </nav> -->
-
-
-
-        <div class="col-md-3">
+        <div class="col-md-3" style="display: none;">
           <label for="inputIsConfirm" class="form-label">用戶資料是否生效</label>
           <select class="isConfirm form-select" name="isConfirm" id="inputIsConfirm">
-            <option value="true">有效</option>
+            <option value="true" selected>有效</option>
             <option value="false">停權</option>
           </select>
         </div>
 
+        <br><br>
+
+
+
         <div class="text-center d-flex flex-row gap-5 justify-content-center">
           <button type="button" class="btn btn-secondary">取消並離開</button>
-          <button type="submit" class="btn btn-primary">提交修改</button>
+          <button type="submit" class="btn btn-primary">建立帳號</button>
         </div>
       </form>
     </div>
