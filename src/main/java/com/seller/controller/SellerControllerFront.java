@@ -39,6 +39,7 @@ import com.user.model.UserVO;
 @ComponentScan(basePackages = { "com.seller", "com.sellerLv" })
 @RequestMapping("/front/seller/seller")
 public class SellerControllerFront extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
 	@Autowired
 	SellerService sellerSvc;

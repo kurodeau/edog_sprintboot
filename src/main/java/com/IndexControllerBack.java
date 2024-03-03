@@ -18,9 +18,11 @@ import com.user.model.UserService;
 @Controller
 @RequestMapping("/back")
 public class IndexControllerBack {
-	
-	
 
+	@GetMapping("/main")
+	public String backMain(
+			Model model) {
+		return "/back-end/back-main";
+	}
 
 }
-

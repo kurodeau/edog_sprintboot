@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+    
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>商品列表</h1>
+        <div class="card card-product-custom">
+          <div class="card-body">
+            <!-- Bordered Tabs -->
+            <ul
+              class="nav nav-tabs nav-tabs-bordered"
+              id="borderedTab"
+              role="tablist"
+            >
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link active"
+                  id="overall-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-overall"
+                  type="button"
+                  role="tab"
+                  aria-controls="overall"
+                  aria-selected="true"
+                >
+                  全部商品
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link"
+                  id="soldout-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-soldout"
+                  type="button"
+                  role="tab"
+                  aria-controls="soldout"
+                  aria-selected="false"
+                >
+                  已售完
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link"
+                  id="unlisted-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-unlisted"
+                  type="button"
+                  role="tab"
+                  aria-controls="unlisted"
+                  aria-selected="false"
+                >
+                  未上架
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link"
+                  id="listed-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-listed"
+                  type="button"
+                  role="tab"
+                  aria-controls="listed"
+                  aria-selected="false"
+                >
+                  已上架
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content pt-2" id="borderedTabContent">
+              <div
+                class="tab-pane show active"
+                id="bordered-overall"
+                role="tabpanel"
+                aria-labelledby="overall-tab"
+              >
+                <div class="container mt-3 container-list-custom">
+                  <div class="row product-row-custom">
+                    <div class="col-2">商品圖片</div>
+                    <div class="col-3">商品名稱</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1">操作</div>
+                  </div>
+
+                  <!-- Item 1 -->
+                  <div class="row item-row-custom">
+                    <div class="col-2">
+                      <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                    </div>
+                    <div class="col-3">貓砂</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1 d-flex flex-column align-items-center">
+                      <button class="product align-self-start btn-func">
+                        編輯
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        上架
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        刪除
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item 2 -->
+                  <div class="row item-row-custom">
+                    <div class="col-2">
+                      <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                    </div>
+                    <div class="col-3">貓砂</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1 d-flex flex-column align-items-center">
+                      <button class="product align-self-start btn-func">
+                        編輯
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        上架
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        刪除
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="tab-pane"
+                id="bordered-soldout"
+                role="tabpanel"
+                aria-labelledby="soldout-tab"
+              >
+                <div class="container mt-3 container-list-custom">
+                  <div class="row product-row-custom">
+                    <div class="col-2">商品圖片</div>
+                    <div class="col-3">商品名稱</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1">操作</div>
+                  </div>
+
+                  <!-- Item 1 -->
+                  <div class="row item-row-custom">
+                    <div class="col-2">
+                      <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                    </div>
+                    <div class="col-3">貓砂XX</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1 d-flex flex-column align-items-center">
+                      <button class="product align-self-start btn-func">
+                        編輯
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        上架
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        刪除
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item 2 -->
+                  <div class="row item-row-custom">
+                    <div class="col-2">
+                      <img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+                    </div>
+                    <div class="col-3">貓砂YY</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-2">售出/商品數量</div>
+                    <div class="col-1">狀態</div>
+                    <div class="col-1 d-flex flex-column align-items-center">
+                      <button class="product align-self-start btn-func">
+                        編輯
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        上架
+                      </button>
+                      <button class="product align-self-start btn-func">
+                        刪除
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="tab-pane"
+                id="bordered-unlisted"
+                role="tabpanel"
+                aria-labelledby="unlisted-tab"
+              >
+                Saepe animi et soluta ad odit soluta sunt. Nihil quos omnis
+                animi debitis cumque. Accusantium quibusdam perspiciatis qui qui
+                omnis magnam. Officiis accusamus impedit molestias nostrum
+                veniam. Qui amet ipsum iure. Dignissimos fuga tempore dolor.
+              </div>
+              <div
+                class="tab-pane"
+                id="bordered-listed"
+                role="tabpanel"
+                aria-labelledby="listed-tab"
+              >
+                <div class="container">
+                  <div class="row">
+                    <div class="col-1">商品圖片</div>
+                    <div class="col-4">商品名稱</div>
+                    <div class="col-2">價格</div>
+                    <div class="col-1">商品數量</div>
+                    <div class="col-2">狀態</div>
+                    <div class="col-1">售出數量</div>
+                    <div class="col-1">操作</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Bordered Tabs -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- End #main -->
+
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout on">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+            <svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor & Main JS Files -->
+ <div th:replace="@{fragment-footer}"></div>
+    <div th:replace="@{/fragment-js}"></div>
+
+  
+  </body>
+</html>

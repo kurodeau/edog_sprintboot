@@ -7,38 +7,7 @@
   <body>
     <!-- ======= Header ======= -->
     <header class="fixed-top">
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
-            </ul>
-
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">[當前登入管理者名稱]</a>
-              </li>
-              <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-              <li class="nav-item"><a class="nav-link" href="#">登出</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
     </header>
 
     <!-- ======= Sidebar ======= -->
@@ -47,16 +16,10 @@
     <aside th:replace="back-end/aside-back.html"></aside>
 
     <!-- ======= Main ======= -->
-    <!-- ======= Main ======= -->
     <main class="main main-layout-seller">
       <div class="container-fluid seller-container">
         <h1>編輯賣家資料</h1>
 
-        <!-- <nav class="mt-5 mb-4">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">帳號設定</li>
-        </ol>
-      </nav> -->
         <form
           class="row g-3"
           id="myForm"
@@ -435,8 +398,12 @@
               id="inputIsConfirm"
               th:value="${sellerVO.isConfirm}"
             >
-              <option value="true"  th:selected="${sellerVO.isConfirm}">通過</option>
-              <option value="false"  th:selected="${!sellerVO.isConfirm}">未通過</option>
+              <option value="true" th:selected="${sellerVO.isConfirm}">
+                通過
+              </option>
+              <option value="false" th:selected="${!sellerVO.isConfirm}">
+                未通過
+              </option>
             </select>
           </div>
 

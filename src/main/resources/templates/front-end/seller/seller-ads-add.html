@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-</head>
-<body>
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-    <th:block th:insert="~{/front-end/seller/header-seller.html}">
-		</th:block>
-	</header>
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="@{front-end/seller/aside-seller.html}"></aside>
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
 
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+    
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">

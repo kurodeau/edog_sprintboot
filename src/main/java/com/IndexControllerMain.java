@@ -1,12 +1,10 @@
 package com;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.user.model.UserService;
@@ -33,24 +31,17 @@ public class IndexControllerMain {
         // resources/template//index.html
     }
 
-    // Controller forBack                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-    
-    @GetMapping("/allLoginRegister")
-	public String allLoginRegister(ModelMap model) 	throws IOException {
-		model.addAttribute("success", "註冊成功");
-		return "/front/seller/seller-seller-add";
-	}
-    
-    
-    @GetMapping("/sellerRegister")
-	public String registerSeller(ModelMap model) 	throws IOException {
-		return "/front/seller/seller-seller-register";
-	}
-    
-    @GetMapping("/sellerLogin")
-	public String loginSeller(ModelMap model) 	throws IOException {
-		model.addAttribute("success", "註冊成功");
-		return "/front/seller/seller-login";
-	}
+
+
+    @GetMapping("/seller/register")
+    public String registerSeller(ModelMap model) throws IOException {
+        return "/front/seller/seller-seller-register";
+    }
+
+    @GetMapping("/seller/login")
+    public String loginSeller(ModelMap model) throws IOException {
+        model.addAttribute("success", "註冊成功");
+        return "/front/seller/seller-login";
+    }
 
 }

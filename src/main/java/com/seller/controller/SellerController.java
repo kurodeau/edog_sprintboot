@@ -40,6 +40,9 @@ import com.user.model.UserVO;
 @RequestMapping("/back/seller")
 public class SellerController extends HttpServlet {
 
+
+	private static final long serialVersionUID = 1L;
+
 	@Autowired
 	SellerService sellerSvc;
 
@@ -71,7 +74,7 @@ public class SellerController extends HttpServlet {
 	}
 
 	// /back/seller/listAll
-	@GetMapping("listAll")
+	@GetMapping("list")
 	public String listAllSeller(ModelMap model) {
 		return "back-end/back-seller-list";
 	}
@@ -109,14 +112,13 @@ public class SellerController extends HttpServlet {
 
 		sellerSvc.updateSeller(sellerVO);
 		model.addAttribute("success", "- (修改成功)");
-		sellerVO = sellerSvc.getById(Integer.valueOf(sellerVO.getSellerId()));
-		model.addAttribute("userVO", sellerVO);
+		model.addAttribute("sellerVO", sellerVO);
 
-		return "redirect:/back/seller/listAll";
+		return "redirect:/back/seller/list";
 	}
 
 	@DeleteMapping("delete")
-	public String delete(@RequestParam("id") Integer sellerId, ModelMap model) throws IOException {
+	public String delete(@RequestParam("id") @NonNull Integer sellerId, ModelMap model) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
@@ -126,23 +128,22 @@ public class SellerController extends HttpServlet {
 		sellerSvc.deleteSeller(sellerId);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 
-		return "redirect:/seller/listAllSeller";
+		return "redirect:/back/seller/list";
 		// 一定要用Redirect，不然會會導致資料重複送
 		// 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/user/listAllUser")
 	}
 
 	@PostMapping("insert")
-	public String insert(@Valid SellerVO sellerVO, BindingResult result, ModelMap model) throws IOException {
-
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-
-		/*************************** 2.開始新增資料 *****************************************/
-		// EmpService empSvc = new EmpService();
+	public String insert(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model) throws IOException {
+		
+		if (result.hasErrors()) {
+			return "back-end/back-seller-add";
+		}
 		sellerSvc.addSeller(sellerVO);
-		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+		
+		
 		List<SellerVO> list = sellerSvc.getAll();
-		model.addAttribute("sellerrListData", list);
+		model.addAttribute("sellerListData", list);
 		model.addAttribute("success", "- (新增成功)");
 		return "redirect:/seller/listAllSeller";
 		// 一定要用Redirect，不然會會導致資料重複送
