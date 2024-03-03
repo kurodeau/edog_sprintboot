@@ -3,10 +3,15 @@ package com;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.user.model.UserService;
+import com.user.model.UserVO;
+
+import java.io.IOException;
+import java.util.*;
 
 //@PropertySource("classpath:application.properties") 
 // 於https://start.spring.io 建立Spring Boot專案時
@@ -16,35 +21,27 @@ import com.user.model.UserService;
 
 @Controller
 public class IndexControllerMain {
-	
-	@Autowired
-	UserService userSvc;
-	
+
+    @Autowired
+    UserService userSvc;
+
     @GetMapping("/")
     public String index(Model model) {
-        return "index"; 
+        return "index";
         // resources/template//index.html
     }
-    
-    
-    
-//    // http://localhost/myApp......./hello?name=peter1
-//    @GetMapping("/seller")
-//    public String indexWithParam(
-//            @RequestParam(name = "account", required = false, defaultValue = "") String name, Model model) {
-//        model.addAttribute("message", name);
-//        return "/selle-main"; 
-//        // resources/template//seller-main.html
-//    }
-    
-   
-    
-    
-    
-    
- 
-    
 
+
+
+    @GetMapping("/seller/register")
+    public String registerSeller(ModelMap model) throws IOException {
+        return "/front/seller/seller-seller-register";
+    }
+
+    @GetMapping("/seller/login")
+    public String loginSeller(ModelMap model) throws IOException {
+        model.addAttribute("success", "註冊成功");
+        return "/front/seller/seller-login";
+    }
 
 }
-

@@ -2,47 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <th:block th:insert="~{/fragment-head}"></th:block>
-      <th:block th:insert="~{/fragment-datatableCss}"></th:block>
-
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
   </head>
-
 
   <body>
     <header class="fixed-top">
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
-            </ul>
-
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">[當前登入管理者名稱]</a>
-              </li>
-              <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-              <li class="nav-item">
-                <a class="nav-link" href="#">登出</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
     </header>
 
     <aside th:replace="back-end/aside-back.html"></aside>
@@ -50,7 +15,7 @@
     <main class="main main-layout-seller">
       <div class="seller-container">
         <div class="pagetitle">
-          <h1>賣家清單</h1>
+          <h1>賣家等級清單</h1>
         </div>
         <table
           id="example"
@@ -61,77 +26,53 @@
             <tr>
               <th>編號</th>
               <th>商家等級</th>
-              <th>商家信箱</th>
-              <th>公司名稱</th>
-              <th>統一編號</th>
-              <th>資本額</th>
-              <th>聯絡人</th>
-              <th>公司電話</th>
-              <th>公司分機</th>
-              <th>手機號碼</th>
-              <th>地址</th>
-              <th>密碼</th>
-              <th>銀行帳戶</th>
-              <th>銀行代碼</th>
-              <th>銀行帳號</th>
-              <th
-                data-type="date"
-                data-format="YYYY/DD/MM"
-                data-sortable="true"
-              >
-                創建時間
-              </th>
-              <th>是否確認</th>
+              <th>平台佣金</th>
+              <th>廣告允許類型</th>
+              <th>是否匯出金流</th>
+              <th>運費補助</th>
+              <th>每月退貨次數補助</th>
+              <th>是否顯示優先</th>
+              <th>上架數量</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="">102</td>
-              <td class="">Silver</td>
-              <td class="">silver_seller@example.com</td>
-              <td class="">Silver Ltd.</td>
-              <td class="">87654321</td>
-              <td class="">500000</td>
-              <td class="">Jane Smith</td>
-              <td class="">987-654-3210</td>
-              <td class="">Ext456</td>
-              <td class="">0987654321</td>
-              <td class="">456 Oak St, Town</td>
-              <td class="">password456</td>
-              <td class="">65432109</td>
-              <td class="">BankABC</td>
-              <td class="">654321098</td>
-              <td class="" data-format="YYYY/DD/MM">2024/01/22</td>
-              <td>AS</td>
-              <td>
-                <a
-                  class="btn"
-                  value="101"
-                  href="back-seller-edit.html?id=101"
-                >
-                  編輯
-                </a>
-                <button
-                  type="button"
-                  class="btn"
-                  data-delete-id="101"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteModal"
-                >
-                  刪除
-                </button>
-              </td>
-            </tr>
+            <th:block th:each="sellerLvVO : ${sellerLvListData}">
+              <tr>
+                <td th:text="${sellerLvVO.sellerLvId}"></td>
+                <td th:text="${sellerLvVO.lvName}"></td>
+                <td th:text="${sellerLvVO.platformCommission}"></td>
+                <td th:text="${sellerLvVO.adAllowType}"></td>
+                <td th:text="${sellerLvVO.isExportGoldflow} ? '是' : '否'"></td>
+                <td th:text="${sellerLvVO.freightSub}"></td>
+                <td th:text="${sellerLvVO.returnSubPerMonth}"></td>
+                <td th:text="${sellerLvVO.isShowPriority} ? '是' : '否'"></td>
+                <td th:text="${sellerLvVO.shelvesNumber}"></td>
+                <td>
+                  <a
+                    class="btn"
+                    th:href="@{getOne_For_Update(id=${sellerLvVO.sellerLvId})}"
+                    >編輯</a
+                  >
+                  <button
+                    type="button"
+                    class="btn btn-del"
+                    th:attr="data-delete-id=${sellerLvVO.sellerLvId}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal"
+                  >
+                    刪除
+                  </button>
+                </td>
+              </tr>
+            </th:block>
           </tbody>
         </table>
       </div>
     </main>
+
     <!-- End Main -->
 
-
-    <!-- Modal -->
-    <!-- Modal 窗口 -->
     <div
       class="modal fade"
       id="deleteModal"
@@ -172,8 +113,7 @@
     <!-- Vendor & Main JS Files -->
     <div th:replace="~{/fragment-js}"></div>
     <div th:replace="~{/fragment-datatableJs}"></div>
-    
-    
+
     <!-- Include DataTables JavaScript library -->
     <!-- Include FixedColumns JavaScript library -->
 
@@ -184,7 +124,10 @@
 
         let table = $("#example").DataTable({
           columnDefs: [
-            { targets: -1, width: 150 }, // 調整最後一列寬度
+            {
+              targets: -1,
+              width: 150,
+            }, // 調整最後一列寬度
           ],
           fixedColumns: true,
           paging: true,
@@ -199,7 +142,11 @@
           pagingType: "full_numbers",
           drawCallback: function () {
             var api = this.api();
-            var rowCount = api.rows({ page: "current" }).count();
+            var rowCount = api
+              .rows({
+                page: "current",
+              })
+              .count();
 
             // Loop to add empty rows if needed
             for (
@@ -222,7 +169,7 @@
           table.clear().draw();
         }
 
-        $(".btn-func").on("click", function () {
+        $(".btn-del").on("click", function () {
           let deleteId = $(this).data("delete-id");
           console.log("deleteId in Btn: " + deleteId);
           $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
@@ -237,9 +184,13 @@
           let myModalEl = document.getElementById("deleteModal");
           let modal = bootstrap.Modal.getInstance(myModalEl);
 
+          let currentLoc = window.location.href;
+          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+          console.log(currentLoc);
+
           // Your AJAX request for deletion
           $.ajax({
-            url: "/back-seller-list?id=" + deleteId,
+            url: currentLoc + "/delete?id=" + deleteId,
             method: "DELETE",
             success: function (response) {
               if (response.success) {

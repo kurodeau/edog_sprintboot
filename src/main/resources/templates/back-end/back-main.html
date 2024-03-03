@@ -1,65 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
 
-  <body>
-    <!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
-            </ul>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">[當前登入管理者名稱]</a>
-              </li>
-              <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-              <li class="nav-item">
-                <a class="nav-link" href="logout">登出</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
-    </header>
+	<!-- ======= Sidebar ======= -->
+	<!-- start帳戶管理 -->
+	<aside th:replace="back-end/aside-back.html"></aside>
 
-    <!-- ======= Sidebar ======= -->
-    <!-- start帳戶管理 -->
-    <aside th:replace="back-end/aside-back.html"></aside>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
 
-    <!-- ======= Main ======= -->
-    <main class="main main-layout-seller">
-
-      <a href=""></a>
+		<main class="main main-layout-seller">
+			<div class="special-text-container">
+				<h1>
+					歡迎回來<br /> 讓我們一起
+					<mark class="green">
+						<span id="typewrite-text" class="d-inline-block changecontent"></span>
+					</mark>
+				</h1>
+			</div>
+		</main>
 
 
+	</main>
+	<!-- End Main -->
 
-    </main>
-    <!-- End Main -->
+	<!-- ======= Footer, 後臺應該不需要footer ======= -->
 
-    <!-- ======= Footer, 後臺應該不需要footer ======= -->
-
-    <!-- Vendor & Main JS Files -->
-    <div th:replace="fragment-js"></div>
-  </body>
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="fragment-js"></div>
+</body>
 </html>

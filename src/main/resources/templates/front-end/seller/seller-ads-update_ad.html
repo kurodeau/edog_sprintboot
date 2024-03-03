@@ -1,23 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
+					</ul>
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
-    
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+	</header>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="back-end/aside-back.html"></aside>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
-			<h1>新增廣告資料</h1>
+			<h1>修改廣告資料</h1>
 			<nav class="mt-5 mb-4">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item">廣告設定</li>
@@ -25,19 +52,26 @@
 			</nav>
 
 			<!-- 假的表單dataForm，實際上是動態生成表單再送出去 -->
-			<form id="dataForm" method="POST" th:action="@{insert}"
-				enctype="multipart/form-data">
+			<form id="dataForm" method="POST" th:action="@{update}"
+				th:object="${adVO}" enctype="multipart/form-data">
+				<label>廣告編號:</label> <input type="text" th:field="*{adId}"
+					style="border: 0px; font-weight: bold;" readonly /><br />
+
 				<div class="upload__box">
 					<div class="upload__btn-box">
 						<label for="adImg" class="btn btn-sellerdark">請選擇廣告圖片</label> <input
-							type="file" data-max_length="1"
+							type="file" th:field="*{adImg}" data-max_length="1"
 							class="form-control upload__inputfile" id="adImg" name="adImg"
 							onclick="previewImage()"
 							onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="adImgFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-						<div id="blob_holder"></div>
+						<div id="blob_holder">
+							<img
+								th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+								width="200px" height="150px" />
+						</div>
 						<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
 					</div>
 					<div class="upload__img--wrap"></div>
@@ -46,7 +80,8 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productName" class="form-label">廣告名稱</label> <input
-						type="text" class="form-control" id="adName" name="adName" />
+						type="text" th:field="*{adName}" class="form-control" id="adName"
+						name="adName" />
 					<div id="productNameFeedback" class="invalid-feedback">
 						Please provide a valid city.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -54,7 +89,7 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productSort" class="form-label">廣告類型</label> <select
-						class="form-select" id="adLv" name="adLv">
+						class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
 						<option value="-1" disabled selected>請選擇廣告版型</option>
 						<option value="0">BaseType</option>
 						<option value="1">PremiumType</option>
@@ -67,7 +102,7 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productStockQuantity" class="form-label">廣告商品網址</label>
-					<input type="text" class="form-control" id="adUrl" name="adUrl" />
+					<input type="text" th:field="*{adUrl}" class="form-control" id="adUrl" name="adUrl" />
 					<div id="productStockQuantityFeedback" class="invalid-feedback">
 						Please provide a valid inputStockQuantity.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -75,7 +110,8 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productDetails" class="form-label">廣告備註</label> <input
-						type="text" class="form-control" id="adMemo" name="adMemo" />
+						type="text" th:field="*{adMemo}" class="form-control" id="adMemo"
+						name="adMemo" />
 					<div id="productDetailsFeedback" class="invalid-feedback">
 						Please provide a valid inputProductDetails.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -84,12 +120,12 @@
 				<div class="row">
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="f_date1" class="form-label">廣告起始日期</label> <input
-							type="date" class="form-control" id="f_date1" name="adStartTime" />
+							type="date"th:field="*{adStartTime}"  class="form-control" id="f_date1" name="adStartTime" />
 					</div>
 
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="end-date" class="form-label">廣告結束日期</label> <input
-							type="date" class="form-control" id="f_date2" name="adEndTime" />
+							type="date"th:field="*{adEndTime}" class="form-control" id="f_date2" name="adEndTime" />
 					</div>
 				</div>
 
@@ -99,7 +135,7 @@
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button type="reset" class="btn btn-secondary">重設</button>
 					<button type="submit" id="submitButton" class="btn btn-primary">
-						提交2張表</button>
+						送出</button>
 				</div>
 			</form>
 		</div>
@@ -152,7 +188,7 @@
 	<!-- End Footer -->
 
 	<!-- Vendor & Main JS Files -->
-	<div th:replace="@{/fragment-js}"></div>
+	<div th:replace="fragment-js"></div>
 
 	<!-- Local JS File -->
 	<script type="text/javascript">

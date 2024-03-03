@@ -1,350 +1,140 @@
 package com.sellerLv.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
 
-@WebServlet("/sellerLv/sellerLv.do")
+@Controller
+@RequestMapping("/back/sellerLv")
 public class SellerLvController extends HttpServlet {
 
-	private List<String> errorMsgs = null;
+	
+	@Autowired
 	private SellerLvService sellerLvSvc;
 
-	@Override
-	public void init() throws ServletException {
-		sellerLvSvc = new SellerLvService();
-	}
-
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		doPost(req, res);
-	}
-
-	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		errorMsgs = new LinkedList<String>();
-
-		req.setCharacterEncoding("UTF-8");
-		req.setAttribute("errorMsgs", errorMsgs);
-
-		String action = req.getParameter("action");
-		String forwardPath = "";
-
-		switch (action) {
-
-		case "getAll":
-			forwardPath = getAll(req, res);
-			break;
-		case "update":
-			forwardPath = update(req, res);
-			break;
-
-		case "getOne_For_Update":
-			forwardPath = getOne_For_Update(req, res);
-			break;
-
-		case "insert":
-			forwardPath = insert(req, res);
-			break;
-			
-		case "getOne_For_Display":
-			forwardPath = getOne_For_Display(req, res);
-			break;
-
-		default:
-			forwardPath = "/index.jsp";
-		}
-		res.setContentType("text/html; charset=UTF-8");
-		RequestDispatcher dispatcher = req.getRequestDispatcher(forwardPath);
-		dispatcher.forward(req, res);
-	}
-
-	// ***************************
-	// Method Area
-	// ***************************
-	private String getOne_For_Display(HttpServletRequest req, HttpServletResponse res) {
-		Integer sellerLvId =Integer.parseInt(req.getParameter("sellerLvId")) ;
-		SellerLvVO sellerLvVO= sellerLvSvc.getOneSellerLv(sellerLvId);
-		req.setAttribute("sellerLvVO", sellerLvVO);
-
-		return "/sellerLv/listOneSellerLv.jsp";
-		
-	}
-
-	private String getAll(HttpServletRequest req, HttpServletResponse res) {
-		String page = req.getParameter("page");
-		int currentPage = (page == null) ? 1 : Integer.parseInt(page);
-
+	
+	@ModelAttribute("sellerLvListData")
+	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
-
-		if (req.getSession().getAttribute("sellerPageQty") == null) {
-			int sellerPageQty = sellerLvSvc.getTotal();
-			req.getSession().setAttribute("sellerPageQty", sellerPageQty);
-		}
-
-		req.setAttribute("list", list);
-		req.setAttribute("currentPage", currentPage);
-
-		return "/sellerLv/listAllSellerLv.jsp";
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
+		return list;
 	}
-
-
-
-	private String getOne_For_Update(HttpServletRequest req, HttpServletResponse res) {
-		Integer sellerLvId = Integer.valueOf(req.getParameter("sellerLvId"));
-		SellerLvVO sellerLvVO = sellerLvSvc.getOneSellerLv(sellerLvId);
-
-		req.setAttribute("sellerLvVO", sellerLvVO);
-		return "/sellerLv/update_sellerLv_input.jsp";
+	
+	
+	@GetMapping("list")
+	public String listAllSellerLv(ModelMap model) {
+		return "back-end/back-sellerLv-list";
 	}
-
-	private String update(HttpServletRequest req, HttpServletResponse res) {
+	
+	
+	
+	
+	@GetMapping("add")
+	public String addSellerLv(ModelMap model) {
+		SellerLvVO sellerLvVO = new SellerLvVO();
+		model.addAttribute("sellerLvVO", sellerLvVO);
+		return "back-end/back-sellerLv-add";
+	}
+	
+	
+	@GetMapping("getOne_For_Update")
+	public String getOneSeller(@RequestParam("id")@NonNull String sellerLvId, ModelMap model) {
 		
-		SellerLvVO sellerlvVO = new SellerLvVO();
-
-		Integer sellerLvId = null;
+		
+		SellerLvVO sellerLvVO = null;
 		try {
-			String sellerLvIdstr = req.getParameter("sellerLvId");
-			if (sellerLvIdstr == null || sellerLvIdstr.trim().length() > 10) {
-				errorMsgs.add("請填寫等級(不超過10字)");
-			}
-			sellerLvId = Integer.valueOf(sellerLvIdstr);
-
+		 sellerLvVO = sellerLvSvc.getById(Integer.valueOf(sellerLvId));
+		
 		} catch (NumberFormatException e) {
-			errorMsgs.add("等級請填寫數字");
+	        model.addAttribute("errorMessage", "Invalid sellerId format");
+	        return "errorPage";
+		} catch (Exception e){
+			e.printStackTrace();
 		}
-		
-		
-		String lvName = req.getParameter("lvName");
-		
-		System.out.println("lvNamelvNamelvName"+lvName);
-		if (lvName == null || lvName.trim().length() == 0) {
-			errorMsgs.add("等級名稱請勿空白");
-		}
-		
-		
-		 BigDecimal platformCommission = BigDecimal.ZERO; // Default value
-		    try {
-		        String platformCommissionStr = req.getParameter("platformCommission");
-		        if (platformCommissionStr != null && !platformCommissionStr.trim().isEmpty()) {
-		            platformCommission = new BigDecimal(platformCommissionStr);
-		        }
-		        
-		        if (platformCommission.scale() != 2) {
-		            errorMsgs.add("平台佣金請輸入兩位小數");
-		        }
-		    } catch (NumberFormatException e) {
-		        errorMsgs.add("平台佣金請輸入小數");
-		    }
-
-		    
-		    Integer adAllowType=null;
-			try {
-				String adAllowTypeStr = req.getParameter("adAllowType");
-				if (adAllowTypeStr != null && !adAllowTypeStr.trim().isEmpty()) {
-					adAllowType = Integer.valueOf(adAllowTypeStr);
-				}
-			} catch (NumberFormatException e) {
-				errorMsgs.add("廣告種類請填入數字");
-			}
-
-			// Boolean parsing
-			Boolean isExportGoldflow = null;
-			try {
-				isExportGoldflow = req.getParameter("isExportGoldflow") == null ? false : true;
-			} catch (IllegalArgumentException e) {
-				System.out.println("金流有誤");
-			}
-			
-			
+//		System.out.println("==============XXXXXXXXXXXXXX");
+//		System.out.println("getOne_For_Update");
+//		System.out.println(sellerLvVO);
+//		System.out.println("==============XXXXXXXXXXXXXX");
+		model.addAttribute("sellerLvVO",sellerLvVO);
+		return "back-end/back-sellerLv-edit";
 	
-			
-			
-			Integer freightSub = null;
-			try {
-			    String freightSubStr = req.getParameter("freightSub");
-			    if (freightSubStr != null && !freightSubStr.trim().isEmpty()) {
-			        freightSub = Integer.valueOf(freightSubStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("運費減免次數請填入數字");
-			}
-
-			Integer returnSubPerMonth = null;
-			try {
-			    String returnSubPerMonthStr = req.getParameter("returnSubPerMonth");
-			    if (returnSubPerMonthStr != null && !returnSubPerMonthStr.trim().isEmpty()) {
-			        returnSubPerMonth = Integer.valueOf(returnSubPerMonthStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("每月可退訂次數請填入數字");
-			}
-
-			// Boolean parsing
-			Boolean isShowPriority = null;
-			try {
-				isShowPriority = req.getParameter("isShowPriority") == null ? false : true;
-			} catch (IllegalArgumentException e) {
-				System.out.println("優先有誤");
-			}			
-			
-			Integer shelvesNumber = null;
-			try {
-			    String shelvesNumberStr = req.getParameter("shelvesNumber");
-			    if (shelvesNumberStr != null && !shelvesNumberStr.trim().isEmpty()) {
-			        shelvesNumber = Integer.valueOf(shelvesNumberStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("上架商品數量請填入數字");
-			}
-			
-			SellerLvVO sellerLvVO = new SellerLvVO();
-			
-			sellerLvVO.setSellerLvId(sellerLvId);
-			sellerLvVO.setLvName(lvName);
-			sellerLvVO.setPlatformCommission(platformCommission);
-			sellerLvVO.setAdAllowType(adAllowType);
-			sellerLvVO.setIsExportGoldflow(isExportGoldflow);
-			sellerLvVO.setFreightSub(freightSub);
-			sellerLvVO.setReturnSubPerMonth(returnSubPerMonth);
-			sellerLvVO.setIsShowPriority(isShowPriority);
-			sellerLvVO.setShelvesNumber(shelvesNumber);
-
-			req.setAttribute("sellerLvVO", sellerLvVO);
-
-			if (!errorMsgs.isEmpty()) {
-				return ("/sellerLv/update_sellerLv_input.jsp");
-			}
-			sellerLvVO = sellerLvSvc.updateSellerLv(sellerLvId, lvName, platformCommission, adAllowType, isExportGoldflow, freightSub, returnSubPerMonth, isShowPriority, shelvesNumber);
-
-		return "/sellerLv/listOneSellerLv.jsp";
 	}
 	
-
-	private String insert(HttpServletRequest req, HttpServletResponse res) {
-		SellerLvVO sellerlvVO = new SellerLvVO();
-
-		
-		
-		String lvName = req.getParameter("lvName");
-		
-		System.out.println("lvNamelvNamelvName"+lvName);
-		if (lvName == null || lvName.trim().length() == 0) {
-			errorMsgs.add("等級名稱請勿空白");
-		}
-		
-		
-		 BigDecimal platformCommission = BigDecimal.ZERO; // Default value
-		    try {
-		        String platformCommissionStr = req.getParameter("platformCommission");
-		        if (platformCommissionStr != null && !platformCommissionStr.trim().isEmpty()) {
-		            platformCommission = new BigDecimal(platformCommissionStr);
-		        }
-		        
-		        if (platformCommission.scale() != 2) {
-		            errorMsgs.add("平台佣金請輸入兩位小數");
-		        }
-		    } catch (NumberFormatException e) {
-		        errorMsgs.add("平台佣金請輸入小數");
-		    }
-
-		    
-		    Integer adAllowType=null;
-			try {
-				String adAllowTypeStr = req.getParameter("adAllowType");
-				if (adAllowTypeStr != null && !adAllowTypeStr.trim().isEmpty()) {
-					adAllowType = Integer.valueOf(adAllowTypeStr);
-				}
-			} catch (NumberFormatException e) {
-				errorMsgs.add("廣告種類請填入數字");
-			}
-
-			// Boolean parsing
-			Boolean isExportGoldflow = null;
-			try {
-				isExportGoldflow = req.getParameter("isExportGoldflow") == null ? false : true;
-			} catch (IllegalArgumentException e) {
-				System.out.println("金流有誤");
-			}
-			
-			
 	
-			
-			
-			Integer freightSub = null;
-			try {
-			    String freightSubStr = req.getParameter("freightSub");
-			    if (freightSubStr != null && !freightSubStr.trim().isEmpty()) {
-			        freightSub = Integer.valueOf(freightSubStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("運費減免次數請填入數字");
-			}
+	@PostMapping("update")
+	public String updateSellerLv(@Valid @NonNull SellerLvVO sellerLvVO, BindingResult result, ModelMap model)
+			throws IOException {
 
-			Integer returnSubPerMonth = null;
-			try {
-			    String returnSubPerMonthStr = req.getParameter("returnSubPerMonth");
-			    if (returnSubPerMonthStr != null && !returnSubPerMonthStr.trim().isEmpty()) {
-			        returnSubPerMonth = Integer.valueOf(returnSubPerMonthStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("每月可退訂次數請填入數字");
-			}
+		if (result.hasErrors()) {
+//			System.out.println("==============XXXXXXXXXXXXXX");
+//			System.out.println("updateSeSellerLvLv;
+//			System.out.println(result);
+//			System.out.println("==============XXXXXXXXXXXXXX");
+			return "back-end/back-sellerLv-edit";
+		}
 
-			// Boolean parsing
-			Boolean isShowPriority = null;
-			try {
-				isShowPriority = req.getParameter("isShowPriority") == null ? false : true;
-			} catch (IllegalArgumentException e) {
-				System.out.println("優先有誤");
-			}			
-			
-			Integer shelvesNumber = null;
-			try {
-			    String shelvesNumberStr = req.getParameter("shelvesNumber");
-			    if (shelvesNumberStr != null && !shelvesNumberStr.trim().isEmpty()) {
-			        shelvesNumber = Integer.valueOf(shelvesNumberStr);
-			    }
-			} catch (NumberFormatException e) {
-			    errorMsgs.add("上架商品數量請填入數字");
-			}
-			
-			
+		sellerLvSvc.updateSellerLv(sellerLvVO);
+		model.addAttribute("success", "- (修改成功)");
+		model.addAttribute("sellerLvVO", sellerLvVO);
 		
-			
-
-			SellerLvVO sellerLvVO = new SellerLvVO();
-			
-			sellerLvVO.setLvName(lvName);
-			sellerLvVO.setPlatformCommission(platformCommission);
-			sellerLvVO.setAdAllowType(adAllowType);
-			sellerLvVO.setIsExportGoldflow(isExportGoldflow);
-			sellerLvVO.setFreightSub(freightSub);
-			sellerLvVO.setReturnSubPerMonth(returnSubPerMonth);
-			sellerLvVO.setIsShowPriority(isShowPriority);
-			sellerLvVO.setShelvesNumber(shelvesNumber);
-
-			req.setAttribute("sellerLvVO", sellerLvVO);
-
-			if (!errorMsgs.isEmpty()) {
-				return ("/sellerLv/addSellerLv.jsp");
-			}
-
-		sellerLvVO = sellerLvSvc.addSellerLv(lvName, platformCommission, adAllowType, isExportGoldflow, freightSub, returnSubPerMonth, isShowPriority, shelvesNumber);
-		req.setAttribute("sellerLvVO", sellerLvVO);
-
-		return "/sellerLv/listOneSellerLv.jsp";
+		return "redirect:/back/sellerLv/list";
 	}
+	
+	@DeleteMapping("delete")
+	public String delete(@RequestParam("id") @NonNull String sellerLvId, ModelMap model) throws IOException {
+		
+	
+		try {
+	        Integer valueOf = Integer.valueOf(sellerLvId);
+	        // 在這裡處理轉換成功的情況
+	        sellerLvSvc.deleteSellerLv(valueOf);
+			return "redirect:/back/sellerLv/list";
+	    } catch (NumberFormatException e) {
+	        // 轉換失敗的情況，可以進行相應的處理，例如返回錯誤信息
+	        model.addAttribute("errorMessage", "Invalid sellerLvId format");
+	        return "errorPage";
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    	return "errorPage";
+	    }
+		// 一定要用Redirect，不然會會導致資料重複送
+		// 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/user/listAllUser")
+
+	}
+	
+	@PostMapping("insert")
+	public String insert (@Valid @NonNull SellerLvVO sellerLvVO ,  BindingResult result, ModelMap model) throws IOException {
+		
+		if (result.hasErrors()) {
+			return "back-end/back-sellerLv-add";
+		}
+		sellerLvSvc.addSellerLv(sellerLvVO);
+		
+		List<SellerLvVO> list = sellerLvSvc.getAll();
+		model.addAttribute("sellerLvListData", list);
+		model.addAttribute("success", "success");
+		return "redirect:/back/sellerLv/list";
+
+	}
+
 
 }

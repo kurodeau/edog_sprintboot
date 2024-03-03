@@ -31,22 +31,23 @@ public class ProductController {
 	ProductService productSvc;
 	
 	@GetMapping("add")
-	public String sellerproductadd(Model model) {
-		return "front-end/seller/seller-product-add";
-	}
-	
-	@GetMapping("seller-product-add")
-	public String productadd(ModelMap model) {
+	public String sellerProductAdd(Model model) {
 		ProductVO productVO = new ProductVO();
 		model.addAttribute("product" , productVO);
 		return "front-end/seller/seller-product-add";
 	}
 	
-	@PostMapping("productinsert")
+
+	
+
+	
+	@PostMapping("insert")
 	public String insert(@Valid ProductVO productVO , BindingResult result , Model model ,
-			@RequestParam("productCoverImg") MultipartFile[] parts) throws IOException {
+			@RequestParam("mainImage") MultipartFile[] parts ,
+			@RequestParam("subImages") MultipartFile[] partsSec) throws IOException {
+	
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/	
-		result = removeFieldError(productVO , result , "productCoverImg");
+		result = removeFieldError(productVO , result , "mainImage");
 		
 		if(parts[0].isEmpty()) {
 			model.addAttribute("errorMessage" , "商品照片:請上傳照片");
@@ -54,11 +55,13 @@ public class ProductController {
 			for(MultipartFile multipartFile : parts) {
 				byte[] buf = multipartFile.getBytes();
 				productVO.setProductCoverImg(buf);
-			}
+			}	
 		}
 		
 		if(result.hasErrors()||parts[0].isEmpty()) {
+			System.out.println(result);
 			return "front-end/seller/seller-product-all";
+			
 		}
 		/*************************** 2.開始新增資料 *****************************************/
 		productSvc.addProduct(productVO);;	
@@ -66,7 +69,7 @@ public class ProductController {
 		List<ProductVO> list = productSvc.getAll();
 		model.addAttribute("ProductListData",list);
 		model.addAttribute("success", "-(新增成功");
-		return "redirect:/front/seller/seller-product-all";
+		return "redirect:/front/seller/product/productlist2";
 	}
 	
 	@PostMapping("getOne_For_Update")
