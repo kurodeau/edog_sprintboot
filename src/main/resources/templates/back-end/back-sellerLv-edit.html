@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
+
+	<!-- ======= Sidebar ======= -->
+	<!-- start帳戶管理 -->
+	<aside th:replace="back-end/aside-back.html"></aside>
+
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		'
+		<div class="container-fluid seller-container">
+			<h1>編輯賣家等級資料</h1>
+
+			<form class="row g-3" id="myForm" th:action="@{update}"
+				th:object="${sellerLvVO}" method="post"
+				enctype="multipart/form-data">
+				<div class="col-md-12">
+					<label for="inputsellerLvId" class="form-label">賣家等級 ID</label> <input
+						type="text" class="form-control" id="inputsellerLvId"
+						name="sellerLvId" th:value="${sellerLvVO.sellerLvId}" readonly />
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputLvName" class="form-label">等級名稱</label> <input
+						type="text" class="form-control" id="inputLvName" name="lvName"
+						th:value="${sellerLvVO.lvName}" aria-describedby="lvNameFeedback"
+						th:classappend="${#fields.hasErrors('lvName')} ? 'is-invalid' : ''" />
+					<div id="lvNameFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('lvName')}" th:errors="*{lvName}">
+							欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputPlatformCommission" class="form-label">平台佣金</label>
+					<input type="text" class="form-control"
+						id="inputPlatformCommission" name="platformCommission"
+						th:value="${sellerLvVO.platformCommission}"
+						aria-describedby="platformCommissionFeedback"
+						th:classappend="${#fields.hasErrors('platformCommission')} ? 'is-invalid' : ''" />
+					<div id="platformCommissionFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('platformCommission')}"
+							th:errors="*{platformCommission}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputAdAllowType" class="form-label">廣告允許類型</label> <input
+						type="text" class="form-control" id="inputAdAllowType"
+						name="adAllowType" th:value="${sellerLvVO.adAllowType}"
+						aria-describedby="adAllowTypeFeedback"
+						th:classappend="${#fields.hasErrors('adAllowType')} ? 'is-invalid' : ''" />
+					<div id="adAllowTypeFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('adAllowType')}"
+							th:errors="*{adAllowType}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label class="form-label">是否匯出金流</label>
+					<div class="form-check">
+						<input type="radio" class="form-check-input"
+							id="inputIsExportGoldflowYes" name="isExportGoldflow"
+							value="true" th:checked="${sellerLvVO.isExportGoldflow}" /> <label
+							class="form-check-label" for="inputIsExportGoldflowYes">是</label>
+					</div>
+					<div class="form-check">
+						<input type="radio" class="form-check-input"
+							id="inputIsExportGoldflowNo" name="isExportGoldflow"
+							value="false" th:checked="${!sellerLvVO.isExportGoldflow}" /> <label
+							class="form-check-label" for="inputIsExportGoldflowNo">否</label>
+					</div>
+					<div id="isExportGoldflowFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('isExportGoldflow')}"
+							th:errors="*{isExportGoldflow}">欄位有誤</p>
+					</div>
+				</div>
+
+
+				<div class="col-md-12">
+					<label for="inputFreightSub" class="form-label">運費補助</label> <input
+						type="text" class="form-control" id="inputFreightSub"
+						name="freightSub" th:value="${sellerLvVO.freightSub}"
+						aria-describedby="freightSubFeedback"
+						th:classappend="${#fields.hasErrors('freightSub')} ? 'is-invalid' : ''" />
+					<div id="freightSubFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('freightSub')}"
+							th:errors="*{freightSub}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputReturnSubPerMonth" class="form-label">每月退貨次數補助</label>
+					<input type="text" class="form-control" id="inputReturnSubPerMonth"
+						name="returnSubPerMonth"
+						th:value="${sellerLvVO.returnSubPerMonth}"
+						aria-describedby="returnSubPerMonthFeedback"
+						th:classappend="${#fields.hasErrors('returnSubPerMonth')} ? 'is-invalid' : ''" />
+					<div id="returnSubPerMonthFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('returnSubPerMonth')}"
+							th:errors="*{returnSubPerMonth}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputAdAllowType" class="form-label">廣告允許類型</label> <input
+						type="text" class="form-control" id="inputAdAllowType"
+						name="adAllowType" th:value="${sellerLvVO.adAllowType}"
+						aria-describedby="adAllowTypeFeedback"
+						th:classappend="${#fields.hasErrors('adAllowType')} ? 'is-invalid' : ''" />
+					<div id="adAllowTypeFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('adAllowType')}"
+							th:errors="*{adAllowType}">欄位有誤</p>
+					</div>
+				</div>
+
+
+
+				<div class="col-md-12">
+					<label for="inputFreightSub" class="form-label">運費補助</label> <input
+						type="text" class="form-control" id="inputFreightSub"
+						name="freightSub" th:value="${sellerLvVO.freightSub}"
+						aria-describedby="freightSubFeedback"
+						th:classappend="${#fields.hasErrors('freightSub')} ? 'is-invalid' : ''" />
+					<div id="freightSubFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('freightSub')}"
+							th:errors="*{freightSub}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label class="form-label">是否優先顯示</label>
+					<div class="form-check">
+						<input type="radio" class="form-check-input" id="showPriorityYes"
+							name="isShowPriority" value="true"
+							th:checked="${sellerLvVO.isShowPriority}" /> <label
+							class="form-check-label" for="showPriorityYes">是</label>
+					</div>
+					<div class="form-check">
+						<input type="radio" class="form-check-input" id="showPriorityNo"
+							name="isShowPriority" value="false"
+							th:checked="${!sellerLvVO.isShowPriority}" /> <label
+							class="form-check-label" for="showPriorityNo">否</label>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputShelvesNumber" class="form-label">擺放數量</label> <input
+						type="text" class="form-control" id="inputShelvesNumber"
+						name="shelvesNumber" th:value="${sellerLvVO.shelvesNumber}"
+						aria-describedby="shelvesNumberFeedback"
+						th:classappend="${#fields.hasErrors('shelvesNumber')} ? 'is-invalid' : ''" />
+					<div id="shelvesNumberFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('shelvesNumber')}"
+							th:errors="*{shelvesNumber}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div
+					class="text-center d-flex flex-row gap-5 justify-content-center">
+					<button type="button" class="btn btn-secondary"
+						onclick="window.history.back()">取消並離開</button>
+					<button type="submit" class="btn btn-primary">提交修改</button>
+				</div>
+			</form>
+		</div>
+	</main>
+	<!-- End Main -->
+	<div th:replace="fragment-js"></div>
+</body>
+</html>

@@ -9,34 +9,9 @@
 
 <body>
 	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-					</ul>
-
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link" href="#">[當前登入管理者名稱]</a>
-						</li>
-						<!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-						<li class="nav-item"><a class="nav-link" href="#">登出</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
 	</header>
-
+	
 	<aside th:replace="back-end/aside-back.html"></aside>
 
 	<main class="main main-layout-seller">
@@ -97,7 +72,7 @@
 							<td th:text="${sellerVO.isConfirm} ? 'Yes' : 'No'"></td>
 							<td><a class="btn"
 								th:href="@{getOne_For_Update(id=${sellerVO.sellerId})}">編輯</a>
-								<button type="button" class="btn"
+								<button type="button" class="btn btn-del"
 									th:attr="data-delete-id=${sellerVO.sellerId}"
 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button>
 							</td>
@@ -191,7 +166,7 @@
 				table.clear().draw();
 			}
 
-			$(".btn-func").on("click", function() {
+			$(".btn-del").on("click", function() {
 				let deleteId = $(this).data("delete-id");
 				console.log("deleteId in Btn: " + deleteId);
 				$("#confirmDeleteBtn").attr("data-delete-id", deleteId);
@@ -205,10 +180,15 @@
 
 				let myModalEl = document.getElementById("deleteModal");
 				let modal = bootstrap.Modal.getInstance(myModalEl);
+				
+				
+				let currentLoc = window.location.href;
+				currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+	console.log(currentLoc);
 
 				// Your AJAX request for deletion
 				$.ajax({
-					url : "/back-seller-list?id=" + deleteId,
+					url : currentLoc+"/delete?id=" + deleteId,
 					method : "DELETE",
 					success : function(response) {
 						if (response.success) {

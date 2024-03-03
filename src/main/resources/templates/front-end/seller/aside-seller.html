@@ -1,0 +1,185 @@
+<aside class="sidebar sidebar-layout-seller">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link nav-seller-entry" th:href="@{/front/seller/main}">
+        <i class="bi bi-grid"></i>
+        <span>賣家中心</span>
+      </a>
+    </li>
+    <!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#seller-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-person"></i>
+        <span>賣家帳戶</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="seller-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/level}">
+            <i class="bi bi-circle"></i><span>賣家等級</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/seller/edit}">
+            <i class="bi bi-circle"></i><span>修改賣家資料</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/report}">
+            <i class="bi bi-circle"></i><span>查看金流</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End Seller Nav -->
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#product-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-bag"></i>
+        <span>商品管理</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="product-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/product/add}">
+            <i class="bi bi-circle"></i><span>新增商品</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/product/all}">
+            <i class="bi bi-circle"></i><span>商品列表</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End product Nav -->
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#service-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-headset"></i><span>客戶服務</span
+        ><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="service-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/service/form}">
+            <i class="bi bi-circle"></i><span>意見表單</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/service/reply}">
+            <i class="bi bi-circle"></i><span>查詢回覆</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End Tables Nav -->
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#charts-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-bar-chart"></i><span>銷售報表</span
+        ><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="charts-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/report}">
+            <i class="bi bi-circle"></i><span>銷售數據</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End Charts Nav -->
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#order-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-stickies"></i><span>訂單管理</span
+        ><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="order-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/order/overall}">
+            <i class="bi bi-circle"></i><span>全部訂單</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/order/search}">
+            <i class="bi bi-circle"></i><span>訂單查詢</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#ads-nav"
+        data-bs-toggle="collapse"
+        href="#"
+      >
+        <i class="bi bi-badge-ad"></i><span>廣告管理</span
+        ><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="ads-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/front/seller/ads/add}">
+            <i class="bi bi-circle"></i><span>新增廣告</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/front/seller/ads/all}">
+            <i class="bi bi-circle"></i><span>查看廣告</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <!-- End Icons Nav -->
+  </ul>
+</aside>

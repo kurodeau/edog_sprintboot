@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+    
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="special-text-container">
+        <img src="" alt="" srcset="" />
+        <h1>
+          歡迎回來<br />
+          讓我們一起
+          <mark class="green">
+            <span
+              id="typewrite-text"
+              class="d-inline-block changecontent"
+            ></span>
+          </mark>
+        </h1>
+      </div>
+    </main>
+    <!-- End #main -->
+
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+ 	
+    <div th:replace="@{fragment-footer}"></div>
+    <div th:replace="@{fragment-js}"></div>
+
+    <!-- Local JS File -->
+    <script></script>
+  </body>
+</html>

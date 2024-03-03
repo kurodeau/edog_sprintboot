@@ -1,8 +1,11 @@
 package com;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,13 +19,19 @@ import com.user.model.UserService;
 // (3) src/main/java / src/main/{language} /  src/main/webapp / src/main/resources
 
 @Controller
-@RequestMapping("/back")
-public class IndexControllerBack {
+@RequestMapping("/front/seller")
+public class IndexControllerSeller {
+	
+	
+	 @GetMapping("/main")
+	   public String backMain(
+	            Model model) {
+	        return "front-end/seller/seller-main"; 
+	 }
+	 
+	 
+	
 
-	@GetMapping("/main")
-	public String backMain(
-			Model model) {
-		return "/back-end/back-main";
-	}
 
 }
+
