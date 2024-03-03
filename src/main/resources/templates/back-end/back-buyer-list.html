@@ -42,19 +42,39 @@
 		<div class="seller-container">
 			<div class="pagetitle">
 				<h1>走馬燈清單</h1>
-				<a class="btn" th:href="@{addNewsTicker}">新增走馬燈</a>
+<!--清單完成後再開, 新增會員資料用 				<a class="btn" th:href="@{addNewsTicker}">新增走馬燈</a> -->
 			</div>
 			<table id="example" class="table table-striped table-bordered"
 				style="width: 100%">
 				<thead>
 					<tr>
+<!-- memberEmail varchar(200)  -->
+<!-- thirdFrom varchar(100)  -->
+<!-- memberName varchar(100)  -->
+<!-- memberPhone varchar(10)  -->
+<!-- memberMobile varchar(20)  -->
+<!-- memberBirthday date  -->
+<!-- memberPassword varchar(100)  -->
+<!-- memberAddress varchar(100)  -->
+<!-- isMemberEmail tinyint(1)  -->
+<!-- memberRegistrationTime datetime  -->
+<!-- petName varchar(100)  -->
+<!-- petImg longblob  -->
+<!-- petImgUploadTime datetime  -->
+<!-- petVaccName1 varchar(100)  -->
+<!-- petVaccTime1 datetime  -->
+<!-- petVaccName2 varchar(100)  -->
+<!-- petVaccTime2 datetime  -->
+<!-- isConfirm tinyint(1) -->
 						<th>編號</th>
-						<th>內容</th>
-						<th>排序</th>
-						<th>開始顯示</th>
-						<th>結束顯示</th>
-						<th>是否顯示</th>
-						<th>操作</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						
+						
+						
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -138,7 +158,7 @@
 						language : {
 							lengthMenu : "顯示 _MENU_ 筆資料",
 						},
-						pageLength : 25,
+						pageLength : 10,
 						scrollCollapse : true,
 						scrollX : true,
 						scrollY : 600,
