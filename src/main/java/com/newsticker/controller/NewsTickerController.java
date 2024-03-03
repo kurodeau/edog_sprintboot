@@ -63,13 +63,13 @@ public class NewsTickerController {
 	// /back/newsTicker/listAllGet
 	@GetMapping("listAllGet")
 	public String listAllNewsTickerGet(ModelMap model) {
-		return "back-end/back-newsticker";
+		return "back-end/back-newsticker-list";
 	}
 	
 	// /back/newsTicker/listAllPost
 	@PostMapping("listAllPost")
 	public String listAllNewsTickerPost(ModelMap model) {
-		return "back-end/back-newsticker";
+		return "back-end/back-newsticker-list";
 	}
 	
 	/*
