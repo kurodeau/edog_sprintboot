@@ -31,7 +31,7 @@ public class AdnoController {
 	@Autowired
 	AdService adSvc;
 	
-	@GetMapping("adlist")
+	@GetMapping("adlist") ///front/seller/ad/adadlist
     public String selleradlist(Model model){
         return "front-end/seller/seller-ads-all";
     }
@@ -47,7 +47,7 @@ public class AdnoController {
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		
 		List<AdVO> list = adSvc.getAll();
-		model.addAttribute("adListData",list);
+		model.addAttribute("adLxxxistData",list);
 		
 		if(adVO == null) {
 			model.addAttribute("errorMessage" , "查無資料");
