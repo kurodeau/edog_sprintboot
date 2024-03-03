@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+  </head>
+
+  <body>
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
+
+    <aside th:replace="back-end/aside-back.html"></aside>
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>賣家等級</h1>
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+          <!-- 免費 -->
+          <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+              <div class="card-header py-3">
+                <h4 class="my-0 fw-normal table-text">免費</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title">
+                  5%<small class="text-muted fw-light">/每筆</small>
+                </h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <li>無廣告</li>
+                  <li>不支援報表</li>
+                </ul>
+                <button
+                  type="button"
+                  class="w-100 btn btn-plan btn-lg btn-sellerdark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#freeModal"
+                  data-plan="1"
+                >
+                  免費方案
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- 專業 -->
+
+          <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+              <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">專業</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title">
+                  8%<small class="text-muted fw-light">/每筆</small>
+                </h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <li>基本商品廣告</li>
+                  <li>支援報表輸出</li>
+                </ul>
+                <button
+                  type="button"
+                  class="w-100 btn btn-plan btn-lg btn-current"
+                  disabled
+                  data-bs-toggle="modal"
+                  data-bs-target="#proModal"
+                  data-plan="2"
+                >
+                  專業方案
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- 企業 -->
+
+          <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm border-sellerdark">
+              <div
+                class="card-header py-3 text-white bg-sellerdark border-sellerdark"
+              >
+                <h4 class="my-0 fw-normal">企業</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title">
+                  12%<small class="text-muted fw-light">/每筆</small>
+                </h1>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <li>主板廣告</li>
+                  <li>支援報表輸出</li>
+                </ul>
+                <button
+                  type="button"
+                  class="w-100 btn btn-plan btn-lg btn-sellerdark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#topModal"
+                  data-plan="3"
+                >
+                  企業方案
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid seller-container">
+        <h1 class="display-6 mb-4">賣家方案</h1>
+
+        <div class="table-responsive">
+          <table class="table text-center">
+            <thead>
+              <tr id="lvName">
+                <th class="pricing-table-text col-3"></th>
+                <th class="pricing-table-text col-3">免費</th>
+                <th class="pricing-table-text col-3">專業</th>
+                <th class="pricing-table-text col-3">企業</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="adAllowType">
+                <th scope="row" class="text-start table-text">廣告允許類型</th>
+                <td>無廣告</td>
+                <td>基本商品廣告</td>
+                <td>主板廣告</td>
+              </tr>
+              <tr id="isExportGoldflow">
+                <th scope="row" class="text-start table-text">匯出金流</th>
+                <td></td>
+                <td><i class="ri-check-line"></i></td>
+                <td><i class="ri-check-line"></i></td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr id="freightSub">
+                <th scope="row" class="text-start table-text" id="">
+                  運費減免
+                </th>
+                <td>10</td>
+                <td>20</td>
+                <td>30</td>
+              </tr>
+              <tr id="returnSubPerMonth">
+                <th scope="row" class="text-start table-text">每月退貨率(%)</th>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+              </tr>
+              <tr id="isShowPriority">
+                <th scope="row" class="text-start table-text">顯示優先權</th>
+                <td></td>
+                <td><i class="ri-check-line"></i></td>
+                <td><i class="ri-check-line"></i></td>
+              </tr>
+              <tr id="shelvesNumber">
+                <th scope="row" class="text-start table-text">貨架數量</th>
+                <td>50</td>
+                <td>100</td>
+                <td>150</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- End Main -->
+    <!-- Modal 免費方案-->
+    <div
+      class="modal fade"
+      id="freeModal"
+      tabindex="-1"
+      aria-labelledby="FreeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered vertical-align-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="FreeModalLabel">免費方案</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">我就是要當免費仔😉</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary">確認</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Pro方案-->
+    <div
+      class="modal fade"
+      id="proModal"
+      tabindex="-1"
+      aria-labelledby="ProModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered vertical-align-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ProModalLabel">回去當免費仔😱</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">確定降級嗎?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary">確定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal TOP方案-->
+    <div
+      class="modal fade"
+      id="topModal"
+      tabindex="-1"
+      aria-labelledby="TopModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered vertical-align-center">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="TopModalLabel">
+              升級後資費會有所調整。請確認
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              關閉
+            </button>
+            <button type="button" class="btn btn-primary">確認</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vendor JS Files -->
+    <div th:replace="fragment-js"></div>
+    <!-- Add this before the closing </body> tag -->
+    <script>
+      $(document).ready(function () {
+        // Function to send AJAX request
+        function sendAjaxRequest() {
+          // Replace the URL with the actual endpoint where you want to send the request
+          var url =
+            window.location.origin + window.location.pathname + "/ajax/all";
+          var userSellerLevelId = ""; // Replace with actual user's seller level ID
+          console.log(url);
+
+          // Fetch seller data and user's seller level ID (replace with actual data)
+          data = [1, 2, 3];
+          // AJAX request
+          $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json",
+            data: JSON.stringify({
+              data: data,
+            }),
+            success: function (response) {
+              console.log("AJAX request successful:", response);
+              let jsonObj = JSON.parse(response);
+              updateButtonStates(jsonObj.id);
+              updateTableContent(jsonObj.id, jsonObj.targetList);
+            },
+            error: function (error) {
+              console.error("AJAX request failed:", error);
+              // Handle the error if needed
+            },
+          });
+        }
+
+        // Call the function when the page is loaded
+        sendAjaxRequest();
+      });
+
+      function updateButtonStates(sellerTargetId) {
+        var sellerLevel = sellerTargetId;
+        let planElements = document.querySelectorAll(".btn-plan");
+        planElements.forEach((planElement) => {
+          if (sellerLevel === planElement.getAttribute("data-plan")) {
+            planElement.classList.add("btn-current");
+            planElement.classList.remove("btn-sellerdark");
+            planElement.setAttribute("readonly", true);
+          } else {
+            planElement.classList.remove("btn-current");
+            planElement.classList.add("btn-sellerdark");
+            planElement.textContent = "現有方案";
+            planElement.removeAttribute("readonly");
+          }
+        });
+      }
+
+      function updateTable(response) {}
+
+      function getAdAllowType(code) {
+        switch (code) {
+          case 1:
+            return "無廣告";
+          case 2:
+            return "基本商品廣告";
+          case 3:
+            return "主板廣告";
+          default:
+            return "";
+        }
+      }
+
+      function updateTableContent(id, targetList) {
+        let icon = "<i class='ri-check-line'></i>";
+        console.log(targetList);
+        console.log(targetList[0]);
+
+        let keys = Object.keys(targetList[0]);
+
+        for (let key = 0; key < keys.length; key++) {
+          let currentKey = keys[key];
+          console.log(currentKey);
+
+          let el = document.querySelector("#" + keys[key]);
+
+          if (el === null) {
+            continue;
+          }
+
+          let td_els = el.querySelectorAll("td");
+          td_els.forEach((td_el, index) => {
+            console.log(index);
+            console.log(targetList[index][currentKey]);
+            console.log(typeof targetList[index][currentKey]);
+
+            if (targetList[index][currentKey] === true) {
+              td_el.innerHTML = icon;
+            } else if (targetList[index][currentKey] === false) {
+              td_el.innerHTML = "";
+            } else {
+              td_el.textContent = targetList[index][currentKey];
+            }
+          });
+        }
+      }
+    </script>
+
+    <!-- Local JS File -->
+  </body>
+</html>

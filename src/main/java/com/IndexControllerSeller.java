@@ -1,15 +1,27 @@
 package com;
 
 import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.seller.entity.SellerVO;
+import com.seller.service.SellerService;
+import com.sellerLv.entity.SellerLvVO;
+import com.sellerLv.service.SellerLvService;
 import com.user.model.UserService;
 
 //@PropertySource("classpath:application.properties") 
@@ -19,16 +31,44 @@ import com.user.model.UserService;
 // (3) src/main/java / src/main/{language} /  src/main/webapp / src/main/resources
 
 @Controller
-@RequestMapping("/front/seller")
 public class IndexControllerSeller {
 	
 	
-	 @GetMapping("/main")
-	   public String backMain(
-	            Model model) {
-	        return "front-end/seller/seller-main"; 
-	 }
-	 
+	@Autowired
+	SellerService sellerSvc;
+
+	@Autowired
+	SellerLvService sellerLvSvc;
+
+	
+	@ModelAttribute("sellerLvListData")
+	protected List<SellerLvVO> referenceListData() {
+		List<SellerLvVO> list = sellerLvSvc.getAll();
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
+		return list;
+	}
+	
+	
+	@PostMapping("/seller/register/check")
+	public String checkregisterSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,HttpSession session) 	throws IOException {
+		
+		if (result.hasErrors()) {
+	        return "/front-end/seller/seller-register";
+		}
+		sellerSvc.addSeller(sellerVO);
+		model.addAttribute("success", "註冊成功");
+
+		
+		// TESTING 註冊登入後保存sellerVO狀態
+		session.setAttribute("sellerVO", sellerVO);
+		
+		return "redirect:/front/seller/main";
+	}
+	
+	
+
 	 
 	
 

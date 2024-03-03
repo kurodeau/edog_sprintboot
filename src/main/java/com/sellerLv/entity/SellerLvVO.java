@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seller.entity.SellerVO;
 
 //com.sellerLv.entity.SellerLv
@@ -27,8 +28,9 @@ public class SellerLvVO implements java.io.Serializable {
     @Column(name = "sellerLvId", updatable = false)
     private Integer sellerLvId;
     
-	@OneToMany(mappedBy = "sellerLvId", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "sellerLvId", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OrderBy("sellerId asc")
+	 @JsonIgnore
 	private Set<SellerVO> sellers;
 
     public Set<SellerVO> getSellers() {

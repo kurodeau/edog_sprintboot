@@ -3,53 +3,30 @@
   <head>
     <th:block th:insert="~{/fragment-head}"></th:block>
   </head>
-
   <body>
     <!-- ======= Header ======= -->
+
     <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
     </header>
 
     <!-- ======= Sidebar ======= -->
-    <!-- start帳戶管理 -->
-
-    <aside th:replace="back-end/aside-back.html"></aside>
+    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
 
     <!-- ======= Main ======= -->
     <main class="main main-layout-seller">
       <div class="container-fluid seller-container">
-        <h1>編輯賣家資料</h1>
+        <h1>註冊賣家資料</h1>
 
         <form
           class="row g-3"
           id="myForm"
-          th:action="@{update}"
+          th:action="@{/seller/register/check}"
           th:object="${sellerVO}"
           method="post"
           enctype="multipart/form-data"
           onsubmit="return updateHiddenFields();"
         >
-          <div class="col-md-12">
-            <label for="inputSellerId" class="form-label">賣家ID</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputSellerId"
-              name="sellerId"
-              th:field="*{sellerId}"
-              aria-describedby="sellerIdFeedback"
-              th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
-              readonly
-            />
-            <div id="sellerIdFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerId')}"
-                th:errors="*{sellerId}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
           <div class="col-md-12">
             <label for="sellerLvId" class="form-label">賣家等級</label>
             <div class="col-md-2">
@@ -83,7 +60,9 @@
               <p
                 th:if="${#fields.hasErrors('sellerCompany')}"
                 th:errors="*{sellerCompany}"
-              ></p>
+              >
+                欄位有誤
+              </p>
             </div>
           </div>
 
@@ -421,50 +400,6 @@
             </div>
           </div>
 
-          <div class="col mb-3">
-            <label for="inputDate" class="col-sm-2 col-form-label"
-              >帳號創立時間</label
-            >
-            <div class="col-sm-3">
-              <input
-                type="date"
-                class="form-control"
-                name="sellerCreateTime"
-                th:value="${#dates.format(sellerVO.sellerCreateTime, 'yyyy-MM-dd')}"
-                aria-describedby="sellerCreateTimeFeedback"
-                th:classappend="${#fields.hasErrors('sellerCreateTime')} ? 'is-invalid' : ''"
-              />
-
-              <div id="sellerCreateTimeFeedback" class="invalid-feedback">
-                <p
-                  th:if="${#fields.hasErrors('sellerCreateTime')}"
-                  th:errors="*{sellerCreateTime}"
-                >
-                  欄位有誤
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-2">
-            <label for="inputIsConfirm" class="form-label"
-              >帳號是否審核過</label
-            >
-            <select
-              class="isConfirm form-select"
-              name="isConfirm"
-              id="inputIsConfirm"
-              th:value="${sellerVO.isConfirm}"
-            >
-              <option value="true" th:selected="${sellerVO.isConfirm}">
-                通過
-              </option>
-              <option value="false" th:selected="${!sellerVO.isConfirm}">
-                未通過
-              </option>
-            </select>
-          </div>
-
           <div class="text-center d-flex flex-row gap-5 justify-content-center">
             <button type="reset" class="btn btn-secondary">取消並離開</button>
             <button type="submit" class="btn btn-primary">提交修改</button>
@@ -474,7 +409,13 @@
     </main>
 
     <!-- End Main -->
-    <div th:replace="fragment-js"></div>
+
+    <!-- ======= Footer ======= -->
+
+    <div th:replace="@{fragment-footer}"></div>
+    <div th:replace="@{fragment-js}"></div>
+
+    <!-- Local JS File -->
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -529,7 +470,5 @@
         return true;
       }
     </script>
-
-    <!-- simpletable -->
   </body>
 </html>
