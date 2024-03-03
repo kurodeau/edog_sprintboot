@@ -148,14 +148,15 @@ public class NewsTickerController {
 //			return "back-end/emp/update_emp_input";
 //		}
 		/*************************** 2.開始修改資料 *****************************************/
-		NewsTickerService newsTickerSvc = new NewsTickerService();
+//		NewsTickerService newsTickerSvc = new NewsTickerService();
 		newsTickerSvc.updateNewsTicker(newsTickerVO);
 
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
 //		model.addAttribute("success", "- (修改成功)");
-		newsTickerVO = newsTickerSvc.getOneNewsTicker(Integer.valueOf(newsTickerVO.getNewsTickerId()));
-		model.addAttribute("newsTickerVO", newsTickerVO);
-		return "back-end/back-newsticker"; // 修改成功後轉交back-newsticker.html
+		List<NewsTickerVO> list = newsTickerSvc.getAll();
+//		newsTickerVO = newsTickerSvc.getOneNewsTicker(Integer.valueOf(newsTickerVO.getNewsTickerId()));
+//		model.addAttribute("newsTickerVO", newsTickerVO);
+		return "redirect:/back/newsTicker/listAllGet"; // 修改成功後轉交back-newsticker-list.html
 //		return "back-end/emp/listOneEmp"; // 修改成功後轉交listOneEmp.html
 	}
 

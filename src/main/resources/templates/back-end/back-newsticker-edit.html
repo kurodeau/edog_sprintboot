@@ -32,7 +32,7 @@
 }
 </style>
 
-<!-- 日曆套件 -->
+<!-- 日曆套件, 但是目前專案中沒有, 要找出來放 -->
 <script src="datetimepicker/jquery.js"></script>
 <script src="datetimepicker/jquery.datetimepicker.full.js"></script>
 </head>
@@ -70,18 +70,17 @@
 
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="back-end/aside-back.html"></aside>
-
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
 			<h1>編輯走馬燈資料</h1>
 
-			<form class="row g-3" id="myForm" action="listAllPost" method="post"
-				enctype="multipart/form-data">
+			<form class="row g-3" id="myForm" th:action="@{updateNewsTicker}" 
+				method="post" enctype="multipart/form-data">
 
 				<div class="col-md-12">
-					<label for="inputNewsTickerId" class="form-label">走馬燈編號</label> <input
-						type="text" class="form-control" id="inputNewsTickerId"
+					<label for="inputNewsTickerId" class="form-label">走馬燈編號</label> 
+					<input type="text" class="form-control" id="inputNewsTickerId"
 						name="newsTickerId" th:value=${newsTickerVO.newsTickerId} readonly />
 				</div>
 
