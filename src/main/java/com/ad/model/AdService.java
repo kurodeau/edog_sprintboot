@@ -36,6 +36,8 @@ public class AdService {
 	public List<AdVO> getAll(){
 	
 		return repository.findAll();
+		
+		
 	}
 	
 	
@@ -45,7 +47,8 @@ public class AdService {
 		List<AdVO> allAds = repository.findAll();		
 		
 		 List<AdVO> list = allAds.stream() //for each
-                 .filter(ad -> "審核中".equals(ad.getAdStatus())) //篩選
+				 .filter(ad -> "審核中".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
+//				 .filter(ad -> "審核中".equals(ad.getAdStatus()))
                  .collect(Collectors.toList());									 
 	    
 				return list;		

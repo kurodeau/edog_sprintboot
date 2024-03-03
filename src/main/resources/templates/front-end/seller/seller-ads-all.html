@@ -108,20 +108,22 @@
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<!-- 審核中的表單 -->
-											<form method="post" action="/edit">
+											<form method="post" th:action="@{/front/seller/ad/getOne_For_Update}">
 												<button type="submit"
 													class="product align-self-start btn-func">編輯</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="adId" th:value="${adVO.adId}">
 											</form>
+											
 											<form method="post" action="/upload">
 												<button type="submit"
 													class="product align-self-start btn-func">上架</button>
 												<input type="hidden" name="empno" value="${empVO.empno}">
 											</form>
-											<form method="post" action="/delete">
+											
+											<form method="post" th:action="@{/front/seller/ad/deleteStatus}">
 												<button type="submit"
 													class="product align-self-start btn-func">刪除</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="adId" th:value="${adVO.adId}">
 											</form>
 										</div>
 									</div>
