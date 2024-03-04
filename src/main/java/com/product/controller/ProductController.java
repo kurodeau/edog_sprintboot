@@ -75,27 +75,23 @@ public class ProductController {
 		}
 		
 		/*************************** 2.開始新增資料 *****************************************/
-		productSvc.addProduct(productVO);
+		productSvc.addProduct(productVO);  //新增一個product 產生PK
 		
 		
-		System.out.println("1111111111"+partsSec.length);
+		
 		
 		for(MultipartFile multipartFile : partsSec) {
 		
 		ProductImgVO productImg = new ProductImgVO();
 		
 		byte[] buf1 = multipartFile.getBytes();
+		
 		productImg.setProductImg(buf1);
-		productImg.setProductVO(productVO);	
-		pdtImgSvc.addProductImg(productImg);
+		productImg.setProductVO(productVO);	//FK
 		
-//		productImgVO.setProductImg(buf1);
-//		productImgVO.setProductVO(productVO);	
-//		pdtImgSvc.addProductImg(productImgVO);
+		pdtImgSvc.addProductImg(productImg); //
 		
-		System.out.println("給我進資料庫");
-		
-		}	
+      }	
 		
 		
 		
