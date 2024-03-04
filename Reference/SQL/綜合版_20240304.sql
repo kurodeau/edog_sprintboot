@@ -26,6 +26,10 @@ CREATE TABLE IF NOT EXISTS seller (
     sellerCompanyPhone VARCHAR(10),
     sellerCompanyExtension VARCHAR(10),
     sellerMobile VARCHAR(10),
+
+    sellerCounty VARCHAR(5),
+    sellerDistrict VARCHAR(5),
+
     sellerAddress VARCHAR(100),
     sellerPassword VARCHAR(100),
     sellerBankAccount VARCHAR(100),
@@ -33,13 +37,12 @@ CREATE TABLE IF NOT EXISTS seller (
     sellerBankAccountNumber VARCHAR(100),
     sellerCreateTime DATETIME DEFAULT CURRENT_TIMESTAMP,
     isConfirm BOOLEAN,
-
-    CONSTRAINT sellerLvId FOREIGN KEY (sellerLvId) REFERENCES sellerLv(sellerLvId)
+	CONSTRAINT sellerLvId FOREIGN KEY (sellerLvId) REFERENCES sellerLv(sellerLvId)
 );
 -- 會員資料  創建table-- 
 create table IF NOT EXISTS buyer(
-    memberId int AUTO_INCREMENT primary key,
-    memberEmail VARCHAR(200),
+	memberId int AUTO_INCREMENT primary key,
+	memberEmail VARCHAR(200),
     thirdFrom VARCHAR(100),
     memberName VARCHAR(100),
     memberPhone VARCHAR(10),
@@ -213,7 +216,6 @@ memberId int,
 foreign key (memberId) references buyer(memberId),
 memberBlockId int,
 foreign key (memberBlockId) references buyer(memberId),
-
 blackListTime datetime DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -228,8 +230,7 @@ CREATE TABLE IF NOT EXISTS article(
     memberId INT,
     articleTitle VARCHAR(255),
     articleContent VARCHAR(500),
-    upFiles LONGBLOB,
-    artCreateTime DATETIME,
+
     artUpdateTime DATETIME,
     articleLike INT,
     articleComment INT,
@@ -353,6 +354,7 @@ CREATE TABLE IF NOT EXISTS productOrder (
 );
 -- 訂單明細  創建table -- 
 CREATE TABLE IF NOT EXISTS orderDetails (
+
     orderDetailsId INT PRIMARY KEY AUTO_INCREMENT,
     orderId INT,
     productId INT,
@@ -370,6 +372,7 @@ CREATE TABLE IF NOT EXISTS orderDetails (
 CREATE TABLE IF NOT EXISTS report(
 reportId Int primary key AUTO_INCREMENT,
 reportMemberId Int,
+
 reportTargetType INT,
 replyId Int,
 articleId Int,
@@ -389,29 +392,27 @@ FOREIGN KEY (reportTypeId) REFERENCES reportType(reportTypeId)
 -- 賣家等級  放入測試資料
 INSERT INTO sellerLv (lvName, platformCommission, adAllowType, isExportGoldflow, freightSub, returnSubPerMonth, isShowPriority, shelvesNumber)
 VALUES 
-  ('Bronze', 0.05, 1, true, 10, 2, false, 50),
-  ('Silver', 0.08, 2, true, 20, 3, true, 100),
-  ('Gold', 0.1, 3, true, 30, 4, true, 150),
-  ('Platinum', 0.12, 4, true, 40, 5, true, 200),
-  ('Diamond', 0.15, 5, true, 50, 6, true, 250);
-  -- 賣家  放入測試資料
-INSERT INTO seller (sellerLvId, sellerEmail, sellerCompany, sellerTaxId, sellerCapital, sellerContact, sellerCompanyPhone, sellerCompanyExtension, sellerMobile, sellerAddress, sellerPassword, sellerBankAccount, sellerBankCode, sellerBankAccountNumber, isConfirm)
+  ('免費', 0.05, 1, false, 10, 2, false, 50),
+  ('專業', 0.08, 2, true, 20, 3, false, 100),
+  ('企業', 0.1, 3, true, 30, 4, true, 150);
+-- 賣家表
+INSERT INTO seller (sellerLvId, sellerEmail, sellerCompany, sellerTaxId, sellerCapital, sellerContact, sellerCompanyPhone, sellerCompanyExtension, sellerMobile, sellerCounty, sellerDistrict, sellerAddress, sellerPassword, sellerBankAccount, sellerBankCode, sellerBankAccountNumber, isConfirm)
 VALUES 
-    (1, 'seller1@example.com', 'ABC Company', 'A1234567', 500000, 'John Doe', '0223456789', '123', '0912345678', '台北市中正區1號', 'Password1', '123-456-789', '012', '98765432', true),
-    (2, 'seller2@example.com', '未審核通過id2', 'B2345678', 700000, 'Jane Smith', '0223456789', '456', '0923456789', '台北市中正區2號', 'Password2', '234-567-890', '345', '87654321', false),
-    (3, 'seller3@example.com', '未審核通過id3', 'C3456789', 900000, 'Bob Johnson', '0223456789', '789', '0934567890', '台北市中正區3號', 'Password3', '345-678-901', '456', '76543210', false),
-    (4, 'seller4@example.com', 'PQR Industries', 'D4567890', 1200000, 'Alice Lee', '0223456789', '012', '0945678901', '台北市中正區4號', 'Password4', '456-789-012', '567', '65432109', true),
-    (5, 'seller5@example.com', 'JKL Enterprises', 'E5678901', 1500000, 'Charlie Chan', '0223456789', '345', '0956789012', '台北市中正區5號', 'Password5', '567-890-123', '678', '54321098', true);
+    (1, 'seller1@example.com', 'ABC Company', 'A1234567', 500000, 'John Doe', '0223456789', '123', '0912345678', '台北市', '中正區', 'XX巷 YY路 1號', 'Password1', '123-456-789', '012', '98765432', true),
+    (2, 'seller2@example.com', '未審核通過id2', 'B2345678', 700000, 'Jane Smith', '0223456789', '456', '0923456789', '台北市', '大安區', 'XX巷 YY路 2號', 'Password2', '234-567-890', '345', '87654321', false),
+    (3, 'seller3@example.com', '未審核通過id3', 'C3456789', 900000, 'Bob Johnson', '0223456789', '789', '0934567890', '台北市', '中正區', 'XX巷 YY路 3號', 'Password3', '345-678-901', '456', '76543210', false),
+    (1, 'seller4@example.com', 'PQR Industries', 'D4567890', 1200000, 'Alice Lee', '0223456789', '012', '0945678901', '桃園市', '中壢區', 'XX巷 YY路 4號', 'Password4', '456-789-012', '567', '65432109', true),
+    (2, 'seller5@example.com', 'JKL Enterprises', 'E5678901', 1500000, 'Charlie Chan', '0223456789', '345', '0956789012', '新竹市', '東區', 'XX巷 YY路 5號', 'Password5', '567-890-123', '678', '54321098', true);
 
-   
-   -- 插入修改过的假数据到 seller 表(沒有時間戳記)
-INSERT INTO seller (sellerLvId, sellerEmail, sellerCompany, sellerTaxId, sellerCapital, sellerContact, sellerCompanyPhone, sellerCompanyExtension, sellerMobile, sellerAddress, sellerPassword, sellerBankAccount, sellerBankCode, sellerBankAccountNumber, isConfirm)
+-- 插入修改過的假資料到 seller 表(沒有時間戳記)
+INSERT INTO seller (sellerLvId, sellerEmail, sellerCompany, sellerTaxId, sellerCapital, sellerContact, sellerCompanyPhone, sellerCompanyExtension, sellerMobile, sellerCounty, sellerDistrict, sellerAddress, sellerPassword, sellerBankAccount, sellerBankCode, sellerBankAccountNumber, isConfirm)
 VALUES 
-    (1, 'seller6@example.com', 'DEF Ltd.', 'F6789012', 1800000, 'David Wang', '0223456789', '678', '0967890123', '台北市中正區6號', 'Password6', '678901234', '789', '43210987', true),
-    (2, 'seller7@example.com', 'GHI Corp.', 'G7890123', 2000000, 'Eva Chen', '0223456789', '901', '0978901234', '台北市中正區7號', 'Password7', '789012345', '890', '32109876', true),
-    (3, 'seller8@example.com', 'ABC Company', 'H8901234', 2200000, 'Frank Lin', '0223456789', '123', '0989012345', '台北市中正區8號', 'Password8', '890123456', '901', '21098765', true),
-    (4, 'seller9@example.com', 'JKL Enterprises', 'I9012345', 2500000, 'Grace Wu', '0223456789', '234', '0990123456', '台北市中正區9號', 'Password9', '901234567', '012', '10987654', true),
-    (5, 'seller10@example.com', 'PQR Industries', 'J0123456', 2800000, 'Henry Chang', '0223456789', '345', '0911234567', '台北市中正區10號', 'Password10', '012345678', '123', '09876543', true);
+    (1, 'seller6@example.com', 'DEF Ltd.', 'F6789012', 1800000, 'David Wang', '0223456789', '678', '0967890123', '台南市', '中西區', 'XX巷 YY路 6號', 'Password6', '678901234', '789', '43210987', true),
+    (2, 'seller7@example.com', 'GHI Corp.', 'G7890123', 2000000, 'Eva Chen', '0223456789', '901', '0978901234', '高雄市', '前鎮區', 'XX巷 YY路 7號', 'Password7', '789012345', '890', '32109876', true),
+    (3, 'seller8@example.com', 'ABC Company', 'H8901234', 2200000, 'Frank Lin', '0223456789', '123', '0989012345', '台中市', '北區', 'XX巷 YY路 8號', 'Password8', '890123456', '901', '21098765', true),
+    (2, 'seller9@example.com', 'JKL Enterprises', 'I9012345', 2500000, 'Grace Wu', '0223456789', '234', '0990123456', '台北市', '萬華區', 'XX巷 YY路 9號', 'Password9', '901234567', '012', '10987654', true),
+    (1, 'seller10@example.com', 'PQR Industries', 'J0123456', 2800000, 'Henry Chang', '0223456789', '345', '0911234567', '新北市', '三峽區', 'XX巷 YY路 10號', 'Password10', '012345678', '123', '09876543', true);
+
 
 -- 會員資料  放入測試資料-- 
 INSERT INTO buyer (
@@ -495,6 +496,7 @@ VALUES
   ('Fren', 'adminpass9', 10, NOW()),
   ('Lulia', 'adminpass10', 10, NOW());
 -- 廣告  放入假資料-- 
+
 INSERT INTO ad (sellerId,adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, adStatus, adCreateTime, isEnabled)
 VALUES 
   (1,NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', "審核中", NOW(), true),
@@ -508,6 +510,7 @@ VALUES
   (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
   (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
   (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true);
+
 -- 廣告審核  放入測試資料-- 
 INSERT INTO adConfirm (adid, failReason, confirmTime, reviewStatus)
 VALUES 
@@ -695,6 +698,7 @@ VALUES
 (2, 3, NULL, 15, 3, 800, 785, '2023-04-01 16:00:00', 1, 45678, 'Emily Davis', '2023-04-05 18:00:00', '5678901234', '678 Maple St', true, '2023-04-07 10:00:00'),
 (3, 4, 5, 10, 5, 900, 890, '2023-05-01 09:30:00', 2, 56789, 'Robert Wilson', '2023-05-05 11:45:00', '0123456789', '789 Elm St', false, null);
 -- 訂單明細  放入測試資料-- 
+
 INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, comments, attachments, isEnable)
 VALUES
     (1, 1, 2, TRUE, 4, 'Good product!', 'image1.jpg', TRUE),
@@ -714,6 +718,7 @@ INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (8, '不實消息'),
     (9, '冒充身份'),
     (10, '其他');
+
 -- 檢舉  放入測試資料-- 
 INSERT INTO report (reportMemberId, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
 VALUES
@@ -722,3 +727,4 @@ VALUES
     (3, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
     (4, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
     (5, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
+
