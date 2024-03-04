@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>EDog</title>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<th:block th:insert="~{/fragment-datatableCss}"></th:block>
 
-  <script src="loadcss.js"></script>
 </head>
 
 <body>
@@ -41,184 +39,71 @@
   </header>
 
   <!-- ======= Sidebar ======= -->
-  <!-- start帳戶管理 -->
-  <aside class="sidebar sidebar-layout-seller">
-    <ul class="sidebar-nav" id="sidebar-nav">
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#seller-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-person"></i>
-          <span>使用者帳號</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="seller-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="seller-check-payment.html">
-              <i class="bi bi-circle"></i><span>管理買家資料</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>管理賣家資料</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>審核新賣家資料</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>管理賣家等級資料</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <!-- End帳戶管理 -->
-
-      <!-- Start訂單管理 -->
-      <li class="nav-item">
-        <a class="nav-link nav-seller-entry" href="#">
-          <i class="bi bi-grid"></i>
-          <span>訂單管理</span>
-        </a>
-      </li>
-      <!-- End訂單管理 -->
-
-      <!-- Start廣告管理 -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bag"></i>
-          <span>廣告</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="product-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>廣告管理</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>廣告審核</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <!-- End廣告管理 -->
-
-      <!-- Strat優惠券管理 -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#service-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-ticket"></i><span>優惠券</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>優惠券管理</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>優惠券新增</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <!-- End優惠券管理 -->
-
-      <!-- Strat匯款資訊 -->
-      <li class="nav-item">
-        <a class="nav-link nav-seller-entry" href="#">
-          <i class="bi bi-credit-card"></i>
-          <span>匯款資訊</span>
-        </a>
-      </li>
-      <!-- End匯款資訊 -->
-
-      <!-- Start論壇管理 -->
-      <li class="nav-item">
-        <a class="nav-link nav-seller-entry" href="#">
-          <i class="bi bi-grid"></i>
-          <span>論壇管理</span>
-        </a>
-      </li>
-      <!-- End論壇管理 -->
-
-      <!-- Start搜尋關鍵字管理 -->
-      <li class="nav-item">
-        <a class="nav-link nav-seller-entry" href="#">
-          <i class="bi bi-pin"></i>
-          <span>搜尋關鍵字管理</span>
-        </a>
-      </li>
-      <!-- End搜尋關鍵字管理 -->
-
-      <!-- Start走馬燈管理 -->
-      <li class="nav-item">
-        <a class="nav-link nav-seller-entry" href="#">
-          <i class="bi bi-lightning"></i>
-          <span>走馬燈管理</span>
-        </a>
-      </li>
-      <!-- End走馬燈管理 -->
-    </ul>
-  </aside>
-
+  <aside th:replace="back-end/aside-back.html"></aside>
+  
   <!-- ======= Main ======= -->
   <main class="main main-layout-seller">
     <div class="container-fluid seller-container">
       <h1>新增買家資料</h1>
 
-      <!-- <nav class="mt-5 mb-4">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">帳號設定</li>
-        </ol>
-      </nav> -->
+      <form class="row g-3" id="dataForm" th:action="@{insertBuyer}" method="post" enctype="multipart/form-data">
 
-      <form class="row g-3" id="myForm" action="testrecap" method="post" enctype="multipart/form-data">
+<!--         <div class="col-md-12" style="display: none;"> -->
+<!--           <label for="inputMemberId" class="form-label">買家編號</label> -->
+<!--           <input type="text" class="form-control" id="inputMemberId" name="memberId" readonly /> -->
+<!--         </div> -->
 
-        <div class="col-md-12" style="display: none;">
-          <label for="inputMemberId" class="form-label">買家編號</label>
-          <input type="text" class="form-control" id="inputMemberId" name="memberId" readonly />
-        </div>
-
-        <div class="col-md-12" style="display: none;">
-          <label for="inputThirdFrom" class="form-label">第三方登入</label>
-          <input type="text" class="form-control" id="inputThirdFrom" name="thirdFrom" placeholder="還不知道要不要做第三方登入,先放著" readonly />
-        </div>
+<!--         <div class="col-md-12" style="display: none;"> -->
+<!--           <label for="inputThirdFrom" class="form-label">第三方登入</label> -->
+<!--           <input type="text" class="form-control" id="inputThirdFrom" name="thirdFrom" placeholder="還不知道要不要做第三方登入,先放著" readonly /> -->
+<!--         </div> -->
 
         <div class="col-md-12">
           <label for="inputMemberEmail" class="form-label">電子信箱</label>
-          <input type="text" class="form-control" id="inputMemberEmail" name="memberEmail" value="123zxc@gmail.com" />
+          <input type="text" class="form-control" id="inputMemberEmail" name="memberEmail" placeholder="請輸入電子信箱,將做為您登入的帳號"/>
+          <div id="memberEmailFeedback" class="invalid-feedback">
+						"輸入電子信箱錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
-        <!-- <nav class="custom-mt-6 mb-2">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">密碼設定</li>
-          </ol>
-        </nav> -->
-
         <div class="col-md-12">
-          <label for="inputPassword" class="form-label">密碼</label>
-          <input type="text" class="form-control" id="inputPassword" name="password" value="pass1234" />
+          <label for="inputMemberPassword" class="form-label">密碼</label>
+          <input type="text" class="form-control" id="inputMemberPassword" name="memberPassword" placeholder="請輸入包含英文與數字6~8字之間的密碼"/>
+          <div id="memberPasswordFeedback" class="invalid-feedback">
+						"輸入密碼錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
         
         <div class="col-md-12">
-          <label for="inputPassword" class="form-label">確認密碼</label>
-          <input type="text" class="form-control" id="inputPassword" name="password" placeholder="輸入相同密碼"/>
+          <label for="inputChecKMemberPassword" class="form-label">確認密碼</label>
+          <input type="text" class="form-control" id="inputChecKMemberPassword" name="checKMemberPassword" placeholder="請輸入相同密碼"/>
+          <div id="checKMemberPasswordFeedback" class="invalid-feedback">
+						"再次輸入密碼錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
         <div class="col-md-12">
           <label for="inputMemberName" class="form-label">用戶名稱</label>
-          <input type="text" class="form-control" id="inputMemberName" name="memberName" value="sakiko" />
+          <input type="text" class="form-control" id="inputMemberName" name="memberName" placeholder="請輸入您的稱呼"/>
+          <div id="memberNameFeedback" class="invalid-feedback">
+						"輸入用戶名稱錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>        
         </div>
 
         <div class="col-md-12">
           <label for="inputMemberPhone" class="form-label">會員電話</label>
-          <input type="text" class="form-control" id="inputMemberPhone" name="memberPhone" value="0229123456" />
+          <input type="text" class="form-control" id="inputMemberPhone" name="memberPhone" placeholder="請輸入市區號碼"/>
+          <div id="memberPhoneFeedback" class="invalid-feedback">
+						"輸入市話錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div> 
         </div>
 
         <div class="col-md-12">
           <label for="inputMemberMobile" class="form-label">手機號碼</label>
-          <input type="text" class="form-control" id="inputMemberMobile" name="memberMobile" value="0922123456" />
+          <input type="text" class="form-control" id="inputMemberMobile" name="memberMobile" placeholder="請輸入手機號碼"/>
+          <div id="memberMobileFeedback" class="invalid-feedback">
+						"輸入手機錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
         <div class="col-md-12">
@@ -236,14 +121,20 @@
           </div> -->
           <input type="text" class="form-control mt-2" id="inputMemberAddress" name="memberAddress"
             placeholder="請輸入地址" />
+          <div id="memberAddressFeedback" class="invalid-feedback">
+						"輸入地址錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
         <div class="col-md-3" style="display: none;">
           <label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
           <select class="isMemberEmail form-select" name="isMemberEmail" id="inputIsMemberEmail">
-            <option value="true" selected>已審核</option>
-            <option value="false">未審核</option>
+            <option value="true" >已審核</option>
+            <option value="false" selected>未審核</option>
           </select>
+          <div id="isMemberEmailFeedback" class="invalid-feedback">
+						"電子信箱審核驗證錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
         <div class="col mb-3" style="display: none;">
@@ -251,11 +142,17 @@
           <div class="col-sm-3">
             <input type="date" class="form-control" name="memberRegistrationTime" readonly>
           </div>
+          <div id="memberRegistrationTimeFeedback" class="invalid-feedback">
+						"創建帳號時間錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
         <div class="col-md-12">
           <label for="inputPetName" class="form-label">寵物名稱</label>
-          <input type="text" class="form-control" id="inputPetName" name="petName" value="木木鴞" />
+          <input type="text" class="form-control" id="inputPetName" name="petName" placeholder="請輸入寵物名稱" />
+          <div id="petNameFeedback" class="invalid-feedback">
+						"輸入寵物名稱錯誤提示訊息"</div>
+		  <div class="valid-feedback">Looks Good!</div>
         </div>
 
                 <!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
@@ -317,19 +214,19 @@
 
         <div class="col-md-12">
           <label for="inputPetVaccName1" class="form-label">施打疫苗1</label>
-          <input type="text" class="form-control" id="inputPetVaccName1" name="petVaccName1" value="禽流感" />
+          <input type="text" class="form-control" id="inputPetVaccName1" name="petVaccName1" placeholder="輸入疫苗名稱" />
         </div>
 
         <div class="col-mb-3">
           <label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
           <div class="col-sm-12">
-            <input type="date" class="form-control" name="petVaccTime1" value="1987-03-21">
+            <input type="date" class="form-control" name="petVaccTime1" >
           </div>
         </div>
 
         <div class="col-md-12">
           <label for="inputPetVaccName2" class="form-label">施打疫苗2</label>
-          <input type="text" class="form-control" id="inputPetVaccName2" name="petVaccName2" value="" />
+          <input type="text" class="form-control" id="inputPetVaccName2" name="petVaccName2" placeholder="輸入疫苗名稱"  />
         </div>
 
         <div class="col-mb-3">
@@ -352,7 +249,7 @@
 
 
         <div class="text-center d-flex flex-row gap-5 justify-content-center">
-          <button type="button" class="btn btn-secondary">取消並離開</button>
+          <button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
           <button type="submit" class="btn btn-primary">建立帳號</button>
         </div>
       </form>
@@ -363,12 +260,17 @@
   <!-- ======= Footer, 後臺應該不需要footer ======= -->
 
   <!-- Vendor & Main JS Files -->
-  <script src="loadjs.js"></script>
+  <div th:replace="fragment-js"></div>
 
   <!-- Local JS File -->
   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
   <script>
 
+  //取消按鈕的跳轉事件設定
+  document.getElementById("cancel-btn").addEventListener("click", function() {
+	  window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
+	  });
+  
     // 定義一個自定義事件，用於通知 TwCitySelector 腳本
     var loadjsCompletedEvent = new Event("loadjsCompleted");
 
