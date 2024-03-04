@@ -1,4 +1,4 @@
-package com.productImg.model;
+package com.product.model;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 
 
 @Service("productImg")
-public class productImg {
+public class ProductImgService {
 	
 	@Autowired
 	ProductImgRepository repository ;
 	
-	public void addProduct(ProductImgVO productVO) {
-		repository.save(productVO);
+	public void addProductImg(ProductImgVO productImgVO) {
+		repository.save(productImgVO);
 	}
 	
-	public void updateProduct(ProductImgVO productVO) {
-		repository.save(productVO);
+	public void updateProduct(ProductImgVO productImgVO) {
+		repository.save(productImgVO);
 	}
 	
 	public void deleteProduct(Integer productId) {

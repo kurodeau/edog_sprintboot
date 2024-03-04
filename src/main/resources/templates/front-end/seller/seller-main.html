@@ -9,7 +9,6 @@
     <header class="fixed-top">
       <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
     </header>
-    
 
     <!-- ======= Sidebar ======= -->
     <aside th:replace="@{front-end/seller/aside-seller}"></aside>
@@ -32,15 +31,62 @@
       </div>
     </main>
     <!-- End #main -->
-
+    <button
+      id="updateSuccess"
+      th:value="${param.updateSuccess}"
+      name="updateSuccess"
+      type="hidden"
+    >
+      UpdateSuccess
+    </button>
     <!-- End Main -->
+    <!-- 這裡放置你的 Modal 代碼 -->
+    <div
+      class="modal fade"
+      id="updateSuccessModal"
+      tabindex="-1"
+      aria-labelledby="updateSuccessModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">修改成功🎉🎉🎉🎉🎉</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- ======= Footer ======= -->
- 	
+
     <div th:replace="@{fragment-footer}"></div>
     <div th:replace="@{fragment-js}"></div>
+    <script>
+      window.onload = function () {
+        let updateSuccess = document.querySelector("#updateSuccess");
+        if (updateSuccess.value === "true") {
+          // Show the modal
+          $("#updateSuccessModal").modal("show");
+        }
+      };
+    </script>
 
     <!-- Local JS File -->
-    <script></script>
   </body>
 </html>

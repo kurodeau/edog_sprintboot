@@ -1,4 +1,4 @@
-package com.productImg.model;
+package com.product.model;
 
 import java.sql.Date;
 
@@ -11,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.product.model.ProductVO;
-
 
 	
 	@Entity
@@ -21,7 +19,8 @@ import com.product.model.ProductVO;
 
 		
 		private Integer productImgId;
-		private ProductVO productId; // Replace YourProductVO with your actual product entity
+		private ProductVO productVO; // Replace YourProductVO with your actual product entity
+//		private Integer productId;
 		private byte[] productImg;
 		private Date productImgTime;		
 		private Boolean isCover;
@@ -43,12 +42,12 @@ import com.product.model.ProductVO;
 
 		@ManyToOne
 		@JoinColumn(name = "productId", referencedColumnName = "productId")
-		public ProductVO getProductId() {
-			return productId;
+		public ProductVO getProductVO() {
+			return productVO;
 		}
 
-		public void setProductId(ProductVO productId) {
-			this.productId = productId;
+		public void setProductVO(ProductVO productVO) {
+			this.productVO = productVO;
 		}
 		
 		@Column(name = "productImg")

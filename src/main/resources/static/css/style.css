@@ -37,6 +37,12 @@
   --admin-red_tint: #f8d3c4;
 }
 
+.main-nosidebar{
+ 	  margin-top: 50px;
+	padding:100px;
+}
+
+
 .seller-container {
   margin-bottom: 50px;
   padding: 50px 50px;
@@ -734,6 +740,19 @@ mark.green {
 .hamburger {
   font-size: 1.2vw;
 }
+
+.preview-image {
+ max-width: 200px;
+ max-height: 150px;
+ margin-right: 10px;
+  }
+
+#subImages_blob_holder {
+ display: flex;
+ flex-wrap:wrap;
+  }
+
+
 /*--------------------------------------------------------------
 # RWD
 --------------------------------------------------------------*/

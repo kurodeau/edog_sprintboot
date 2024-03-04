@@ -1,40 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-</head>
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
 
-<body>
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<th:block th:insert="~{/back-end/header-back}"></th:block>
-	</header>
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
 
-	<!-- ======= Sidebar ======= -->
-	<!-- start帳戶管理 -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+    <!-- ======= Sidebar ======= -->
+    <!-- start帳戶管理 -->
+    <aside th:replace="back-end/aside-back.html"></aside>
 
-	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
+    <!-- ======= Main ======= -->
+    <main class="main main-layout-seller">
+      <main class="main main-layout-seller">
+        <div class="special-text-container">
+          <h1>
+            歡迎回來<br />
+            讓我們一起
+            <mark class="green">
+              <span
+                id="typewrite-text"
+                class="d-inline-block changecontent"
+              ></span>
+            </mark>
+          </h1>
+        </div>
+      </main>
+    </main>
+    <!-- End Main -->
+    <div th:if="${updateSuccess}">
+      <!-- 這裡放置你的 Modal 代碼 -->
+      <div
+        class="modal fade"
+        id="updateSuccessModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="updateSuccessModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- 這裡可以放置更新成功的提示信息 -->
+              賣家資料已成功更新！
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                確定
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ======= Footer, 後臺應該不需要footer ======= -->
 
-		<main class="main main-layout-seller">
-			<div class="special-text-container">
-				<h1>
-					歡迎回來<br /> 讓我們一起
-					<mark class="green">
-						<span id="typewrite-text" class="d-inline-block changecontent"></span>
-					</mark>
-				</h1>
-			</div>
-		</main>
-
-
-	</main>
-	<!-- End Main -->
-
-	<!-- ======= Footer, 後臺應該不需要footer ======= -->
-
-	<!-- Vendor & Main JS Files -->
-	<div th:replace="fragment-js"></div>
-</body>
+    <!-- Vendor & Main JS Files -->
+    <div th:replace="fragment-js"></div>
+  </body>
 </html>

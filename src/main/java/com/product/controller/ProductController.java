@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,16 +21,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ad.model.AdVO;
+import com.product.model.ProductImgService;
+import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
 
 @Controller
 @RequestMapping("/front/seller/product")
+
 public class ProductController {
 	
 	@Autowired
 	ProductService productSvc;
+	
+	@Autowired
+	ProductImgService pdtImgSvc;
+	
+
 	
 	@GetMapping("add")
 	public String sellerProductAdd(Model model) {
@@ -42,12 +51,14 @@ public class ProductController {
 
 	
 	@PostMapping("insert")
-	public String insert(@Valid ProductVO productVO , BindingResult result , Model model ,
+
+	public String insert(@Valid ProductVO productVO ,ProductImgVO productImgVO ,BindingResult result , Model model ,
 			@RequestParam("mainImage") MultipartFile[] parts ,
 			@RequestParam("subImages") MultipartFile[] partsSec) throws IOException {
 	
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/	
 		result = removeFieldError(productVO , result , "mainImage");
+		
 		
 		if(parts[0].isEmpty()) {
 			model.addAttribute("errorMessage" , "商品照片:請上傳照片");
@@ -56,20 +67,43 @@ public class ProductController {
 				byte[] buf = multipartFile.getBytes();
 				productVO.setProductCoverImg(buf);
 			}	
-		}
+		}		
 		
 		if(result.hasErrors()||parts[0].isEmpty()) {
 			System.out.println(result);
-			return "front-end/seller/seller-product-all";
-			
+			return "front-end/seller/seller-product-all";			
 		}
+		
 		/*************************** 2.開始新增資料 *****************************************/
-		productSvc.addProduct(productVO);;	
+		productSvc.addProduct(productVO);
+		
+		
+		System.out.println("1111111111"+partsSec.length);
+		
+		for(MultipartFile multipartFile : partsSec) {
+		
+		ProductImgVO productImg = new ProductImgVO();
+		
+		byte[] buf1 = multipartFile.getBytes();
+		productImg.setProductImg(buf1);
+		productImg.setProductVO(productVO);	
+		pdtImgSvc.addProductImg(productImg);
+		
+//		productImgVO.setProductImg(buf1);
+//		productImgVO.setProductVO(productVO);	
+//		pdtImgSvc.addProductImg(productImgVO);
+		
+		System.out.println("給我進資料庫");
+		
+		}	
+		
+		
+		
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<ProductVO> list = productSvc.getAll();
 		model.addAttribute("ProductListData",list);
 		model.addAttribute("success", "-(新增成功");
-		return "redirect:/front/seller/product/productlist2";
+		return "redirect:/front/seller/product/productlist";
 	}
 	
 	@PostMapping("getOne_For_Update")
@@ -128,6 +162,17 @@ public class ProductController {
 				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
 				.collect(Collectors.toList());
 		result = new BeanPropertyBindingResult(productVO, "productVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
+	
+	public BindingResult removeFieldError1(ProductImgVO productImgVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
+				.collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(productImgVO, "productImgVO");
 		for (FieldError fieldError : errorsListToKeep) {
 			result.addError(fieldError);
 		}

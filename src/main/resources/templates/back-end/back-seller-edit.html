@@ -27,19 +27,29 @@
           th:object="${sellerVO}"
           method="post"
           enctype="multipart/form-data"
+          onsubmit="return updateHiddenFields();"
         >
           <div class="col-md-12">
-            <label for="sellerId" class="form-label">賣家編號</label>
+            <label for="inputSellerId" class="form-label">賣家ID</label>
             <input
               type="text"
               class="form-control"
-              id="sellerId"
+              id="inputSellerId"
               name="sellerId"
               th:field="*{sellerId}"
+              aria-describedby="sellerIdFeedback"
+              th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
               readonly
             />
+            <div id="sellerIdFeedback" class="invalid-feedback">
+              <p
+                th:if="${#fields.hasErrors('sellerId')}"
+                th:errors="*{sellerId}"
+              >
+                欄位有誤
+              </p>
+            </div>
           </div>
-
           <div class="col-md-12">
             <label for="sellerLvId" class="form-label">賣家等級</label>
             <div class="col-md-2">
@@ -59,7 +69,7 @@
           </div>
 
           <div class="col-md-12">
-            <label for="inputSellerCompany" class="form-label">公司名稱</label>
+            <label for="inputSellerId" class="form-label">公司名稱</label>
             <input
               type="text"
               class="form-control"
@@ -73,9 +83,7 @@
               <p
                 th:if="${#fields.hasErrors('sellerCompany')}"
                 th:errors="*{sellerCompany}"
-              >
-                欄位有誤
-              </p>
+              ></p>
             </div>
           </div>
 
@@ -106,7 +114,7 @@
           <div class="col-md-12">
             <label for="inputsellerEmail" class="form-label">電子郵件</label>
             <input
-              type="sellerEmail"
+              type="email"
               class="form-control"
               id="inputsellerEmail"
               name="sellerEmail"
@@ -239,14 +247,37 @@
             </div>
           </div>
 
+          <input
+            type="hidden"
+            id="sellerCountyValue"
+            name="sellerCounty"
+            th:value="${sellerVO.sellerCounty ?: ''}"
+            aria-describedby="sellerCountyFeedback"
+          />
+          <input
+            type="hidden"
+            id="sellerDistrictValue"
+            name="sellerDistrict"
+            th:value="${sellerVO.sellerDistrict ?: ''}"
+            aria-describedby="sellerDistrictFeedback"
+          />
+
           <div class="col-md-12">
             <label for="inputAddress" class="form-label">地址</label>
             <div class="city-selector-set col-md-12 d-flex flex-row">
               <div class="col-md-2">
-                <select class="county form-select" name="county"></select>
+                <select
+                  class="county form-select"
+                  th:value="${sellerVO.sellerCounty ?: ''}"
+                  th:classappend="${#fields.hasErrors('sellerCounty')} ? 'is-invalid' : ''"
+                ></select>
               </div>
               <div class="col-md-2">
-                <select class="district form-select" name="district"></select>
+                <select
+                  class="district form-select"
+                  th:value="${sellerVO.sellerDistrict ?: ''}"
+                  th:classappend="${#fields.hasErrors('sellerDistrict')} ? 'is-invalid' : ''"
+                ></select>
               </div>
               <div class="col-md-2">
                 <input
@@ -256,7 +287,6 @@
                   readonly
                   placeholder="郵遞區號"
                   name="zipcode"
-                  th:value="${sellerVO.sellerMobile}"
                 />
               </div>
             </div>
@@ -264,9 +294,37 @@
               type="text"
               class="form-control mt-2"
               id="inputAddress"
-              name="address"
-              placeholder="請輸入地址"
+              name="sellerAddress"
+              th:value="${sellerVO.sellerAddress ?: 'XX路A巷54號'}"
+              th:classappend="${#fields.hasErrors('sellerAddress')} ? 'is-invalid' : ''"
+              aria-describedby="sellerAddressFeedback"
             />
+            <div id="sellerCountyFeedback" class="invalid-feedback">
+              <p
+                th:if="${#fields.hasErrors('sellerCounty')}"
+                th:errors="*{sellerCounty}"
+              >
+                欄位有誤
+              </p>
+            </div>
+
+            <div id="sellerDistrictFeedback" class="invalid-feedback">
+              <p
+                th:if="${#fields.hasErrors('sellerDistrict')}"
+                th:errors="*{sellerDistrict}"
+              >
+                欄位有誤
+              </p>
+            </div>
+
+            <div id="sellerAddressFeedback" class="invalid-feedback">
+              <p
+                th:if="${#fields.hasErrors('sellerAddress')}"
+                th:errors="*{sellerAddress}"
+              >
+                欄位有誤
+              </p>
+            </div>
           </div>
 
           <div class="col-md-3">
@@ -414,20 +472,64 @@
         </form>
       </div>
     </main>
+
     <!-- End Main -->
     <div th:replace="fragment-js"></div>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var countyValue = document
+          .querySelector(".county")
+          .getAttribute("data-countyValue");
+        console.log(countyValue); // 將印出 "台北市"
+      });
+
       window.onload = function () {
         // 監聽自定義事件，當 loadjs 完成時觸發
+
         new TwCitySelector({
           el: ".city-selector-set",
           elCounty: ".county",
           elDistrict: ".district",
           elZipcode: ".zipcode",
+          countyValue: document.querySelector("#sellerCountyValue").value,
+          districtValue: document.querySelector("#sellerDistrictValue").value,
         });
       };
+
+      function updateHiddenFields() {
+        // 取得選擇的縣市和區域的值
+        var selectedCounty = document.querySelector(".county").value;
+        var selectedDistrict = document.querySelector(".district").value;
+
+        // 更新隱藏欄位的值
+        document.getElementById("sellerCountyValue").value = selectedCounty;
+        document.getElementById("sellerDistrictValue").value = selectedDistrict;
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return checkFormBeforeSubmit();
+      }
+
+      function checkFormBeforeSubmit() {
+        // 取得表單元素
+        var form = document.getElementById("myForm");
+
+        // 檢視表單內容
+        var formData = new FormData(form);
+        var formContent = "";
+
+        for (var pair of formData.entries()) {
+          formContent += pair[0] + ": " + pair[1] + "\n";
+        }
+
+        // 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+        alert("表單內容：\n" + formContent);
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return true;
+      }
     </script>
+
     <!-- simpletable -->
   </body>
 </html>
