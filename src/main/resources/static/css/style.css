@@ -37,6 +37,12 @@
   --admin-red_tint: #f8d3c4;
 }
 
+.main-nosidebar{
+ 	  margin-top: 50px;
+	padding:100px;
+}
+
+
 .seller-container {
   margin-bottom: 50px;
   padding: 50px 50px;

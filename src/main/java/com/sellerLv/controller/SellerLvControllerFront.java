@@ -50,7 +50,7 @@ public class SellerLvControllerFront extends HttpServlet {
 //			System.out.println("==============================");
 		return list;
 	}
-
+	
 	@GetMapping("edit")
 	public String selleredit(Model model, HttpSession session) {
 
@@ -79,50 +79,53 @@ public class SellerLvControllerFront extends HttpServlet {
 
 	@PutMapping("edit/api/v1/sellers/{id}")
 	@ResponseBody
-	public  ResponseEntity<?> ajaxUpdate (
-			@PathVariable("id") Integer targetSellerId,
-			@RequestBody Map<String, Object> requestData){
+	public ResponseEntity<?> ajaxUpdate(@PathVariable("id") Integer targetSellerId,
+			@RequestBody Map<String, Object> requestData ,HttpSession session) {
 		System.out.println(targetSellerId);
 		System.out.println(requestData);
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			// Convert requestData map to JSON
 			String jsonData = objectMapper.writeValueAsString(requestData);
-			
+
 			// Deserialize JSON to MyData object
 			UpdateData updateData = objectMapper.readValue(jsonData, UpdateData.class);
 			// System.out.println(updateData);
 			
+		
 			
-			
-			SellerLvVO sellerLvVO= sellerLvSvc.getById(updateData.getTargetSellerLvId());
+			Integer targetLvId = updateData.data.getTargetSellerLvId();
+			SellerLvVO sellerLvVO = sellerLvSvc.getById(targetLvId);
 			SellerVO sellerVO = sellerSvc.getById(targetSellerId);
 			sellerVO.setSellerLvId(sellerLvVO);
 			sellerSvc.updateSeller(sellerVO);
-			
-			List<SellerLvVO> firstThreeElements =null;
-			List<SellerLvVO> sellerLvVOList =  sellerLvSvc.getAll();
-			if (sellerLvVOList.size()>=3) {
-			  firstThreeElements = sellerLvVOList.subList(0, 3);
+
+			List<SellerLvVO> firstThreeElements = null;
+			List<SellerLvVO> sellerLvVOList = sellerLvSvc.getAll();
+			if (sellerLvVOList.size() >= 3) {
+				firstThreeElements = sellerLvVOList.subList(0, 3);
 
 			}
 			System.out.println(sellerLvVOList);
 			
-			ResponseData responseData = new ResponseData(targetSellerId,updateData.getTargetSellerLvId(),firstThreeElements);
+			ResponseData responseData = new ResponseData(targetSellerId,targetLvId,firstThreeElements);
 			String jsonString = objectMapper.writeValueAsString(responseData);
-			
+
 			System.out.println(jsonString);
+
 			
 			
+			// TESTING-UPDATE SELLER INFO
+			session.setAttribute("session", sellerSvc.getById(targetSellerId));
+
 			
 			return ResponseEntity.status(HttpStatus.OK).body(jsonString);
-			
-			
-		}catch(Exception e) 
-		{e.printStackTrace();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		return null;
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("解析 SellerLvID 时出错: ");
 	}
 
 	@PostMapping("edit/ajax/all")
@@ -156,12 +159,14 @@ public class SellerLvControllerFront extends HttpServlet {
 
 				System.out.println(targetList);
 
-				// TESTING
+				// TESTING-UPDATE SELLER INFO
 				SellerVO sellerVO = (SellerVO) session.getAttribute("sellerVO");
-				Integer sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
-				Integer sellerId = sellerVO.getSellerId();
+				Integer targetSellerId = sellerVO.getSellerId();
+				SellerVO sellerTargetVO = sellerSvc.getById(targetSellerId);
+				Integer sellerLvId = sellerTargetVO.getSellerLvId().getSellerLvId();
+				
 				// @JsonIgnore // Prevent including SellerLvVO reference during serialization
-				ResponseData responseData = new ResponseData(sellerId,sellerLvId, targetList);
+				ResponseData responseData = new ResponseData(targetSellerId, sellerLvId, targetList);
 				String jsonString = objectMapper.writeValueAsString(responseData);
 
 //				System.out.println(jsonString);
@@ -178,34 +183,38 @@ public class SellerLvControllerFront extends HttpServlet {
 		}
 
 	}
-	
-	
+
 	static class UpdateData {
-		private Integer targetSellerId;
-		private Integer targetSellerLvId;
-		public Integer getTargetSellerId() {
-			return targetSellerId;
-		}
-		public void setTargetSellerId(Integer targetSellerId) {
-			this.targetSellerId = targetSellerId;
-		}
-		public Integer getTargetSellerLvId() {
-			return targetSellerLvId;
-		}
-	
-		public UpdateData() {
-			super();
-		}
-		public UpdateData(Integer targetSellerId, Integer targetSellerLvId) {
-			super();
-			this.targetSellerId = targetSellerId;
-			this.targetSellerLvId = targetSellerLvId;
-		}
-		public void setTargetSellerLvId(Integer targetSellerLvId) {
-			this.targetSellerLvId = targetSellerLvId;
+		private Data data;
+
+		public Data getData() {
+			return data;
 		}
 
+		public void setData(Data data) {
+			this.data = data;
+		}
 
+		public static class Data {
+			private int targetSellerId;
+			private int targetSellerLvId;
+
+			public int getTargetSellerId() {
+				return targetSellerId;
+			}
+
+			public void setTargetSellerId(int targetSellerId) {
+				this.targetSellerId = targetSellerId;
+			}
+
+			public int getTargetSellerLvId() {
+				return targetSellerLvId;
+			}
+
+			public void setTargetSellerLvId(int targetSellerLvId) {
+				this.targetSellerLvId = targetSellerLvId;
+			}
+		}
 	}
 
 	static class MyData {
@@ -242,7 +251,7 @@ public class SellerLvControllerFront extends HttpServlet {
 		public void setSellerId(Integer sellerId) {
 			this.sellerId = sellerId;
 		}
-	
+
 		public Integer getSellerLvId() {
 			return sellerLvId;
 		}
@@ -266,9 +275,6 @@ public class SellerLvControllerFront extends HttpServlet {
 			this.targetList = targetList;
 		}
 
-		
-
 	}
-
 
 }

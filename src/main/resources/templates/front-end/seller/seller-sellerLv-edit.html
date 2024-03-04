@@ -2,15 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <th:block th:insert="~{/fragment-head}"></th:block>
-    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
   </head>
-
   <body>
+    <!-- ======= Header ======= -->
+
     <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
     </header>
 
-    <aside th:replace="back-end/aside-back.html"></aside>
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
     <!-- ======= Main ======= -->
 
     <main class="main main-layout-seller">
@@ -39,7 +40,7 @@
                   data-bs-target="#freeModal"
                   data-plan="1"
                 >
-                  免費方案
+                  選擇方案
                 </button>
               </div>
             </div>
@@ -68,7 +69,7 @@
                   data-bs-target="#proModal"
                   data-plan="2"
                 >
-                  專業方案
+                  選擇方案
                 </button>
               </div>
             </div>
@@ -98,7 +99,7 @@
                   data-bs-target="#topModal"
                   data-plan="3"
                 >
-                  企業方案
+                  選擇方案
                 </button>
               </div>
             </div>
@@ -276,6 +277,8 @@
       </div>
     </div>
 
+    <!-- Success Modal -->
+
     <!-- Vendor JS Files -->
     <div th:replace="fragment-js"></div>
     <!-- Add this before the closing </body> tag -->
@@ -356,6 +359,7 @@
             planElement.removeAttribute("disabled");
             planElement.classList.remove("btn-current");
             planElement.classList.add("btn-sellerdark");
+            planElement.textContent = "選擇方案";
           }
         });
       }
@@ -449,14 +453,18 @@
           .then((response) => {
             if (!response.ok) {
               throw new Error("HTTP error! Status:" + response);
-              return response.json();
-              //  let jsonObj = JSON.parse(response);
             }
+            return response.json();
+            //  let jsonObj = JSON.parse(response);
           })
           .then((jsonObj) => {
             let { sellerId, sellerLvId, targetList } = jsonObj;
             updateButtonStates(sellerLvId);
             updateTableContent(sellerLvId, targetList);
+
+            $("#freeModal .btn-secondary").click();
+            $("#proModal .btn-secondary").click();
+            $("#topModal .btn-secondary").click();
           })
           .catch((error) => {
             console.error("Fetch request failed:", error);
