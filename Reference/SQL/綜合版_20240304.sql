@@ -105,6 +105,7 @@ adid int AUTO_INCREMENT primary KEY,
 sellerId int,
 constraint fk_seller_sellerID
 foreign key(sellerID) references seller(sellerID),
+
 adimg longblob,
 adImgUploadTime datetime,
 adName varchar(20),
@@ -225,6 +226,8 @@ CREATE TABLE IF NOT EXISTS article(
     memberId INT,
     articleTitle VARCHAR(255),
     articleContent VARCHAR(500),
+    upFiles LONGBLOB,
+    artCreateTime DATETIME,
     artUpdateTime DATETIME,
     articleLike INT,
     articleComment INT,
@@ -233,21 +236,6 @@ CREATE TABLE IF NOT EXISTS article(
     isEnabled BOOLEAN,
     FOREIGN KEY (memberId) REFERENCES buyer(memberId),
     FOREIGN KEY (articleSort) REFERENCES articleType(articleTypeId)
-);
-CREATE TABLE IF NOT EXISTS articlePic(
-articlePicId int primary key AUTO_INCREMENT,
-articleId int,
-articlePicBlob LONGBLOB,
-articlePicTime datetime DEFAULT CURRENT_TIMESTAMP,
-FOREIGN KEY (articleId) REFERENCES article(articleId)
-);
--- 文章影片  創建table-- 
-CREATE TABLE IF NOT EXISTS articleVid(
-articleVidId Int primary key AUTO_INCREMENT,
-articleId Int,
-articleVidBlob LONGBLOB,
-articleVidTime datetime DEFAULT CURRENT_TIMESTAMP,
-FOREIGN KEY (articleId) REFERENCES article(articleId)
 );
 -- 文章喜歡  創建table-- 
 CREATE TABLE IF NOT EXISTS articleLike(
@@ -379,6 +367,7 @@ CREATE TABLE IF NOT EXISTS orderDetails (
 CREATE TABLE IF NOT EXISTS report(
 reportId Int primary key AUTO_INCREMENT,
 reportMemberId Int,
+reportTargetType INT,
 replyId Int,
 articleId Int,
 reportTypeId Int,
@@ -516,8 +505,6 @@ VALUES
   (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
   (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
   (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true);
-
-
 -- 廣告審核  放入測試資料-- 
 INSERT INTO adConfirm (adid, failReason, confirmTime, reviewStatus)
 VALUES 
@@ -609,27 +596,14 @@ INSERT INTO articleType (articleTypeName) VALUES
   ('文章分類5');
 
 -- 文章  放入測試資料-- 
-INSERT INTO article (memberId, articleTitle, articleContent, artUpdateTime, articleLike, articleComment, articleShare, articleSort, isEnabled)
+INSERT INTO article (memberId, articleTitle, articleContent, upFiles,artCreateTime,artUpdateTime, articleLike, articleComment, articleShare, articleSort, isEnabled)
 VALUES
-    (1, '標題1', '這是文章1的內容。', '2023-01-05 10:20:00', 15, 8, 5, 1, TRUE),
-    (2, '標題2', '這是文章2的內容。', '2023-02-10 14:45:00', 20, 12, 8, 2, FALSE),
-    (3, '標題3', '這是文章3的內容。', '2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
-    (4, '標題4', '這是文章4的內容。', '2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
-    (5, '標題5', '這是文章5的內容。', '2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
--- 文章圖片  放入測試資料-- 
-INSERT INTO articlePic (articleId, articlePicBlob, articlePicTime)
-VALUES
-    (1, NULL, '2023-01-05 10:30:00'),
-    (2, NULL, '2023-02-10 15:00:00'),
-    (3, NULL, '2023-03-15 19:00:00'),
-    (4, NULL, '2023-04-20 08:30:00'),
-    (5, NULL, '2023-05-25 13:00:00');
--- 文章影片  放入測試資料-- 
-INSERT INTO articleVid (articleId, articleVidBlob, articleVidTime)
-VALUES
-    (1, NULL, '2023-01-05 10:45:00'),
-    (2, NULL, '2023-02-10 15:15:00'),
-    (3, NULL, '2023-03-15 19:30:00');
+    (1, '標題1', '這是文章1的內容。', NULL, '2024-03-03 10:00:00','2023-01-05 10:20:00', 15, 8, 5, 1, TRUE),
+    (2, '標題2', '這是文章2的內容。', NULL, '2024-03-03 10:00:00','2023-02-10 14:45:00', 20, 12, 8, 2, FALSE),
+    (3, '標題3', '這是文章3的內容。', NULL, '2024-03-03 10:00:00','2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
+    (4, '標題4', '這是文章4的內容。', NULL, '2024-03-03 10:00:00','2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
+    (5, '標題5', '這是文章5的內容。', NULL, '2024-03-03 10:00:00','2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
+
 -- 文章喜歡  放入測試資料-- 
 INSERT INTO articleLike (memberId, articleId, articleLikeListTime)
 VALUES
@@ -657,6 +631,7 @@ INSERT INTO couponUsed (
 )
 VALUES 
     (1, 2, '2023-11-05 14:30:00'),
+    (2, 2, '2023-12-10 08:45:00'),
     (3, 2, '2024-01-15 16:20:00'),
     (4, 5, '2023-05-20 12:00:00'),
     (5, 5, '2023-10-25 19:30:00');
@@ -721,8 +696,6 @@ VALUES
     (2, 1, 3, FALSE, NULL, NULL, NULL, NULL, TRUE),
     (2, 2, 1, TRUE, 5, '2023-02-15 14:45:00', 'Amazing!', NULL, TRUE),
     (3, 3, 1, FALSE, NULL, NULL, NULL, NULL, TRUE);
-
-
 -- 檢舉Type  放入測試資料-- 
 INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (1, '垃圾訊息'),
@@ -735,12 +708,12 @@ INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (8, '不實消息'),
     (9, '冒充身份'),
     (10, '其他');
-
 -- 檢舉  放入測試資料-- 
-INSERT INTO report (reportMemberId, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
+INSERT INTO report (reportMemberId, reportTargetType, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
 VALUES
-    (1, 1, NULL, 3, '2023-01-05 12:00:00', 1, '2023-01-06 14:30:00'),
-    (2, NULL, 2, 8, '2023-02-10 17:30:00', 0, NULL),
-    (3, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
-    (4, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
-    (5, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
+    (1, 1, 1, NULL, 3, '2023-01-05 12:00:00', 1, '2023-01-06 14:30:00'),
+    (2, 0, NULL, 2, 8, '2023-02-10 17:30:00', 0, NULL),
+    (3, 1, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
+    (4, 0, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
+    (5, 1, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
+
