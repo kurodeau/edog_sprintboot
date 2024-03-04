@@ -63,7 +63,7 @@
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="mainImageFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-							<div id="blob_holder"></div>
+							<div id="mainImage_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -73,10 +73,11 @@
 						<label for="subImages" class="btn btn-sellerdark"> 請選擇其他圖片</label>
 						<input type="file" multiple="" data-max_length="5"
 							class="form-control upload__inputfile" id="subImages"
-							name="subImages" />
+							name="subImages" onclick="previewImage1()" onchange="hideContent('upFiles.errors');"/>
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="subImagesFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
+							<div id="subImages_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -211,37 +212,57 @@ acceptedTypes = {
 	'image/gif' : true
 };
 function previewImage() {
-	var upfile1 = document.getElementById("mainImage");
-	upfile1.addEventListener("change", function(event) {
-		var files = event.target.files || event.dataTransfer.files;
-		for (var i = 0; i < files.length; i++) {
-			previewfile(files[i])
-		}
-	}, false);
+    var upfile1 = document.getElementById("mainImage");
+    upfile1.addEventListener("change", function(event) {
+        var files = event.target.files || event.dataTransfer.files;
+        for (var i = 0; i < files.length; i++) {
+            previewfile(files[i], "mainImage_blob_holder");
+        }
+    }, false);
 }
-function previewfile(file) {
-	if (filereader_support === true && acceptedTypes[file.type] === true) {
-		var reader = new FileReader();
-		reader.onload = function(event) {
-			var image = new Image();
-			image.src = event.target.result;
-			image.width = 200;
-			image.height = 150;
-			image.border = 2;
-			if (blob_holder.hasChildNodes()) {
-				blob_holder.removeChild(blob_holder.childNodes[0]);
-			}
-			blob_holder.appendChild(image);
-		};
-		reader.readAsDataURL(file);
-		document.getElementById('submit').disabled = false;
-	} else {
-		blob_holder.innerHTML = "<div  style='text-align: left;'>" + "● filename: " + file.name
-				+ "<br>" + "● ContentTyp: " + file.type
-				+ "<br>" + "● size: " + file.size + "bytes"
-				+ "<br>" + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-		document.getElementById('submit').disabled = true;
-	}
+
+function previewImage1() {
+	   var upfile2 = document.getElementById("subImages");
+	   upfile2.addEventListener("change", function (event) {
+	    var files = event.target.files || event.dataTransfer.files;
+	    var blob_holder = document.getElementById("subImages_blob_holder");
+	    
+	    while (blob_holder.firstChild) {
+	     blob_holder.removeChild(blob_holder.firstChild);
+	    }
+	   
+	    for (var i = 0; i < files.length; i++) {
+	     let previewDiv = document.createElement('div');
+	     let previewImg = document.createElement('img');
+	     previewImg.src = URL.createObjectURL(files[i]);
+	     previewImg.classList.add('preview-image');
+	     previewDiv.appendChild(previewImg);
+	     blob_holder.appendChild(previewDiv);
+	    }
+	   }, false);
+	  }
+
+function previewfile(file, blobHolderId) {
+    var blob_holder = document.getElementById(blobHolderId);
+    if (filereader_support === true && acceptedTypes[file.type] === true) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var image = new Image();
+            image.src = event.target.result;
+            image.width = 200;
+            image.height = 150;
+            image.border = 2;
+            blob_holder.appendChild(image);
+        };
+        reader.readAsDataURL(file);
+        document.getElementById('submit').disabled = false;
+    } else {
+        blob_holder.innerHTML = "<div  style='text-align: left;'>" + "● filename: " + file.name
+                + "<br>" + "● ContentTyp: " + file.type
+                + "<br>" + "● size: " + file.size + "bytes"
+                + "<br>" + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+        document.getElementById('submit').disabled = true;
+    }
 }
 </script>
 </body>
