@@ -69,6 +69,13 @@ public class SellerVO implements java.io.Serializable {
 
 	@Column(name = "sellerMobile")
 	private String sellerMobile;
+	
+	@Column(name = "sellerCounty ")
+	private String sellerCounty ;
+	
+	@Column(name = "sellerDistrict")
+	private String sellerDistrict;
+
 
 	@Column(name = "sellerAddress")
 	private String sellerAddress;
@@ -177,7 +184,28 @@ public class SellerVO implements java.io.Serializable {
 	public void setSellerMobile(String sellerMobile) {
 		this.sellerMobile = sellerMobile;
 	}
+	
+	@NotEmpty(message =" 請選擇縣市")
+	@Pattern(regexp = "^[\\u4e00-\\u9fa5]+[市縣]{1}$", message = "縣市格式錯誤")
+	public String getSellerCounty() {
+		return sellerCounty;
+	}
 
+	public void setSellerCounty(String sellerCounty) {
+		this.sellerCounty = sellerCounty;
+	}
+
+	@NotEmpty(message =" 請選擇鄉鎮市區")
+	@Pattern(regexp = "^[\\u4e00-\\u9fa5]+[鄉鎮市區]{1}$", message = "鄉鎮市區-格式錯誤")
+	public String getSellerDistrict() {
+		return sellerDistrict;
+	}
+
+	public void setSellerDistrict(String sellerDistrict) {
+		this.sellerDistrict = sellerDistrict;
+	}
+
+	@NotEmpty(message = "地址請勿空白")
 	public String getSellerAddress() {
 		return sellerAddress;
 	}
@@ -199,8 +227,7 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerPassword = sellerPassword;
 	}
 
-	@NotEmpty(message = "銀行帳號請勿留白")
-	@Pattern(regexp = "\\d{5,14}", message = "銀行帳號應為數字")
+	@NotEmpty(message = "銀行帳號名稱請勿留白")
 	public String getSellerBankAccount() {
 		return sellerBankAccount;
 	}

@@ -26,9 +26,12 @@ public class SellerLvServiceImpl implements SellerLvService {
 
 	public void deleteSellerLv( @NonNull Integer id) {
 		if (repo.existsById(id))
-			repo.deleteByTheId(id);
-		// 預防級聯刪除，導致 單方整表刪除
-//			repo.deleteById(userId);
+		{
+		// 直接刪除
+		repo.deleteById(id);
+		}
+	
+		
 	}
 	
 	public SellerLvVO getById(@NonNull Integer id) {
@@ -43,6 +46,16 @@ public class SellerLvServiceImpl implements SellerLvService {
 	
 	public Integer getCount() {
 		return (int) repo.count();
+	}
+
+	@Override
+	public void deleteSecureSellerLv(@NonNull Integer id) {
+		if (repo.existsById(id))
+		{
+			// 預防級聯刪除，導致 單方整表刪除
+			repo.deleteByTheId(id);
+		}
+				
 	}
 
 }

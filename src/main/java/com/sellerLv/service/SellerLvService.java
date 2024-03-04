@@ -13,6 +13,8 @@ public interface SellerLvService {
     void updateSellerLv(@NonNull SellerLvVO sellerLvVO);
 
     void deleteSellerLv(@NonNull Integer id);
+    
+    void deleteSecureSellerLv(@NonNull Integer id);
 
     SellerLvVO getById(@NonNull Integer id);
 

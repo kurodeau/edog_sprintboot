@@ -101,6 +101,7 @@ public class SellerController extends HttpServlet {
 	@PostMapping("update")
 	public String updateSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model)
 			throws IOException {
+//		System.out.println(sellerVO);
 
 		if (result.hasErrors()) {
 //			System.out.println("==============XXXXXXXXXXXXXX");
@@ -116,6 +117,7 @@ public class SellerController extends HttpServlet {
 
 		return "redirect:/back/seller/list";
 	}
+	
 
 	@DeleteMapping("delete")
 	public String delete(@RequestParam("id") @NonNull Integer sellerId, ModelMap model) throws IOException {
