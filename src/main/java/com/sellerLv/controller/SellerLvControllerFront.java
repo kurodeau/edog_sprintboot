@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,10 +77,59 @@ public class SellerLvControllerFront extends HttpServlet {
 		return "redirect:/front/seller/main" + "?updateSuccess=true";
 	}
 
+	@PutMapping("edit/api/v1/sellers/{id}")
+	@ResponseBody
+	public  ResponseEntity<?> ajaxUpdate (
+			@PathVariable("id") Integer targetSellerId,
+			@RequestBody Map<String, Object> requestData){
+		System.out.println(targetSellerId);
+		System.out.println(requestData);
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			// Convert requestData map to JSON
+			String jsonData = objectMapper.writeValueAsString(requestData);
+			
+			// Deserialize JSON to MyData object
+			UpdateData updateData = objectMapper.readValue(jsonData, UpdateData.class);
+			// System.out.println(updateData);
+			
+			
+			
+			SellerLvVO sellerLvVO= sellerLvSvc.getById(updateData.getTargetSellerLvId());
+			SellerVO sellerVO = sellerSvc.getById(targetSellerId);
+			sellerVO.setSellerLvId(sellerLvVO);
+			sellerSvc.updateSeller(sellerVO);
+			
+			List<SellerLvVO> firstThreeElements =null;
+			List<SellerLvVO> sellerLvVOList =  sellerLvSvc.getAll();
+			if (sellerLvVOList.size()>=3) {
+			  firstThreeElements = sellerLvVOList.subList(0, 3);
+
+			}
+			System.out.println(sellerLvVOList);
+			
+			ResponseData responseData = new ResponseData(targetSellerId,updateData.getTargetSellerLvId(),firstThreeElements);
+			String jsonString = objectMapper.writeValueAsString(responseData);
+			
+			System.out.println(jsonString);
+			
+			
+			
+			return ResponseEntity.status(HttpStatus.OK).body(jsonString);
+			
+			
+		}catch(Exception e) 
+		{e.printStackTrace();
+		}
+		
+		return null;
+	}
+
 	@PostMapping("edit/ajax/all")
 	@ResponseBody
-	public ResponseEntity ajaxAll(@RequestBody Map<String, Object> requestData, HttpSession session) {
+	public ResponseEntity<?> ajaxAll(@RequestBody Map<String, Object> requestData, HttpSession session) {
 		try {
+			System.out.println(requestData);
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			// Convert requestData map to JSON
@@ -107,10 +158,10 @@ public class SellerLvControllerFront extends HttpServlet {
 
 				// TESTING
 				SellerVO sellerVO = (SellerVO) session.getAttribute("sellerVO");
-				Integer id = sellerVO.getSellerLvId().getSellerLvId();
-
+				Integer sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
+				Integer sellerId = sellerVO.getSellerId();
 				// @JsonIgnore // Prevent including SellerLvVO reference during serialization
-				ResponseData responseData = new ResponseData(id, targetList);
+				ResponseData responseData = new ResponseData(sellerId,sellerLvId, targetList);
 				String jsonString = objectMapper.writeValueAsString(responseData);
 
 //				System.out.println(jsonString);
@@ -127,12 +178,40 @@ public class SellerLvControllerFront extends HttpServlet {
 		}
 
 	}
+	
+	
+	static class UpdateData {
+		private Integer targetSellerId;
+		private Integer targetSellerLvId;
+		public Integer getTargetSellerId() {
+			return targetSellerId;
+		}
+		public void setTargetSellerId(Integer targetSellerId) {
+			this.targetSellerId = targetSellerId;
+		}
+		public Integer getTargetSellerLvId() {
+			return targetSellerLvId;
+		}
+	
+		public UpdateData() {
+			super();
+		}
+		public UpdateData(Integer targetSellerId, Integer targetSellerLvId) {
+			super();
+			this.targetSellerId = targetSellerId;
+			this.targetSellerLvId = targetSellerLvId;
+		}
+		public void setTargetSellerLvId(Integer targetSellerLvId) {
+			this.targetSellerLvId = targetSellerLvId;
+		}
+
+
+	}
 
 	static class MyData {
 		private List<Integer> data;
 
 		public MyData() {
-			// Default constructor
 		}
 
 		public MyData(List<Integer> data) {
@@ -148,35 +227,48 @@ public class SellerLvControllerFront extends HttpServlet {
 	@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class ResponseData {
-		private Integer id;
+		private Integer sellerId;
+		private Integer sellerLvId;
 		private List<SellerLvVO> targetList;
-
-
 
 		public ResponseData() {
 			// Default constructor
 		}
 
-		public ResponseData(Integer id, List<SellerLvVO> targetList) {
-			this.id = id;
+		public Integer getSellerId() {
+			return sellerId;
+		}
+
+		public void setSellerId(Integer sellerId) {
+			this.sellerId = sellerId;
+		}
+	
+		public Integer getSellerLvId() {
+			return sellerLvId;
+		}
+
+		public void setSellerLvId(Integer sellerLvId) {
+			this.sellerLvId = sellerLvId;
+		}
+
+		public ResponseData(Integer sellerId, Integer sellerLvId, List<SellerLvVO> targetList) {
+			super();
+			this.sellerId = sellerId;
+			this.sellerLvId = sellerLvId;
 			this.targetList = targetList;
 		}
 
+		public List<SellerLvVO> getTargetList() {
+			return targetList;
+		}
+
+		public void setTargetList(List<SellerLvVO> targetList) {
+			this.targetList = targetList;
+		}
+
+		
+
 	}
 
-//	    @PostMapping("ajax/update")
-//	    public ResponseEntity<SellerVO> ajaxAll(@Valid @RequestBody SellerVO sellerVO,Model model,   BindingResult result) {
-////			System.out.println(sellerVO);
-//
-//	    	if (result.hasErrors()){
-//	    		return ResponseEntity.badRequest().build();
-//	    	}
-//	    	
-//	    	
-//	        
-//
-//	        return ResponseEntity.ok(updatedSellerList);
-//
-//	       }
 
 }

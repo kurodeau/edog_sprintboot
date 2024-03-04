@@ -24,8 +24,9 @@
                 <h4 class="my-0 fw-normal table-text">免費</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  5%<small class="text-muted fw-light">/每筆</small>
+                <h1 class="card-title pricing-card-title platformCommission">
+                  <span>5%</span>
+                  <small class="text-muted fw-light">/每筆</small>
                 </h1>
                 <ul class="list-unstyled mt-3 mb-4">
                   <li>無廣告</li>
@@ -51,8 +52,9 @@
                 <h4 class="my-0 fw-normal">專業</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  8%<small class="text-muted fw-light">/每筆</small>
+                <h1 class="card-title pricing-card-title platformCommission">
+                  <span>8%</span>
+                  <small class="text-muted fw-light">/每筆</small>
                 </h1>
                 <ul class="list-unstyled mt-3 mb-4">
                   <li>基本商品廣告</li>
@@ -81,8 +83,9 @@
                 <h4 class="my-0 fw-normal">企業</h4>
               </div>
               <div class="card-body">
-                <h1 class="card-title pricing-card-title">
-                  12%<small class="text-muted fw-light">/每筆</small>
+                <h1 class="card-title pricing-card-title platformCommission">
+                  <span>12%</span>
+                  <small class="text-muted fw-light">/每筆</small>
                 </h1>
                 <ul class="list-unstyled mt-3 mb-4">
                   <li>主板廣告</li>
@@ -193,7 +196,9 @@
             >
               關閉
             </button>
-            <button type="button" class="btn btn-primary">確認</button>
+            <button type="button" class="btn btn-primary btn-confirm">
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -210,7 +215,7 @@
       <div class="modal-dialog modal-dialog-centered vertical-align-center">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="ProModalLabel">回去當免費仔😱</h5>
+            <h5 class="modal-title" id="ProModalLabel">專業方案</h5>
             <button
               type="button"
               class="btn-close"
@@ -218,7 +223,7 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">確定降級嗎?</div>
+          <div class="modal-body">成為專業賣家的選擇</div>
           <div class="modal-footer">
             <button
               type="button"
@@ -227,7 +232,9 @@
             >
               關閉
             </button>
-            <button type="button" class="btn btn-primary">確定</button>
+            <button type="button" class="btn btn-primary btn-confirm">
+              確定
+            </button>
           </div>
         </div>
       </div>
@@ -244,9 +251,7 @@
       <div class="modal-dialog modal-dialog-centered vertical-align-center">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="TopModalLabel">
-              升級後資費會有所調整。請確認
-            </h5>
+            <h5 class="modal-title" id="TopModalLabel">企業方案</h5>
             <button
               type="button"
               class="btn-close"
@@ -254,7 +259,7 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body"></div>
+          <div class="modal-body">升級後資費會有所調整。請確認</div>
           <div class="modal-footer">
             <button
               type="button"
@@ -263,7 +268,9 @@
             >
               關閉
             </button>
-            <button type="button" class="btn btn-primary">確認</button>
+            <button type="button" class="btn btn-primary btn-confirm">
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -273,17 +280,35 @@
     <div th:replace="fragment-js"></div>
     <!-- Add this before the closing </body> tag -->
     <script>
-      $(document).ready(function () {
-        // Function to send AJAX request
-        function sendAjaxRequest() {
-          // Replace the URL with the actual endpoint where you want to send the request
+      $(document).ready(async function () {
+        let data = [1, 2, 3];
+        let jsonObj = await requestAll(data);
+        console.log(jsonObj);
+        let { sellerId, sellerLvId, targetList } = jsonObj;
+
+        updateButtonStates(sellerLvId);
+        updateTableContent(sellerLvId, targetList);
+        bindingModalBtn(data);
+
+        confirmbtn_els = document.querySelectorAll(".btn-confirm");
+
+        if (confirmbtn_els) {
+          confirmbtn_els.forEach((confirmBtn) => {
+            confirmBtn.addEventListener("click", function () {
+              let clickedLvId = confirmBtn.getAttribute("data-plan");
+              updateSellerId(sellerId, clickedLvId);
+            });
+          });
+        }
+      });
+
+      function requestAll(data) {
+        return new Promise((resolve, reject) => {
           var url =
             window.location.origin + window.location.pathname + "/ajax/all";
-          var userSellerLevelId = ""; // Replace with actual user's seller level ID
-          console.log(url);
 
           // Fetch seller data and user's seller level ID (replace with actual data)
-          data = [1, 2, 3];
+
           // AJAX request
           $.ajax({
             type: "POST",
@@ -294,34 +319,43 @@
             }),
             success: function (response) {
               console.log("AJAX request successful:", response);
-              let jsonObj = JSON.parse(response);
-              updateButtonStates(jsonObj.id);
-              updateTableContent(jsonObj.id, jsonObj.targetList);
+              resolve(JSON.parse(response));
             },
             error: function (error) {
-              console.error("AJAX request failed:", error);
+              reject(error);
               // Handle the error if needed
             },
           });
-        }
+        });
+        // Replace the URL with the actual endpoint where you want to send the request
+      }
 
-        // Call the function when the page is loaded
-        sendAjaxRequest();
-      });
+      function bindingModalBtn(data) {
+        // bindingModalBtn會依照陣列順序綁定ID
+        let confirmbtn_els = document.querySelectorAll(".btn-confirm");
+        confirmbtn_els.forEach((confirmbtn_el, index) => {
+          confirmbtn_el.setAttribute("data-plan", data[index]);
+        });
+      }
 
       function updateButtonStates(sellerTargetId) {
         var sellerLevel = sellerTargetId;
         let planElements = document.querySelectorAll(".btn-plan");
         planElements.forEach((planElement) => {
-          if (sellerLevel === planElement.getAttribute("data-plan")) {
-            planElement.classList.add("btn-current");
+          // console.log("==updateButtonStates==");
+          // console.log(sellerTargetId);
+          // console.log(planElement.getAttribute("data-plan"));
+          // console.log("==updateButtonStates==");
+
+          if (sellerLevel === parseInt(planElement.getAttribute("data-plan"))) {
+            planElement.setAttribute("disabled", true);
             planElement.classList.remove("btn-sellerdark");
-            planElement.setAttribute("readonly", true);
+            planElement.classList.add("btn-current");
+            planElement.textContent = "現有方案";
           } else {
+            planElement.removeAttribute("disabled");
             planElement.classList.remove("btn-current");
             planElement.classList.add("btn-sellerdark");
-            planElement.textContent = "現有方案";
-            planElement.removeAttribute("readonly");
           }
         });
       }
@@ -343,26 +377,45 @@
 
       function updateTableContent(id, targetList) {
         let icon = "<i class='ri-check-line'></i>";
-        console.log(targetList);
-        console.log(targetList[0]);
-
         let keys = Object.keys(targetList[0]);
+        let priceTags = document.querySelectorAll(".platformCommission");
+
+        // console.log("==updateTableContent==");
+        // console.log(targetList);
+        // console.log(targetList[0]);
+        //console.log(priceTags);
+        // console.log("==updateTableContent==");
+
+        priceTags.forEach((priceTag, index) => {
+          let decimalCommission = targetList[index]["platformCommission"];
+          console.log("==updateTableContent==");
+          console.log(priceTag);
+          console.log("==updateTableContent==");
+
+          priceTag.querySelector("span").textContent =
+            (decimalCommission * 100).toFixed(0) + "%";
+        });
 
         for (let key = 0; key < keys.length; key++) {
+          // key值
           let currentKey = keys[key];
           console.log(currentKey);
 
+          // 利用Id抓key值
           let el = document.querySelector("#" + keys[key]);
 
           if (el === null) {
             continue;
           }
 
+          // 更新下方Table
           let td_els = el.querySelectorAll("td");
           td_els.forEach((td_el, index) => {
-            console.log(index);
-            console.log(targetList[index][currentKey]);
-            console.log(typeof targetList[index][currentKey]);
+            // console.log("==updateTableContent==datatable==");
+            // console.log(index);
+            // console.log(targetList[index][currentKey]);
+            // console.log(typeof targetList[index][currentKey]);
+            // console.log("==updateTableContent==datatable==");
 
             if (targetList[index][currentKey] === true) {
               td_el.innerHTML = icon;
@@ -373,6 +426,41 @@
             }
           });
         }
+      }
+
+      function updateSellerId(sellerId, selectedLvId) {
+        let url =
+          window.location.origin +
+          window.location.pathname +
+          "/api/v1/sellers/" +
+          sellerId;
+
+        console.log(url);
+
+        fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: { targetSellerId: sellerId, targetSellerLvId: selectedLvId },
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("HTTP error! Status:" + response);
+              return response.json();
+              //  let jsonObj = JSON.parse(response);
+            }
+          })
+          .then((jsonObj) => {
+            let { sellerId, sellerLvId, targetList } = jsonObj;
+            updateButtonStates(sellerLvId);
+            updateTableContent(sellerLvId, targetList);
+          })
+          .catch((error) => {
+            console.error("Fetch request failed:", error);
+          });
       }
     </script>
 
