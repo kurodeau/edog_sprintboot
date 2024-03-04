@@ -1,6 +1,6 @@
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
 
-package com.productImg.model;
+package com.product.model;
 
 import java.util.List;
 

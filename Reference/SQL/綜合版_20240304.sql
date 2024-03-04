@@ -102,17 +102,19 @@ createtime datetime DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS ad (
 adid int AUTO_INCREMENT primary KEY,
--- constraint fk_seller_sellerID
--- foreign key(sellerID) references seller(sellerID),
+sellerId int,
+constraint fk_seller_sellerID
+foreign key(sellerID) references seller(sellerID),
+
 adimg longblob,
 adImgUploadTime datetime,
 adName varchar(20),
 adUrl varchar(100),
-adStartTime datetime ,
-adEndTime datetime  ,
+adStartTime date ,
+adEndTime date  ,
 adLv int,
 adMemo varchar(100),
-isAdConfirm boolean,
+adstatus varchar(50),
 adCreateTime datetime DEFAULT CURRENT_TIMESTAMP,
 isEnabled boolean
 );
@@ -490,21 +492,19 @@ VALUES
   ('Fren', 'adminpass9', 10, NOW()),
   ('Lulia', 'adminpass10', 10, NOW());
 -- 廣告  放入假資料-- 
-INSERT INTO ad (adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, isAdConfirm, adCreateTime, isEnabled)
+INSERT INTO ad (sellerId,adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, adStatus, adCreateTime, isEnabled)
 VALUES 
-  (NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 2, 'Another test ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 3, 'Yet another test ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 4, 'Test ad number four.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 5, 'The last test ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
-  (NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true);
-
-
+  (1,NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', "審核中", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 2, 'Another test ad.', "審核中", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 3, 'Yet another test ad.', "審核中", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 4, 'Test ad number four.', "審核中", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 5, 'The last test ad.', "未上架", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true);
 -- 廣告審核  放入測試資料-- 
 INSERT INTO adConfirm (adid, failReason, confirmTime, reviewStatus)
 VALUES 
@@ -603,6 +603,7 @@ VALUES
     (3, '標題3', '這是文章3的內容。', NULL, '2024-03-03 10:00:00','2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
     (4, '標題4', '這是文章4的內容。', NULL, '2024-03-03 10:00:00','2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
     (5, '標題5', '這是文章5的內容。', NULL, '2024-03-03 10:00:00','2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
+
 -- 文章喜歡  放入測試資料-- 
 INSERT INTO articleLike (memberId, articleId, articleLikeListTime)
 VALUES
@@ -695,8 +696,6 @@ VALUES
     (2, 1, 3, FALSE, NULL, NULL, NULL, NULL, TRUE),
     (2, 2, 1, TRUE, 5, '2023-02-15 14:45:00', 'Amazing!', NULL, TRUE),
     (3, 3, 1, FALSE, NULL, NULL, NULL, NULL, TRUE);
-
-
 -- 檢舉Type  放入測試資料-- 
 INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (1, '垃圾訊息'),
@@ -709,7 +708,6 @@ INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (8, '不實消息'),
     (9, '冒充身份'),
     (10, '其他');
-
 -- 檢舉  放入測試資料-- 
 INSERT INTO report (reportMemberId, reportTargetType, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
 VALUES
@@ -718,3 +716,4 @@ VALUES
     (3, 1, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
     (4, 0, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
     (5, 1, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
+

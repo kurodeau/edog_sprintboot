@@ -734,6 +734,19 @@ mark.green {
 .hamburger {
   font-size: 1.2vw;
 }
+
+.preview-image {
+ max-width: 200px;
+ max-height: 150px;
+ margin-right: 10px;
+  }
+
+#subImages_blob_holder {
+ display: flex;
+ flex-wrap:wrap;
+  }
+
+
 /*--------------------------------------------------------------
 # RWD
 --------------------------------------------------------------*/
