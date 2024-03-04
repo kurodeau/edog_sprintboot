@@ -26,10 +26,8 @@ CREATE TABLE IF NOT EXISTS seller (
     sellerCompanyPhone VARCHAR(10),
     sellerCompanyExtension VARCHAR(10),
     sellerMobile VARCHAR(10),
-
     sellerCounty VARCHAR(5),
     sellerDistrict VARCHAR(5),
-
     sellerAddress VARCHAR(100),
     sellerPassword VARCHAR(100),
     sellerBankAccount VARCHAR(100),
@@ -106,18 +104,17 @@ createtime datetime DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS ad (
 adid int AUTO_INCREMENT primary KEY,
-sellerId int,
-constraint fk_seller_sellerID
-foreign key(sellerID) references seller(sellerID),
+-- constraint fk_seller_sellerID
+-- foreign key(sellerID) references seller(sellerID),
 adimg longblob,
 adImgUploadTime datetime,
 adName varchar(20),
 adUrl varchar(100),
-adStartTime date ,
-adEndTime date  ,
+adStartTime datetime ,
+adEndTime datetime  ,
 adLv int,
 adMemo varchar(100),
-adstatus varchar(50),
+isAdConfirm boolean,
 adCreateTime datetime DEFAULT CURRENT_TIMESTAMP,
 isEnabled boolean
 );
@@ -169,7 +166,6 @@ CREATE TABLE IF NOT EXISTS petdraw (
     petdrawlat DOUBLE,
     CONSTRAINT fk_member FOREIGN KEY (memberId) REFERENCES buyer(memberId),
     CONSTRAINT fk_member_pair FOREIGN KEY (memberpairId) REFERENCES buyer(memberId)
-
 );
 -- BS聊天室  創建table-- 
 Create Table IF NOT EXISTS sellChatRoom(
@@ -226,12 +222,10 @@ articleTypeName varchar(100)
 );
 -- 文章  創建table-- 
 CREATE TABLE IF NOT EXISTS article(
-    articleId INT PRIMARY KEY AUTO_INCREMENT,
+   articleId INT PRIMARY KEY AUTO_INCREMENT,
     memberId INT,
     articleTitle VARCHAR(255),
     articleContent VARCHAR(500),
-    upFiles LONGBLOB,
-    artCreateTime DATETIME,
     artUpdateTime DATETIME,
     articleLike INT,
     articleComment INT,
@@ -241,7 +235,21 @@ CREATE TABLE IF NOT EXISTS article(
     FOREIGN KEY (memberId) REFERENCES buyer(memberId),
     FOREIGN KEY (articleSort) REFERENCES articleType(articleTypeId)
 );
-
+CREATE TABLE IF NOT EXISTS articlePic(
+articlePicId int primary key AUTO_INCREMENT,
+articleId int,
+articlePicBlob LONGBLOB,
+articlePicTime datetime DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (articleId) REFERENCES article(articleId)
+);
+-- 文章影片  創建table-- 
+CREATE TABLE IF NOT EXISTS articleVid(
+articleVidId Int primary key AUTO_INCREMENT,
+articleId Int,
+articleVidBlob LONGBLOB,
+articleVidTime datetime DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (articleId) REFERENCES article(articleId)
+);
 -- 文章喜歡  創建table-- 
 CREATE TABLE IF NOT EXISTS articleLike(
 articleLikeId Int primary key AUTO_INCREMENT,
@@ -355,9 +363,7 @@ CREATE TABLE IF NOT EXISTS productOrder (
 );
 -- 訂單明細  創建table -- 
 CREATE TABLE IF NOT EXISTS orderDetails (
-
-    orderDetailsId INT PRIMARY KEY AUTO_INCREMENT,
-    orderId INT,
+    orderDetailsId INT,
     productId INT,
     purchaseQuantity INT,
     isCommented BOOLEAN,
@@ -366,15 +372,14 @@ CREATE TABLE IF NOT EXISTS orderDetails (
     comments VARCHAR(200),
     attachments VARCHAR(200),
     isEnable BOOLEAN,
-    FOREIGN KEY (orderId) REFERENCES productOrder (orderId), 
+    PRIMARY KEY (orderDetailsId, productId),
+    FOREIGN KEY (orderDetailsId) REFERENCES productOrder (orderId), 
     FOREIGN KEY (productId) REFERENCES product (productId)
 );
 -- 檢舉  創建table-- 
 CREATE TABLE IF NOT EXISTS report(
 reportId Int primary key AUTO_INCREMENT,
 reportMemberId Int,
-
-reportTargetType INT,
 replyId Int,
 articleId Int,
 reportTypeId Int,
@@ -413,7 +418,6 @@ VALUES
     (3, 'seller8@example.com', 'ABC Company', 'H8901234', 2200000, 'Frank Lin', '0223456789', '123', '0989012345', '台中市', '北區', 'XX巷 YY路 8號', 'Password8', '890123456', '901', '21098765', true),
     (2, 'seller9@example.com', 'JKL Enterprises', 'I9012345', 2500000, 'Grace Wu', '0223456789', '234', '0990123456', '台北市', '萬華區', 'XX巷 YY路 9號', 'Password9', '901234567', '012', '10987654', true),
     (1, 'seller10@example.com', 'PQR Industries', 'J0123456', 2800000, 'Henry Chang', '0223456789', '345', '0911234567', '新北市', '三峽區', 'XX巷 YY路 10號', 'Password10', '012345678', '123', '09876543', true);
-
 
 -- 會員資料  放入測試資料-- 
 INSERT INTO buyer (
@@ -497,20 +501,20 @@ VALUES
   ('Fren', 'adminpass9', 10, NOW()),
   ('Lulia', 'adminpass10', 10, NOW());
 -- 廣告  放入假資料-- 
-
-INSERT INTO ad (sellerId,adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, adStatus, adCreateTime, isEnabled)
+INSERT INTO ad (adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, isAdConfirm, adCreateTime, isEnabled)
 VALUES 
-  (1,NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', "審核中", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 2, 'Another test ad.', "審核中", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 3, 'Yet another test ad.', "審核中", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 4, 'Test ad number four.', "審核中", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 5, 'The last test ad.', "未上架", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true);
+  (NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 2, 'Another test ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 3, 'Yet another test ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 4, 'Test ad number four.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 5, 'The last test ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true),
+  (NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', true, NOW(), true);
+
 
 -- 廣告審核  放入測試資料-- 
 INSERT INTO adConfirm (adid, failReason, confirmTime, reviewStatus)
@@ -555,7 +559,6 @@ VALUES
     (3, '2023-09-05 10:00:00', '2023-09-10 12:15:00', '2023-09-15 14:30:00', 13000, 650, 12350, 1, 'Eighth remittance'),
     (1, '2023-10-10 14:15:00', '2023-10-15 16:30:00', '2023-10-20 18:45:00', 19000, 950, 18050, 1, 'Ninth remittance');
 -- 寵物抽卡  放入測試資料-- 
-
 INSERT INTO petdraw (memberId, memberpairId, ismemberlike, memberrestime, memberpairrestime, ismemberpairlike, petdrawtime, petdrawlog, petdrawlat)
 VALUES
     (1, 2, true, '2023-01-05 12:00:00', '2023-01-05 12:30:00', false, '2023-01-05 13:00:00', 25.123, 121.456),
@@ -604,16 +607,27 @@ INSERT INTO articleType (articleTypeName) VALUES
   ('文章分類5');
 
 -- 文章  放入測試資料-- 
-
-INSERT INTO article (memberId, articleTitle, articleContent, upFiles,artCreateTime,artUpdateTime, articleLike, articleComment, articleShare, articleSort, isEnabled)
+INSERT INTO article (memberId, articleTitle, articleContent, artUpdateTime, articleLike, articleComment, articleShare, articleSort, isEnabled)
 VALUES
-    (1, '標題1', '這是文章1的內容。', NULL, '2024-03-03 10:00:00','2023-01-05 10:20:00', 15, 8, 5, 1, TRUE),
-    (2, '標題2', '這是文章2的內容。', NULL, '2024-03-03 10:00:00','2023-02-10 14:45:00', 20, 12, 8, 2, FALSE),
-    (3, '標題3', '這是文章3的內容。', NULL, '2024-03-03 10:00:00','2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
-    (4, '標題4', '這是文章4的內容。', NULL, '2024-03-03 10:00:00','2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
-    (5, '標題5', '這是文章5的內容。', NULL, '2024-03-03 10:00:00','2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
-
-
+    (1, '標題1', '這是文章1的內容。', '2023-01-05 10:20:00', 15, 8, 5, 1, TRUE),
+    (2, '標題2', '這是文章2的內容。', '2023-02-10 14:45:00', 20, 12, 8, 2, FALSE),
+    (3, '標題3', '這是文章3的內容。', '2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
+    (4, '標題4', '這是文章4的內容。', '2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
+    (5, '標題5', '這是文章5的內容。', '2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
+-- 文章圖片  放入測試資料-- 
+INSERT INTO articlePic (articleId, articlePicBlob, articlePicTime)
+VALUES
+    (1, NULL, '2023-01-05 10:30:00'),
+    (2, NULL, '2023-02-10 15:00:00'),
+    (3, NULL, '2023-03-15 19:00:00'),
+    (4, NULL, '2023-04-20 08:30:00'),
+    (5, NULL, '2023-05-25 13:00:00');
+-- 文章影片  放入測試資料-- 
+INSERT INTO articleVid (articleId, articleVidBlob, articleVidTime)
+VALUES
+    (1, NULL, '2023-01-05 10:45:00'),
+    (2, NULL, '2023-02-10 15:15:00'),
+    (3, NULL, '2023-03-15 19:30:00');
 -- 文章喜歡  放入測試資料-- 
 INSERT INTO articleLike (memberId, articleId, articleLikeListTime)
 VALUES
@@ -699,27 +713,13 @@ VALUES
 (2, 3, NULL, 15, 3, 800, 785, '2023-04-01 16:00:00', 1, 45678, 'Emily Davis', '2023-04-05 18:00:00', '5678901234', '678 Maple St', true, '2023-04-07 10:00:00'),
 (3, 4, 5, 10, 5, 900, 890, '2023-05-01 09:30:00', 2, 56789, 'Robert Wilson', '2023-05-05 11:45:00', '0123456789', '789 Elm St', false, null);
 -- 訂單明細  放入測試資料-- 
-
--- 訂單1的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (1, 1, 2, true, 4, '2024-03-04 12:30:00', '很滿意', 'attachment1.jpg', true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (1, 1, 1, false, NULL, NULL, NULL, NULL, true);
-
--- 訂單2的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (2, 2, 3, true, 5, '2024-03-05 14:45:00', '非常好', 'attachment2.jpg', true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (2, 2, 2, true, 4, '2024-03-05 15:00:00', '不錯', 'attachment3.jpg', true);
-
--- 訂單3的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (3, 3, 1, false, NULL, NULL, NULL, NULL, true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (3, 2, 4, true, 3, '2024-03-06 10:20:00', '一般般', 'attachment4.jpg', true);
+INSERT INTO orderDetails (orderDetailsId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable)
+VALUES
+    (1, 1, 2, TRUE, 4, '2023-01-01 12:30:00', 'Great orderDetailsproductOrderproduct!', NULL, TRUE),
+    (1, 2, 1, FALSE, NULL, NULL, NULL, NULL, TRUE),
+    (2, 1, 3, FALSE, NULL, NULL, NULL, NULL, TRUE),
+    (2, 2, 1, TRUE, 5, '2023-02-15 14:45:00', 'Amazing!', NULL, TRUE),
+    (3, 3, 1, FALSE, NULL, NULL, NULL, NULL, TRUE);
 
 
 -- 檢舉Type  放入測試資料-- 
@@ -743,4 +743,3 @@ VALUES
     (3, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
     (4, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
     (5, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
-

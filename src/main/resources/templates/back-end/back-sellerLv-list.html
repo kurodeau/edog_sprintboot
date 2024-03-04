@@ -194,16 +194,16 @@
             method: "DELETE",
             success: function (response) {
               if (response.success) {
-                alert("刪除成功");
+                alert(response.message);
                 // true 表示強制從伺服器重新加載頁面，忽略緩存
                 location.reload(true);
               } else {
                 // 刪除失敗
-                alert("刪除失敗");
+                alert(response.message);
               }
             },
             error: function () {
-              alert("請求失敗");
+              alert(response.message);
             },
             complete: function () {
               // This will be called regardless of success or error
