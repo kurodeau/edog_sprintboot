@@ -1,18 +1,19 @@
 package com.product.model;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.seller.entity.SellerVO;
 
@@ -36,12 +37,22 @@ public class ProductVO {
     private Integer totalStars;    
     private Integer totalReviews;
     private Integer productSort;
-    private Boolean isEnabled;
-
-   
+    private Boolean isEnabled;   
     private SellerVO sellerVO;
     
+    //OnetoMany需要加上
+    private Set<ProductImgVO> productImgVO = new HashSet<ProductImgVO>();
     
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "productVO")
+	public Set<ProductImgVO> getProductImgVO() {
+	    return productImgVO;
+	}
+	
+	public void setProductImgVO(Set<ProductImgVO> productImgVO) {
+		this.productImgVO = productImgVO;
+	}
+   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "productId")
@@ -163,15 +174,11 @@ public class ProductVO {
 	    this.sellerVO = sellerVO;
 	}
 
-	@Override
-	public String toString() {
-		return "ProductVO [productId=" + productId + ", productCoverImg="
-				+ productCoverImg != null && productCoverImg.length > 0 ? "Has Pic" : "No Pic"+ ", productName=" + productName + ", productPrice=" + productPrice
-				+ ", productStockQuantity=" + productStockQuantity + ", productDetails=" + productDetails
-				+ ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime + ", totalStars="
-				+ totalStars + ", totalReviews=" + totalReviews + ", productSort=" + productSort + ", isEnabled="
-				+ isEnabled + ", seller=" + sellerVO + "]";
-	}
+
+
+
+	
+	
 
     // Add getters and setters
 
