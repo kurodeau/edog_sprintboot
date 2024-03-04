@@ -15,7 +15,6 @@ public class NewsTickerService {
 	NewsTickerRepository repository;
 
 	public void addNewsTicker(@NonNull NewsTickerVO newsTickerVO) {
-		System.out.println("NewsTickerService");
 		repository.save(newsTickerVO);
 	}
 

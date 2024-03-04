@@ -36,15 +36,6 @@ public class AdController {
 	    public String selleradsadd(Model model){
 	        return "front-end/seller/seller-ads-add";
 	    }
-	 
-	 
-	@GetMapping("seller-ads-add")
-	public String addAd(ModelMap model) {
-		AdVO adVO = new AdVO();
-		model.addAttribute("adVO" , adVO);
-		return "front-end/seller/seller-ads-add" ;
-		
-	}
 	
 	
 	@PostMapping("insert")
@@ -83,24 +74,25 @@ public class AdController {
 		List<AdVO> list = adSvc.getAll();
 		model.addAttribute("AdListData" , list);
 		model.addAttribute("success" , "-(新增成功)");
-		return "redirect:/front/seller/ad/add";
+		return "redirect:/front/seller/ad/adlist";
 	}
 	
 	@PostMapping("getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("adId") String adId,ModelMap model ) {
+		System.out.println(adId);
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("adVO" ,adVO);
-		return "back-end/ad/update_ad_input";
+		return "front-end/seller/seller-ads-update_ad";
 	}
 	
 	@PostMapping("update")
 	public String update(@Valid AdVO adVO , BindingResult result , ModelMap model,
-			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
+			@RequestParam("adImg") MultipartFile[] parts) throws IOException {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		result = removeFieldError(adVO,result,"upFiles");
+		result = removeFieldError(adVO,result,"adImg");
 		
 		if(parts[0].isEmpty()) {
 			byte[] upFiles = adSvc.getOneAd(adVO.getAdId()).getAdImg();
@@ -112,7 +104,7 @@ public class AdController {
 			}
 		}
 		if(result.hasErrors()) {
-			return "back-end/ad/update_ad_input";
+			return "front-end/seller/seller-ads-update_ad";
 		}
 		/*************************** 2.開始修改資料 *****************************************/
 		adSvc.updateAd(adVO);
@@ -120,11 +112,11 @@ public class AdController {
 		model.addAttribute("success" , "-(修改成功)");
 		adVO = adSvc.getOneAd(Integer.valueOf(adVO.getAdId()));
 		model.addAttribute("adVO",adVO);
-		return "back-end/ad/listOneAd";
+		return "redirect:/front/seller/ad/adlist";
 	}
 	
 	@PostMapping("delete")
-	public String delete(@RequestParam("adid") String adId , ModelMap model) {
+	public String delete(@RequestParam("adId") String adId , ModelMap model) {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始刪除資料 *****************************************/
 		adSvc.deleteAd(Integer.valueOf(adId));
@@ -134,6 +126,25 @@ public class AdController {
 		model.addAttribute("success" , "-(刪除成功)");
 		return "back-end/emp/ListAllAd";
 	}
+	
+	@PostMapping("deleteStatus")
+	public String deleteStatus(@RequestParam("adId") String adId , ModelMap model) {
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		/*************************** 2.開始刪除資料 *****************************************/
+		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
+		adVO.setIsEnabled(false); // 將廣告設置為禁用
+		adSvc.updateAd(adVO); // 更新廣告信息
+		
+		/*************************** 3.刪除完成,準備轉交(Send the Success view) **************/
+		List<AdVO> list = adSvc.getAll();
+		model.addAttribute("adListData",list);
+		model.addAttribute("success" , "-(刪除成功)");
+		return "redirect:/front/seller/ad/adlist";
+	}
+	
+	
+	
+	
 
 	// 去除BindingResult中某個欄位的FieldError紀錄
 	public BindingResult removeFieldError(AdVO adVO, BindingResult result, String removedFieldname) {

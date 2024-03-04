@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
 <th:block th:insert="~{/fragment-datatableCss}"></th:block>
 
 </head>
+
 
 <body>
 	<header class="fixed-top">
@@ -36,52 +37,63 @@
 		<!-- End NavBar  -->
 	</header>
 
-	<aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="front-end/article/aside-forum.html"></aside>
 
 	<main class="main main-layout-seller">
 		<div class="seller-container">
+			<h1  style="margin-top: 30px;">全部</h1>
+	      <div class="tab_list_block">
+	        <ul class="tab_list">
+	          <li><a href="#" data-target="tab1" class="tab -on">熱門</a></li>
+	          <li><a href="#" data-target="tab2" class="tab">最新</a></li>
+	        </ul>
+	        <hr>  
+	      </div>
 			<div class="pagetitle">
-				<h1>走馬燈清單</h1>
-				<a class="btn" th:href="@{addNewsTicker}">新增走馬燈</a>
+				<h1>賣家清單</h1>
 			</div>
 			<table id="example" class="table table-striped table-bordered"
 				style="width: 100%">
 				<thead>
 					<tr>
-						<th>編號</th>
-						<th>內容</th>
-						<th>排序</th>
-						<th>開始顯示</th>
-						<th>結束顯示</th>
-						<th>是否顯示</th>
+						<th>文章ID</th>
+						<th>會員頭像</th>
+						<th>會員ID</th>
+						<th>文章標題</th>
+						<th>文章內容</th>
+						<th>照片</th>
+						<th>上傳時間</th>
+						<th>喜歡數</th>
+						<th>留言數</th>
+						<th>分享數</th>
+						<th>文章分類</th>
+						<th>啟用狀態</th>
 						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
-
-
-					<th:block th:each="newsTickerVO : ${newsTickerListData}">
-						<tr>
-							<td th:text="${newsTickerVO.newsTickerId}"></td>
-							<td th:text="${newsTickerVO.newsTickerContent}"
-								style="max-width: 265px;
-								       overflow: hidden;
-								       text-overflow: ellipsis;
-								       white-space: nowrap;"></td>
-							<td th:text="${newsTickerVO.sort}"></td>
-							<td
-								th:text="${#dates.format(newsTickerVO.startTime, 'yyyy/MM/dd')}"></td>
-							<td
-								th:text="${#dates.format(newsTickerVO.endTime, 'yyyy/MM/dd')}"></td>
-							<td th:text="${newsTickerVO.isDisplay} ? 'Yes' : 'No'"></td>
-
+				
+			
+					<th:block th:each="articleVO : ${articleListData}">
+						<tr class="forum-article-list" >
+							<td th:text="${articleVO.articleId}"></td>
+							<td><img th:src="@{/article/DBGifReader} + '?memberId=' + ${articleVO.buyerVO.memberId}" width="100px"></td>
+							<td class="avatar-section" th:text="${articleVO.buyerVO.memberId}"></td>
+							<td th:text="${articleVO.articleTitle}"></td>
+							<td th:text="${articleVO.articleContent}"></td>
+							<td><img th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></td>
+							<td th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+							<td th:text="${articleVO.articleLike}"></td>
+							<td th:text="${articleVO.articleComment}"></td>
+							<td th:text="${articleVO.articleShare}"></td>
+							<td th:text="${articleVO.articleTypeVO.articleTypeName}"></td>
+							<td th:text="${articleVO.isEnabled}"></td>
 							<td><a class="btn"
-								th:href="@{getOne_For_Update(newsTickerId=${newsTickerVO.newsTickerId})}">編輯</a>
-								<!-- 還有沒有這個, 先註解
+								th:href="@{getOne_For_Update(id=${articleVO.articleId})}">編輯</a>
 								<button type="button" class="btn"
-									th:attr="data-delete-id=${newsTickerVO.newsTickerId}"
+									th:attr="data-delete-id=${articleVO.articleId}"
 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button>
-							    --></td>
+							</td>
 						</tr>
 					</th:block>
 
@@ -89,10 +101,11 @@
 			</table>
 		</div>
 	</main>
+	<!-- End Main -->
+
 
 	<!-- Modal -->
 	<!-- Modal 窗口 -->
-	<!-- 
 	<div class="modal fade" id="deleteModal" tabindex="-1"
 		aria-labelledby="deleteModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
@@ -112,15 +125,66 @@
 			</div>
 		</div>
 	</div>
-	 -->
 
 	<!-- ======= Footer, 後臺應該不需要footer ======= -->
-
-	<!-- Vendor & Main JS Files -->
-	<div th:replace="fragment-js"></div>
-	<div th:replace="~{/fragment-datatableJs}"></div>
-
-	<!-- Your custom script to initialize the DataTable with fixed columns -->
+	 <footer class="footer footer-layout on">
+	      <div
+	        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+	      >
+	        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+	
+	        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+	          <h5 class="mb-3">關於我們</h5>
+	          <ul class="nav flex-column">
+	            <li class="nav-item mb-2">
+	              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+	            </li>
+	            <li class="nav-item mb-2">
+	              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+	            </li>
+	          </ul>
+	        </div>
+	
+	        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+	          <h5 class="mb-3">常見問題</h5>
+	          <ul class="nav flex-column">
+	            <li class="nav-item mb-2">
+	              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+	            </li>
+	            <li class="nav-item mb-2">
+	              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+	            </li>
+	          </ul>
+	        </div>
+	      </div>
+	      <div class="row footer-container-custom">
+	        <div class="col-3"></div>
+	
+	        <div class="col-auto">
+	          <a
+	            href="/"
+	            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+	          >
+	            <svg class="bi" width="32" height="32" fill="currentColor">
+	              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+	            </svg>
+	          </a>
+	          <p class="text-body-secondary">
+	            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+	            CatTom.版權所有。
+	          </p>
+	        </div>
+	      </div>
+	    </footer>
+		<!-- Vendor & Main JS Files -->
+		<div th:replace="~{/fragment-js}"></div>
+		<div th:replace="~{/fragment-datatableJs}"></div>
+	
+	
+		<!-- Include DataTables JavaScript library -->
+		<!-- Include FixedColumns JavaScript library -->
+	
+		<!-- Your custom script to initialize the DataTable with fixed columns -->
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			// 初始化 DataTables
@@ -134,7 +198,7 @@
 						],
 						fixedColumns : true,
 						paging : true,
-						lengthMenu : [ 5, 10 ],
+						lengthMenu : [ 25, 50, 75, 100 ],
 						language : {
 							lengthMenu : "顯示 _MENU_ 筆資料",
 						},
@@ -211,5 +275,4 @@
 		});
 	</script>
 </body>
-
 </html>
