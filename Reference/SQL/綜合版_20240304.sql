@@ -33,12 +33,13 @@ CREATE TABLE IF NOT EXISTS seller (
     sellerBankAccountNumber VARCHAR(100),
     sellerCreateTime DATETIME DEFAULT CURRENT_TIMESTAMP,
     isConfirm BOOLEAN,
-	CONSTRAINT sellerLvId FOREIGN KEY (sellerLvId) REFERENCES sellerLv(sellerLvId)
+
+    CONSTRAINT sellerLvId FOREIGN KEY (sellerLvId) REFERENCES sellerLv(sellerLvId)
 );
 -- 會員資料  創建table-- 
 create table IF NOT EXISTS buyer(
-	memberId int AUTO_INCREMENT primary key,
-	memberEmail VARCHAR(200),
+    memberId int AUTO_INCREMENT primary key,
+    memberEmail VARCHAR(200),
     thirdFrom VARCHAR(100),
     memberName VARCHAR(100),
     memberPhone VARCHAR(10),
@@ -105,7 +106,6 @@ adid int AUTO_INCREMENT primary KEY,
 sellerId int,
 constraint fk_seller_sellerID
 foreign key(sellerID) references seller(sellerID),
-
 adimg longblob,
 adImgUploadTime datetime,
 adName varchar(20),
@@ -166,6 +166,7 @@ CREATE TABLE IF NOT EXISTS petdraw (
     petdrawlat DOUBLE,
     CONSTRAINT fk_member FOREIGN KEY (memberId) REFERENCES buyer(memberId),
     CONSTRAINT fk_member_pair FOREIGN KEY (memberpairId) REFERENCES buyer(memberId)
+
 );
 -- BS聊天室  創建table-- 
 Create Table IF NOT EXISTS sellChatRoom(
@@ -212,6 +213,7 @@ memberId int,
 foreign key (memberId) references buyer(memberId),
 memberBlockId int,
 foreign key (memberBlockId) references buyer(memberId),
+
 blackListTime datetime DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -237,6 +239,7 @@ CREATE TABLE IF NOT EXISTS article(
     FOREIGN KEY (memberId) REFERENCES buyer(memberId),
     FOREIGN KEY (articleSort) REFERENCES articleType(articleTypeId)
 );
+
 -- 文章喜歡  創建table-- 
 CREATE TABLE IF NOT EXISTS articleLike(
 articleLikeId Int primary key AUTO_INCREMENT,
@@ -350,7 +353,8 @@ CREATE TABLE IF NOT EXISTS productOrder (
 );
 -- 訂單明細  創建table -- 
 CREATE TABLE IF NOT EXISTS orderDetails (
-    orderDetailsId INT,
+    orderDetailsId INT PRIMARY KEY AUTO_INCREMENT,
+    orderId INT,
     productId INT,
     purchaseQuantity INT,
     isCommented BOOLEAN,
@@ -359,8 +363,7 @@ CREATE TABLE IF NOT EXISTS orderDetails (
     comments VARCHAR(200),
     attachments VARCHAR(200),
     isEnable BOOLEAN,
-    PRIMARY KEY (orderDetailsId, productId),
-    FOREIGN KEY (orderDetailsId) REFERENCES productOrder (orderId), 
+    FOREIGN KEY (orderId) REFERENCES productOrder (orderId), 
     FOREIGN KEY (productId) REFERENCES product (productId)
 );
 -- 檢舉  創建table-- 
@@ -548,6 +551,7 @@ VALUES
     (3, '2023-09-05 10:00:00', '2023-09-10 12:15:00', '2023-09-15 14:30:00', 13000, 650, 12350, 1, 'Eighth remittance'),
     (1, '2023-10-10 14:15:00', '2023-10-15 16:30:00', '2023-10-20 18:45:00', 19000, 950, 18050, 1, 'Ninth remittance');
 -- 寵物抽卡  放入測試資料-- 
+
 INSERT INTO petdraw (memberId, memberpairId, ismemberlike, memberrestime, memberpairrestime, ismemberpairlike, petdrawtime, petdrawlog, petdrawlat)
 VALUES
     (1, 2, true, '2023-01-05 12:00:00', '2023-01-05 12:30:00', false, '2023-01-05 13:00:00', 25.123, 121.456),
@@ -596,6 +600,7 @@ INSERT INTO articleType (articleTypeName) VALUES
   ('文章分類5');
 
 -- 文章  放入測試資料-- 
+
 INSERT INTO article (memberId, articleTitle, articleContent, upFiles,artCreateTime,artUpdateTime, articleLike, articleComment, articleShare, articleSort, isEnabled)
 VALUES
     (1, '標題1', '這是文章1的內容。', NULL, '2024-03-03 10:00:00','2023-01-05 10:20:00', 15, 8, 5, 1, TRUE),
@@ -603,6 +608,7 @@ VALUES
     (3, '標題3', '這是文章3的內容。', NULL, '2024-03-03 10:00:00','2023-03-15 18:30:00', 10, 5, 3, 3, TRUE),
     (4, '標題4', '這是文章4的內容。', NULL, '2024-03-03 10:00:00','2023-04-20 08:10:00', 25, 15, 10, 4, FALSE),
     (5, '標題5', '這是文章5的內容。', NULL, '2024-03-03 10:00:00','2023-05-25 12:50:00', 18, 10, 7, 5, TRUE);
+
 
 -- 文章喜歡  放入測試資料-- 
 INSERT INTO articleLike (memberId, articleId, articleLikeListTime)
@@ -689,13 +695,13 @@ VALUES
 (2, 3, NULL, 15, 3, 800, 785, '2023-04-01 16:00:00', 1, 45678, 'Emily Davis', '2023-04-05 18:00:00', '5678901234', '678 Maple St', true, '2023-04-07 10:00:00'),
 (3, 4, 5, 10, 5, 900, 890, '2023-05-01 09:30:00', 2, 56789, 'Robert Wilson', '2023-05-05 11:45:00', '0123456789', '789 Elm St', false, null);
 -- 訂單明細  放入測試資料-- 
-INSERT INTO orderDetails (orderDetailsId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable)
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, comments, attachments, isEnable)
 VALUES
-    (1, 1, 2, TRUE, 4, '2023-01-01 12:30:00', 'Great orderDetailsproductOrderproduct!', NULL, TRUE),
-    (1, 2, 1, FALSE, NULL, NULL, NULL, NULL, TRUE),
-    (2, 1, 3, FALSE, NULL, NULL, NULL, NULL, TRUE),
-    (2, 2, 1, TRUE, 5, '2023-02-15 14:45:00', 'Amazing!', NULL, TRUE),
-    (3, 3, 1, FALSE, NULL, NULL, NULL, NULL, TRUE);
+    (1, 1, 2, TRUE, 4, 'Good product!', 'image1.jpg', TRUE),
+    (1, 2, 1, FALSE, NULL, NULL, NULL, TRUE),
+    (2, 3, 3, TRUE, 5, 'Excellent service!', 'image2.jpg', TRUE),
+    (2, 4, 1, TRUE, 3, 'Could be better', NULL, TRUE),
+    (3, 5, 2, FALSE, NULL, NULL, NULL, TRUE);
 -- 檢舉Type  放入測試資料-- 
 INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (1, '垃圾訊息'),
@@ -709,11 +715,10 @@ INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (9, '冒充身份'),
     (10, '其他');
 -- 檢舉  放入測試資料-- 
-INSERT INTO report (reportMemberId, reportTargetType, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
+INSERT INTO report (reportMemberId, replyId, articleId, reportTypeId, reportTime, reportState, reportDealTime)
 VALUES
-    (1, 1, 1, NULL, 3, '2023-01-05 12:00:00', 1, '2023-01-06 14:30:00'),
-    (2, 0, NULL, 2, 8, '2023-02-10 17:30:00', 0, NULL),
-    (3, 1, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
-    (4, 0, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
-    (5, 1, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
-
+    (1, 1, NULL, 3, '2023-01-05 12:00:00', 1, '2023-01-06 14:30:00'),
+    (2, NULL, 2, 8, '2023-02-10 17:30:00', 0, NULL),
+    (3, 3, NULL, 5, '2023-03-15 14:45:00', 1, '2023-03-16 10:00:00'),
+    (4, NULL, 1, 10, '2023-04-20 09:15:00', 0, NULL),
+    (5, 2, NULL, 6, '2023-05-25 18:30:00', 1, '2023-05-26 12:45:00');
