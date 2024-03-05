@@ -1,131 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
-    
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
-    <!-- ======= Main ======= -->
 
-    <main class="main main-layout-seller on">
-      <div class="container">
-        <section
-          class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
-        >
-          <div class="container">
-            <div class="row justify-content-center">
-              <div
-                class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center"
-              >
-                <div class="d-flex justify-content-center py-4">
-                  <img src="assets/image/Medium.png" alt="" />
-                </div>
-                <h1>😉賣家會員登入</h1>
-                <!-- End Logo -->
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
+	<!-- ======= Main ======= -->
 
-                <form
-                  class="row needs-validation"
-                  novalidate
-                  action="sellerMain.html"
-                  method="post"
-                >
-                  <div class="col-12">
-                    <label for="validationCustom01" class="form-label"
-                      >帳號</label
-                    >
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="validationCustom01"
-                      placeholder="xxxx@email.com"
-                      required
-                    />
-                    <div class="valid-feedback">Looks good!</div>
-                    <div class="invalid-feedback">請輸入信箱</div>
-                  </div>
-                  <div class="col-12 mt-3">
-                    <label for="validationCustom02" class="form-label"
-                      >密碼</label
-                    >
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="validationCustom02"
-                      required
-                    />
-                    <div class="valid-feedback">Looks good!</div>
-                    <div class="invalid-feedback">請輸入密碼</div>
-                  </div>
+	<main class="main main-layout-seller on">
+		<div class="container">
+			<section
+				class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div
+							class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+							<div class="d-flex justify-content-center py-4">
+								<img src="assets/image/Medium.png" alt="" />
+							</div>
+							<h1>😉賣家會員登入</h1>
+							<!-- End Logo -->
 
-                  <div class="col-12 mt-3">
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        id="invalidCheck"
-                        required
-                      />
-                      <label class="form-check-label" for="invalidCheck">
-                        Agree to terms and conditions
-                      </label>
-                      <div class="invalid-feedback">
-                        You must agree before submitting.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row g-3 mt-5">
-                    <!-- 第一个列 -->
-                    <div class="col-6 d-flex justify-content-center">
-                      <button class="btn btn-primary btn-lg" type="submit">
-                        註&nbsp;&nbsp;&nbsp;冊
-                      </button>
-                    </div>
+							<form class="row needs-validation" novalidate
+								th:action="@{front/seller/main}" method="post">
+								<div class="col-12">
+									<label for="validationCustom01" class="form-label">帳號</label>
+									<input name="usernameinhtml" type="email" class="form-control"
+										id="validationCustom01" placeholder="xxxx@email.com" required />
+									<div class="valid-feedback">Looks good!</div>
+									<div class="invalid-feedback">請輸入信箱</div>
+								</div>
+								<div class="col-12 mt-3">
+									<label for="validationCustom02" class="form-label">密碼</label>
+									<input name="passwordinhtml" type="password"
+										class="form-control" id="validationCustom02" required />
+									<div class="valid-feedback">Looks good!</div>
+									<div class="invalid-feedback">請輸入密碼</div>
+								</div>
 
-                    <!-- 第二个列 -->
-                    <div class="col-6 d-flex justify-content-center">
-                      <button class="btn btn-primary btn-lg" type="submit">
-                        登&nbsp;&nbsp;&nbsp;入
-                      </button>
-                    </div>
+								<div class="col-12 mt-3">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value=""
+											id="invalidCheck" required /> <label
+											class="form-check-label" for="invalidCheck"> Agree to
+											terms and conditions </label>
+										<div class="invalid-feedback">You must agree before
+											submitting.</div>
+									</div>
+								</div>
+								<div class="row g-3 mt-5">
+									<!-- 第一个列 -->
+									<div class="col-6 d-flex justify-content-center">
+										<button class="btn btn-primary btn-lg" type="submit">
+											註&nbsp;&nbsp;&nbsp;冊</button>
+									</div>
 
-                    <div class="col mt-5">
-                      <div class="col d-flex justify-content-center">
-                        <a
-                          href="forgot"
-                          class="forgot-password-link"
-                          style="color: grey"
-                          >忘記密碼</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
-    <!-- End #main -->
+									<!-- 第二个列 -->
+									<div class="col-6 d-flex justify-content-center">
+										<button class="btn btn-primary btn-lg" type="submit">
+											登&nbsp;&nbsp;&nbsp;入</button>
+									</div>
 
-    <!-- End Main -->
+									<div class="col mt-5">
+										<div class="col d-flex justify-content-center">
+											<a href="forgot" class="forgot-password-link"
+												style="color: grey">忘記密碼</a>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+	<!-- End #main -->
 
-    <!-- ======= Footer ======= -->
-  
-    <!-- End Footer -->
-    <div th:replace="@{fragment-footer}"></div>
+	<!-- End Main -->
 
-    <div th:replace="@{fragment-js}"></div>
+	<!-- ======= Footer ======= -->
 
-    <!-- Local JS File -->
-  </body>
+	<!-- End Footer -->
+	<div th:replace="@{fragment-footer}"></div>
+
+	<div th:replace="@{fragment-js}"></div>
+
+	<!-- Local JS File -->
+</body>
 </html>

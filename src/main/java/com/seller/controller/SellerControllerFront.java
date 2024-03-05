@@ -34,6 +34,7 @@ public class SellerControllerFront extends HttpServlet {
 
 	@Autowired
 	SellerLvService sellerLvSvc;
+
 	
     
     @GetMapping("main")

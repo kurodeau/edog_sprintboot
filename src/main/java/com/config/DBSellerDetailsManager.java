@@ -1,59 +1,51 @@
 package com.config;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
 import com.seller.entity.SellerVO;
 import com.seller.repositary.SellerRepository;
-import com.seller.service.SellerService;
-import com.seller.service.SellerServiceImpl;
+
 
 @Component
-public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetailsManager {
+public class DBSellerDetailsManager implements UserDetailsService, UserDetailsManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(DBSellerDetailsManager.class);
 
 	@Autowired
 	SellerRepository sellerRepo;
 
-	
-//	private SellerService sellerSvc =new SellerServiceImpl();;
-//	private SellerService sellerSvc;
-//
-//	@Autowired
-//	public void setSellerService(SellerService sellervice) {
-//		this.sellerSvc = sellervice;
-//	}
-//	
-
-//	public DBUserDetailsManagerSeller(SellerService sellerSvc) {
-//		super();
-//		this.sellerSvc = sellerSvc;
-//	}
-	
-//	private final SellerService sellerSvc = new SellerService() ;
-
 
 	@Override
 	public void createUser(UserDetails user) {
+		SellerVO sellerVO = new SellerVO();
 		
-	 	
+		sellerVO.setSellerEmail(user.getUsername());
+		sellerVO.setSellerPassword(user.getPassword());
+		
+		sellerRepo.save(sellerVO);
+
 	}
 	
 	public void createUser(UserDetails user,SellerVO sellerVO) {
-		System.out.println("SSSSsdsasYYYasdasdasXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 		sellerVO.setSellerEmail(user.getUsername());
+
 		sellerVO.setSellerPassword(user.getPassword());
 		sellerVO.setIsConfirm(true);
-	
-				
+
 		sellerRepo.save(sellerVO);
 	}
 
@@ -63,20 +55,15 @@ public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetai
 		sellerVO.setSellerEmail(user.getUsername());
 		sellerVO.setSellerPassword(user.getPassword());
 		
-		
 		sellerRepo.save(sellerVO);
 	}
 
 	@Override
 	public void deleteUser(String username) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void changePassword(String oldPassword, String newPassword) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -90,24 +77,16 @@ public class DBUserDetailsManagerSeller implements UserDetailsService, UserDetai
 	// 在UsernamePasswordAutheniticationFilter過濾器 AttemptAutheniciation方法中
 	// 把用戶輸入的密碼和SQL中或的密名進行驗證
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-		System.out.println("=======loadUserByUsername============");
-		System.out.println(username);
-		System.out.println("=======loadUserByUsername============");
+		System.out.println(" UserDetails loadUserByUsername");
+		logger.error(username);
 		
 		
 		SellerVO targetUser =  sellerRepo.findByEmail(username);
-		
+
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		
-		System.out.println("=======loadUserByUsername============");
-		System.out.println(targetUser);
-		System.out.println("=======loadUserByUsername============");
 
-		
-		
-		// 參考InMemorySecurity的做法
+
 		if (targetUser == null) {
 			throw new UsernameNotFoundException(username);
 		} else {

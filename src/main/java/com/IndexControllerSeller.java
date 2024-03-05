@@ -53,13 +53,11 @@ public class IndexControllerSeller {
 	
 	@PostMapping("/seller/register/check")
 	public String checkregisterSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,HttpSession session) 	throws IOException {
-		
 		if (result.hasErrors()) {
 	        return "/front-end/seller/seller-register";
 		}
-		sellerSvc.addSeller(sellerVO);
 		model.addAttribute("success", "註冊成功");
-
+		sellerSvc.saveUserDetails(sellerVO);
 		
 		// TESTING 註冊登入後保存sellerVO狀態
 		session.setAttribute("sellerVO", sellerVO);
