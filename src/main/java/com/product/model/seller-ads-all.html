@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
+
+
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
+	
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+			<h1>廣告列表</h1>
+			<div class="card card-product-custom">
+				<div class="card-body">
+					<!-- Bordered Tabs -->
+					<ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab"
+						role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link active" id="overall-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-overall"
+								type="button" role="tab" aria-controls="overall"
+								aria-selected="true">全部</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="soldout-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-soldout"
+								type="button" role="tab" aria-controls="soldout"
+								aria-selected="false">審核中</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="unlisted-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-unlisted"
+								type="button" role="tab" aria-controls="unlisted"
+								aria-selected="false">未上架</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link seller-nav-link" id="listed-tab"
+								data-bs-toggle="tab" data-bs-target="#bordered-listed"
+								type="button" role="tab" aria-controls="listed"
+								aria-selected="false">已上架</button>
+						</li>
+					</ul>
+
+					<div class="tab-content pt-2" id="borderedTabContent">
+						<!-- 全部  廣告-->
+						<div class="tab-pane show active" id="bordered-overall"
+							role="tabpanel" aria-labelledby="overall-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-2">廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<!-- Item 3 -->
+								<div class="row item-row-custom" th:each="adVO : ${adListData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1">
+										<div class="d-flex flex-column align-items-center">
+											<!-- 全部中的表單 -->
+											<form method="post"
+												th:action="@{/front/seller/ad/getOne_For_Update}">
+												<button type="submit"
+													class="product align-self-start btn-func">編輯</button>
+												<input type="hidden" name="adId" th:value="${adVO.adId}">
+											</form>
+
+
+											<form id="deleteForm${adVO.adId}" method="post"
+												th:action="@{/front/seller/ad/deleteStatus}"
+												onsubmit="return confirmDelete('${adVO.adId}');">
+												<button type="submit"
+													class="product align-self-start btn-func">刪除</button>
+												<input type="hidden" name="adId" th:value="${adVO.adId}">
+											</form>
+
+
+
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+						</div>
+
+						<!-- 審核中-->
+						<div class="tab-pane" id="bordered-soldout" role="tabpanel"
+							aria-labelledby="soldout-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-2">廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListReviewData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+
+
+									<div class="col-1 d-flex flex-column align-items-center">
+
+										<!-- 審核中-->
+										<form method="post"
+											th:action="@{/front/seller/ad/getOne_For_Update}">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+
+										<form id="deleteForm${adVO.adId}" method="post"
+											th:action="@{/front/seller/ad/deleteStatus}"
+											onsubmit="return confirmDelete('${adVO.adId}');">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+
+
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<!-- 全部  未上架-->
+						<div class="tab-pane" id="bordered-unlisted" role="tabpanel"
+							aria-labelledby="unlisted-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-2">廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListUnLaunchData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1 d-flex flex-column align-items-center">
+										<!-- 未上架中的表單 -->
+										<form method="post"
+											th:action="@{/front/seller/ad/getOne_For_Update}">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+										<form id="launchForm${adVO.adId}" method="post"
+											th:action="@{/front/seller/ad/launch}"
+											onsubmit="return confirmLaunch('${adVO.adId}');">
+											<button type="submit"
+												class="product align-self-start btn-func">上架</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+										<form id="deleteForm${adVO.adId}" method="post"
+											th:action="@{/front/seller/ad/deleteStatus}"
+											onsubmit="return confirmDelete('${adVO.adId}');">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+						<!-- 全部  已上架-->
+
+						<div class="tab-pane" id="bordered-listed" role="tabpanel"
+							aria-labelledby="listed-tab">
+							<div class="container mt-3 container-list-custom">
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-2">廣告編號</div>
+									<div class="col-2">廣告圖片</div>
+									<div class="col-2">廣告名稱</div>
+									<div class="col-3">廣告時段</div>
+									<div class="col-2">狀態</div>
+									<div class="col-1">操作</div>
+								</div>
+
+
+								<div class="row item-row-custom"
+									th:each="adVO : ${adListLaunchData}">
+									<div class="col-2" th:text="${adVO.adId}"></div>
+									<div class="col-2">
+										<img
+											th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="100px" />
+									</div>
+									<div class="col-2" th:text="${adVO.adName}"></div>
+									<div class="col-3">
+										<div class="adStartTime" th:text="${adVO.adStartTime}"></div>
+										<div class="adEndTime" th:text="${adVO.adEndTime}"></div>
+									</div>
+									<div class="col-2" th:text="${adVO.adStatus}"></div>
+									<div class="col-1 d-flex flex-column align-items-center">
+										<!-- 已上架中的表單 -->
+										<form method="post"
+											th:action="@{/front/seller/ad/getOne_For_Update}">
+											<button type="submit"
+												class="product align-self-start btn-func">編輯</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+										<form id="unlaunchForm${adVO.adId}" method="post"
+											th:action="@{/front/seller/ad/unLaunch}"
+											onsubmit="return confirmUnLaunch('${adVO.adId}');">
+											<button type="submit"
+												class="product align-self-start btn-func">下架</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+										<form id="deleteForm${adVO.adId}" method="post"
+											th:action="@{/front/seller/ad/deleteStatus}"
+											onsubmit="return confirmDelete('${adVO.adId}');">
+											<button type="submit"
+												class="product align-self-start btn-func">刪除</button>
+											<input type="hidden" name="adId" th:value="${adVO.adId}">
+										</form>
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+					<!-- End Bordered Tabs -->
+				</div>
+			</div>
+		</div>
+	</main>
+	<!-- End Main -->
+
+	<div class="modal fade" id="deleteModal" tabindex="-1"
+		aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">確定要刪除嗎？</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+						確定刪除</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout on">
+		<div
+			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">關於我們</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">人才招募</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+				</ul>
+			</div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">常見問題</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">Q&A</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row footer-container-custom">
+			<div class="col-3"></div>
+
+			<div class="col-auto">
+				<a href="/"
+					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+					<svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+				</a>
+				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
+					© 2023 CatTom.版權所有。</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer -->
+
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="fragment-js"></div>
+
+
+	<script>
+		function confirmDelete(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要刪除嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("deleteForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function confirmLaunch(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要上架嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("launchForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function confirmUnLaunch(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要下架嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("unlaunchForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		// 		  $(".btn-del").on("click", function () {
+		// 	          let deleteId = $(this).data("delete-id");
+		// 	          console.log("deleteId in Btn: " + deleteId);
+		// 	          $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
+		// 	        });
+
+		// 	        // Listen to the confirmDeleteBtn click event
+		// 	        $("#confirmDeleteBtn").on("click", function () {
+		// 	          // Retrieve the deleteId from data-delete-id attribute
+		// 	          let deleteId = $(this).data("delete-id");
+		// 	          console.log("deleteId in Modal: " + deleteId);
+
+		// 	          let myModalEl = document.getElementById("deleteModal");
+		// 	          let modal = bootstrap.Modal.getInstance(myModalEl);
+
+		// 	          let currentLoc = window.location.href;
+		// 	          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+		// 	          console.log(currentLoc);
+
+		// 	          // Your AJAX request for deletion
+		// 	          $.ajax({
+		// 	            url: currentLoc + "/delete?id=" + deleteId,
+		// 	            method: "DELETE",
+		// 	            success: function (response) {
+		// 	              if (response.success) {
+		// 	                alert(response.message);
+		// 	                // true 表示強制從伺服器重新加載頁面，忽略緩存
+		// 	                location.reload(true);
+		// 	              } else {
+		// 	                // 刪除失敗
+		// 	                alert(response.message);
+		// 	              }
+		// 	            },
+		// 	            error: function () {
+		// 	              alert(response.message);
+		// 	            },
+		// 	            complete: function () {
+		// 	              // This will be called regardless of success or error
+		// 	              // Close the modal after the AJAX request is completed
+		// 	              // Reload the DataTable
+		// 	              modal.hide();
+		// 	            },
+		// 	          });
+	</script>
+
+
+
+</body>
+</html>

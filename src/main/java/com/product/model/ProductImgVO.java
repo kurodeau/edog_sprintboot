@@ -1,6 +1,7 @@
 package com.product.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 		private ProductVO productVO; // Replace YourProductVO with your actual product entity
 //		private Integer productId;
 		private byte[] productImg;
-		private Date productImgTime;		
+		private Timestamp productImgTime;		
 		private Boolean isCover;
 		private Boolean isEnabled;
 
@@ -60,11 +61,11 @@ import javax.persistence.Table;
 		}
 
 		@Column(name = "productImgTime")
-		public Date getProductImgTime() {
+		public Timestamp getProductImgTime() {
 			return productImgTime;
 		}
 
-		public void setProductImgTime(Date productImgTime) {
+		public void setProductImgTime(Timestamp productImgTime) {
 			this.productImgTime = productImgTime;
 		}
 
