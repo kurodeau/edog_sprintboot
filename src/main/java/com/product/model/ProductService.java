@@ -43,17 +43,29 @@ public class ProductService {
 		
 		List<ProductVO> allProducts = repository.findAll();
 		List<ProductVO> list = allProducts.stream()
-										  .filter(pt -> "已出售".equals(pt.getProductStatus()))
+										  .filter(pt -> "已售完".equals(pt.getProductStatus())&& Boolean.TRUE.equals(pt.getIsEnabled()))
 										  .collect(Collectors.toList());
 		return list;
 	}
+	
+	
+public List<ProductVO> getProductLaunch(){
+		
+		
+		List<ProductVO> allProducts = repository.findAll();
+		List<ProductVO> list = allProducts.stream()
+										  .filter(pt -> "已上架".equals(pt.getProductStatus())&& Boolean.TRUE.equals(pt.getIsEnabled()))
+										  .collect(Collectors.toList());
+		return list;
+	}
+	
 	
 	
 	public List<ProductVO> getProductUnLaunch(){
 		
 		List<ProductVO> allProducts = repository.findAll();
 		List<ProductVO> list = allProducts.stream()
-										  .filter(pt -> "已下架".equals(pt.getProductStatus()))
+										  .filter(pt -> "未上架".equals(pt.getProductStatus())&& Boolean.TRUE.equals(pt.getIsEnabled()))
 										  .collect(Collectors.toList());
 		return list;										  
 	}

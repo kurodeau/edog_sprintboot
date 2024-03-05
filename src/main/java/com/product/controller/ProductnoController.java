@@ -74,6 +74,14 @@ public class ProductnoController {
 		return list;
 	}
 	
+	@ModelAttribute("productLaunch")
+	protected List<ProductVO> referenceListData3(Model model){
+		
+		List<ProductVO> list = productSvc.getProductLaunch();
+		return list;
+	}
+	
+	
 	
 	@ModelAttribute("productUnLaunch")
 	protected List<ProductVO> referenceListData2(Model model){
