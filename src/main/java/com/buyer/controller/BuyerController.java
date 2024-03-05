@@ -1,5 +1,11 @@
 package com.buyer.controller;
 
+import java.io.IOException;
+//import java.sql.Timestamp;
+import java.util.List;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -9,16 +15,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import com.buyer.entity.*;
 import com.buyer.model.*;
@@ -40,7 +43,21 @@ public class BuyerController {
 	// /back/buyer/listAllPost
 	@PostMapping("listAllPost")
 	public String listAllBuyerPost(ModelMap model) {
-		return "back-end/back-newsticker-list";
+		return "back-end/back-buyer-list";
+	}
+	
+	/*
+	 * 第一種作法 Method used to populate the List Data in view. 如 :
+	 * <form:select path="deptno" id="deptno" items="${deptListData}"
+	 * itemValue="deptno" itemLabel="dname" />
+	 */
+	@ModelAttribute("buyerListData") 
+	protected List<BuyerVO> referenceListData(Model model) {
+		List<BuyerVO> list = buyerSvc.getAll();
+		System.out.println("==============================");
+	    list.forEach(data -> System.out.println(data));
+		System.out.println("==============================");
+		return list;
 	}
 	
 	/*
@@ -56,40 +73,53 @@ public class BuyerController {
 	/*
 	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("insert")
-	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
-			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
+	@PostMapping("insertBuyer")
+	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
-		result = removeFieldError(buyerVO, result, "petImg");
+//		System.out.println("test我有進這個insertBuyer");
+//		result = removeFieldError(buyerVO, result, "petImg");
 
-		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
-			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
-		} else {
-			for (MultipartFile multipartFile : parts) {
-				byte[] buf = multipartFile.getBytes();
-				buyerVO.setPetImg(buf);
-			}
-		}
-		if (result.hasErrors() || parts[0].isEmpty()) {
-			return "#"; //看從哪裡創帳號就回到哪裡
-		}
+		//這段是當圖片必須存在時的, 追加條件的檢查檢查
+//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
+//			model.addAttribute("errorMessage", "寵物照片: 請上傳照片");
+//		} else {
+//			for (MultipartFile multipartFile : parts) {
+//				byte[] buf = multipartFile.getBytes();
+//				buyerVO.setPetImg(buf);
+//			}
+//		}
+//		System.out.println("test檢查寵物圖片有過");
+//		if (result.hasErrors() || parts[0].isEmpty()) {
+//			System.out.println("test進了錯誤檢查?");
+//			return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
+//		}
+		
+		if (result.hasErrors()) {	
+		System.out.println("test進了錯誤檢查?");
+		System.out.println( result );
+		return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
+	}
+		
 		/*************************** 2.開始新增資料 *****************************************/
 		// BuyerService buyerSvc = new BuyerService();
-		buyerSvc.addBuyer(buyerVO);
+//		System.out.println("test新增資料之前??");
+//		buyerSvc.addBuyer(buyerVO);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<BuyerVO> list = buyerSvc.getAll();
 		model.addAttribute("buyerListData", list);
 		model.addAttribute("success", "- (新增成功)");
 		// 這之後要重禱回買家登入頁面
-		return "#"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
+		System.out.println("test重導之前???");
+		return "redirect:/back/buyer/listAllPost"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}
 
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST request
 	 */
-	@PostMapping("getOne_For_Update")
+	// /back/buyer/getOne_For_Update
+	@GetMapping("getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("memberId") String memberId, ModelMap model) {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
@@ -99,13 +129,13 @@ public class BuyerController {
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("buyerVO", buyerVO);
 		// 我看範例沒有這個html檔案? 有問題
-		return "#"; // 查詢完成後轉交update_emp_input.html
+		return "back-end/back-buyer-edit"; // 查詢完成後轉交update_emp_input.html
 	}
 
 	/*
 	 * This method will be called on update_emp_input.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("update")
+	@PostMapping("updateBuyer")
 	public String update(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
 
@@ -124,8 +154,8 @@ public class BuyerController {
 			}
 		}
 		if (result.hasErrors()) {
-			// 我看範例沒有這個html檔案? 有問題, 但這裡要修改成進行修改資料的PAGE
-			return "#";
+			// 修改成進行修改資料的PAGE
+			return "back-end/back-buyer-edit";
 		}
 		/*************************** 2.開始修改資料 *****************************************/
 		// BuyerService buyerSvc = new BuyerService();
@@ -136,7 +166,7 @@ public class BuyerController {
 		buyerVO = buyerSvc.getOneBuyer(Integer.valueOf(buyerVO.getMemberId()));
 		model.addAttribute("buyerVO", buyerVO);
 		// 這要轉到進行改資料的頁面, 有問題
-		return "back-end/back-buyer-edit"; // 修改成功後轉交listOneEmp.html
+		return "redirect:/back/buyer/listAllGet"; // 修改成功後轉交listOneEmp.html
 	}
 
 	/*
