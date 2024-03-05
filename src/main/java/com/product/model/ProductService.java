@@ -38,4 +38,25 @@ public class ProductService {
 		return repository.findAll();
 	}
 	
+	public List<ProductVO> getSellOutProduct(){
+		
+		
+		List<ProductVO> allProducts = repository.findAll();
+		List<ProductVO> list = allProducts.stream()
+										  .filter(pt -> "已出售".equals(pt.getProductStatus()))
+										  .collect(Collectors.toList());
+		return list;
+	}
+	
+	
+	public List<ProductVO> getProductUnLaunch(){
+		
+		List<ProductVO> allProducts = repository.findAll();
+		List<ProductVO> list = allProducts.stream()
+										  .filter(pt -> "已下架".equals(pt.getProductStatus()))
+										  .collect(Collectors.toList());
+		return list;										  
+	}
+	
+	
 }
