@@ -33,8 +33,6 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	@Autowired
 	SellerRepository sellerRepo;
 
-
-	
 	@Override
 	public void createUser(UserDetails user) {
 

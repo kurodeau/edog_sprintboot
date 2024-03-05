@@ -18,16 +18,11 @@ import com.seller.repositary.SellerRepository;
 @ComponentScan("com.config")
 public class SellerServiceImpl implements SellerService {
 
-//    private static final Logger logger = LoggerFactory.getLogger(SellerServiceImpl.class);
 
-	
-	
-	
-	
-	
+
 	private SellerDetailsService  sellerDetailsService ;
 	@Autowired
-	public void setDbUserDetailsManagerSeller(SellerDetailsService  sellerDetailsService) {
+	public void setSellerDetailsService(SellerDetailsService  sellerDetailsService) {
 		this.sellerDetailsService = sellerDetailsService;
 	}
 	
