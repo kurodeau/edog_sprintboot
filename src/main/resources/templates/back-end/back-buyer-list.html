@@ -86,9 +86,12 @@
 							<td	th:text="${#dates.format(buyerVO.memberRegistrationTime, 'yyyy/MM/dd')}"></td>
 							<td th:text="${buyerVO.isMemberEmail}"></td>								
 							<td th:text="${#strings.isEmpty(buyerVO.petName) ? '無' : buyerVO.petName}"></td>
-							<td th:text="${buyerVO.petImg}"></td>
+<!-- 							<td th:text="${buyerVO.petImg}"></td> -->
 <!-- 							<td><img th:src="${data:image/png;base64, buyerVO.petImg }" alt="寵物圖片"></td> -->
-<!-- 							<td><img th:src="@{/emp/DBGifReader} + '?empno=' + ${empVO.empno}" width="100px"></td> -->
+
+							<td><img th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}" width="100px" height="auto"></td>
+							
+							
 							<td	th:text="${#dates.format(buyerVO.petImgUploadTime, 'yyyy/MM/dd')}"></td>
 							<td th:text="${#strings.isEmpty(buyerVO.petVaccName1) ? '無' : buyerVO.petVaccName1}"></td>						
 							<td	th:text="${#dates.format(buyerVO.petVaccTime1, 'yyyy/MM/dd')}"></td>							
