@@ -1,5 +1,11 @@
 package com.buyer.controller;
 
+import java.io.IOException;
+//import java.sql.Timestamp;
+import java.util.List;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -16,10 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import com.buyer.entity.*;
 import com.buyer.model.*;
@@ -72,32 +74,44 @@ public class BuyerController {
 	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 	 */
 	@PostMapping("insertBuyer")
-	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
-			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
+	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
-		result = removeFieldError(buyerVO, result, "petImg");
+//		System.out.println("test我有進這個insertBuyer");
+//		result = removeFieldError(buyerVO, result, "petImg");
 
-		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
-			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
-		} else {
-			for (MultipartFile multipartFile : parts) {
-				byte[] buf = multipartFile.getBytes();
-				buyerVO.setPetImg(buf);
-			}
-		}
-		if (result.hasErrors() || parts[0].isEmpty()) {
-			return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
-		}
+		//這段是當圖片必須存在時的, 追加條件的檢查檢查
+//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
+//			model.addAttribute("errorMessage", "寵物照片: 請上傳照片");
+//		} else {
+//			for (MultipartFile multipartFile : parts) {
+//				byte[] buf = multipartFile.getBytes();
+//				buyerVO.setPetImg(buf);
+//			}
+//		}
+//		System.out.println("test檢查寵物圖片有過");
+//		if (result.hasErrors() || parts[0].isEmpty()) {
+//			System.out.println("test進了錯誤檢查?");
+//			return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
+//		}
+		
+		if (result.hasErrors()) {	
+		System.out.println("test進了錯誤檢查?");
+		System.out.println( result );
+		return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
+	}
+		
 		/*************************** 2.開始新增資料 *****************************************/
 		// BuyerService buyerSvc = new BuyerService();
-		buyerSvc.addBuyer(buyerVO);
+//		System.out.println("test新增資料之前??");
+//		buyerSvc.addBuyer(buyerVO);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<BuyerVO> list = buyerSvc.getAll();
 		model.addAttribute("buyerListData", list);
 		model.addAttribute("success", "- (新增成功)");
 		// 這之後要重禱回買家登入頁面
+		System.out.println("test重導之前???");
 		return "redirect:/back/buyer/listAllPost"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}
 
