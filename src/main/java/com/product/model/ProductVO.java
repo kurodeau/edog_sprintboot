@@ -1,6 +1,7 @@
 package com.product.model;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class ProductVO {
     private Integer productStockQuantity;    
     private String productDetails;    
     private String productStatus;
-    private Date productCreationTime; 
+    private Timestamp productCreationTime; 
     private Integer totalStars;    
     private Integer totalReviews;
     private Integer productSort;
@@ -120,11 +121,11 @@ public class ProductVO {
 	}
 
 	@Column(name = "productCreationTime")
-	public Date getProductCreationTime() {
+	public Timestamp getProductCreationTime() {
 		return productCreationTime;
 	}
 
-	public void setProductCreationTime(Date productCreationTime) {
+	public void setProductCreationTime(Timestamp productCreationTime) {
 		this.productCreationTime = productCreationTime;
 	}
 

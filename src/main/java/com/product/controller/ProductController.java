@@ -1,14 +1,13 @@
 package com.product.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.allenum.ProductStatus;
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
+import com.seller.entity.SellerVO;
+import com.seller.service.SellerService;
 
 @Controller
 @RequestMapping("/front/seller/product")
@@ -36,6 +38,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductImgService pdtImgSvc;
+	
+	@Autowired
+	SellerService srSvc;
 	
 
 	
@@ -75,6 +80,17 @@ public class ProductController {
 		}
 		
 		/*************************** 2.開始新增資料 *****************************************/
+		
+		
+		SellerVO sellerVO = srSvc.getById(5);
+		productVO.setSellerVO(sellerVO);
+		
+		long currentTime = System.currentTimeMillis();
+		Timestamp timestamp = new Timestamp(currentTime);
+		productVO.setProductCreationTime(timestamp);
+		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
+		productVO.setIsEnabled(true);
+		
 		productSvc.addProduct(productVO);  //新增一個product 產生PK
 		
 		
