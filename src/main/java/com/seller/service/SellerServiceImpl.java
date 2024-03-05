@@ -8,10 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.config.DBSellerDetailsManager;
+import com.config.SellerDetailsService;
 import com.seller.entity.SellerVO;
 import com.seller.repositary.SellerRepository;
 
@@ -22,21 +21,18 @@ public class SellerServiceImpl implements SellerService {
 //    private static final Logger logger = LoggerFactory.getLogger(SellerServiceImpl.class);
 
 	
-	private  PasswordEncoder passwordEncoder;
+	
+	
+	
+	
+	private SellerDetailsService  sellerDetailsService ;
 	@Autowired
-	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
+	public void setDbUserDetailsManagerSeller(SellerDetailsService  sellerDetailsService) {
+		this.sellerDetailsService = sellerDetailsService;
 	}
+	
+	
 	private SellerRepository repo;
-	
-	private DBSellerDetailsManager dBSellerDetailsManager;
-	@Autowired
-	public void setDbUserDetailsManagerSeller(DBSellerDetailsManager dBSellerDetailsManager) {
-		this.dBSellerDetailsManager = dBSellerDetailsManager;
-	}
-	
-	
-
 	@Autowired
 	public void setSellerRepository(SellerRepository repo) {
 		this.repo = repo;
@@ -73,7 +69,8 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	 public void saveUserDetails(SellerVO sellerVO) {
-	 UserDetails userdetails =
+				 
+	 UserDetails userdetails = 
 			User.builder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("SELLER")
 	        .build();
 
@@ -83,7 +80,7 @@ public class SellerServiceImpl implements SellerService {
 //	         .password("password")
 //	         .roles("USER")
 //	         .build();
-	 dBSellerDetailsManager.createUser(userdetails,sellerVO);
+	 sellerDetailsService.createUser(userdetails,sellerVO);
 	 
 	 }
 

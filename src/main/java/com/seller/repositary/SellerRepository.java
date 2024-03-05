@@ -19,6 +19,10 @@ public interface SellerRepository extends JpaRepository<SellerVO, Integer>{
 	void disableSellerById(int sellerId);
 	
 	
+	@Query(value = "SELECT * FROM seller WHERE sellerEmail = ?1 LIMIT 1", nativeQuery = true)
+	SellerVO findByOnlyOneEmail(String email);
+
+	
 	 @Query(value = "FROM SellerVO WHERE sellerEmail = :email")
 	 SellerVO findByEmail(String email);
 

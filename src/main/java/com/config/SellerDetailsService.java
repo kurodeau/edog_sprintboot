@@ -20,30 +20,31 @@ import com.seller.repositary.SellerRepository;
 
 
 @Component
-public class DBSellerDetailsManager implements UserDetailsService, UserDetailsManager {
+public class SellerDetailsService  implements UserDetailsService, UserDetailsManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(DBSellerDetailsManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(SellerDetailsService .class);
 
+    private  PasswordEncoder passwordEncoder;
+	@Autowired
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
+	
 	@Autowired
 	SellerRepository sellerRepo;
 
 
+	
 	@Override
 	public void createUser(UserDetails user) {
-		SellerVO sellerVO = new SellerVO();
-		
-		sellerVO.setSellerEmail(user.getUsername());
-		sellerVO.setSellerPassword(user.getPassword());
-		
-		sellerRepo.save(sellerVO);
 
 	}
 	
 	public void createUser(UserDetails user,SellerVO sellerVO) {
 
 		sellerVO.setSellerEmail(user.getUsername());
-
-		sellerVO.setSellerPassword(user.getPassword());
+		
+		sellerVO.setSellerPassword(passwordEncoder.encode(user.getPassword()));
 		sellerVO.setIsConfirm(true);
 
 		sellerRepo.save(sellerVO);
@@ -81,8 +82,9 @@ public class DBSellerDetailsManager implements UserDetailsService, UserDetailsMa
 		logger.error(username);
 		
 		
-		SellerVO targetUser =  sellerRepo.findByEmail(username);
-
+//		SellerVO targetUser =  sellerRepo.findByEmail(username);
+		SellerVO targetUser =  sellerRepo.findByOnlyOneEmail(username);
+		System.out.println(targetUser);
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -90,12 +92,15 @@ public class DBSellerDetailsManager implements UserDetailsService, UserDetailsMa
 		if (targetUser == null) {
 			throw new UsernameNotFoundException(username);
 		} else {
-			return new org.springframework.security.core.userdetails.User(targetUser.getSellerEmail(),
-					targetUser.getSellerPassword(), targetUser.getIsConfirm(), true, // 用戶帳號是否過期
-					true, // 用戶憑證是否過期
-					true, // 用戶是否未被鎖定
-					authorities // 授權權限列表
-			);
+			return new org.springframework.security.core.userdetails.User(
+				    targetUser.getSellerEmail(),
+				    targetUser.getSellerPassword(),
+				    true,  // 用户启用状态
+				    true,  // 用戶帳號是否過期
+				    true,  // 用戶憑證是否過期
+				    true,  // 用戶是否未被鎖定
+				    authorities // 授權權限列表
+				);
 		}
 
 	}
