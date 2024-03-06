@@ -4,18 +4,33 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.buyer.entity.BuyerVO;
 import com.buyer.model.BuyerRepository;
+import com.config.BuyerDetailsService;
+import com.config.SellerDetailsService;
+import com.seller.entity.SellerVO;
 
 
 @Service("buyerService")
+@ComponentScan("com.config")
 public class BuyerService {
 
 	@Autowired
 	BuyerRepository repository;
 
+	
+	private BuyerDetailsService  buyerDetailsService ;
+	@Autowired
+	public void setbuyerDetailsService(BuyerDetailsService  buyerDetailsService) {
+		this.buyerDetailsService = buyerDetailsService;
+	}
+	
+	
 	public void addBuyer(BuyerVO buyerVO) {
 		repository.save(buyerVO);
 	}
@@ -39,5 +54,18 @@ public class BuyerService {
 	public List<BuyerVO> getAll() {
 		return repository.findAll();
 	}
+	
+	
+	public void saveUserDetails(BuyerVO buyerVO) {
+		 
+		 UserDetails userdetails = 
+				User.builder().username(buyerVO.getMemberEmail()).password(buyerVO.getMemberPassword()).roles("SELLER")
+		        .build();
+
+
+		 buyerDetailsService.createUser(userdetails,buyerVO);
+		 
+		 }
+	
 
 }

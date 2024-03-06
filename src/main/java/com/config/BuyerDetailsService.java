@@ -13,62 +13,34 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
 
+import com.buyer.entity.BuyerVO;
+import com.buyer.model.BuyerRepository;
 import com.seller.entity.SellerVO;
-import com.seller.repositary.SellerRepository;
 
 
-@Component("sellerDetailsService")
-public class SellerDetailsService  implements UserDetailsService, UserDetailsManager {
+@Component("buyerDetailsService")
+public class BuyerDetailsService  implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SellerDetailsService .class);
+    private static final Logger logger = LoggerFactory.getLogger(BuyerDetailsService .class);
 
-	@Autowired
-	@Qualifier("sellerPasswordEncoder")
-    private  PasswordEncoder sellerPasswordEncoder;
-
+    
+    @Autowired
+	@Qualifier("buyerPasswordEncoder")
+    private  PasswordEncoder buyerPasswordEncoder;
+  
 	
 	@Autowired
-	SellerRepository sellerRepo;
+	BuyerRepository buyerRepo;
 
-	@Override
-	public void createUser(UserDetails user) {
+	public void createUser(UserDetails user,BuyerVO buyerVO) {
 
-	}
-	
-	public void createUser(UserDetails user,SellerVO sellerVO) {
+		buyerVO.setMemberEmail(buyerVO.getMemberEmail());
+		buyerVO.setMemberPassword( buyerPasswordEncoder.encode(buyerVO.getMemberPassword()));
+		buyerVO.setIsConfirm(true);
 
-		sellerVO.setSellerEmail(user.getUsername());
-		
-		sellerVO.setSellerPassword(sellerPasswordEncoder.encode(user.getPassword()));
-		sellerVO.setIsConfirm(true);
-
-		sellerRepo.save(sellerVO);
-	}
-
-	@Override
-	public void updateUser(UserDetails user) {
-		SellerVO sellerVO = new SellerVO();
-		sellerVO.setSellerEmail(user.getUsername());
-		sellerVO.setSellerPassword(user.getPassword());
-		
-		sellerRepo.save(sellerVO);
-	}
-
-	@Override
-	public void deleteUser(String username) {
-	}
-
-	@Override
-	public void changePassword(String oldPassword, String newPassword) {
-	}
-
-	@Override
-	public boolean userExists(String username) {
-		SellerVO targetUser = sellerRepo.findByEmail(username);
-		return targetUser != null;
+		buyerRepo.save(buyerVO);
 	}
 
 	@Override
@@ -80,7 +52,7 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 		
 		
 //		SellerVO targetUser =  sellerRepo.findByEmail(username);
-		SellerVO targetUser =  sellerRepo.findByOnlyOneEmail(username);
+		SellerVO targetUser =  buyerRepo.findByOnlyOneEmail(username);
 		System.out.println(targetUser);
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();

@@ -10,11 +10,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.buyer.entity.BuyerVO;
 import com.seller.entity.SellerVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
 import com.user.model.UserService;
-import com.user.model.UserVO;
 
 //@PropertySource("classpath:application.properties") 
 // 於https://start.spring.io 建立Spring Boot專案時
@@ -83,5 +83,8 @@ public class IndexControllerMain {
     public String loginSeller(ModelMap model) throws IOException {
         return "/front-end/seller/seller-login";
     }
+    
+
+
 
 }

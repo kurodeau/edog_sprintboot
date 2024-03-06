@@ -19,7 +19,6 @@ import com.seller.repositary.SellerRepository;
 public class SellerServiceImpl implements SellerService {
 
 
-
 	private SellerDetailsService  sellerDetailsService ;
 	@Autowired
 	public void setSellerDetailsService(SellerDetailsService  sellerDetailsService) {
@@ -69,14 +68,11 @@ public class SellerServiceImpl implements SellerService {
 			User.builder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("SELLER")
 	        .build();
 
-//  帶{bcypt}
-//	 UserDetails userdetails =User.withDefaultPasswordEncoder()
-//	         .username("user")
-//	         .password("password")
-//	         .roles("USER")
-//	         .build();
+
 	 sellerDetailsService.createUser(userdetails,sellerVO);
 	 
 	 }
-
+	 
+	 
+	 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.buyer.entity.BuyerVO;
+import com.seller.entity.SellerVO;
 
 public interface BuyerRepository extends JpaRepository<BuyerVO, Integer> {
 
@@ -15,5 +16,8 @@ public interface BuyerRepository extends JpaRepository<BuyerVO, Integer> {
 	@Modifying
 	@Query(value = "delete from buyer where memberId =?1", nativeQuery = true)
 	void deleteByMemberId(int memberId);
+	
+	@Query(value = "SELECT * FROM buyer WHERE memberEmail = ?1 LIMIT 1", nativeQuery = true)
+	SellerVO findByOnlyOneEmail(String email);
 
 }
