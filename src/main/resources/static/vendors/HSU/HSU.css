@@ -68,10 +68,19 @@ display:flex;
 	margin-right: 15px;
 	margin-left: 5px;
 }
+.floor-count{
+	margin-right: 15px;
+	margin-left: 5px;
+}
 .article-comment{
 	margin-left: 5px;
 }
 .time {
+  font-size: 12px; /* 調整時間字體大小 */
+  color: var(--text-placeholder);
+  margin-left: auto;
+}
+.reply-time {
   font-size: 12px; /* 調整時間字體大小 */
   color: var(--text-placeholder);
   margin-left: auto;
@@ -211,19 +220,37 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 #title {
   border: none;
   outline: none;
+  width: 100%;
+  font-size: 24px;
+  font-weight: bold;
 }
 #content {
   border: none;
   outline: none;
+  width: 100%; /* 可根据需要调整宽度 */
+  height: 200px; /* 可根据需要调整高度 */
+}
+#title:focus {
+    border: 1px solid #ccc; /* 输入框获得焦点时显示边框 */
+    border-radius: 5px;
+}
+#content:focus {
+    border: 1px solid #ccc; /* 输入框获得焦点时显示边框 */
+    border-radius: 5px;
 }
 .dashed-hr {
   border: 0;
   border-top: 2px dashed #ffffff;
   margin: 0px;
 }
+.icon-container {
+        font-size: 24px; /* 设置图标大小为 24 像素 */
+        color: #666;
+    }
 /*--------------------------------------------------------------
   # RWD
   --------------------------------------------------------------*/
