@@ -122,7 +122,6 @@ public class AdController {
 		
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
-		adVO.setAdCreateTime(timestamp);
 		adVO.setAdImgUploadTime(timestamp);
 		adVO.setIsEnabled(true);
 		adVO.setAdStatus(AdStatusEnum.REVIEWING.getStatus());

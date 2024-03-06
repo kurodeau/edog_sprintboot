@@ -7,37 +7,15 @@
 </head>
 
 <body>
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-					</ul>
+	<!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
 
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link" href="#">[當前登入管理者名稱]</a>
-						</li>
-						<!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-						<li class="nav-item"><a class="nav-link" href="#">登出</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-	</header>
-
+	<!-- ======= Sidebar ======= -->
 	<aside th:replace="back-end/aside-back.html"></aside>
 
+	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
 		<div class="seller-container">
 			<div class="pagetitle">
@@ -86,9 +64,12 @@
 							<td	th:text="${#dates.format(buyerVO.memberRegistrationTime, 'yyyy/MM/dd')}"></td>
 							<td th:text="${buyerVO.isMemberEmail}"></td>								
 							<td th:text="${#strings.isEmpty(buyerVO.petName) ? '無' : buyerVO.petName}"></td>
-							<td th:text="${buyerVO.petImg}"></td>
+<!-- 							<td th:text="${buyerVO.petImg}"></td> -->
 <!-- 							<td><img th:src="${data:image/png;base64, buyerVO.petImg }" alt="寵物圖片"></td> -->
-<!-- 							<td><img th:src="@{/emp/DBGifReader} + '?empno=' + ${empVO.empno}" width="100px"></td> -->
+
+							<td><img th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}" width="100px" height="auto"></td>
+							
+							
 							<td	th:text="${#dates.format(buyerVO.petImgUploadTime, 'yyyy/MM/dd')}"></td>
 							<td th:text="${#strings.isEmpty(buyerVO.petVaccName1) ? '無' : buyerVO.petVaccName1}"></td>						
 							<td	th:text="${#dates.format(buyerVO.petVaccTime1, 'yyyy/MM/dd')}"></td>							

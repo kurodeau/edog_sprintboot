@@ -74,49 +74,62 @@
 								aria-selected="false">已上架</button>
 						</li>
 					</ul>
+
+					<!-- 全部 -->
+
 					<div class="tab-content pt-2" id="borderedTabContent">
 						<div class="tab-pane show active" id="bordered-overall"
 							role="tabpanel" aria-labelledby="overall-tab">
 							<div class="container mt-3 container-list-custom">
-								<div class="row product-row-custom">
-									<div class="col-2">商品編號</div>
-									<div class="col-2">商品圖片</div>
-									<div class="col-2">商品名稱</div>
-									<div class="col-2">價格</div>
-									<div class="col-2">售出/商品數量</div>
+
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-1-5">商品編號</div>
+									<div class="col-1-5">商品圖片</div>
+									<div class="col-1-5">商品名稱</div>
+									<div class="col-1">價格</div>
+									<div class="col-1-5">庫存/已出售</div>
+									<div class="col-1-5">商品分類</div>
 									<div class="col-1">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productListData}">
-									<div class="col-2" th:text="${productVO.productId}"></div>
-									<div class="col-2">
+									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
-									<div class="col-2" th:text="${productVO.productName}"></div>
-									<div class="col-2" th:text="${productVO.productPrice}"></div>
-									<div class="col-2" th:text="${productVO.productStockQuantity}"></div>
+									<div class="col-1-5" th:text="${productVO.productName}"></div>
+									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1-5">
+										<span
+											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
+									</div>
+									<div class="col-1-5"
+										th:text="${productVO.productSortVO.productSortName}"></div>
 									<div class="col-1" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
-											<!-- 審核中的表單 -->
-											<form method="post" action="/edit">
+
+											<form method="post"
+												th:action="@{/front/seller/product/getOne_For_Update}">
 												<button type="submit"
 													class="product align-self-start btn-func">編輯</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/upload">
-												<button type="submit"
-													class="product align-self-start btn-func">上架</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
-											</form>
-											<form method="post" action="/delete">
+
+
+											<form id="deleteForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/deleteStatus}"
+												onsubmit="return confirmDelete('${productVO.productId}');">
 												<button type="submit"
 													class="product align-self-start btn-func">刪除</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
 										</div>
 									</div>
@@ -125,48 +138,61 @@
 
 							</div>
 						</div>
+
+
+						<!-- 已售完 -->
+
 						<div class="tab-pane" id="bordered-soldout" role="tabpanel"
 							aria-labelledby="soldout-tab">
 							<div class="container mt-3 container-list-custom">
-								<div class="row product-row-custom">
-									<div class="col-2">商品編號</div>
-									<div class="col-2">商品圖片</div>
-									<div class="col-2">商品名稱</div>
-									<div class="col-2">價格</div>
-									<div class="col-2">售出/商品數量</div>
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-1-5">商品編號</div>
+									<div class="col-1-5">商品圖片</div>
+									<div class="col-1-5">商品名稱</div>
+									<div class="col-1">價格</div>
+									<div class="col-1-5">庫存/已出售</div>
+									<div class="col-1-5">商品分類</div>
 									<div class="col-1">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productSellOut}">
-									<div class="col-2" th:text="${productVO.productId}"></div>
-									<div class="col-2">
+									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
-									<div class="col-2" th:text="${productVO.productName}"></div>
-									<div class="col-2" th:text="${productVO.productPrice}"></div>
-									<div class="col-2" th:text="${productVO.productStockQuantity}"></div>
+									<div class="col-1-5" th:text="${productVO.productName}"></div>
+									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1-5">
+										<span
+											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
+									</div>
+									<div class="col-1-5"
+										th:text="${productVO.productSortVO.productSortName}"></div>
 									<div class="col-1" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<!-- 審核中的表單 -->
-											<form method="post" action="/edit">
+											<form method="post"
+												th:action="@{/front/seller/product/getOne_For_Update}">
 												<button type="submit"
 													class="product align-self-start btn-func">編輯</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/upload">
-												<button type="submit"
-													class="product align-self-start btn-func">上架</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
-											</form>
-											<form method="post" action="/delete">
+
+
+											<form id="deleteForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/deleteStatus}"
+												onsubmit="return confirmDelete('${productVO.productId}');">
 												<button type="submit"
 													class="product align-self-start btn-func">刪除</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
 										</div>
 									</div>
@@ -174,48 +200,66 @@
 							</div>
 						</div>
 
+						<!-- 未上架 -->
 
 						<div class="tab-pane" id="bordered-unlisted" role="tabpanel"
 							aria-labelledby="unlisted-tab">
 							<div class="container mt-3 container-list-custom">
-								<div class="row product-row-custom">
-									<div class="col-2">商品編號</div>
-									<div class="col-2">商品圖片</div>
-									<div class="col-2">商品名稱</div>
-									<div class="col-2">價格</div>
-									<div class="col-2">售出/商品數量</div>
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-1-5">商品編號</div>
+									<div class="col-1-5">商品圖片</div>
+									<div class="col-1-5">商品名稱</div>
+									<div class="col-1">價格</div>
+									<div class="col-1-5">庫存/已出售</div>
+									<div class="col-1-5">商品分類</div>
 									<div class="col-1">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productUnLaunch}">
-									<div class="col-2" th:text="${productVO.productId}"></div>
-									<div class="col-2">
+									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
-									<div class="col-2" th:text="${productVO.productName}"></div>
-									<div class="col-2" th:text="${productVO.productPrice}"></div>
-									<div class="col-2" th:text="${productVO.productStockQuantity}"></div>
+									<div class="col-1-5" th:text="${productVO.productName}"></div>
+									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1-5">
+										<span
+											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
+									</div>
+									<div class="col-1-5"
+										th:text="${productVO.productSortVO.productSortName}"></div>
 									<div class="col-1" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
-											<form method="post" action="/edit">
+											<form method="post"
+												th:action="@{/front/seller/product/getOne_For_Update}">
 												<button type="submit"
 													class="product align-self-start btn-func">編輯</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/upload">
+
+											<form id="launchForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/launch}"
+												onsubmit="return confirmLaunch('${productVO.productId}');">
 												<button type="submit"
 													class="product align-self-start btn-func">上架</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/delete">
+
+											<form id="deleteForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/deleteStatus}"
+												onsubmit="return confirmDelete('${productVO.productId}');">
 												<button type="submit"
 													class="product align-self-start btn-func">刪除</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
 										</div>
 									</div>
@@ -223,50 +267,67 @@
 							</div>
 						</div>
 
-
+						<!-- 已上架 -->
 
 						<div class="tab-pane" id="bordered-listed" role="tabpanel"
 							aria-labelledby="listed-tab">
 							<div class="container mt-3 container-list-custom">
-								<div class="row product-row-custom">
-									<div class="col-2">商品編號</div>
-									<div class="col-2">商品圖片</div>
-									<div class="col-2">商品名稱</div>
-									<div class="col-2">價格</div>
-									<div class="col-2">售出/商品數量</div>
+								<div class="row product-row-custom"
+									style="padding-left: 0; padding-right: 0;">
+									<div class="col-1-5">商品編號</div>
+									<div class="col-1-5">商品圖片</div>
+									<div class="col-1-5">商品名稱</div>
+									<div class="col-1">價格</div>
+									<div class="col-1-5">庫存/已出售</div>
+									<div class="col-1-5">商品分類</div>
 									<div class="col-1">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
-									th:each="productVO : ${productUnLaunch}">
-									<div class="col-2" th:text="${productVO.productId}"></div>
-									<div class="col-2">
+									th:each="productVO : ${productLaunch}">
+									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
-									<div class="col-2" th:text="${productVO.productName}"></div>
-									<div class="col-2" th:text="${productVO.productPrice}"></div>
-									<div class="col-2" th:text="${productVO.productStockQuantity}"></div>
+									<div class="col-1-5" th:text="${productVO.productName}"></div>
+									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1-5">
+										<span
+											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
+									</div>
+									<div class="col-1-5"
+										th:text="${productVO.productSortVO.productSortName}"></div>
 									<div class="col-1" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<!-- 審核中的表單 -->
-											<form method="post" action="/edit">
+											<form method="post"
+												th:action="@{/front/seller/product/getOne_For_Update}">
 												<button type="submit"
 													class="product align-self-start btn-func">編輯</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/upload">
+
+											<form id="unlaunchForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/unLaunch}"
+												onsubmit="return confirmUnLaunch('${adVO.adId}');">
 												<button type="submit"
-													class="product align-self-start btn-func">上架</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+													class="product align-self-start btn-func">下架</button>
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
-											<form method="post" action="/delete">
+
+											<form id="deleteForm${productVO.productId}" method="post"
+												th:action="@{/front/seller/product/deleteStatus}"
+												onsubmit="return confirmDelete('${productVO.productId}');">
 												<button type="submit"
 													class="product align-self-start btn-func">刪除</button>
-												<input type="hidden" name="empno" value="${empVO.empno}">
+												<input type="hidden" name="productId"
+													th:value="${productVO.productId}">
 											</form>
 										</div>
 									</div>
@@ -332,6 +393,42 @@
 	<div th:replace="fragment-js"></div>
 
 	<!-- Local JS File -->
-	<script></script>
+	<script>
+		function confirmDelete(productId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要刪除嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("deleteForm" + productId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function confirmLaunch(productId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要上架嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("launchForm" + productId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function confirmUnLaunch(productId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要下架嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("unlaunchForm" + productId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+	</script>
 </body>
 </html>

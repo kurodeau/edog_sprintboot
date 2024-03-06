@@ -1,228 +1,142 @@
- <aside class="sidebar sidebar-layout">
-      <form>
-        <div class="container mt-2">
-          <!-- 動物種類 -->
-          <fieldset class="filter-section">
-            <legend class="header-filter-custom">
-              <i class="fa-solid fa-paw"></i>&nbsp;&nbsp;動物種類
-            </legend>
-            <ul class="list-group">
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="dog"
-                  aria-label="dog"
-                />
-                犬
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="cat"
-                />
-                貓
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="bird"
-                  aria-label="..."
-                />
-                鳥
-              </li>
-            </ul>
-          </fieldset>
+<aside class="sidebar sidebar-layout">
+  <form id="myform">
+    <div class="container mt-2">
+      <!-- 動物種類 -->
+      <fieldset class="filter-section">
+        <legend class="header-filter-custom">
+          <i class="fa-solid fa-paw"></i>&nbsp;&nbsp;動物種類
+        </legend>
+        <ul class="list-group animalCheckboxes ">
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="dog" aria-label="dog" />
+            犬
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="cat" />
+            貓
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="bird" aria-label="..." />
+            鳥
+          </li>
+        </ul>
+      </fieldset>
 
-          <!-- 商品分類 -->
-          <fieldset class="filter-section mt-2">
-            <legend class="header-filter-custom">
-              <i class="fa-solid fa-filter"></i>&nbsp;&nbsp;商品分類
-            </legend>
-            <ul class="list-group">
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="food"
-                  aria-label="食品"
-                />
-                食品
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="toys"
-                />
-                玩具
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="bedding"
-                  aria-label="..."
-                />
-                寢具
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="grooming"
-                  aria-label="..."
-                />
-                美容清潔
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="carriers"
-                  aria-label="..."
-                />
-                攜帶袋
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="apparel"
-                />
-                服飾
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="health_care"
-                  aria-label="..."
-                />
-                健康保健
-              </li>
-              <li class="list-group-item item-filter-custom">
-                <input
-                  class="form-check-input me-1"
-                  type="checkbox"
-                  value="accessories"
-                />
-                配件
-              </li>
-            </ul>
-          </fieldset>
+      <!-- 商品分類 -->
+      <fieldset class="filter-section mt-2">
+        <legend class="header-filter-custom">
+          <i class="fa-solid fa-filter"></i>&nbsp;&nbsp;商品分類
+        </legend>
+        <ul class="list-group categoryList">
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="food" aria-label="食品" />
+            食品
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="toys" />
+            玩具
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="bedding" aria-label="..." />
+            寢具
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="grooming" aria-label="..." />
+            美容清潔
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="carriers" aria-label="..." />
+            攜帶袋
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="apparel" />
+            服飾
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="health_care" aria-label="..." />
+            健康保健
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="accessories" />
+            配件
+          </li>
+        </ul>
+      </fieldset>
 
-          <!-- 商品評價 -->
-         <fieldset class="filter-section mt-2">
-    <legend class="header-filter-custom">
-        <i class="ri-star-fill"></i>&nbsp;&nbsp;商品評價
-    </legend>
-    <ul class="list-group">
-        <!-- Repeat similar structure as above for ratings -->
-        <li class="list-group-item item-filter-custom">
-            <input
-                class="form-check-input me-1"
-                type="checkbox"
-                value="5"
-                aria-label="dog"
-            />
+      <!-- 商品評價 -->
+      <fieldset class="filter-section mt-2">
+        <legend class="header-filter-custom">
+          <i class="ri-star-fill"></i>&nbsp;&nbsp;商品評價
+        </legend>
+        <ul class="list-group ratingCheckbox">
+          <!-- Repeat similar structure as above for ratings -->
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="5" aria-label="dog" />
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
-        </li>
-        <li class="list-group-item item-filter-custom">
-            <input
-                class="form-check-input me-1"
-                type="checkbox"
-                value="4"
-                aria-label="dog"
-            />
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="4" aria-label="dog" />
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star"></i>
-        </li>
-        <li class="list-group-item item-filter-custom">
-            <input
-                class="form-check-input me-1"
-                type="checkbox"
-                value="3"
-                aria-label="dog"
-            />
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="3" aria-label="dog" />
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
-        </li>
-        <li class="list-group-item item-filter-custom">
-            <input
-                class="form-check-input me-1"
-                type="checkbox"
-                value="2"
-                aria-label="dog"
-            />
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="2" aria-label="dog" />
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
-        </li>
-        <li class="list-group-item item-filter-custom">
-            <input
-                class="form-check-input me-1"
-                type="checkbox"
-                value="1"
-                aria-label="dog"
-            />
+          </li>
+          <li class="list-group-item item-filter-custom">
+            <input class="form-check-input me-1" type="checkbox" value="1" aria-label="dog" />
             <i class="ri-star-fill text-userdark"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
             <i class="ri-star"></i>
-        </li>
-    </ul>
-</fieldset>
+          </li>
+        </ul>
+      </fieldset>
 
 
-          <!-- 商品價格 -->
-          <fieldset class="filter-section mt-2">
-            <legend class="header-filter-custom">
-              <i class="ri-price-tag-fill"></i>&nbsp;&nbsp;商品價格
-            </legend>
-            <div class="container d-flex container-filter-custom">
-              <div class="row">
-                <div class="col-6 d-flex">
-                  <label for="priceFrom"></label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="priceFrom"
-                    placeholder="最低價格"
-                  />
-                </div>
-                <div class="col-6 d-flex">
-                  <label for="priceTo"></label>
-                  <input
-                    type="text"
-                    class="form-control form-group-custom"
-                    id="priceTo"
-                    placeholder="最高價格"
-                  />
-                </div>
-              </div>
+      <!-- 商品價格 -->
+      <fieldset class="filter-section mt-2">
+        <legend class="header-filter-custom">
+          <i class="ri-price-tag-fill"></i>&nbsp;&nbsp;商品價格
+        </legend>
+        <div class="container d-flex container-filter-custom">
+          <div class="row">
+            <div class="col-6 d-flex">
+              <label for="priceFrom"></label>
+              <input type="text" class="form-control" id="priceFrom" placeholder="最低價格" />
             </div>
-          </fieldset>
-
-          <!-- 提交按鈕 -->
-          <div class="d-flex justify-content-center mt-5">
-            <button type="submit" class="btn btn-primary">提交</button>
+            <div class="col-6 d-flex">
+              <label for="priceTo"></label>
+              <input type="text" class="form-control form-group-custom" id="priceTo" placeholder="最高價格" />
+            </div>
           </div>
         </div>
-      </form>
-    </aside>
+      </fieldset>
+
+      <!-- 提交按鈕 -->
+      <div class="d-flex justify-content-center mt-5">
+        <button type="submit" class="btn btn-primary btn-search">提交</button>
+      </div>
+    </div>
+  </form>
+</aside>

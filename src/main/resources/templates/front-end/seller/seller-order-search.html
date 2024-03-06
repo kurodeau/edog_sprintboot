@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>EDog</title>
+    <script src="loadcss.js"></script>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+        <div class="container-fluid">
+          <div
+            class="collapse navbar-collapse d-flex justify-content-between"
+            id="navbarSupportedContent"
+          >
+            <!-- Start NavBar  -->
+            <!-- NavBar--LeftSide  -->
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+                <i class="bi bi-list"></i>
+                <a
+                  class="nav-link cancel-default-behavior"
+                  aria-current="page"
+                  href="#"
+                  >選單</a
+                >
+              </li>
+              <li class="nav-item d-flex align-items-center">
+                <a class="nav-link active" aria-current="page" href="#"
+                  >電子商城</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="seller-login.html">賣家中心</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">論壇</a>
+              </li>
+            </ul>
+
+            <!-- NavBar--RightSide  -->
+            <ul class="navbar-nav ms-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">註冊</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">登入</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End NavBar  -->
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar sidebar-layout-seller">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+          <a class="nav-link nav-seller-entry" href="seller-main.html">
+            <i class="bi bi-grid"></i>
+            <span>賣家中心</span>
+          </a>
+        </li>
+        <!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#seller-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-person"></i>
+            <span>賣家帳戶</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="seller-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-level.html">
+                <i class="bi bi-circle"></i><span>賣家等級</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-edit.html">
+                <i class="bi bi-circle"></i><span>修改賣家資料</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-check-payment.html">
+                <i class="bi bi-circle"></i><span>查看金流</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Seller Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#product-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-bag"></i>
+            <span>商品管理</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="product-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-product-add.html">
+                <i class="bi bi-circle"></i><span>新增商品</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-product-all.html">
+                <i class="bi bi-circle"></i><span>商品列表</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End product Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#service-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-headset"></i><span>客戶服務</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="service-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-service-form.html">
+                <i class="bi bi-circle"></i><span>意見表單</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-service-reply.html">
+                <i class="bi bi-circle"></i><span>查詢回覆</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Tables Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#charts-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-bar-chart"></i><span>銷售報表</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="charts-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-report.html">
+                <i class="bi bi-circle"></i><span>銷售數據</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Charts Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#order-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-stickies"></i><span>訂單管理</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="order-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-order-overall.html">
+                <i class="bi bi-circle"></i><span>全部訂單</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-order-search.html">
+                <i class="bi bi-circle"></i><span>訂單查詢</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#ads-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-badge-ad"></i><span>廣告管理</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="ads-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-ads-add.html">
+                <i class="bi bi-circle"></i><span>新增廣告</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-ads-all.html">
+                <i class="bi bi-circle"></i><span>查看廣告</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- End Icons Nav -->
+      </ul>
+    </aside>
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>訂單查詢</h1>
+        <form id="orderQuery" method="POST">
+          <div class="row">
+            <div class="col-md-4">
+              <label for="orderId" class="form-label">訂單序號</label>
+              <input
+                type="text"
+                class="form-control"
+                id="orderId"
+                name="orderId"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label for="startDate" class="form-label">起始日期</label>
+              <input
+                type="date"
+                class="form-control"
+                id="startDate"
+                name="startDate"
+              />
+            </div>
+
+            <div class="col-md-4">
+              <label for="endDate" class="form-label">結束日期</label>
+              <input
+                type="date"
+                class="form-control"
+                id="endDate"
+                name="endDate"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label for="minPaidAmount" class="form-label">最小實付金額</label>
+              <input
+                type="text"
+                class="form-control"
+                id="minPaidAmount"
+                name="minPaidAmount"
+              />
+            </div>
+
+            <div class="col-md-4">
+              <label for="maxPaidAmount" class="form-label">最大實付金額</label>
+              <input
+                type="text"
+                class="form-control"
+                id="maxPaidAmount"
+                name="maxPaidAmount"
+              />
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button type="reset" class="btn btn-secondary">重設</button>
+            <button
+              type="submit"
+              id="submitCompositeQuery"
+              class="btn btn-primary"
+            >
+              提交複合查詢
+            </button>
+          </div>
+        </form>
+
+        <div class="tab-content pt-2" id="borderedTabContent">
+          <div
+            class="tab-pane show active"
+            id="bordered-all-orders"
+            role="tabpanel"
+            aria-labelledby="all-orders-tab"
+          >
+            <div class="container mt-3 container-list-custom">
+              <div class="row header-row-custom">
+                <div class="col-2">訂單序號</div>
+                <div class="col-3">訂單日期</div>
+                <div class="col-2">買家實付金額</div>
+                <div class="col-3">狀態</div>
+                <div class="col-2">操作</div>
+              </div>
+
+              <!-- Item 1 -->
+              <div class="row item-row-custom">
+                <div class="col-2">123456</div>
+                <div class="col-3">2024-02-18</div>
+                <div class="col-2">50</div>
+                <div class="col-3">等待中<br />待賣家確認</div>
+                <div class="col-2 d-flex flex-column align-items-center">
+                  <button class="product align-self-start btn-func">
+                    接受訂單
+                  </button>
+                  <button class="product align-self-start btn-func">
+                    取消訂單
+                  </button>
+                  <button class="product align-self-start btn-func">
+                    查看詳情
+                  </button>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="row item-row-custom">
+                <div class="col-2">123456</div>
+                <div class="col-3">2024-02-18</div>
+                <div class="col-2">50</div>
+                <div class="col-3">不成立<br />買家不接受</div>
+                <div class="col-2 d-flex flex-column align-items-center">
+                  <button class="product align-self-start btn-func">
+                    查看詳情
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Content for All Orders Tab -->
+          </div>
+          <div
+            class="tab-pane"
+            id="bordered-pending"
+            role="tabpanel"
+            aria-labelledby="pending-tab"
+          >
+            <!-- Content for Pending Orders Tab -->
+          </div>
+          <div
+            class="tab-pane"
+            id="bordered-shipped"
+            role="tabpanel"
+            aria-labelledby="shipped-tab"
+          >
+            <!-- Content for Cancelled Orders Tab -->
+          </div>
+          <div
+            class="tab-pane"
+            id="bordered-cancel"
+            role="tabpanel"
+            aria-labelledby="cancel-tab"
+          >
+            <!-- Content for Shipped Orders Tab -->
+          </div>
+          <div
+            class="tab-pane"
+            id="bordered-completed"
+            role="tabpanel"
+            aria-labelledby="completed-tab"
+          >
+            <!-- Content for Completed Orders Tab -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- End #main -->
+
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout on">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+            <svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor & Main JS Files -->
+    <script src="loadjs.js"></script>
+
+    <!-- Local JS File -->
+    <script></script>
+  </body>
+</html>

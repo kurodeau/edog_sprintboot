@@ -33,6 +33,10 @@ public class ProductnoController {
 	public String sellerproductlist(Model model) {
 		return "front-end/seller/seller-product-all";
 	}
+	
+	
+
+	
 
 	@PostMapping("getOne_For_Display")
 	public String getOne_For_Display(/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 *************************/
@@ -58,31 +62,34 @@ public class ProductnoController {
 
 		return "front-end/seller/seller-product-all";
 	}
-	
-	
+
 	@ModelAttribute("productListData")
-	protected List<ProductVO> referenceListData(Model model){
-		
+	protected List<ProductVO> referenceListData(Model model) {
+
 		List<ProductVO> list = productSvc.getAll();
 		return list;
 	}
 
 	@ModelAttribute("productSellOut")
-	protected List<ProductVO> referenceListData1(Model model){
-		
+	protected List<ProductVO> referenceListData1(Model model) {
+
 		List<ProductVO> list = productSvc.getSellOutProduct();
 		return list;
 	}
-	
-	
+
+	@ModelAttribute("productLaunch")
+	protected List<ProductVO> referenceListData3(Model model) {
+
+		List<ProductVO> list = productSvc.getProductLaunch();
+		return list;
+	}
+
 	@ModelAttribute("productUnLaunch")
-	protected List<ProductVO> referenceListData2(Model model){
-		
+	protected List<ProductVO> referenceListData2(Model model) {
+
 		List<ProductVO> list = productSvc.getProductUnLaunch();
 		return list;
 	}
-	
-	
 
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	// @ResponseStatus(value = HttpStatus.BAD_REQUEST)

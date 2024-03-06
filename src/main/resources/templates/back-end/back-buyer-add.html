@@ -9,34 +9,9 @@
 
 <body>
 	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-					</ul>
-
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link" href="#">[當前登入管理者名稱]</a>
-						</li>
-						<!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-						<li class="nav-item"><a class="nav-link" href="#">登出</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-	</header>
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
 
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="back-end/aside-back.html"></aside>
@@ -51,9 +26,13 @@
 				enctype="multipart/form-data">
 
 				<div class="col-md-12">
-					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input
-						type="text" class="form-control" id="inputMemberEmail"
-						name="memberEmail" placeholder="請輸入電子信箱,將做為您登入的帳號" />
+					<label for="inputMemberEmail" class="form-label">電子信箱</label> 
+					<input
+						type="text" 
+						class="form-control" 
+						id="inputMemberEmail"
+						name="memberEmail" 
+						placeholder="請輸入電子信箱,將做為您登入的帳號" />
 					<div id="memberEmailFeedback" class="invalid-feedback">
 						"輸入電子信箱錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -105,6 +84,13 @@
 					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
+				<div class="col-mb-3">
+					<label for="inputMemberBirthday" class="col-sm-2 col-form-label">生日</label>
+					<div class="col-sm-12">
+						<input type="date" class="form-control" name="memberBirthday">
+					</div>
+				</div>
+
 				<div class="col-md-12">
 					<label for="inputMemberAddress" class="form-label">地址</label>
 					<!-- <div class="city-selector-set col-md-12 d-flex flex-row">
@@ -140,7 +126,7 @@
 				<div class="col mb-3" style="display: none;">
 					<label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
 					<div class="col-sm-3">
-						<input type="date" class="form-control"
+						<input type="date" class="form-controlf"
 							name="memberRegistrationTime" readonly>
 					</div>
 					<div id="memberRegistrationTimeFeedback" class="invalid-feedback">

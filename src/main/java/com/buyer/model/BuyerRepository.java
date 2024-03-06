@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.buyer.entity.BuyerVO;
+import com.seller.entity.SellerVO;
 
 public interface BuyerRepository extends JpaRepository<BuyerVO, Integer> {
 

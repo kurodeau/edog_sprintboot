@@ -38,7 +38,7 @@
 		<!-- End NavBar  -->
 	</header>
 	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
 
 	<!-- ======= Main ======= -->
 
@@ -102,7 +102,8 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productStockQuantity" class="form-label">廣告商品網址</label>
-					<input type="text" th:field="*{adUrl}" class="form-control" id="adUrl" name="adUrl" />
+					<input type="text" th:field="*{adUrl}" class="form-control"
+						id="adUrl" name="adUrl" />
 					<div id="productStockQuantityFeedback" class="invalid-feedback">
 						Please provide a valid inputStockQuantity.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -120,12 +121,14 @@
 				<div class="row">
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="f_date1" class="form-label">廣告起始日期</label> <input
-							type="date"th:field="*{adStartTime}"  class="form-control" id="f_date1" name="adStartTime" />
+							type="date" th:field="*{adStartTime}" class="form-control"
+							id="f_date1" name="adStartTime" />
 					</div>
 
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="end-date" class="form-label">廣告結束日期</label> <input
-							type="date"th:field="*{adEndTime}" class="form-control" id="f_date2" name="adEndTime" />
+							type="date" th:field="*{adEndTime}" class="form-control"
+							id="f_date2" name="adEndTime" />
 					</div>
 				</div>
 
@@ -213,6 +216,7 @@
 				var files = event.target.files || event.dataTransfer.files;
 				for (var i = 0; i < files.length; i++) {
 					previewfile(files[i])
+					consle.log("啊啊啊啊啊啊");
 				}
 			}, false);
 		}
@@ -228,8 +232,10 @@
 					image.border = 2;
 					if (blob_holder.hasChildNodes()) {
 						blob_holder.removeChild(blob_holder.childNodes[0]);
+						console.log("我執行幾次?");
 					}
 					blob_holder.appendChild(image);
+					clearChildNodesExceptLast();
 				};
 				reader.readAsDataURL(file);
 				document.getElementById('submit').disabled = false;
@@ -249,6 +255,28 @@
 				document.getElementById('submit').disabled = true;
 			}
 		}
+
+		function clearChildNodesExceptLast() {
+			var blobHolder = document.getElementById("blob_holder");
+			var childNodes = blobHolder.children;
+			// 從第一個子元素開始到倒數第二個子元素移除
+			for (var i = childNodes.length - 2; i >= 0; i--) {
+				blobHolder.removeChild(childNodes[i]);
+			}
+		}
+		
+		document.getElementById('dataForm').addEventListener('submit', function(event) {
+	        event.preventDefault(); // 防止表單默認提交行為
+	        var formData = new FormData(this); // 獲取表單數據
+	        var formValues = ''; // 初始化表單值字符串
+	        // 遍歷 FormData 將每個鍵值對添加到表單值字符串中
+	        for (var pair of formData.entries()) {
+	            formValues += pair[0] + ': ' + pair[1] + '\n';
+	        }
+	        // 顯示表單內容
+	        alert('表單內容:\n\n' + formValues);
+	        this.submit(); // 手動提交表單
+	    });
 	</script>
 
 
