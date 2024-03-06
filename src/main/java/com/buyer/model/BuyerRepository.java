@@ -18,6 +18,6 @@ public interface BuyerRepository extends JpaRepository<BuyerVO, Integer> {
 	void deleteByMemberId(int memberId);
 	
 	@Query(value = "SELECT * FROM buyer WHERE memberEmail = ?1 LIMIT 1", nativeQuery = true)
-	SellerVO findByOnlyOneEmail(String email);
+	BuyerVO findByOnlyOneEmail(String email);
 
 }

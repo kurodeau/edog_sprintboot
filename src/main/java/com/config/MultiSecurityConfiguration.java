@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 // @EnableWebSecurity開啟SpringSecurity的自訂義配置，SpringBoot 中可省略
@@ -35,6 +38,10 @@ public class MultiSecurityConfiguration {
 	private SellerPasswordEncoder sellerPasswordEncoder;
 
 	@Autowired
+	@Qualifier("sellerAuthenticationSuccessHandler")
+	private AuthenticationSuccessHandler sellerAuthenticationSuccessHandler;
+	
+	@Autowired
 	@Qualifier("buyerDetailsService") // Use the correct qualifier if needed
 	private BuyerDetailsService buyerDetailsService;
 
@@ -42,16 +49,33 @@ public class MultiSecurityConfiguration {
 	@Qualifier("buyerPasswordEncoder")
 	private BuyerPasswordEncoder buyerPasswordEncoder;
 
+	
+	@Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider1() {
+        DaoAuthenticationProvider authenticationProvider 
+                                  = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(sellerDetailsService);
+        authenticationProvider.setPasswordEncoder(sellerPasswordEncoder);
+        return authenticationProvider;
+    }
+	
+	
+	@Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider2() {
+        DaoAuthenticationProvider authenticationProvider 
+                                  = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(buyerDetailsService);
+        authenticationProvider.setPasswordEncoder(buyerPasswordEncoder);
+        return authenticationProvider;
+    }
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 		// retrieve builder from httpSecurity
-		AuthenticationManagerBuilder authenticationManagerBuilder = http
-				.getSharedObject(AuthenticationManagerBuilder.class);
 
-		authenticationManagerBuilder.userDetailsService(sellerDetailsService).passwordEncoder(sellerPasswordEncoder);
+		
+        return new ProviderManager(daoAuthenticationProvider1(),daoAuthenticationProvider2());
 
-		authenticationManagerBuilder.userDetailsService(buyerDetailsService).passwordEncoder(buyerPasswordEncoder);
-		return authenticationManagerBuilder.build();
+
 	}
 
 	@Bean
@@ -64,12 +88,14 @@ public class MultiSecurityConfiguration {
 						.antMatchers("/seller/register/check").permitAll()
 						.antMatchers("/buyer/register").permitAll()
 						.antMatchers("/buyer/register/check").permitAll()
+						.antMatchers("/front/seller/**").hasRole("SELLER")
 //             .antMatchers("/seller/login").permitAll() // Permit access to the specific URL
 //             .antMatchers("/seller/login/check").permitAll() 
 						// .antMatchers("/**").permitAll() // Permit access to the specific URL
 						.anyRequest().authenticated())
 //         .formLogin(form -> form.loginPage("/seller/login").usernameParameter("usernameinhtml").passwordParameter("passwordinhtml"));
-				.formLogin();
+				.formLogin().successHandler(sellerAuthenticationSuccessHandler).failureUrl("/loginXXXXX");
+
 
 		http.csrf().disable();
 		// 配置表单登录

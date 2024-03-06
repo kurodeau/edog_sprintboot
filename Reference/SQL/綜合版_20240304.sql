@@ -226,11 +226,12 @@ articleTypeName varchar(100)
 );
 -- 文章  創建table-- 
 CREATE TABLE IF NOT EXISTS article(
-   articleId INT PRIMARY KEY AUTO_INCREMENT,
+    articleId INT PRIMARY KEY AUTO_INCREMENT,
     memberId INT,
     articleTitle VARCHAR(255),
     articleContent VARCHAR(500),
-
+    upFiles LONGBLOB,
+    artCreateTime DATETIME,
     artUpdateTime DATETIME,
     articleLike INT,
     articleComment INT,
@@ -699,13 +700,28 @@ VALUES
 (3, 4, 5, 10, 5, 900, 890, '2023-05-01 09:30:00', 2, 56789, 'Robert Wilson', '2023-05-05 11:45:00', '0123456789', '789 Elm St', false, null);
 -- 訂單明細  放入測試資料-- 
 
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, comments, attachments, isEnable)
-VALUES
-    (1, 1, 2, TRUE, 4, 'Good product!', 'image1.jpg', TRUE),
-    (1, 2, 1, FALSE, NULL, NULL, NULL, TRUE),
-    (2, 3, 3, TRUE, 5, 'Excellent service!', 'image2.jpg', TRUE),
-    (2, 4, 1, TRUE, 3, 'Could be better', NULL, TRUE),
-    (3, 5, 2, FALSE, NULL, NULL, NULL, TRUE);
+-- 訂單1的明細 --
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (1, 1, 2, true, 4, '2024-03-04 12:30:00', '很滿意', 'attachment1.jpg', true);
+
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (1, 1, 1, false, NULL, NULL, NULL, NULL, true);
+
+-- 訂單2的明細 --
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (2, 2, 3, true, 5, '2024-03-05 14:45:00', '非常好', 'attachment2.jpg', true);
+
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (2, 2, 2, true, 4, '2024-03-05 15:00:00', '不錯', 'attachment3.jpg', true);
+
+-- 訂單3的明細 --
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (3, 3, 1, false, NULL, NULL, NULL, NULL, true);
+
+INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
+VALUES (3, 2, 4, true, 3, '2024-03-06 10:20:00', '一般般', 'attachment4.jpg', true);
+
+
 -- 檢舉Type  放入測試資料-- 
 INSERT INTO reportType (reportTypeId, reportTypeSort) VALUES
     (1, '垃圾訊息'),

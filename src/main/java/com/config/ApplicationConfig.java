@@ -31,11 +31,11 @@ public class ApplicationConfig {
 //	}
 
 	// (0 使用者提供 PasswordEncoder Bean時，Spring會取消預設配置，配合1.1.2
-	@Bean
-	// 用戶輸入的密碼會加密過，而非使用明文去做存入
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	// 用戶輸入的密碼會加密過，而非使用明文去做存入
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 	
 	
 	

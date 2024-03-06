@@ -9,6 +9,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
@@ -58,8 +60,9 @@ public class SellerControllerFront extends HttpServlet {
 	   public String selleredit(
 	            Model model,HttpSession session) {
     	
-    	//TESTING 從登入後SESSION取得用戶
-		SellerVO sellerVO = (SellerVO)session.getAttribute("sellerVO");
+    	SecurityContext secCtx = SecurityContextHolder.getContext();
+    	Authentication authentication = secCtx.getAuthentication();
+    	SellerVO sellerVO = (SellerVO)authentication.getPrincipal();
 		model.addAttribute("sellerVO",sellerVO);
 		
 	    return "front-end/seller/seller-seller-edit"; 

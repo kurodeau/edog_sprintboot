@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,12 +40,15 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	}
 	
 	public void createUser(UserDetails user,SellerVO sellerVO) {
-
+	
 		sellerVO.setSellerEmail(user.getUsername());
 		
 		sellerVO.setSellerPassword(sellerPasswordEncoder.encode(user.getPassword()));
 		sellerVO.setIsConfirm(true);
 
+		
+		
+		
 		sellerRepo.save(sellerVO);
 	}
 
@@ -81,24 +85,40 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 		
 //		SellerVO targetUser =  sellerRepo.findByEmail(username);
 		SellerVO targetUser =  sellerRepo.findByOnlyOneEmail(username);
-		System.out.println(targetUser);
+	
+		
+	
+
+		
+//		System.out.println(targetUser);
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 
 
-		if (targetUser == null) {
-			throw new UsernameNotFoundException(username);
-		} else {
-			return new org.springframework.security.core.userdetails.User(
-				    targetUser.getSellerEmail(),
-				    targetUser.getSellerPassword(),
-				    true,  // 用户启用状态
-				    true,  // 用戶帳號是否過期
-				    true,  // 用戶憑證是否過期
-				    true,  // 用戶是否未被鎖定
-				    authorities // 授權權限列表
-				);
-		}
+
+	    if (targetUser == null) {
+	        System.out.println("targetUser");
+	        
+	        throw new UsernameNotFoundException(username);
+	    
+	    } else {
+	        // 創建權限列表
+	        Collection<GrantedAuthority> authorities1 = new ArrayList<>();
+
+	        // 根據使用者的角色添加權限
+            authorities1.add(new SimpleGrantedAuthority("ROLE_SELLER" ));
+
+
+	        return new org.springframework.security.core.userdetails.User(
+	            targetUser.getSellerEmail(),
+	            targetUser.getSellerPassword(),
+	            true,  // 用户启用状态
+	            true,  // 用戶帳號是否過期
+	            true,  // 用戶憑證是否過期
+	            true,  // 用戶是否未被鎖定
+	            authorities1 // 授權權限列表
+	        );
+	    }
 
 	}
 

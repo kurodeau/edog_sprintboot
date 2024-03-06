@@ -48,12 +48,10 @@ public class BuyerDetailsService  implements UserDetailsService {
 	// 在UsernamePasswordAutheniticationFilter過濾器 AttemptAutheniciation方法中
 	// 把用戶輸入的密碼和SQL中或的密名進行驗證
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		logger.error(username);
 		
 		
 //		SellerVO targetUser =  sellerRepo.findByEmail(username);
-		SellerVO targetUser =  buyerRepo.findByOnlyOneEmail(username);
-		System.out.println(targetUser);
+		BuyerVO targetUser =  buyerRepo.findByOnlyOneEmail(username);
 		// 創建權限列表
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 
@@ -62,8 +60,8 @@ public class BuyerDetailsService  implements UserDetailsService {
 			throw new UsernameNotFoundException(username);
 		} else {
 			return new org.springframework.security.core.userdetails.User(
-				    targetUser.getSellerEmail(),
-				    targetUser.getSellerPassword(),
+				    targetUser.getMemberEmail(),
+				    targetUser.getMemberPassword(),
 				    true,  // 用户启用状态
 				    true,  // 用戶帳號是否過期
 				    true,  // 用戶憑證是否過期

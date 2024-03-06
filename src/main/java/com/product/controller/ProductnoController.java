@@ -67,6 +67,30 @@ public class ProductnoController {
 		return list;
 	}
 
+	@ModelAttribute("productSellOut")
+	protected List<ProductVO> referenceListData1(Model model){
+		
+		List<ProductVO> list = productSvc.getSellOutProduct();
+		return list;
+	}
+	
+	@ModelAttribute("productLaunch")
+	protected List<ProductVO> referenceListData3(Model model){
+		
+		List<ProductVO> list = productSvc.getProductLaunch();
+		return list;
+	}
+	
+	
+	
+	@ModelAttribute("productUnLaunch")
+	protected List<ProductVO> referenceListData2(Model model){
+		
+		List<ProductVO> list = productSvc.getProductUnLaunch();
+		return list;
+	}
+	
+	
 
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	// @ResponseStatus(value = HttpStatus.BAD_REQUEST)

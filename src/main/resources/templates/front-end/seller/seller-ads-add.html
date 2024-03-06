@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
-    
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
@@ -191,9 +191,11 @@
 					image.height = 150;
 					image.border = 2;
 					if (blob_holder.hasChildNodes()) {
+						consle.log("5k4ux3");
 						blob_holder.removeChild(blob_holder.childNodes[0]);
 					}
 					blob_holder.appendChild(image);
+					clearChildNodesExceptLast();
 				};
 				reader.readAsDataURL(file);
 				document.getElementById('submit').disabled = false;
@@ -213,6 +215,8 @@
 				document.getElementById('submit').disabled = true;
 			}
 		}
+
+	
 	</script>
 
 
