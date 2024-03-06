@@ -83,5 +83,8 @@ public class IndexControllerMain {
     public String loginSeller(ModelMap model) throws IOException {
         return "/front-end/seller/seller-login";
     }
+    
+  
+    
 
 }
