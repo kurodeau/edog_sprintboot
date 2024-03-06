@@ -14,38 +14,31 @@
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+ cursor: pointer;
+  transition: background-color 0.3s;
 }
-
-.avatar-section {
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 40px; /* 調整頭像大小 */
-  height: 40px;
-  border-radius: 50%;
-}
-
+.forum-article:hover { 
+  color: #604ec7;
+} 
 .avatar-name {
   font-size: 16px; /* 調整作者名稱字體大小 */
   font-weight: bold;
-  margin: 0;
-  margin-left: 10px;
+  
 }
 
-.category {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-}
 
 .category-options {
   /* 這裡放上點點的樣式 */
 }
-
+.avatar-category{
+	display:flex;
+}
+.title-category{
+	display:flex;
+}
 .category-name {
-  margin-left: 5px;
+display:flex;
+ margin-left: auto;
 }
 
 .article-title {
@@ -53,7 +46,11 @@
   font-weight: bold;
   margin: 10px 0;
 }
-
+.title-category .article-title{
+	font-size: 24px;
+  font-weight: bold;
+   margin-top: 0px;
+}
 .article-content {
   margin-bottom: 10px;
 }
@@ -67,10 +64,17 @@
 .interaction-item {
   margin-right: 15px;
 }
-
+.article-like{
+	margin-right: 15px;
+	margin-left: 5px;
+}
+.article-comment{
+	margin-left: 5px;
+}
 .time {
   font-size: 12px; /* 調整時間字體大小 */
   color: var(--text-placeholder);
+  margin-left: auto;
 }
 /*--------------------------------------------------------------
   # 頁籤

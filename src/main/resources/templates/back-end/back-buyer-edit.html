@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -192,6 +192,11 @@
         </div>
 
         <div class="col-md-12">
+          <label for="inputPassword" class="form-label">密碼</label>
+          <input type="text" class="form-control" id="inputPassword" name="password" value="pass1234" />
+        </div>
+
+        <div class="col-md-12">
           <label for="inputMemberName" class="form-label">用戶名稱</label>
           <input type="text" class="form-control" id="inputMemberName" name="memberName" value="sakiko" />
         </div>
@@ -208,7 +213,7 @@
 
         <div class="col-md-12">
           <label for="inputMemberAddress" class="form-label">地址</label>
-          <div class="city-selector-set col-md-12 d-flex flex-row">
+          <!-- <div class="city-selector-set col-md-12 d-flex flex-row">
             <div class="col-md-2">
               <select class="county form-select" name="county"></select>
             </div>
@@ -218,7 +223,7 @@
             <div class="col-md-2">
               <input class="zipcode form-control" type="text" size="3" readonly placeholder="郵遞區號" name="zipcode" />
             </div>
-          </div>
+          </div> -->
           <input type="text" class="form-control mt-2" id="inputMemberAddress" name="memberAddress"
             placeholder="請輸入地址" />
         </div>
@@ -231,12 +236,12 @@
           </select>
         </div>
 
-        <div class="col mb-3">
+        <!-- <div class="col mb-3">
           <label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
           <div class="col-sm-3">
             <input type="date" class="form-control" name="memberRegistrationTime" value="1987-03-21" readonly>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-md-12">
           <label for="inputPetName" class="form-label">寵物名稱</label>
@@ -317,12 +322,12 @@
           </div>
         </div>
 
-        <div class="col mb-3">
+        <!-- <div class="col mb-3">
           <label for="inputPetImgUploadTime" class="col-sm-2 col-form-label">寵物圖片更新時間</label>
           <div class="col-sm-3">
             <input type="date" class="form-control" name="petImgUploadTime" value="2000-03-21" readonly>
           </div>
-        </div>
+        </div> -->
 
         <!-- <nav class="custom-mt-6 mb-2">
           <ol class="breadcrumb">
@@ -330,10 +335,7 @@
           </ol>
         </nav> -->
 
-        <div class="col-md-12">
-          <label for="inputPassword" class="form-label">密碼</label>
-          <input type="text" class="form-control" id="inputPassword" name="password" value="pass1234" />
-        </div>
+
 
         <div class="col-md-3">
           <label for="inputIsConfirm" class="form-label">用戶資料是否生效</label>

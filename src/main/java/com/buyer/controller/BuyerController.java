@@ -25,12 +25,24 @@ import com.buyer.model.*;
 import com.buyer.service.*;
 
 @Controller
-@RequestMapping("/buyer")
+@RequestMapping("/back/buyer")
 public class BuyerController {
 
 	@Autowired
 	BuyerService buyerSvc;
 
+	// /back/buyer/listAllGet
+	@GetMapping("listAllGet")
+	public String listAllBuyerGet(ModelMap model) {
+		return "back-end/back-buyer-list";
+	}
+	
+	// /back/buyer/listAllPost
+	@PostMapping("listAllPost")
+	public String listAllBuyerPost(ModelMap model) {
+		return "back-end/back-newsticker-list";
+	}
+	
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
