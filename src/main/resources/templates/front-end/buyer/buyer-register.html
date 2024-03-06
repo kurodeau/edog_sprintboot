@@ -34,7 +34,8 @@
 						class="form-control" 
 						id="inputMemberEmail"
 						name="memberEmail" 
-						placeholder="請輸入電子信箱,將做為您登入的帳號" />
+						placeholder="請輸入電子信箱,將做為您登入的帳號"
+						th:value="${buyerVO.memberEmail}" />
 					<div id="memberEmailFeedback" class="invalid-feedback">
 						"輸入電子信箱錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -43,7 +44,8 @@
 				<div class="col-md-12">
 					<label for="inputMemberPassword" class="form-label">密碼</label> <input
 						type="text" class="form-control" id="inputMemberPassword"
-						name="memberPassword" placeholder="請輸入包含英文與數字6~8字之間的密碼" />
+						name="memberPassword" placeholder="請輸入包含英文與數字6~8字之間的密碼" 
+						th:value="${buyerVO.memberPassword}"/>
 					<div id="memberPasswordFeedback" class="invalid-feedback">
 						"輸入密碼錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -53,7 +55,8 @@
 					<label for="inputChecKMemberPassword" class="form-label">確認密碼</label>
 					<input type="text" class="form-control"
 						id="inputChecKMemberPassword" name="checkMemberPassword"
-						placeholder="請輸入相同密碼" />
+						placeholder="請輸入相同密碼" 
+						th:value="${buyerVO.memberPassword}"/>
 					<div id="checKMemberPasswordFeedback" class="invalid-feedback">
 						"再次輸入密碼錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -62,7 +65,8 @@
 				<div class="col-md-12">
 					<label for="inputMemberName" class="form-label">用戶名稱</label> <input
 						type="text" class="form-control" id="inputMemberName"
-						name="memberName" placeholder="請輸入您的稱呼" />
+						name="memberName" placeholder="請輸入您的稱呼" 
+						th:value="${buyerVO.memberName}"/>
 					<div id="memberNameFeedback" class="invalid-feedback">
 						"輸入用戶名稱錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -71,7 +75,8 @@
 				<div class="col-md-12">
 					<label for="inputMemberPhone" class="form-label">會員電話</label> <input
 						type="text" class="form-control" id="inputMemberPhone"
-						name="memberPhone" placeholder="請輸入市區號碼" />
+						name="memberPhone" placeholder="請輸入市區號碼" 
+						th:value="${buyerVO.memberPhone}"/>
 					<div id="memberPhoneFeedback" class="invalid-feedback">
 						"輸入市話錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -80,7 +85,8 @@
 				<div class="col-md-12">
 					<label for="inputMemberMobile" class="form-label">手機號碼</label> <input
 						type="text" class="form-control" id="inputMemberMobile"
-						name="memberMobile" placeholder="請輸入手機號碼" />
+						name="memberMobile" placeholder="請輸入手機號碼" 
+						th:value="${buyerVO.memberMobile}"/>
 					<div id="memberMobileFeedback" class="invalid-feedback">
 						"輸入手機錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -89,7 +95,9 @@
 				<div class="col-mb-3">
 					<label for="inputMemberBirthday" class="col-sm-2 col-form-label">生日</label>
 					<div class="col-sm-12">
-						<input type="date" class="form-control" name="memberBirthday">
+						<input type="date" class="form-control" name="memberBirthday"
+						th:value="${buyerVO.memberBirthday}"
+						/>
 					</div>
 				</div>
 
@@ -107,7 +115,9 @@
             </div>
           </div> -->
 					<input type="text" class="form-control mt-2"
-						id="inputMemberAddress" name="memberAddress" placeholder="請輸入地址" />
+						id="inputMemberAddress" name="memberAddress" placeholder="請輸入地址" 
+						th:value="${buyerVO.memberAddress}"
+						/>
 					<div id="memberAddressFeedback" class="invalid-feedback">
 						"輸入地址錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -129,7 +139,8 @@
 					<label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
 					<div class="col-sm-3">
 						<input type="date" class="form-controlf"
-							name="memberRegistrationTime" readonly>
+							name="memberRegistrationTime" readonly
+							th:value="${buyerVO.memberRegistrationTime}">
 					</div>
 					<div id="memberRegistrationTimeFeedback" class="invalid-feedback">
 						"創建帳號時間錯誤提示訊息"</div>
@@ -139,7 +150,7 @@
 				<div class="col-md-12">
 					<label for="inputPetName" class="form-label">寵物名稱</label> <input
 						type="text" class="form-control" id="inputPetName" name="petName"
-						placeholder="請輸入寵物名稱" />
+						placeholder="請輸入寵物名稱" th:value="${buyerVO.petName}"/>
 					<div id="petNameFeedback" class="invalid-feedback">
 						"輸入寵物名稱錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
