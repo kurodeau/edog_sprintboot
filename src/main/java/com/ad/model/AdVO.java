@@ -126,7 +126,7 @@ public class AdVO implements Serializable {
 
 
 
-	@Column(name= "adImgUploadTime")
+	@Column(name= "adImgUploadTime" , updatable = false)
 	public Timestamp getAdImgUploadTime() {
 		return adImgUploadTime;
 	}
@@ -242,7 +242,7 @@ public class AdVO implements Serializable {
 
 
 
-	@Column(name = "adCreateTime")
+	@Column(name = "adCreateTime" , updatable = false)
 	public Timestamp getAdCreateTime() {
 		return adCreateTime;
 	}
