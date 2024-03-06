@@ -84,6 +84,9 @@ public class IndexControllerMain {
     public String loginSeller(ModelMap model) throws IOException {
         return "/front-end/seller/seller-login";
     }
+    
+  
+    
 
     @GetMapping("/buyer/register")
     public String registerBuyer(ModelMap model) throws IOException {
