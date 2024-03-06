@@ -34,8 +34,15 @@ public class ProductService {
 	}
 	
 	public List<ProductVO> getAll(){
+		
+		List<ProductVO> allProducts = repository.findAll();
+		
+		List<ProductVO> list = allProducts.stream()
+										  .filter( pt -> Boolean.TRUE.equals(pt.getIsEnabled()))
+										  .collect(Collectors.toList());
+		
 	
-		return repository.findAll();
+		return list;
 	}
 	
 	public List<ProductVO> getSellOutProduct(){
