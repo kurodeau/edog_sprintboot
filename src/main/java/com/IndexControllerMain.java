@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.seller.entity.SellerVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
+import com.buyer.entity.*;
 import com.user.model.UserService;
 import com.user.model.UserVO;
 
@@ -84,4 +85,44 @@ public class IndexControllerMain {
         return "/front-end/seller/seller-login";
     }
 
+    @GetMapping("/buyer/register")
+    public String registerBuyer(ModelMap model) throws IOException {
+    	BuyerVO buyerVO = new BuyerVO();
+    	
+    	// TEST 
+    	buyerVO.setMemberEmail("lulu.doe@example.com");
+    	buyerVO.setThirdFrom(null);
+    	buyerVO.setMemberName("Lulu");
+    	buyerVO.setMemberPhone("03123321");
+    	buyerVO.setMemberMobile("09777666");
+    	buyerVO.setMemberBirthday(null);
+    	buyerVO.setMemberAddress("地址");
+    	buyerVO.setIsMemberEmail(false);
+    	
+    	java.util.Date utilDate = new java.util.Date();
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+    	buyerVO.setMemberRegistrationTime( sqlDate );
+    	buyerVO.setPetName("寵物啦");
+    	buyerVO.setPetImg(null);
+    	buyerVO.setPetImgUploadTime(null);
+    	buyerVO.setPetVaccName1(null);
+    	buyerVO.setPetVaccTime1(null);
+    	buyerVO.setPetVaccName2(null);
+    	buyerVO.setPetVaccTime2(null);
+   	
+    	    
+    	// 防止被修改
+    	buyerVO.setMemberPassword(null);
+    	buyerVO.setIsConfirm(true);
+    	    
+		model.addAttribute("buyerVO", buyerVO);
+        return "/front-end/buyer/buyer-register";
+    }   
+    
+    
+    @GetMapping("/buyer/login")
+    public String loginBuyer(ModelMap model) throws IOException {
+        return "/front-end/buyer/buyer-login";
+    }
+    
 }

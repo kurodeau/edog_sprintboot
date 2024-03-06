@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
 
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-<th:block th:insert="~{/fragment-datatableCss}"></th:block>
-
-</head>
-
-<body>
-	<!-- ======= Header ======= -->
     <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
+      <p>這個還沒有改</p>   
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
     </header>
 
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+	
+    <!-- ======= Main ======= -->
+    <main class="main-nosidebar">
+      <div class="container-fluid seller-container">
+        <h1>註冊買家資料</h1>
 
-	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
-		<div class="container-fluid seller-container">
-			<h1>新增買家資料</h1>
-
-
-			<form id="dataForm" method="POST" th:action="@{insertBuyer}"
-				enctype="multipart/form-data">
+        <form
+          class="row g-3"
+          id="myForm"
+          th:action="@{/buyer/register/check}"
+          th:object="${buyerVO}"
+          method="post"
+          enctype="multipart/form-data"
+          onsubmit="return updateHiddenFields();"
+        >
 
 				<div class="col-md-12">
 					<label for="inputMemberEmail" class="form-label">電子信箱</label> 
@@ -193,106 +195,123 @@
 
 				<br> <br>
 
-				<div
-					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
-					<button type="submit" class="btn btn-primary">建立帳號</button>
-				</div>
-			</form>
-		</div>
-	</main>
-	<!-- End Main -->
+          <div class="text-center d-flex flex-row gap-5 justify-content-center">
+            <button type="reset" class="btn btn-secondary">取消並離開</button>
+            <button type="submit" class="btn btn-primary">提交修改</button>
+          </div>
+        </form>
+      </div>
+    </main>
 
-	<!-- ======= Footer, 後臺應該不需要footer ======= -->
+    <!-- End Main -->
 
-	<!-- Vendor & Main JS Files -->
-	<div th:replace="fragment-js"></div>
+    <!-- ======= Footer ======= -->
 
-	<!-- Local JS File -->
-	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
-		type="text/javascript"></script>
-	<script type="text/javascript">
-		//============ 取消按鈕的跳轉事件設定 start =============
-		document.getElementById("cancel-btn").addEventListener("click",
-				function() {
-					window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
-				});
+    <div th:replace="@{fragment-footer}"></div>
+    <div th:replace="@{fragment-js}"></div>
 
-		//============ 照片上傳-預覽用 start =============
-		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
-		var filereader_support = typeof FileReader != 'undefined';
-		if (!filereader_support) {
-			alert("No FileReader support");
-		}
-		acceptedTypes = {
-			'image/png' : true,
-			'image/jpeg' : true,
-			'image/gif' : true
-		};
-		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
-		function previewImage() {
-			var upfile1 = document.getElementById("inputPetImg");
-			upfile1.addEventListener("change", function(event) {
-				var files = event.target.files || event.dataTransfer.files;
-				for (var i = 0; i < files.length; i++) {
-					previewfile(files[i])
-				}
-			}, false);
-		}
-		//檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
-		function previewfile(file) {
-			if (filereader_support === true
-					&& acceptedTypes[file.type] === true) {
-				var reader = new FileReader();
-				reader.onload = function(event) {
+    <!-- Local JS File -->
 
-					var image = new Image();
-					image.src = event.target.result;
-					// 設定圖片的寬度上限
-					var maxWidth = 250;
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var countyValue = document
+          .querySelector(".county")
+          .getAttribute("data-countyValue");
+        console.log(countyValue); // 將印出 "台北市"
+      });
 
-					image.onload = function() {
-						// 原始圖片的寬高比
-						var aspectRatio = this.height / this.width;
-						// 計算相應的高度
-						var maxHeight = maxWidth * aspectRatio;
-						// 確保高度不超過設定的高度上限
-						if (maxHeight > 250) {
-							maxHeight = 250;
-							// 根據新的高度重新計算寬度
-							maxWidth = maxHeight / aspectRatio;
-						}
-						// 設定圖片的寬度和高度
-						this.width = maxWidth;
-						this.height = maxHeight;
+      window.onload = function () {
+        // 監聽自定義事件，當 loadjs 完成時觸發
 
-						image.border = 2;
-						if (blob_holder.hasChildNodes()) {
-							blob_holder.removeChild(blob_holder.childNodes[0]);
-						}
-						blob_holder.appendChild(image);
-					};
-				};
-				reader.readAsDataURL(file);
-				document.getElementById('submit').disabled = false;
-			} else {
-				blob_holder.innerHTML = "<div  style='text-align: left;'>"
-						+ "● filename: "
-						+ file.name
-						+ "<br>"
-						+ "● ContentTyp: "
-						+ file.type
-						+ "<br>"
-						+ "● size: "
-						+ file.size
-						+ "bytes"
-						+ "<br>"
-						+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-				document.getElementById('submit').disabled = true;
-			}
-		}
-	</script>
-	<!-- simpletable -->
-</body>
+        new TwCitySelector({
+          el: ".city-selector-set",
+          elCounty: ".county",
+          elDistrict: ".district",
+          elZipcode: ".zipcode",
+          countyValue: document.querySelector("#sellerCountyValue").value,
+          districtValue: document.querySelector("#sellerDistrictValue").value,
+        });
+      };
 
+      function updateHiddenFields() {
+        // 取得選擇的縣市和區域的值
+        var selectedCounty = document.querySelector(".county").value;
+        var selectedDistrict = document.querySelector(".district").value;
+
+        // 更新隱藏欄位的值
+        document.getElementById("sellerCountyValue").value = selectedCounty;
+        document.getElementById("sellerDistrictValue").value = selectedDistrict;
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return checkFormBeforeSubmit();
+      }
+
+      function checkFormBeforeSubmit() {
+        // 取得表單元素
+        var form = document.getElementById("myForm");
+
+        // 檢視表單內容
+        var formData = new FormData(form);
+        var formContent = "";
+
+        for (var pair of formData.entries()) {
+          formContent += pair[0] + ": " + pair[1] + "\n";
+        }
+
+        // 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+        alert("表單內容：\n" + formContent);
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return true;
+      }
+    </script>
+  </body>
+  
+   <!-- ======= Footer ======= -->
+    <footer class="footer-nosidebar">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
 </html>
