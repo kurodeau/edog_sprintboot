@@ -198,7 +198,7 @@
 <script type="text/javascript">
 //清除提示信息
 function hideContent(d) {
-//      document.getElementById(d).style.display = "none";
+     document.getElementById(d).style.display = "none";
 }
 
 //照片上傳-預覽用
@@ -211,21 +211,42 @@ acceptedTypes = {
 	'image/jpeg' : true,
 	'image/gif' : true
 };
-function previewImage() {
-    var upfile1 = document.getElementById("mainImage");
-    upfile1.addEventListener("change", function(event) {
-        var files = event.target.files || event.dataTransfer.files;
-//         for (var i = 0; i < files.length; i++) {
-//             previewfile(files[i], "mainImage_blob_holder");
-//             console.log("生徒");
-//         }
+
+
+// function previewImage() {
+//     var upfile1 = document.getElementById("mainImage");
+//     upfile1.addEventListener("change", function(event) {
+//         var files = event.target.files || event.dataTransfer.files;
+// //         for (var i = 0; i < files.length; i++) {
+// //             previewfile(files[i], "mainImage_blob_holder");
+// //             console.log("生徒");
+// //         }
         
-            previewfile(files[0], "mainImage_blob_holder");
-            console.log("生徒");
+//             previewfile(files[0], "mainImage_blob_holder");
         
-        clearChildNodesExceptLast();
-    }, false);
-}
+//         clearChildNodesExceptLast();
+//     }, false);
+// }
+
+// 上傳主圖片
+  function previewImage() {
+   var upfile1 = document.getElementById("mainImage");
+   upfile1.addEventListener("change", function (event) {
+    var files = event.target.files || event.dataTransfer.files;
+    var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
+
+    if (mainImage_blob_holder.firstChild) {
+     mainImage_blob_holder.firstChild.src = URL.createObjectURL(files[0]);
+    } else {
+     previewfile(files[0], "mainImage_blob_holder");
+    }
+   }, false);
+  }
+
+
+
+
+
 
 function previewImage1() {
 	   var upfile2 = document.getElementById("subImages");
@@ -247,6 +268,10 @@ function previewImage1() {
 	    }
 	   }, false);
 	  }
+	  
+	  
+	  
+	  
 
 function previewfile(file, blobHolderId) {
     var blob_holder = document.getElementById(blobHolderId);
@@ -259,7 +284,7 @@ function previewfile(file, blobHolderId) {
             image.height = 150;
             image.border = 2;
             blob_holder.appendChild(image);
-            console.log("真真正正出徒的來源?");
+          
         };
         reader.readAsDataURL(file);
 //         document.getElementById('submit').disabled = false;
@@ -273,21 +298,24 @@ function previewfile(file, blobHolderId) {
     }
 }
 
-function clearChildNodesExceptLast() {
-    var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
-    var childNodes = mainImage_blob_holder.children;
-    // 從第一個子元素開始到倒數第二個子元素移除
-    for (var nnn = childNodes.length - 2; nnn >= 0; nnn--) {
-    	mainImage_blob_holder.removeChild(childNodes[nnn]);
-        console.log("有進f的迴圈");
-    }
-    for (var xx = 0 ; xx <= 5 ; xx++){
-    	mainImage_blob_holder.removeChild(childNodes[0]);
-    	console.log("測試迴圈");
-    }
-    console.log(childNodes.length);
-    console.log("有進f");
-}
+
+
+
+// function clearChildNodesExceptLast() {
+//     var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
+//     var childNodes = mainImage_blob_holder.children;
+//     // 從第一個子元素開始到倒數第二個子元素移除
+//     for (var nnn = childNodes.length - 2; nnn >= 0; nnn--) {
+//     	mainImage_blob_holder.removeChild(childNodes[nnn]);
+//         console.log("有進f的迴圈");
+//     }
+//     for (var xx = 0 ; xx <= 5 ; xx++){
+//     	mainImage_blob_holder.removeChild(childNodes[0]);
+//     	console.log("測試迴圈");
+//     }
+//     console.log(childNodes.length);
+//     console.log("有進f");
+// }
 
 </script>
 </body>

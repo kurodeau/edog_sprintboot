@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>EDog</title>
+    <script src="loadcss.js"></script>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
+        <div class="container-fluid">
+          <div
+            class="collapse navbar-collapse d-flex justify-content-between"
+            id="navbarSupportedContent"
+          >
+            <!-- Start NavBar  -->
+            <!-- NavBar--LeftSide  -->
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+                <i class="bi bi-list"></i>
+                <a
+                  class="nav-link cancel-default-behavior"
+                  aria-current="page"
+                  href="#"
+                  >選單</a
+                >
+              </li>
+              <li class="nav-item d-flex align-items-center">
+                <a class="nav-link active" aria-current="page" href="#"
+                  >電子商城</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="seller-login.html">賣家中心</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">論壇</a>
+              </li>
+            </ul>
+
+            <!-- NavBar--RightSide  -->
+            <ul class="navbar-nav ms-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">註冊</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">登入</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End NavBar  -->
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar sidebar-layout-seller">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+          <a class="nav-link nav-seller-entry" href="seller-main.html">
+            <i class="bi bi-grid"></i>
+            <span>賣家中心</span>
+          </a>
+        </li>
+        <!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#seller-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-person"></i>
+            <span>賣家帳戶</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="seller-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-level.html">
+                <i class="bi bi-circle"></i><span>賣家等級</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-edit.html">
+                <i class="bi bi-circle"></i><span>修改賣家資料</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-check-payment.html">
+                <i class="bi bi-circle"></i><span>查看金流</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Seller Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#product-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-bag"></i>
+            <span>商品管理</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="product-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-product-add.html">
+                <i class="bi bi-circle"></i><span>新增商品</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-product-all.html">
+                <i class="bi bi-circle"></i><span>商品列表</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End product Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#service-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-headset"></i><span>客戶服務</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="service-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-service-form.html">
+                <i class="bi bi-circle"></i><span>意見表單</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-service-reply.html">
+                <i class="bi bi-circle"></i><span>查詢回覆</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Tables Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#charts-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-bar-chart"></i><span>銷售報表</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="charts-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-report.html">
+                <i class="bi bi-circle"></i><span>銷售數據</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Charts Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#order-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-stickies"></i><span>訂單管理</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="order-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-order-overall.html">
+                <i class="bi bi-circle"></i><span>全部訂單</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-order-search.html">
+                <i class="bi bi-circle"></i><span>訂單查詢</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#ads-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-badge-ad"></i><span>廣告管理</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="ads-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="seller-ads-add.html">
+                <i class="bi bi-circle"></i><span>新增廣告</span>
+              </a>
+            </li>
+            <li>
+              <a href="seller-ads-all.html">
+                <i class="bi bi-circle"></i><span>查看廣告</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- End Icons Nav -->
+      </ul>
+    </aside>
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>意見表單</h1>
+        <form
+          class="row g-3"
+          id="myForm"
+          action="testrecap"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="col-md-12">
+            <label for="userName" class="form-label">用戶名稱</label>
+            <input
+              type="text"
+              class="form-control"
+              id="userName"
+              name="userName"
+            />
+          </div>
+
+          <div class="col-md-12">
+            <label for="userEmail" class="form-label">用戶信箱</label>
+            <input
+              type="email"
+              class="form-control"
+              id="userEmail"
+              name="userEmail"
+            />
+          </div>
+
+          <div class="col-md-12">
+            <label for="feedbackType" class="form-label">反饋類別</label>
+            <input
+              type="text"
+              class="form-control"
+              id="feedbackType"
+              name="feedbackType"
+            />
+          </div>
+
+          <div class="col-md-12">
+            <label for="feedbackContent" class="form-label">反饋內容</label>
+            <input
+              type="text"
+              class="form-control"
+              id="feedbackContent"
+              name="feedbackContent"
+            />
+          </div>
+
+          <div class="text-center d-flex flex-row gap-5 justify-content-center">
+            <button type="reset" class="btn btn-secondary">重設</button>
+            <button type="submit" class="btn btn-primary">傳送</button>
+          </div>
+        </form>
+      </div>
+    </main>
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout on">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+            <svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor & Main JS Files -->
+    <script src="loadjs.js"></script>
+
+    <!-- Local JS File -->
+    <script>
+      // 利用JS閉包特性，把imgArray鎖定在函數createImageUploader
+      // 閉包：即便父函數執行完畢，內部的子函數仍可取得父函數的變數
+      function createImageUploader() {
+        let imgArray = [];
+
+        // 監測圖片上傳
+        function imgUpload() {
+          var uploadInputs = document.querySelectorAll(".upload__inputfile");
+          uploadInputs.forEach(function (uploadInput) {
+            uploadInput.addEventListener("change", function (event) {
+              var imgWrap = event.target
+                .closest(".upload__box")
+                .querySelector(".upload__img--wrap");
+              // 將 section 解析
+              let section = event.target.id;
+
+              // 將 maxLength 解析為整數
+              var maxLength = parseInt(
+                event.target.getAttribute("data-max_length"),
+                10
+              );
+
+              var files = event.target.files;
+
+              // 檢查是否存在 imgWrap
+              if (!imgWrap) {
+                console.error("找不到 imgWrap");
+                return;
+              }
+
+              // 檢查 maxLength 是否不等於 1 並且超過限制
+              if (
+                maxLength !== 1 &&
+                imgWrap.children.length + files.length > maxLength
+              ) {
+                console.log(
+                  "直接子元素的數量 + files.length:",
+                  imgWrap.children.length + files.length
+                );
+                alert("只能上傳" + maxLength + "張圖片");
+                return;
+              }
+
+              // 檢查 maxLength 是否等於 1 並且 imgWrap 有第一個子元素
+              if (maxLength === 1 && imgWrap.firstChild) {
+                let replaceFirst = imgWrap.firstChild.querySelector(
+                  ".upload__img--close"
+                );
+                // 觸發handleImageClose
+                replaceFirst.click();
+              }
+
+              let previousSuffix = -1;
+              Array.from(files).forEach(function (file) {
+                if (!file.type.match("image.*")) {
+                  alert("上傳的不是圖片");
+                  return;
+                }
+                // 取得亂數方便辨識
+                let randomSuffix = Math.floor(Math.random() * 1000);
+                while (previousSuffix === randomSuffix) {
+                  randomSuffix = Math.floor(Math.random() * 1000);
+                }
+                previousSuffix = randomSuffix;
+
+                // 取得毫秒數，並取得不唯一值(前端可能被人竄改，後端生成UUID保險)
+                let timestamp = new Date().getTime();
+                let uniqueFileName = `image_${timestamp}_${randomSuffix}.jpg`;
+
+                // 新增進入imgArray
+                imgArray.push({
+                  name: uniqueFileName,
+                  file: file,
+                  section: section,
+                });
+                appendImageToWrap(imgWrap, file, uniqueFileName, section);
+
+                console.log("=====imgArray======");
+                console.log(event.target);
+                console.log(imgArray);
+                console.log("=====imgArray======");
+              });
+
+              // 瀏覽器會讀檔名，相同不能上傳，可重複上傳同一張圖片，
+              this.value = "";
+            });
+          });
+        }
+
+        function handleImageClose(event) {
+          var filename = event.target
+            .closest(".upload__img--box")
+            .querySelector(".img-bg").dataset.filename;
+
+          // 針對陣列做刪除
+          imgArray = imgArray.filter(function (item) {
+            // console.log("===========");
+            // console.log("item", item);
+            // console.log("filename", filename);
+            // console.log("item.name", item.name);
+            // console.log("===========");
+            return item.name !== filename;
+          });
+
+          event.target.closest(".upload__img--box").remove();
+        }
+
+        // 添加預覽圖片
+        function appendImageToWrap(imgWrap, file, fileName, section) {
+          var div = document.createElement("div");
+          div.classList.add("upload__img--box");
+
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            div.innerHTML = `
+              <div style='background-image: url(${e.target.result})' data-filename='${fileName}'  data-section='${section}' class='img-bg'>
+                <div class='upload__img--close'></div>
+              </div>
+            `;
+          };
+          reader.readAsDataURL(file);
+
+          imgWrap.appendChild(div);
+        }
+
+        // 回傳 imgUpload function handleImageClose function getImgArray function
+        return { imgUpload, handleImageClose, getImgArray: () => imgArray };
+      }
+
+      // DOMContentLoaded後啟動，
+      document.addEventListener("DOMContentLoaded", function () {
+        const uploader = createImageUploader();
+        const { imgUpload, handleImageClose, getImgArray } = uploader;
+
+        // (1 開始偵測圖片上傳
+        imgUpload();
+
+        // (2 偵測所有畫面點擊
+        document.body.addEventListener("click", function (e) {
+          if (e.target.classList.contains("upload__img--close")) {
+            handleImageClose(e);
+          }
+        });
+
+        // (3 動態生成表單元素
+        document
+          .getElementById("submitButton")
+          .addEventListener("click", async function (event) {
+            // 防止表單預設的提交行為，不然就直接送出去了!!!
+            event.preventDefault();
+
+            // 動態生成表單元素
+            var form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("enctype", "multipart/form-data");
+
+            let getActionPath;
+            try {
+              let response = await fetch("config.json");
+              let config = await response.json();
+              getActionPath = await config.actionPath["product-add"].form;
+            } catch (err) {
+              console.log(err);
+            }
+            getActionPath = getActionPath.replace(
+              "CTXPATH",
+              window.location.pathname.substring(
+                1,
+                window.location.pathname.indexOf("/", 1)
+              )
+            );
+
+            console.log("getActionPath" + getActionPath);
+            form.setAttribute("action", getActionPath);
+
+            // (1.1 針對第一個表單imageForm
+            // 創建一個 DataTransfer 對象，模擬用戶上傳圖片行為
+            // Create an object to store DataTransfer objects for each section
+            var dataTransfers = {};
+
+            // Iterate through each image in imgArray
+            getImgArray().forEach(function (item) {
+              // Check if a DataTransfer object exists for the section
+              if (!dataTransfers[item.section]) {
+                // If not, create a new DataTransfer object
+                dataTransfers[item.section] = new DataTransfer();
+              }
+
+              // Create a new File object and add it to the corresponding DataTransfer
+              var file = new File([item.file], item.name, {
+                type: item.file.type,
+              });
+              // console.log("======item.section=======");
+              // console.log(item.section);
+              // console.log("======item.section=======");
+              dataTransfers[item.section].items.add(file);
+            });
+
+            // Iterate through the sections and create input elements
+            for (var section in dataTransfers) {
+              if (dataTransfers.hasOwnProperty(section)) {
+                var input = document.createElement("input");
+                input.setAttribute("type", "file");
+                input.setAttribute("name", section); // Use the section as the input name
+                input.files = dataTransfers[section].files;
+
+                // For example, you can append it to a form or perform other actions.
+
+                form.appendChild(input);
+              }
+            }
+
+            // (2 將第二個表單的資料加入到 FormData 中
+            var dataForm = document.getElementById("dataForm");
+            var dataFormInputs = new FormData(dataForm);
+            for (let pair of dataFormInputs.entries()) {
+              form
+                .appendChild(document.createElement("input"))
+                .setAttribute("type", "hidden");
+              form.lastChild.setAttribute("name", pair[0]);
+              form.lastChild.setAttribute("value", pair[1]);
+            }
+
+            //  (2 將表單添加到 body 中
+            document.body.appendChild(form);
+
+            // (3. 測試
+            // console.log(form);
+            // var dataFormSubmitted = new FormData(form);
+            // for (let pair of dataFormSubmitted.entries()) {
+            //   console.log("name>>" + pair[0]);
+            //   if (pair[1] instanceof File) {
+            //     // 如果是文件上传字段，pair[1] 是一个 FileList 对象
+            //     console.log("file name>>" + pair[1].name);
+            //     console.log("file type>>" + pair[1].type);
+            //     console.log("file size>>" + pair[1].size);
+            //   } else {
+            //     // 如果不是文件上传字段，直接输出值
+            //     console.log("value>>" + pair[1]);
+            //   }
+            // }
+
+            try {
+              // (4) 後端驗證
+              await checkValidity(form);
+              // (4. 提交表單
+              // form.submit();
+            } catch (error) {
+              console.error(error);
+            } finally {
+              // (5. 刪除動態生成的表單元素
+              document.body.removeChild(form);
+            }
+          });
+
+        async function checkValidity(form) {
+          const submitButton = document.getElementById("submitButton");
+          const needValidations = document.querySelectorAll(".form-control");
+
+          submitButton.setAttribute("disabled", true);
+
+          try {
+            const isValid = await validateForm(form);
+            submitButton.removeAttribute("disabled");
+            if (!isValid) {
+              throw new Error("Form is invalid");
+            }
+          } catch (error) {
+            submitButton.removeAttribute("disabled");
+            throw error;
+          }
+        }
+
+        async function validateForm(formElement) {
+          const formData = new FormData(formElement);
+
+          console.log(formElement.getAttribute("action"));
+          console.log(formElement);
+
+          const response = await fetch(formElement.getAttribute("action"), {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error("Server response not okay");
+          }
+
+          const result = await response.json();
+
+          return result.valid;
+        }
+      });
+    </script>
+  </body>
+</html>

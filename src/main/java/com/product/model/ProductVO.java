@@ -1,6 +1,6 @@
 package com.product.model;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
 
 
 
 @Entity
 @Table(name = "product")  // Replace "your_table_name" with the actual table name
-public class ProductVO {
+public class ProductVO implements Serializable{
 	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
@@ -31,13 +32,14 @@ public class ProductVO {
     private byte[] productCoverImg;
     private String productName;    
     private BigDecimal productPrice;
-    private Integer productStockQuantity;    
-    private String productDetails;    
+    private Integer productStockQuantity;   
+    private Integer productSoldQuantity;
+	private String productDetails;    
     private String productStatus;
     private Timestamp productCreationTime; 
     private Integer totalStars;    
     private Integer totalReviews;
-    private Integer productSort;
+    private ProductSortVO productSortVO;
     private Boolean isEnabled;   
     private SellerVO sellerVO;
     
@@ -54,6 +56,20 @@ public class ProductVO {
 		this.productImgVO = productImgVO;
 	}
    
+	   
+    
+	 @Column(name = "productSoldQuantity")
+    public Integer getProductSoldQuantity() {
+		return productSoldQuantity;
+	}
+    
+
+	public void setProductSoldQuantity(Integer productSoldQuantity) {
+		this.productSoldQuantity = productSoldQuantity;
+	}
+	
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "productId")
@@ -120,7 +136,7 @@ public class ProductVO {
 		this.productStatus = productStatus;
 	}
 
-	@Column(name = "productCreationTime")
+	@Column(name = "productCreationTime" , updatable = false)
 	public Timestamp getProductCreationTime() {
 		return productCreationTime;
 	}
@@ -147,13 +163,14 @@ public class ProductVO {
 		this.totalReviews = totalReviews;
 	}
 
-	@Column(name = "productSort")
-	public Integer getProductSort() {
-		return productSort;
+	@ManyToOne
+	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")	
+	public ProductSortVO getProductSortVO() {
+		return productSortVO;
 	}
 
-	public void setProductSort(Integer productSort) {
-		this.productSort = productSort;
+	public void setProductSortVO(ProductSortVO productSortVO) {
+		this.productSortVO = productSortVO;
 	}
 
     @Column(name = "isEnabled")

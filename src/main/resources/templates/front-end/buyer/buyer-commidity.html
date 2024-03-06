@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>EDog</title>
+    <script src="loadcss.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://sachinchoolur.github.io/lightslider/dist/css/lightslider.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"
+    ></script>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+        <div class="container-fluid">
+          <div
+            class="collapse navbar-collapse d-flex justify-content-between"
+            id="navbarSupportedContent"
+          >
+            <!-- Start NavBar  -->
+            <!-- NavBar--LeftSide  -->
+            <ul class="navbar-nav me-auto mb-2">
+              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+                <i class="bi bi-list"></i>
+                <a
+                  class="nav-link cancel-default-behavior"
+                  aria-current="page"
+                  href="#"
+                  >選單</a
+                >
+              </li>
+              <li class="nav-item d-flex align-items-center">
+                <a class="nav-link active" aria-current="page" href="#"
+                  >電子商城</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="seller-login.html">賣家中心</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">論壇</a>
+              </li>
+            </ul>
+
+            <!-- NavBar--RightSide  -->
+            <ul class="navbar-nav ms-auto mb-2">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">註冊</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">登入</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End NavBar  -->
+
+      <!-- Start SearchBar  -->
+      <div class="container-fluid bg-user search-container-custom">
+        <div class="row">
+          <!-- Start SearchBar-Logo  -->
+          <div
+            class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end"
+          >
+            <img
+              src="../assets/image/Medium.png"
+              class="img-logo-custom"
+              alt=""
+              srcset=""
+            />
+          </div>
+          <!-- End SearchBar-Logo  -->
+
+          <!-- Start SearchBar-Input  -->
+          <div
+            class="col d-flex searchItem flex-column search-item-container-custom"
+          >
+            <form class="form-inline w-100">
+              <div class="row py-2 search-row-custom w-100 pe-2">
+                <div class="col">
+                  <input
+                    class="form-control mr-sm-2 w-100 search-input-custom"
+                    type="search"
+                    placeholder="請在此進行商品檢索"
+                    aria-label="Search"
+                  />
+                </div>
+                <div class="col-auto">
+                  <button
+                    class="btn btn-user search-button-custom d-flex"
+                    type="submit"
+                  >
+                    <i class="me-2 ri-search-line"></i>
+                    <div class="col-auto d-none d-md-block">Search</div>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="my-2 keyword-container-custom">
+              <span class="badge rounded-pill keyword-item-custom">寵物床</span>
+              <span class="badge rounded-pill keyword-item-custom">玩具</span>
+            </div>
+          </div>
+          <!-- End SearchBar-Input  -->
+
+          <!-- Start SearchBar-Function  -->
+          <div
+            class="col-2 d-block col-sm-2 d-flex align-items-start justify-content-start cart-container-custom"
+          >
+            <div
+              class="baritem d-flex align-items-center justify-content-start cart-item-custom"
+            >
+              <i class="ri-shopping-cart-2-line"></i>
+              <div class="cart d-none d-lg-block ml-1">購物車</div>
+            </div>
+          </div>
+          <!-- End SearchBar-Function  -->
+        </div>
+      </div>
+      <!-- Start Banner  -->
+      <div
+        class="container-fluid justify-content-between align-items-center banner-container-custom"
+      >
+        <div class="row">
+          <div class="col banner-content text-center banner-content-custom">
+            <p class="mb-1 mt-1 banner-para-custom">
+              This is a sample horizontal full-width banner.
+            </p>
+          </div>
+          <div
+            class="col-auto buttona mb-0 d-flex justify-content-end banner-close-custom"
+          >
+            <i class="mb-1 mt-1 ri-close-line banner-close"></i>
+          </div>
+        </div>
+      </div>
+      <!-- End Banner  -->
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside class="sidebar sidebar-layout-seller">
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+          <a class="nav-link nav-seller-entry" href="buyer-main.html">
+            <i class="bi bi-grid"></i>
+            <span>買家中心</span>
+          </a>
+        </li>
+        <!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#buyer-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-person"></i>
+            <span>買家帳戶</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="buyer-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="buyer-edit.html">
+                <i class="bi bi-circle"></i><span>修改買家資料</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- End Seller Nav -->
+
+        <li class="nav-item">
+          <a class="nav-link nav-seller-entry" href="buyer-cart.html">
+            <i class="bi bi-cart"></i>
+            <span>我的購物車</span>
+          </a>
+        </li>
+        <!-- End product Nav -->
+        <li class="nav-item">
+          <a class="nav-link nav-seller-entry" href="buyer-like.html">
+            <i class="bi bi-heart"></i>
+            <span>我的收藏</span>
+          </a>
+        </li>
+
+        <!-- End Charts Nav -->
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#order-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-stickies"></i><span>訂單管理</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="order-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="buyer-order-overall.html">
+                <i class="bi bi-circle"></i><span>全部訂單</span>
+              </a>
+            </li>
+            <li>
+              <a href="buyer-order-search.html">
+                <i class="bi bi-circle"></i><span>訂單查詢</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            data-bs-target="#service-nav"
+            data-bs-toggle="collapse"
+            href="#"
+          >
+            <i class="bi bi-headset"></i><span>客戶服務</span
+            ><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul
+            id="service-nav"
+            class="nav-content collapse"
+            data-bs-parent="#sidebar-nav"
+          >
+            <li>
+              <a href="buyer-service-form.html">
+                <i class="bi bi-circle"></i><span>意見表單</span>
+              </a>
+            </li>
+            <li>
+              <a href="buyer-service-reply.html">
+                <i class="bi bi-circle"></i><span>查詢回覆</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+    <!-- ======= Main ======= -->
+    <main class="main main-layout">
+      <!-- ## ListItems -->
+      <div class="container mt-4 container-commidity-custom py-4">
+        <div class="row">
+          <div class="col-6">
+            <div class="container-fluid mt-2 mb-3">
+              <div class="row">
+                <div class="card commidity-card-custom">
+                  <ul id="lightSlider">
+                    <li data-thumb="https://fakeimg.pl/1000x580/">
+                      <img
+                        class="img-fluid"
+                        src="https://fakeimg.pl/1000x580/"
+                      />
+                    </li>
+                    <li data-thumb="https://fakeimg.pl/1000x580/">
+                      <img
+                        class="img-fluid"
+                        src="https://fakeimg.pl/1000x580/"
+                      />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <h1 class="fw-bold">A狗屋</h1>
+            <section class="commidity-details-custom d-flex">
+              <h2 class="fw-bold col-5">商品售價</h2>
+              <h2 class="fw-bold col-7 text-userdark" id="price">NT$ 1200</h2>
+            </section>
+
+            <section class="commidity-details-custom d-flex">
+              <h5 class="fw-bold col-5">庫存</h5>
+              <h5 class="fw-bold col-7" id="stock">50件</h5>
+            </section>
+
+            <section class="commidity-details-custom d-flex">
+              <h5 class="fw-bold col-5">數量</h5>
+              <h5 class="fw-bold col-7" id="orderNum">50件</h5>
+            </section>
+
+            <section class="commidity-details-custom d-flex">
+              <h5 class="fw-bold col-5">結帳方式</h5>
+              <h5 class="fw-bold col-7" id="orderNum">50件</h5>
+            </section>
+
+            <section class="commidity-details-custom d-flex">
+              <h5 class="fw-bold col-5">運費</h5>
+              <h5 class="fw-bold col-7" id="orderNum">NT$ 60</h5>
+            </section>
+
+            <section
+              class="commidity-details-custom d-flex justify-content-start gap-3"
+            >
+              <div class="col-auto d-flex">
+                <button class="btn btn-shopcart-custom">
+                  <i class="ri-heart-line"></i>&nbsp;&nbsp;加入收藏
+                </button>
+
+                <button class="btn btn-like-custom" style="display: none">
+                  <i class="ri-heart-fill"></i>&nbsp;&nbsp;取消收藏
+                </button>
+              </div>
+              <div class="col-auto d-flex">
+                <button class="btn btn-shopcart-custom">
+                  <i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
+                </button>
+              </div>
+              <div class="col-auto d-flex">
+                <button class="btn btn-userdark text-white">
+                  &nbsp;&nbsp;直接購買
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="container mt-4 container-commidity-custom">
+        <div class="row">
+          <div class="col-12 bg-user">
+            <h5 class="d-flex mb-0 py-2">商品描述</h5>
+          </div>
+        </div>
+
+        <div class="row py-3">
+          <div class="col-12 text-wrap commidity-desp-custom" id="description">
+            ⚠️為了讓各位有愉快的消費經驗 ⚠️購買前務必詳細閱讀
+            ◇◆◇◆◇◆◇◆◇下單須知◇◆◇◆◇◆◇◆◇ 🐻本賣場能下單的商品大部份都是現貨
+            如遇缺貨會即時告知 🐻商品有任何問題請先聊聊反應
+            我們會即時處理，切勿以評價作為溝通
+            🐻出貨時間:周一至周五，六日及國定假日是店休日
+            🐻台灣出貨，非海外賣家，寄出3~4個工作天即到門市
+            🐻本賣場由蝦皮代開電子發票 需要統編的朋友記得在結帳步驟中選填
+            有任何發票問題都可以直接詢問蝦皮客服
+          </div>
+        </div>
+      </div>
+
+      <div class="container mt-4 container-commidity-custom">
+        <div class="row">
+          <div class="col-12 bg-user">
+            <h5 class="d-flex mb-0 py-2">商品評價</h5>
+          </div>
+        </div>
+
+        <div class="row py-3">
+          <div class="col-12 d-flex commidity-rate-custom" id="description">
+            <div
+              class="d-flex align-items-center justify-content-end user-icon"
+            >
+              <i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
+            </div>
+            <div class="d-flex flex-column user-comment">
+              <h5 class="comment-account fw-bold mb-0">account1</h5>
+              <div class="comment-star d-flex">
+                <i class="bi bi-star-fill text-userdark"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+              </div>
+              <div class="comment-time">2023-01-1</div>
+            </div>
+            <div class="col-3 user-commentarea d-flex text-wrap">
+              SSSSSSSSSSSS SSSSSSSSS
+            </div>
+          </div>
+          <div class="col-12 d-flex commidity-rate-custom" id="description">
+            <div
+              class="d-flex align-items-center justify-content-end user-icon"
+            >
+              <i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
+            </div>
+            <div class="d-flex flex-column user-comment">
+              <h5 class="comment-account fw-bold mb-0">account1</h5>
+              <div class="comment-star d-flex">
+                <i class="bi bi-star-fill text-userdark"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+              </div>
+              <div class="comment-time">2023-01-1</div>
+            </div>
+            <div class="col-3 user-commentarea d-flex text-wrap">
+              SSSSSSSSSSSS SSSSSSSSS
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+    <script src="loadjs.js"></script>
+
+    <script src="https://sachinchoolur.github.io/lightslider/dist/js/lightslider.js"></script>
+    <script>
+      var loadjsCompletedEvent = new Event("loadjsCompleted");
+
+      // 監聽自定義事件，當 loadjs 完成時觸發
+      document.addEventListener("loadjsCompleted", function () {
+        $("#lightSlider").lightSlider({
+          gallery: true,
+          item: 1,
+          loop: true,
+          slideMargin: 50,
+          thumbItem: 6,
+        });
+      });
+
+      // 手動觸發事件，告知 TwCitySelector 可以初始化了
+      // document.dispatchEvent(loadjsCompletedEvent);
+    </script>
+    <!-- Vendor & Main JS Files -->
+  </body>
+</html>
