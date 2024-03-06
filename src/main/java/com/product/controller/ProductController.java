@@ -49,6 +49,8 @@ public class ProductController {
 		return "front-end/seller/seller-product-add";
 	}
 
+		
+	
 	@PostMapping("insert")
 
 	public String insert(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
