@@ -3,6 +3,8 @@ package com;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,12 +15,17 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.buyer.entity.BuyerVO;
 import com.seller.entity.SellerVO;
+import com.seller.service.SellerService;
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
 import com.user.model.UserService;
+import com.util.JedisUtil;
+
+import redis.clients.jedis.Jedis;
 
 //@PropertySource("classpath:application.properties") 
 // 於https://start.spring.io 建立Spring Boot專案時
@@ -34,6 +41,9 @@ public class IndexControllerMain {
 
 	@Autowired
 	SellerLvService sellerLvSvc;
+	
+	@Autowired
+	SellerService sellerSvc;
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -63,19 +73,7 @@ public class IndexControllerMain {
 			System.out.println("getCredentials" + authentication.getCredentials());
 			System.out.println("getDetails" + authentication.getDetails());
 			System.out.println("getAuthorities" + authentication.getAuthorities());
-
-		} else {
-			String username = principal.toString();
-			System.out.println("securityContext not UserDetails" + username);
-			System.out.println("securityContext not UserDetails => principal" + principal);
-			SellerVO sellerVO = (SellerVO) principal;
-			System.out.println("securityContext not UserDetails => SellerVO" + sellerVO.getSellerAddress());
-
-			System.out.println("getCredentials" + authentication.getCredentials());
-			System.out.println("getDetails" + authentication.getDetails());
-			System.out.println("getAuthorities" + authentication.getAuthorities());
-		}
-
+		} 
 		return "index";
 		// resources/template//index.html
 	}
@@ -118,9 +116,15 @@ public class IndexControllerMain {
 		return "/front-end/seller/seller-register";
 	}
 
-	@GetMapping("/seller/login")
-	public String loginSeller(ModelMap model) throws IOException {
-		return "/front-end/seller/seller-login";
+	@GetMapping({"/seller/login", "/seller/login/errors"})
+	public String loginSeller(ModelMap model,HttpServletRequest req) throws IOException {
+
+	    String error = (String) req.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION.message");
+		if(error!= null) {
+			model.addAttribute("error",error);
+		}
+		
+		return "front-end/seller/seller-login";
 	}
 
 	@GetMapping("/buyer/register")
@@ -159,6 +163,62 @@ public class IndexControllerMain {
 	@GetMapping("/buyer/login")
 	public String loginBuyer(ModelMap model) throws IOException {
 		return "/front-end/buyer/buyer-login";
+	}
+	
+	
+//	@GetMapping({"/authentication/forgot-password/input-email"})
+//	public String forgotPassword(ModelMap model) throws IOException {
+//		
+//		return "/login/authentication-forgotPassword/input-email";
+//	}
+//	
+//	@GetMapping({"/authentication/forgot-password/check"})
+//	public String checkForgotPassword(ModelMap model) throws IOException {
+//		Boolean isActive =null;
+//		
+//		
+//		
+//		if(!isActive) {
+//			model.addAttribute("error","輸入有誤");	
+//			return "/login/authentication-forgotPassword/input-email";
+//		}
+//		
+//		
+//		
+//		return "/login/authentication-forgotPassword";
+//	}
+	
+	@GetMapping("/activate/seller/{sellerId}/{tokenId}")
+	public String authenticationUser(
+	        @PathVariable Integer sellerId,
+	        @PathVariable String tokenId,
+	        ModelMap model) throws IOException {
+
+		try ( Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			 String authKey = "AUTH_SELLER:" + sellerId;
+		     String storedToken = jedis.get(authKey);
+		     if(storedToken==null ) {
+		    	 
+		    	 model.addAttribute("error" , "驗證信已經過期");
+		    	 return "/login/authentication-failure";
+		     }
+		     if (tokenId==null ) {
+		    	 model.addAttribute("error" , "請確認驗證信有沒有點錯");
+		    	 return "/login/authentication-failure";
+		     }
+
+		     if(storedToken.equals(tokenId)) {
+			        return "/login/authentication-success";
+		     }
+		     
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.err.println("Failed to obtain or use Jedis instance");
+	        return "/login/authentication-failure";
+	    }
+		
+   	 	return "/login/authentication-failure";
+
 	}
 
 }

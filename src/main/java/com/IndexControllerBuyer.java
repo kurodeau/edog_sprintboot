@@ -81,6 +81,11 @@ public class IndexControllerBuyer {
         return "/front-end/buyer/buyer-main";
         // resources/template//index.html
     }
+    
+    @GetMapping("/front/buyer/pic")
+    public String TestV2(Model model) {
+        return "/front-end/buyer/buyer-commidityV2";
+    }
 	
 	
 	

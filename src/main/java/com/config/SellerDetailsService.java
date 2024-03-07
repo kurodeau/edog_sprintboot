@@ -82,7 +82,6 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		logger.error(username);
 		
-		
 //		SellerVO targetUser =  sellerRepo.findByEmail(username);
 		SellerVO targetUser =  sellerRepo.findByOnlyOneEmail(username);
 	
@@ -112,7 +111,7 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	        return new org.springframework.security.core.userdetails.User(
 	            targetUser.getSellerEmail(),
 	            targetUser.getSellerPassword(),
-	            true,  // 用户启用状态
+	            targetUser.getIsConfirm(),  // 用户启用状态
 	            true,  // 用戶帳號是否過期
 	            true,  // 用戶憑證是否過期
 	            true,  // 用戶是否未被鎖定

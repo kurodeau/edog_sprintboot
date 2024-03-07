@@ -61,6 +61,13 @@ public class SellerServiceImpl implements SellerService {
 	public SellerVO findUserEmail(String email) {
 		return repo.findByEmail(email);
 	}
+	
+	
+
+	public SellerVO findByOnlyOneEmail(String email) {
+		return repo.findByOnlyOneEmail(email);
+	}
+
 
 	public void saveUserDetails(SellerVO sellerVO) {
 

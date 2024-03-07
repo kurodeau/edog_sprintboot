@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
+
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -28,20 +29,26 @@
 							</div>
 							<h1>😉賣家會員登入</h1>
 							<!-- End Logo -->
-
+							<p style="color: red" th:if="${param.error}"
+								th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
+							</p>
+							<p style="color: red" th:if="${param.error}"
+								th:text="${session.customErrorMessage}"></p>
 							<form class="row needs-validation" novalidate
-								th:action="@{front/seller/main}" method="post">
+								th:action="@{/seller/login}" method="post">
 								<div class="col-12">
-									<label for="validationCustom01" class="form-label">帳號</label>
-									<input name="usernameinhtml" type="email" class="form-control"
+									<label for="validationCustom01" class="form-label">帳號</label> <input
+										name="usernameinhtml" type="email" class="form-control"
 										id="validationCustom01" placeholder="xxxx@email.com" required />
 									<div class="valid-feedback">Looks good!</div>
 									<div class="invalid-feedback">請輸入信箱</div>
 								</div>
+
+
 								<div class="col-12 mt-3">
-									<label for="validationCustom02" class="form-label">密碼</label>
-									<input name="passwordinhtml" type="password"
-										class="form-control" id="validationCustom02" required />
+									<label for="validationCustom02" class="form-label">密碼</label> <input
+										name="passwordinhtml" type="password" class="form-control"
+										id="validationCustom02" required />
 									<div class="valid-feedback">Looks good!</div>
 									<div class="invalid-feedback">請輸入密碼</div>
 								</div>
@@ -94,6 +101,46 @@
 
 	<div th:replace="@{fragment-js}"></div>
 
-	<!-- Local JS File -->
+	<script>
+function manipulateFormDataAndSubmit() {
+    // Get form data
+    var formData = new FormData(document.querySelector("form.needs-validation"));
+
+    // Modify the data as needed
+    formData.append("additionalField", "additionalValue");
+    formData.set("usernameinhtml", formData.get("usernameinhtml") + "-" + window.location.href);
+
+    // You can add more manipulation logic here...
+
+    // Create a new form element to submit the modified data
+    var newForm = document.createElement('form');
+    newForm.method = 'post';
+    newForm.action = '/seller/login';
+
+    // Append the manipulated form data to the new form
+    for (var pair of formData.entries()) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = pair[0];
+        input.value = pair[1];
+        newForm.appendChild(input);
+    }
+
+    // Append the new form to the document body
+    document.body.appendChild(newForm);
+
+    // Submit the new form
+    newForm.submit();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Add an event listener to the form submission
+    document.querySelector("form.needs-validation").addEventListener("submit", function (event) {
+        event.preventDefault();
+        // Execute the function before the form is submitted
+        manipulateFormDataAndSubmit();
+    });
+});
+</script>
 </body>
 </html>

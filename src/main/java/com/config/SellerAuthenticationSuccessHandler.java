@@ -35,7 +35,7 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 		setSellerVOToSecurityContext(sellerVO, authentication);
 
 		// 這裡可以進行其他登入成功後的處理，例如重定向等
-		response.sendRedirect("front/seller/main");
+		response.sendRedirect("/front/seller/main");
 	}
 
 	private String getLoggedInSellerVO(Authentication authentication) {
