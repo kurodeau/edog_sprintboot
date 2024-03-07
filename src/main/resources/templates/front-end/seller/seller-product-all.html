@@ -286,7 +286,17 @@
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productLaunch}">
-									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									
+									
+									<div class="col-1-5">
+										<a
+											th:href="'/product/' + ${productVO.productId}">
+											<span th:text="${productVO.productId}"></span>
+										</a>
+									</div>
+									
+									
+									
 									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
