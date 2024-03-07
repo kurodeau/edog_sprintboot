@@ -1,6 +1,7 @@
 package com.reply.service;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -9,12 +10,11 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.article.ArticleRepository;
+import com.article.repositary.ArticleRepository;
 import com.article.entity.ArticleVO;
 import com.reply.entity.ReplyVO;
 import com.reply.repositary.ReplyRepository;
 
-import CompositeQuery.HibernateUtil_CompositeQuery_Article;
 
 @Service("replyService")
 public class ReplyService {
@@ -47,6 +47,18 @@ public class ReplyService {
 
 	public List<ReplyVO> getAll() {
 		return repository.findAll();
+	}
+	
+	public List<ReplyVO> getAllRepliesForArticle(Integer articleId) {
+		 List<Integer> ids = new ArrayList<>();
+	        ids.add(articleId);
+	        List<ReplyVO> replyVOList = repository.findAllById(ids);
+        return replyVOList;
+    }
+	
+	public List<ReplyVO> getByArticleId(ArticleVO articleVO){
+		List<ReplyVO> articleReply=repository.findByArticleVO(articleVO);
+		return articleReply;
 	}
 
 }

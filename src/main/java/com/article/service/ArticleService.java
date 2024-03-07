@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.article.entity.ArticleVO;
 import com.article.repositary.ArticleRepository;
+import com.articleType.entity.ArticleTypeVO;
 
 @Service("articleService")
 public class ArticleService {
@@ -41,5 +42,8 @@ public class ArticleService {
 	public List<ArticleVO> getAll() {
 		return repository.findAll();
 	}
-
+	public List<ArticleVO> getByArticleTypeId(ArticleTypeVO articleTypeVO){
+		List<ArticleVO> articleType=repository.findByArticleTypeVO(articleTypeVO);
+		return articleType;
+	}
 }
