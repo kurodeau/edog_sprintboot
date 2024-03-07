@@ -207,12 +207,32 @@
     <!-- End廣告管理 -->
 
     <!-- Start論壇管理 -->
-    <li class="nav-item">
-      <!-- 請依自身需求改變網址 -->
-      <a class="nav-link nav-seller-entry" th:href="@{#}">
-        <i class="bi bi-grid"></i>
-        <span>論壇管理</span>
+     <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#forum-nav"
+        data-bs-toggle="collapse"
+        th:href="@{#}"
+      >
+        <i class="bi bi-file-text"></i>
+        <span>論壇檢舉管理</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
+      <ul
+        id="forum-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/back/report/listartAll}">
+            <i class="bi bi-circle"></i><span>文章檢舉</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/back/report/listreplyAll}">
+            <i class="bi bi-circle"></i><span>留言檢舉</span>
+          </a>
+        </li>
+      </ul>
     </li>
     <!-- End論壇管理 -->
 

@@ -30,6 +30,10 @@ import com.reply.service.ReplyService;
 import com.seller.entity.SellerVO;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
+import com.report.entity.ReportVO;
+import com.report.service.ReportService;
+import com.reportType.entity.ReportTypeVO;
+import com.reportType.service.ReportTypeService;
 
 @Controller
 @ComponentScan(basePackages = {"com.article", "com.articleType"})
@@ -48,6 +52,12 @@ public class ArticleController {
 	@Autowired
 	ReplyService replySvc;
 
+	@Autowired
+	ReportService reportSvc;
+
+
+	@Autowired
+	ReportTypeService reportTypeSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -72,7 +82,19 @@ public class ArticleController {
 			List<BuyerVO> list = buyerSvc.getAll();
 			return list;
 		}
-
+	 @ModelAttribute("reportListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	    protected List<ReportVO> referenceListData_Report(Model model) {
+	    	
+	    	List<ReportVO> list = reportSvc.getAll();
+	    	return list;
+	    }
+		
+		@ModelAttribute("reportTypeListData") // for select_page.html 第135行用
+		protected List<ReportTypeVO> referenceListData_ReportType(Model model) {
+			model.addAttribute("reportTypeVO", new ReportTypeVO()); // for select_page.html 第133行用
+			List<ReportTypeVO> list = reportTypeSvc.getAll();
+			return list;
+		}
 	
 	// /front/article/listAll
 		@GetMapping("listAll")
@@ -93,18 +115,20 @@ public class ArticleController {
 			model.addAttribute("articleVO", articleVO);
 			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		    model.addAttribute("replyVOList", replyVOList);
+		    ReportVO reportVO = new ReportVO();
+		    model.addAttribute("reportVO", reportVO);
 			return "front-end/article/list-one-article";
 		}
 		
 		 @GetMapping("/TypeList")
 		    public String getTypeList(@RequestParam("id") Integer articleTypeId, Model model) {
 		        ArticleTypeVO articleTypeVO = articleTypeSvc.getOneArticleType(articleTypeId);
-
+		        model.addAttribute("articleTypeVO", articleTypeVO);
 		        List<ArticleVO> articleList = articleSvc.getByArticleTypeId(articleTypeVO);
 		        
 		        model.addAttribute("articleList", articleList);
 
-		        return "front-end/article/forum-home";
+		        return "front-end/article/articletype-list";
 		    }
 		
 		@GetMapping("getOne_For_Update")
@@ -164,7 +188,40 @@ public class ArticleController {
 		model.addAttribute("success", "- (新增成功)");
 		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
 	}
-
+	@PostMapping("insert-reply-report")
+	public String insertReplyReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setReportTargetType(1);
+		reportVO.setArticleVO(null);
+		reportVO.setReportState(0);
+		reportVO.setReportTime(new Date());
+		/*************************** 2.開始新增資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.addReport(reportVO);
+		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+		List<ReportVO> list = reportSvc.getAll();
+		model.addAttribute("reportListData", list);
+		
+		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+	}
+	@PostMapping("insert-article-report")
+	public String insertArticleReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setReportTargetType(0);
+		reportVO.setReplyVO(null);
+		reportVO.setReportState(0);
+		reportVO.setReportTime(new Date());
+		/*************************** 2.開始新增資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.addReport(reportVO);
+		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+		List<ReportVO> list = reportSvc.getAll();
+		model.addAttribute("reportListData", list);
+		
+		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+	}
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST request
 	 */

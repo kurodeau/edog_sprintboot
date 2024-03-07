@@ -68,12 +68,21 @@ display:flex;
 	margin-right: 15px;
 	margin-left: 5px;
 }
+.reply-like{
+	margin-right: 15px;
+	margin-left: 5px;
+}
 .floor-count{
 	margin-right: 15px;
 	margin-left: 5px;
 }
 .article-comment{
 	margin-left: 5px;
+	margin-right: 15px;
+}
+.bi-exclamation-triangle:hover {
+  color: red;
+  cursor: pointer;
 }
 .time {
   font-size: 12px; /* 調整時間字體大小 */
