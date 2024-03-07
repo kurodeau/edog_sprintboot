@@ -5,7 +5,10 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import com.google.gson.Gson;
 import java.util.TreeSet;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Set;
+import com.product.model.*;
 
 public class JedisUtil {
 	// Singleton單例模式, 使連線池是唯一存在
@@ -49,16 +52,34 @@ public class JedisUtil {
 //
 //		// 從 JedisPool 中取得 Jedis 連線
 //		try (Jedis jedis = jedisPool.getResource()) {
+//			//塞入假資料, 直接存VO, 不好的方法?
+////			TreeSet<ProductVO> collection = new TreeSet<>();			
+////			for (int i= 1; i<= 5; i++) {
+////				ProductVO product = new ProductVO();
+////				product.setProductId(i);
+////	            product.setProductName("Product " + (i + 1));
+////	            product.setProductPrice(BigDecimal.valueOf(10 * (i + 1)));
+////	            product.setProductStockQuantity(100 + i);
+////	            product.setProductDetails("This is product " + (i + 1));
+////	            product.setProductStatus("Active");
+////	            product.setProductCreationTime(new Timestamp(System.currentTimeMillis()));
+////	            product.setTotalStars(0);
+////	            product.setTotalReviews(0);
+////	            product.setIsEnabled(true);
+////				collection.add(product);
+////			}
+//
+//			//塞入假資料, 只存商品編號 拿出來還要處理?
 //			TreeSet<Integer> collection = new TreeSet<>();
-//			collection.add(101);
-//			collection.add(133);
-//			collection.add(9);
-//			collection.add(101);
+//			collection.add(1);
+//			collection.add(3);
+//			collection.add(4);
 //			
 //			// 將資料寫入 Redis 並且指定為db10 試圖分流分類資料
 //			jedis.select(10);
 //			String json = new Gson().toJson(collection);
-//			jedis.set("買家編號1", json);
+//			// 模擬把用戶9001 的收藏清單包成json 後傳到redis
+//			jedis.set("9", json);
 //			System.out.println("應該有存入資料了");
 //
 //		} catch (Exception e) {
@@ -70,8 +91,8 @@ public class JedisUtil {
 //		try (Jedis jedis = jedisPool.getResource()) {
 //			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
 //			jedis.select(10);
-//			String value = jedis.get("買家編號1");
-//			System.out.println("Value of 買家編號1: " + value);
+//			String value = jedis.get("9");
+//			System.out.println("買家編號9的value:" + value);
 //			System.out.println("應該有印出資料了");
 //		} catch (Exception e) {
 //			System.out.println("讀出資料有問題");

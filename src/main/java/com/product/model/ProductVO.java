@@ -23,7 +23,7 @@ import com.seller.entity.SellerVO;
 
 @Entity
 @Table(name = "product")  // Replace "your_table_name" with the actual table name
-public class ProductVO implements Serializable{
+public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
@@ -192,11 +192,11 @@ public class ProductVO implements Serializable{
 	    this.sellerVO = sellerVO;
 	}
 
-
-
-
-	
-	
+    public int compareTo(ProductVO other) {
+        // 根據需要指定比較邏輯
+        // 這裡假設根據商品ID進行比較
+        return this.productId.compareTo(other.getProductId());
+    }
 
     // Add getters and setters
 
