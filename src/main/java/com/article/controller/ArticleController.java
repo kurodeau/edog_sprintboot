@@ -23,7 +23,10 @@ import java.util.stream.Collectors;
 
 import com.articleType.entity.ArticleTypeVO;
 import com.articleType.service.ArticleTypeService;
+import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
+import com.reply.entity.ReplyVO;
+import com.reply.service.ReplyService;
 import com.seller.entity.SellerVO;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
@@ -41,6 +44,9 @@ public class ArticleController {
 	
 	@Autowired
 	BuyerService buyerSvc;
+	
+	@Autowired
+	ReplyService replySvc;
 
 	/*
 	 * This method will serve as addEmp.html handler.
@@ -59,6 +65,13 @@ public class ArticleController {
 			List<ArticleTypeVO> list = articleTypeSvc.getAll();
 			return list;
 		}
+	 
+	 @ModelAttribute("buyerListData") 
+		protected List<BuyerVO> referenceListData(Model model) {
+		 	model.addAttribute("buyerVO", new BuyerVO()); // for select_page.html 第133行用
+			List<BuyerVO> list = buyerSvc.getAll();
+			return list;
+		}
 
 	
 	// /front/article/listAll
@@ -72,15 +85,27 @@ public class ArticleController {
 		public String addArticle(ModelMap model) {
 			ArticleVO articleVO = new ArticleVO();
 			model.addAttribute("articleVO", articleVO);
-			return "front-end/addArticle";
+			return "front-end/article/post-article";
 		}
 		@GetMapping("getOne")
 		public String getOneArticle(@RequestParam("id") Integer articleId, ModelMap model) {
 			ArticleVO articleVO = articleSvc.getOneArticle(articleId);
 			model.addAttribute("articleVO", articleVO);
-			
+			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
+		    model.addAttribute("replyVOList", replyVOList);
 			return "front-end/article/list-one-article";
 		}
+		
+		 @GetMapping("/TypeList")
+		    public String getTypeList(@RequestParam("id") Integer articleTypeId, Model model) {
+		        ArticleTypeVO articleTypeVO = articleTypeSvc.getOneArticleType(articleTypeId);
+
+		        List<ArticleVO> articleList = articleSvc.getByArticleTypeId(articleTypeVO);
+		        
+		        model.addAttribute("articleList", articleList);
+
+		        return "front-end/article/forum-home";
+		    }
 		
 		@GetMapping("getOne_For_Update")
 		public String getOneArticleUpdate(@RequestParam("id") Integer articleId, ModelMap model) {
@@ -105,7 +130,7 @@ public class ArticleController {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(articleVO, result, "upFiles");
-
+		articleVO.setArtUpdateTime(new Date());
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
 			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
 		} else {
@@ -114,11 +139,22 @@ public class ArticleController {
 				articleVO.setUpFiles(buf);
 			}
 		}
-		if (result.hasErrors() || parts[0].isEmpty()) {
-			return "front-end/article/addArticle";
+//		if (result.hasErrors() || parts[0].isEmpty()) {
+//			System.out.println("Id: " + articleVO.getArticleId());
+//			System.out.println("Buyer: " + articleVO.getBuyerVO());
+//			System.out.println("ArticleType: " + articleVO.getArticleTypeVO());
+//			System.out.println("Title: " + articleVO.getArticleTitle());
+//			System.out.println("Content: " + articleVO.getArticleContent());
+//			System.out.println("Time: " + articleVO.getArtUpdateTime());
+//			System.out.println("Like: " + articleVO.getArticleLike());
+//			System.out.println("Comment: " + articleVO.getArticleComment());
+//			System.out.println("Share: " + articleVO.getArticleShare());
+//			System.out.println("IsEnabled: " + articleVO.getIsEnabled());
+//			System.out.println("UpFiles: " + articleVO.getUpFiles());
+////			return "front-end/article/addArticle";
 //			return "front-end/article/post-article";
-		}
-		articleVO.setArtUpdateTime(new Date());
+//		}
+//		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始新增資料 *****************************************/
 		// EmpService empSvc = new EmpService();
 		articleSvc.addArticle(articleVO);
@@ -126,7 +162,7 @@ public class ArticleController {
 		List<ArticleVO> list = articleSvc.getAll();
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/article/listAllArticle"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
 	}
 
 	/*
@@ -206,6 +242,12 @@ public class ArticleController {
 	protected List<ArticleTypeVO> referenceListData() {
 		// DeptService deptSvc = new DeptService();
 		List<ArticleTypeVO> list = articleTypeSvc.getAll();
+		return list;
+	}
+	@ModelAttribute("buyerListData")
+	protected List<BuyerVO> referenceListData1() {
+		// DeptService deptSvc = new DeptService();
+		List<BuyerVO> list = buyerSvc.getAll();
 		return list;
 	}
 

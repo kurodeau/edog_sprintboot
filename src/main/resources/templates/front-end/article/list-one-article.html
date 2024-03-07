@@ -25,7 +25,7 @@
 							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
 					</ul>
 
 					<!-- NavBar--RightSide  -->
@@ -86,9 +86,8 @@
     <main class="main main-layout-seller">
     <div class="seller-container">
 			<div class="pagetitle">
-    <h1  style="margin-top: 30px;">2全部</h1>
 	        </div> 
-	        <div th:fragment="listOneArticle-div"> 
+	        <div style="margin-top: 30px;" th:fragment="listOneArticle-div"> 
 <!-- 				<span th:text="${articleVO.articleId}"></span><br/> -->
 				<span  class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
 				<hr>
@@ -96,14 +95,54 @@
 						        <span class="article-title" th:text="${articleVO.articleTitle}"></span>
 						        <span class="category-name" th:text="${articleVO.articleTypeVO.articleTypeName}"></span>
 				</span>
-				<span th:text="${articleVO.articleContent}"></span><br/>
-				<span><img th:if="${upFiles != null}" th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></span><br/>
-				<span th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
-				<span th:text="${articleVO.articleLike}"></span><br/>
-				<span th:text="${articleVO.articleComment}"></span><br/>
-				<span th:text="${articleVO.articleShare}"></span><br/>
+				<span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
+				<span><img th:if="${articleVO.upFiles != null}" th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></span><br/>
+				
+				<div class="interaction-section">
+					<i class="bi bi-suit-heart"></i>
+			        <span class="article-like" th:text="${articleVO.articleLike}"></span>
+			        <i class="bi bi-chat-dots"></i>
+			        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
+			        <span class="post-time time" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				</div>
 
-				<span th:text="${articleVO.isEnabled ? '啟用' : '隱藏'}"></span><br/>
+				
+								
+				<table id="example" class="display" style="width: 100%">
+				  <tbody>
+						<th:block th:each="replyVO:${replyVOList}">
+						
+						<td >
+						<hr style="margin-top: 10px;">
+						<span class="avatar-name" th:text="${replyVO.buyerVO.memberName}">
+						
+						</span>
+						</td>
+							<tr>
+							    <td th:text="${replyVO.replyContent}"></td>
+							</tr>
+							<tr>
+							    <td class="interaction-section">
+							        <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
+							        <i class="bi bi-suit-heart"></i>
+			        				<span class="reply-like" th:text="${articleVO.articleLike}"></span>
+							        <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							    </td>
+							</tr>
+
+						</th:block>
+				  </tbody>
+				</table>
+				
+<!-- 				<div th:each="replyVO:${replyVOList}"> -->
+<!-- 				<span>回復編號:</span><span th:text="${replyVO.replyId}"></span><br/> -->
+<!-- 				<span>文章編號:</span><span th:text="${replyVO.articleVO.articleId} + '-[' + ${replyVO.articleVO.articleTitle} + ']'"></span><br/> -->
+<!-- 				<span>會員編號:</span><span th:text="${replyVO.buyerVO.memberName}"></span><br/> -->
+<!-- 				<span>回覆內容:</span><span th:text="${replyVO.replyContent}"></span><br/> -->
+<!-- 				<span>喜歡數:</span><span th:text="${replyVO.replyLike}"></span><br/> -->
+<!-- 				<span>回復時間:</span><span th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span><br/> -->
+<!-- 				<span>啟用狀態:</span><span th:text="${replyVO.isEnabled}"></span><br/> -->
+<!-- 				</div> -->
 		</div>
 		</div>
 	</main>
