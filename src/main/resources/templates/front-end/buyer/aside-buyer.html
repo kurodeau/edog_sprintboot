@@ -1,142 +1,47 @@
-<aside class="sidebar sidebar-layout">
-  <form id="myform">
-    <div class="container mt-2">
-      <!-- 動物種類 -->
-      <fieldset class="filter-section">
-        <legend class="header-filter-custom">
-          <i class="fa-solid fa-paw"></i>&nbsp;&nbsp;動物種類
-        </legend>
-        <ul class="list-group animalCheckboxes ">
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="dog" aria-label="dog" />
-            犬
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="cat" />
-            貓
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="bird" aria-label="..." />
-            鳥
-          </li>
-        </ul>
-      </fieldset>
-
-      <!-- 商品分類 -->
-      <fieldset class="filter-section mt-2">
-        <legend class="header-filter-custom">
-          <i class="fa-solid fa-filter"></i>&nbsp;&nbsp;商品分類
-        </legend>
-        <ul class="list-group categoryList">
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="food" aria-label="食品" />
-            食品
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="toys" />
-            玩具
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="bedding" aria-label="..." />
-            寢具
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="grooming" aria-label="..." />
-            美容清潔
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="carriers" aria-label="..." />
-            攜帶袋
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="apparel" />
-            服飾
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="health_care" aria-label="..." />
-            健康保健
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="accessories" />
-            配件
-          </li>
-        </ul>
-      </fieldset>
-
-      <!-- 商品評價 -->
-      <fieldset class="filter-section mt-2">
-        <legend class="header-filter-custom">
-          <i class="ri-star-fill"></i>&nbsp;&nbsp;商品評價
-        </legend>
-        <ul class="list-group ratingCheckbox">
-          <!-- Repeat similar structure as above for ratings -->
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="5" aria-label="dog" />
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="4" aria-label="dog" />
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star"></i>
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="3" aria-label="dog" />
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="2" aria-label="dog" />
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-          </li>
-          <li class="list-group-item item-filter-custom">
-            <input class="form-check-input me-1" type="checkbox" value="1" aria-label="dog" />
-            <i class="ri-star-fill text-userdark"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-            <i class="ri-star"></i>
-          </li>
-        </ul>
-      </fieldset>
+<aside class="sidebar sidebar-layout-seller">
+	<ul class="sidebar-nav" id="sidebar-nav">
+	
+	
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/front/buyer/main}"> <i class="bi bi-grid"></i> <span>會員中心</span>
+		</a></li>
 
 
-      <!-- 商品價格 -->
-      <fieldset class="filter-section mt-2">
-        <legend class="header-filter-custom">
-          <i class="ri-price-tag-fill"></i>&nbsp;&nbsp;商品價格
-        </legend>
-        <div class="container d-flex container-filter-custom">
-          <div class="row">
-            <div class="col-6 d-flex">
-              <label for="priceFrom"></label>
-              <input type="text" class="form-control" id="priceFrom" placeholder="最低價格" />
-            </div>
-            <div class="col-6 d-flex">
-              <label for="priceTo"></label>
-              <input type="text" class="form-control form-group-custom" id="priceTo" placeholder="最高價格" />
-            </div>
-          </div>
-        </div>
-      </fieldset>
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/front/buyer/main}"> <i class="bi bi-grid"></i> <span>會員資訊</span>
+		</a></li>
+		
 
-      <!-- 提交按鈕 -->
-      <div class="d-flex justify-content-center mt-5">
-        <button type="submit" class="btn btn-primary btn-search">提交</button>
-      </div>
-    </div>
-  </form>
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/front/buyer/main}"> <i class="bi bi-grid"></i> <span>我的收藏</span>
+		</a></li>
+
+
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/front/buyer/main}"> <i class="bi bi-grid"></i> <span>我的購物車</span>
+		</a></li>
+
+
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/front/buyer/main}"> <i class="bi bi-grid"></i> <span>我的訂單</span>
+		</a></li>
+
+
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#service-nav" data-bs-toggle="collapse" href="#">
+				<i class="bi bi-headset"></i><span>客戶服務</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="service-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/front/seller/service/form}"> <i
+						class="bi bi-circle"></i><span>意見表單</span>
+				</a></li>
+				<li><a th:href="@{/front/seller/service/reply}"> <i
+						class="bi bi-circle"></i><span>查詢回覆</span>
+				</a></li>
+			</ul></li>
+
+
+	</ul>
 </aside>
