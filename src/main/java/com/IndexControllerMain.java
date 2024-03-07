@@ -10,11 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.buyer.entity.BuyerVO;
 import com.product.model.ProductService;
+import com.product.model.ProductVO;
 import com.seller.entity.SellerVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
@@ -134,6 +136,26 @@ public class IndexControllerMain {
         return "/front-end/buyer/buyer-login";
     }
     
+    
+    @GetMapping("/product/{id}")
+    public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
+    	Integer productId =null;
+    	try {
+    	 productId = Integer.valueOf(id);
+    	} catch (NumberFormatException e) {
+//    		e.printStackTrace();
+    		return "/";
+    	}
+    	
+    	ProductVO productVO = productSvc.getOneProduct(productId);
+    	
+    	
+    	model.addAttribute("productVO",productVO);
+        // 使用從URL獲取的id參數執行你的邏輯
+        // 在這裡，你可以使用id來進行相應的處理，例如查找特定商品
+    	
+        return "/front-end/buyer/buyer-commidity";
+    }
 	@PostMapping("/search")
 	public ResponseEntity<?>  seachProducts(@RequestBody FormData formData) {
 		System.out.println(formData);

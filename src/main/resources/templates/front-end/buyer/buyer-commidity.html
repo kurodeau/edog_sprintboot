@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
 </head>
 <body>
+
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
 		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
@@ -23,7 +24,8 @@
 							<div class="card commidity-card-custom">
 								<ul id="lightSlider">
 									<li data-thumb="https://fakeimg.pl/1000x580/"><img
-										class="img-fluid" src="https://fakeimg.pl/1000x580/" /></li>
+										class="img-fluid" th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+											width="100px"/></li>
 									<li data-thumb="https://fakeimg.pl/1000x580/"><img
 										class="img-fluid" src="https://fakeimg.pl/1000x580/" /></li>
 								</ul>
@@ -31,21 +33,25 @@
 						</div>
 					</div>
 				</div>
+
+
 				<div class="col-6">
-					<h1 class="fw-bold">A狗屋</h1>
+					<h1 class="fw-bold" th:text=${productVO.productName}></h1>
 					<section class="commidity-details-custom d-flex">
 						<h2 class="fw-bold col-5">商品售價</h2>
-						<h2 class="fw-bold col-7 text-userdark" id="price">NT$ 1200</h2>
+						<h2 class="fw-bold col-7 text-userdark" id="price"
+							th:text="'NT $ ' + ${productVO.productPrice}"></h2>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">庫存</h5>
-						<h5 class="fw-bold col-7" id="stock">50件</h5>
+						<h5 class="fw-bold col-7" id="stock"
+							th:text=${productVO.productStockQuantity}></h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
-						<h5 class="fw-bold col-5">數量</h5>
-						<h5 class="fw-bold col-7" id="orderNum">50件</h5>
+						<h5 class="fw-bold col-5">購買數量</h5>
+						<h5 class="fw-bold col-7" id="orderNum"></h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
@@ -80,6 +86,9 @@
 						</div>
 					</section>
 				</div>
+
+
+
 			</div>
 		</div>
 		<div class="container mt-4 container-commidity-custom">
@@ -145,66 +154,22 @@
 	</main>
 	<!-- End Main -->
 
-	<!-- ======= Footer ======= -->
-	<footer class="footer footer-layout">
-		<div
-			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
-			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
 
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">關於我們</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">人才招募</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
-				</ul>
-			</div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">常見問題</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">Q&A</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row footer-container-custom">
-			<div class="col-3"></div>
-
-			<div class="col-auto">
-				<a href="/"
-					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-				</a>
-				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
-					© 2023 CatTom.版權所有。</p>
-			</div>
-		</div>
-	</footer>
 	<!-- End Footer -->
-	<script src="loadjs.js"></script>
-
-	<script
-		src="https://sachinchoolur.github.io/lightslider/dist/js/lightslider.js"></script>
+	<div th:replace="@{fragment-footer}"></div>
+	<div th:replace="@{fragment-js}"></div>
+	<div th:replace="@{front-end/buyer/fragment-lightbarJs}"></div>
 	<script>
-		var loadjsCompletedEvent = new Event("loadjsCompleted");
+	document.addEventListener('DOMContentLoaded', function() {
+	    $("#lightSlider").lightSlider({
+	        gallery: true,
+	        item: 1,
+	        loop: true,
+	        slideMargin: 50,
+	        thumbItem: 6
+	    });
+	});
 
-		// 監聽自定義事件，當 loadjs 完成時觸發
-		document.addEventListener("loadjsCompleted", function() {
-			$("#lightSlider").lightSlider({
-				gallery : true,
-				item : 1,
-				loop : true,
-				slideMargin : 50,
-				thumbItem : 6,
-			});
-		});
-
-		// 手動觸發事件，告知 TwCitySelector 可以初始化了
-		// document.dispatchEvent(loadjsCompletedEvent);
 	</script>
-	<!-- Vendor & Main JS Files -->
 </body>
 </html>
