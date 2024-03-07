@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import java.util.TreeSet;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 import com.product.model.*;
 
@@ -45,6 +46,8 @@ public class JedisUtil {
 			pool.destroy();
 	}
 
+	
+	//測試用的main 方法
 //	public static void main(String[] args) {
 //		// 取得 JedisPool 實例
 //
@@ -52,48 +55,29 @@ public class JedisUtil {
 //
 //		// 從 JedisPool 中取得 Jedis 連線
 //		try (Jedis jedis = jedisPool.getResource()) {
-//			//塞入假資料, 直接存VO, 不好的方法?
-////			TreeSet<ProductVO> collection = new TreeSet<>();			
-////			for (int i= 1; i<= 5; i++) {
-////				ProductVO product = new ProductVO();
-////				product.setProductId(i);
-////	            product.setProductName("Product " + (i + 1));
-////	            product.setProductPrice(BigDecimal.valueOf(10 * (i + 1)));
-////	            product.setProductStockQuantity(100 + i);
-////	            product.setProductDetails("This is product " + (i + 1));
-////	            product.setProductStatus("Active");
-////	            product.setProductCreationTime(new Timestamp(System.currentTimeMillis()));
-////	            product.setTotalStars(0);
-////	            product.setTotalReviews(0);
-////	            product.setIsEnabled(true);
-////				collection.add(product);
-////			}
 //
-//			//塞入假資料, 只存商品編號 拿出來還要處理?
-//			TreeSet<Integer> collection = new TreeSet<>();
-//			collection.add(1);
-//			collection.add(3);
-//			collection.add(4);
 //			
 //			// 將資料寫入 Redis 並且指定為db10 試圖分流分類資料
 //			jedis.select(10);
-//			String json = new Gson().toJson(collection);
-//			// 模擬把用戶9001 的收藏清單包成json 後傳到redis
-//			jedis.set("9", json);
+//
+//			jedis.lpush("9", "1", "3", "4");
 //			System.out.println("應該有存入資料了");
 //
 //		} catch (Exception e) {
 //			System.out.println("不知道為啥, 存入資料失敗");
 //			e.printStackTrace();
 //		}
-//
-//		// 從 JedisPool 中取得 Jedis 連線
+
+		// 從 JedisPool 中取得 Jedis 連線
 //		try (Jedis jedis = jedisPool.getResource()) {
 //			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
 //			jedis.select(10);
-//			String value = jedis.get("9");
-//			System.out.println("買家編號9的value:" + value);
-//			System.out.println("應該有印出資料了");
+//			List<String> value;
+//			
+//			for( int i= 0; i< jedis.llen("9"); i++ ) {
+//				System.out.println( "Key" + 9 + "的值" + jedis.lindex("9", i) );
+//			}
+//			
 //		} catch (Exception e) {
 //			System.out.println("讀出資料有問題");
 //			e.printStackTrace();

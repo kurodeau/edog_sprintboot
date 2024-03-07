@@ -2,6 +2,7 @@ package com.product.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -202,4 +203,14 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 
     // You can also add additional methods or annotations as needed
 
+    @Override
+	public String toString() {
+		return "ProductVO [productId=" + productId + ", productCoverImg=" + Arrays.toString(productCoverImg)
+				+ ", productName=" + productName + ", productPrice=" + productPrice + ", productStockQuantity="
+				+ productStockQuantity + ", productSoldQuantity=" + productSoldQuantity + ", productDetails="
+				+ productDetails + ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime
+				+ ", totalStars=" + totalStars + ", totalReviews=" + totalReviews + ", productSortVO=" + productSortVO
+				+ ", isEnabled=" + isEnabled + ", sellerVO=" + sellerVO + ", productImgVO=" + productImgVO + "]";
+	}
+    
 }

@@ -1,10 +1,10 @@
 package com.collection.controller;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.Arrays;
 import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.origin.SystemEnvironmentOrigin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -37,20 +38,20 @@ public class CollectionnoController {
 	@Autowired
 	ProductService productSvc;
 
-	// 定義自訂方法, 將String 轉為Set<String>
-	private static Set<String> parseAndConvertToSet(String value) {
-		// 如果資料為空或不合法，回傳空集合
-		if (value == null || value.isEmpty() || value.equals("null")) {
-			System.out.println("來源資料是空的,或只由null,空白組成");
-			return new HashSet<>();
-		}
-
-		// 移除字串頭尾的方括號以及空白
-		value = value.substring(1, value.length() - 1).trim();
-
-		// 以逗號分割字串並建立集合
-		return new HashSet<>(Arrays.asList(value.split("\\s*,\\s*")));
-	}
+	// 定義自訂方法, 將String 轉為Set<String>, 改成存list 應該用不到
+//	private static Set<String> parseAndConvertToSet(String value) {
+//		// 如果資料為空或不合法，回傳空集合
+//		if (value == null || value.isEmpty() || value.equals("null")) {
+//			System.out.println("來源資料是空的,或只由null,空白組成");
+//			return new HashSet<>();
+//		}
+//
+//		// 移除字串頭尾的方括號以及空白
+//		value = value.substring(1, value.length() - 1).trim();
+//
+//		// 以逗號分割字串並建立集合
+//		return new HashSet<>(Arrays.asList(value.split("\\s*,\\s*")));
+//	}
 
 	// 用戶取出自己所有購物車資料
 	// //front/buyer/collection/list
@@ -59,36 +60,40 @@ public class CollectionnoController {
 		/***************************
 		 * 0.(測試) 假定memberID以利測試
 		 *********************************************/
-
+		String memberId = "9";
+		
+		//裝回傳結果用的
+		List<ProductVO> collectList = new ArrayList<>();
 		
 		// 測試用的, 建立連線池
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-
-			/****************************
-			 * 1.透過已知的 memberId 自 Redis 要出收藏清單
-			 *********************************************/
-
-			Jedis jedis = jedisPool.getResource()) {
+				/****************************
+				 * 1.透過已知的 memberId 自 Redis 要出收藏清單
+				 *********************************************/
+				Jedis jedis = jedisPool.getResource()) {
 			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
 			jedis.select(10);
-			// 指定要讀取的memberId
-			String value = jedis.get("9");
-			System.out.println("value" + value); // 測試資料
+
+            // 將讀取的資料轉換為int型態的列表
+//            for (String str : storedList) {
+//                int num = Integer.parseInt(str);
+//                System.out.println(num);
+//            }
+
+
+			ProductVO product = new ProductVO();
+			System.out.println();
+			for (String str : jedis.lrange(memberId, 0, -1)) {
 			
-			
-			/***************************
-			 * 2.處理收藏清單的編號, 並逐個生成VO 放入清單後轉交
-			 *********************************************/			
-//		    List<ProductVO> productVOList = new ArrayList<ProductVO>();
-			
-			Set<String> valueSet = parseAndConvertToSet(value);
-			for (String s : valueSet) {
-				System.out.println( "s:" + s); //測試資料
-				
-			};
+				product = productSvc.getOneProduct( Integer.parseInt(str) );				
+				System.out.println( product.toString() ); //測試資料
+				collectList.add(product);   	
+
+			}
+			System.out.println( "測試我這到底裝了多少東西: " + collectList.size() );
 
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
@@ -98,11 +103,8 @@ public class CollectionnoController {
 //		finally {
 //            // 無論連線操作是否成功都釋放當前的 Jedis 連線，將其返回到連線池中
 //			jedisPool.close();
-//		}	
-
-
-
-
+//		}
+		model.addAttribute("collectList", collectList);
 		return "front-end/buyer/buyer-collection-list";
 	}
 
