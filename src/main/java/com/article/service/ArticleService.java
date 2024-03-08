@@ -44,6 +44,7 @@ public class ArticleService {
 	}
 	public List<ArticleVO> getByArticleTypeId(ArticleTypeVO articleTypeVO){
 		List<ArticleVO> articleType=repository.findByArticleTypeVO(articleTypeVO);
+		System.out.println("TypeId="+articleTypeVO.getArticleTypeId());
 		return articleType;
 	}
 }
