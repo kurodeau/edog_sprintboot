@@ -15,10 +15,6 @@
 	<aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
 
 	<!-- ======= Main ======= -->
-	<script>
-let collectListRev = Array.from(${collectList}).reverse();
-</script>
-
 	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
 			<h1>我的收藏</h1>
@@ -36,21 +32,22 @@ let collectListRev = Array.from(${collectList}).reverse();
 
 
 				<!-- 先進行大迴圈, 區分 -->
-				<section class="cart-seller mt-3">
+				<section class="cart-seller mt-3"
+					th:each="sellerCompany : ${collectionClassfi}">
 					<div class="row header-row-custom">
 						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName">ABC</span>
+							賣家名稱&nbsp;&nbsp;&nbsp; <span class="sellerName"
+								th:text="${sellerCompany.key}"></span>
 						</div>
 					</div>
 
 					<!-- 後套入小迴圈的資料 -->
 					<div class="row item-row-custom"
-						th:each="productVO : ${collectList}">
+						th:each="productVO : ${collectionClassfi[ sellerCompany.key ]}">
 						<div class="col-5">
 							<img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
 						</div>
 						<div class="col-3" th:text="${productVO.productName}"></div>
-						<!-- 					<div class="col-2 d-flex justify-content-end cart-qty" th:text="${productVO.productPrice}"></div> -->
 						<div class="col-2 d-flex justify-content-end cart-price"
 							th:text="${productVO.productPrice}"></div>
 						<div
