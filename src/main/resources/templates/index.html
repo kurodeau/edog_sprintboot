@@ -18,11 +18,16 @@
 							<i class="bi bi-list"></i> <a class="nav-link cancel-default-behavior" aria-current="page"
 								href="#">選單</a>
 						</li>
+
 						<li class="nav-item d-flex align-items-center"><a class="nav-link active" aria-current="page"
 								th:href="@{/}">電子商城</a></li>
 						<li class="nav-item"><a class="nav-link" th:href="@{/front/seller/main}">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/back/main}">後台中心</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/back/main}"
+						    style="color:red">後台中心(測試入口)</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/front/buyer/main}"
+						    style="color:red">買家中心(測試入口)</a></li>
+
 					</ul>
 
 					<!-- NavBar--RightSide  -->
@@ -96,7 +101,7 @@
 		<!-- End Banner  -->
 	</header>
 	<!-- ======= Sidebar ======= -->
-	<aside th:replace="front-end/buyer/aside-buyer.html"></aside>
+	<aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
 
 	<!-- ======= Main ======= -->
 	<main class="main main-layout">

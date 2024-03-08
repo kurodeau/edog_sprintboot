@@ -2,12 +2,15 @@
 
 package com.article.repositary;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.article.entity.ArticleVO;
+import com.articleType.entity.ArticleTypeVO;
 
 public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 
@@ -15,5 +18,7 @@ public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 	@Modifying
 	@Query(value = "delete from article where articleId =?1", nativeQuery = true)
 	void deleteByArticleId(int articleId);
+	
+	List<ArticleVO> findByArticleTypeVO(ArticleTypeVO articleTypeVO);
 
 }

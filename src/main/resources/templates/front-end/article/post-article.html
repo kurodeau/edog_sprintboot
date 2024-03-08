@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/article/listAll}">論壇</a></li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+
+						<!-- 測試進入後台入口 -->
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+
+		<!-- Start SearchBar  -->
+		<div class="container-fluid bg-user search-container-custom">
+			<div class="row">
+				<!-- Start SearchBar-Logo  -->
+				<div
+					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
+						srcset="" />
+				</div>
+				<!-- End SearchBar-Logo  -->
+
+				<!-- Start SearchBar-Input  -->
+				<div
+					class="col d-flex searchItem flex-column search-item-container-custom">
+					<form class="form-inline w-100">
+						<div class="row py-2 search-row-custom w-100 pe-2">
+							<div class="col">
+								<input class="form-control mr-sm-2 w-100 search-input-custom"
+									type="search" placeholder="請在此進行商品檢索" aria-label="Search" />
+							</div>
+							<div class="col-auto">
+								<button class="btn btn-user search-button-custom d-flex"
+									type="submit">
+									<i class="me-2 ri-search-line"></i>
+									<div class="col-auto d-none d-md-block">Search</div>
+								</button>
+							</div>
+						</div>
+					</form>
+					<div class="my-2 keyword-container-custom">
+						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
+							class="badge rounded-pill keyword-item-custom">玩具</span>
+					</div>
+				</div>
+				<!-- End SearchBar-Input  -->
+
+			</div>
+		</div>
+	</header>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="front-end/article/aside-forum.html"></aside>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<div class="seller-container">
+			<div class="pagetitle">
+				<h1 style="margin-top: 30px;">發表文章</h1>
+				<hr>
+			</div>
+			<div style="margin-top: 30px;">
+				<form th:action="@{insert}" method="post" th:object="${articleVO}"
+					enctype="multipart/form-data">
+
+					<div>
+						<select class="form-select" th:field="*{buyerVO.memberId}">
+							<option th:each="buyerVO : ${buyerListData}"
+								th:value="${buyerVO.memberId}" th:text="${buyerVO.memberName}" />
+						</select> <span th:if="${#fields.hasErrors('buyerVO.memberId')}"
+							th:errors="*{buyerVO.memberId}" class="error"
+							id="buyerVO.memberId.errors"></span>
+					</div>
+
+					<div>
+						<input id="title" type="text" th:field="*{articleTitle}"
+							onclick="hideContent('articleTitle.errors');" required
+							placeholder="標題..." /> <span
+							th:if="${#fields.hasErrors('articleTitle')}"
+							th:errors="*{articleTitle}" class="error"
+							id="articleTitle.errors"></span>
+					</div>
+
+					<hr class="dashed-hr">
+
+					<div>
+						<textarea id="content" rows="10" th:field="*{articleContent}"
+							onclick="hideContent('articleContent.errors');" required
+							placeholder="內容..." style="resize: none;"></textarea>
+						<span th:if="${#fields.hasErrors('articleContent')}"
+							th:errors="*{articleContent}" class="error"
+							id="articleContent.errors"></span>
+					</div>
+
+					<!-- 			<div class="hide"> -->
+					<!-- 			<label>上傳時間:</label> -->
+					<!-- 			<input type="date" th:field="*{artCreateUpdateTime}" onclick="hideContent('artUpdateTime.errors');" /><br/> -->
+					<!-- 			</div> -->
+
+
+					<div class="hide">
+						<label>上傳時間:</label> <input type="date"
+							th:field="*{artUpdateTime}"
+							onclick="hideContent('artUpdateTime.errors');" /><br />
+					</div>
+
+
+					<div class="hide">
+						<label>喜歡數:</label> <input type="text"
+							th:value="*{articleLike == null ? '0' : articleLike}"
+							name="articleLike" onclick="hideContent('articleLike.errors');" /><br />
+					</div>
+
+					<div class="hide">
+						<label>留言數:</label> <input type="text"
+							th:value="*{articleComment == null ? '0' : articleComment}"
+							name="articleComment"
+							onclick="hideContent('articleComment.errors');" /><br />
+					</div>
+					<div class="hide">
+						<label>分享數:</label> <input type="text"
+							th:value="*{articleShare == null ? '0' : articleShare}"
+							name="articleShare" onclick="hideContent('articleShare.errors');" /><br />
+					</div>
+					<div class="hide">
+						<label>啟用:</label> <select th:field="*{isEnabled}"
+							onchange="hideContent('isEnabled.errors');">
+							<option th:value="true" th:text="是"></option>
+							<option th:value="false" th:text="否"></option>
+						</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
+							th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
+					</div>
+
+					<div
+						style="display: flex; align-items: center; justify-content: space-between;">
+						<div>
+							<input type="file" id="upFiles" th:field="*{upFiles}"
+								onclick="previewImage()" multiple="multiple"
+								onchange="hideContent('upFiles.errors');" style="display: none;" />
+							<button type="button"
+								onclick="document.getElementById('upFiles').click();"
+								style="border: none; background: transparent;">
+								<div class="icon-container">
+									<i class="bi bi-image"></i>
+								</div>
+							</button>
+							<span class="error" th:utext="${errorMessage}"
+								id="upFiles.errors">${errorMessage}</span>
+							<div id="blob_holder"></div>
+						</div>
+
+						<div style="display: flex; align-items: center;">
+							<div style="margin-right: 10px;">
+								<label>文章分類1:</label>
+							</div>
+							<div>
+								<select class="form-select"
+									th:field="*{articleTypeVO.articleTypeId}">
+									<option th:each="articleTypeVO : ${articleTypeListData}"
+										th:value="${articleTypeVO.articleTypeId}"
+										th:text="${articleTypeVO.articleTypeName}" />
+								</select> <span
+									th:if="${#fields.hasErrors('articleTypeVO.articleTypeId')}"
+									th:errors="*{articleTypeVO.articleTypeId}" class="error"
+									id="articleTypeVO.articleTypeId.errors"></span>
+							</div>
+						</div>
+
+
+						<div>
+							<div
+								class="text-center d-flex flex-row gap-5 justify-content-center">
+								<button type="submit" id="submit" class="btn btn-primary">送出新增</button>
+							</div>
+							<!-- 								<button type="submit" id="submit">送出新增</button> -->
+						</div>
+					</div>
+
+
+
+
+				</form>
+
+			</div>
+		</div>
+	</main>
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout">
+		<div
+			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">關於我們</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">人才招募</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+				</ul>
+			</div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">常見問題</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">Q&A</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row footer-container-custom">
+			<div class="col-3"></div>
+
+			<div class="col-auto">
+				<a href="/"
+					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+					<svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+				</a>
+				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
+					© 2023 CatTom.版權所有。</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer -->
+
+	<!-- Vendor JS Files -->
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-datatableJs}"></div>
+	<script>
+		$("a.tab").on("click", function(e) {
+			e.preventDefault();
+			console.log("aaa");
+			/* 將頁籤列表移除所有 -on，再將指定的加上 -on */
+			$(this).closest("ul").find("a.tab").removeClass("-on");
+			$(this).addClass("-on");
+
+			/* 找到對應的頁籤內容，加上 -on 來顯示 */
+			$("div.tab").removeClass("-on");
+			$("div.tab." + $(this).attr("data-target")).addClass("-on");
+		});
+		function redirectToUpdatePage(url) {
+			window.location.href = url;
+		}
+
+		var filereader_support = typeof FileReader != 'undefined';
+		if (!filereader_support) {
+			alert("No FileReader support");
+		}
+		acceptedTypes = {
+			'image/png' : true,
+			'image/jpeg' : true,
+			'image/gif' : true
+		};
+		function previewImage() {
+			var upfile1 = document.getElementById("upFiles");
+			upfile1.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				for (var i = 0; i < files.length; i++) {
+					previewfile(files[i])
+				}
+			}, false);
+		}
+		function previewfile(file) {
+		    if (filereader_support === true && acceptedTypes[file.type] === true) {
+		        var reader = new FileReader();
+		        reader.onload = function(event) {
+		            // 清除 blob_holder 中的所有子元素
+		            blob_holder.innerHTML = '';
+
+		            // 添加新的图片
+		            var image = new Image();
+		            image.src = event.target.result;
+		            image.width = 100;
+		            image.height = 75;
+		            image.border = 2;
+		            blob_holder.appendChild(image);
+
+		            // 添加取消按钮
+		            var cancelButton = document.createElement("button");
+		            cancelButton.setAttribute("type", "button");
+		            cancelButton.setAttribute("onclick", "cancelImageSelection()");
+		            cancelButton.style.border = "none";
+		            cancelButton.style.background = "transparent";
+		            cancelButton.innerHTML = '<div class="icon-container"><i class="bi bi-x-lg"></i></div>';
+		            blob_holder.appendChild(cancelButton);
+		        };
+		        reader.readAsDataURL(file);
+		        document.getElementById('submit').disabled = false;
+		    } else {
+		        blob_holder.innerHTML = "<div  style='text-align: left;'>"
+		            + "● filename: "
+		            + file.name
+		            + "<br>"
+		            + "● ContentTyp: "
+		            + file.type
+		            + "<br>"
+		            + "● size: "
+		            + file.size
+		            + "bytes"
+		            + "<br>"
+		            + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+		        document.getElementById('submit').disabled = true;
+		    }
+		}
+
+
+		function cancelImageSelection() {
+		    // 清除预览图片
+		    var blobHolder = document.getElementById("blob_holder");
+		    blobHolder.innerHTML = "";
+
+		    // 清除文件输入字段的值
+		    var fileInput = document.getElementById("upFiles");
+		    fileInput.value = "";
+
+		}
+
+
+	</script>
+</body>
+</html>

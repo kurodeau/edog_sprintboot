@@ -25,6 +25,8 @@ import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
+import com.productSort.model.ProductSortService;
+import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 
@@ -38,6 +40,9 @@ public class ProductController {
 
 	@Autowired
 	ProductImgService pdtImgSvc;
+	
+	@Autowired
+	ProductSortService pdstSvc;
 
 	@Autowired
 	SellerService srSvc;
@@ -49,13 +54,11 @@ public class ProductController {
 		return "front-end/seller/seller-product-add";
 	}
 
-		
-	
 	@PostMapping("insert")
 
 	public String insert(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
-			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec)
-			throws IOException {
+			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
+			@RequestParam("productSortNo") String productSortNo) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		result = removeFieldError(productVO, result, "mainImage");
@@ -79,9 +82,15 @@ public class ProductController {
 		SellerVO sellerVO = srSvc.getById(5);
 		productVO.setSellerVO(sellerVO);
 
+		
+		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
+		productVO.setProductSortVO(productSortVO);
+		
+		
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
 		productVO.setProductCreationTime(timestamp);
+		productVO.setProductSoldQuantity(0);
 		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
 		productVO.setIsEnabled(true);
 
