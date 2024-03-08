@@ -1,11 +1,6 @@
 package com.collection.controller;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.HashSet;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -27,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
 import com.redis.JedisUtil;
+import com.seller.entity.SellerVO;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -61,10 +57,10 @@ public class CollectionnoController {
 		 * 0.(測試) 假定memberID以利測試
 		 *********************************************/
 		String memberId = "9";
-		
-		//裝回傳結果用的
+
+		// 裝回傳結果用的
 		List<ProductVO> collectList = new ArrayList<>();
-		
+
 		// 測試用的, 建立連線池
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
@@ -77,23 +73,22 @@ public class CollectionnoController {
 			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
 			jedis.select(10);
 
-            // 將讀取的資料轉換為int型態的列表
-//            for (String str : storedList) {
-//                int num = Integer.parseInt(str);
-//                System.out.println(num);
-//            }
-
-
+			// 將所有收藏的資料包入 List<ProductVO>, 並透過公司名稱分為Map
+//			Set<String> sellerCompanySet = new HashSet();
 			ProductVO product = new ProductVO();
-			System.out.println();
+			Map<String,List<ProductVO>> collectionClassfi = new HashMap<>();
 			for (String str : jedis.lrange(memberId, 0, -1)) {
-			
-				product = productSvc.getOneProduct( Integer.parseInt(str) );				
-				System.out.println( product.toString() ); //測試資料
-				collectList.add(product);   	
-
+				product = productSvc.getOneProduct(Integer.parseInt(str));
+				String sellerCompany = product.getSellerVO().getSellerCompany();
+//				sellerCompanySet.add(sellerCompany);
+//				collectionClassfi.
+//				product.set
+//				collectList.add(product);
 			}
-			System.out.println( "測試我這到底裝了多少東西: " + collectList.size() );
+
+	        // 將 collectList 中的 Product 根据 sellerId 分组, 不知道怎麼用Stream寫
+//	        Map<String, List<ProductVO> > groupedProducts = collectList.stream()
+//	                .collect(Collectors.groupingBy(ProductVO::getSellerCompany ));
 
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
