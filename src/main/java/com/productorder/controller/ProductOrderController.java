@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.allenum.ProductOrderStatus;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
 
@@ -32,21 +32,48 @@ public class ProductOrderController {
 
 		
 		
-		/*
-		 * This method will serve as addEmp.html handler.
-		 */
+		
 		
 		@PostMapping("confirm")
 		public String confirmProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
+			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+			productOrderVO.setOrderStatus(5);
+			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+			
+			List<ProductOrderVO> list = productOrderSvc.getAll();
+			model.addAttribute("productOrderList",list);
+			model.addAttribute("success" , "-(接受訂單成功)");
+			return "redirect:/front/seller/productorder/productorderlist";
+		}
+		
+		@PostMapping("shipping")
+		public String shippingProduct(@RequestParam("orderId") String orderId ,ModelMap model) {
+			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+			productOrderVO.setOrderStatus(6);
+			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+			
+			List<ProductOrderVO> list = productOrderSvc.getAll();
+			model.addAttribute("productOrderList",list);
+			model.addAttribute("success" , "-(接受訂單成功)");
+			return "redirect:/front/seller/productorder/productorderlist";
+		}
+
+		@PostMapping("cancel")
+		public String cancelProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			productOrderVO.setOrderStatus(3);
 			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
 			List<ProductOrderVO> list = productOrderSvc.getAll();
 			model.addAttribute("productOrderList",list);
 			model.addAttribute("success" , "-(接受訂單成功)");
-			return "redirect:front-end/seller/seller-order-overall";
+			return "redirect:/front/seller/productorder/productorderlist";
 		}
-
+		
+		
+		
+		
+		
+		
 		/*
 		 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 		 */
