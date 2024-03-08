@@ -1,6 +1,7 @@
 package com.reply.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
+import com.buyer.entity.BuyerVO;
 
 @Controller
 @RequestMapping("/reply")
@@ -52,23 +54,56 @@ public class ReplyController {
 	/*
 	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("insert")
-	public String insert(@Valid ReplyVO replyVO, BindingResult result, ModelMap model
-			) throws IOException {
+//	@PostMapping("insert")
+//	public void insert(@Valid ReplyVO replyVO, BindingResult result, @RequestParam("articleId") String articleId, 
+//	                   HttpServletRequest request, HttpServletResponse response) 
+//	        throws IOException {
+//	    ArticleVO articleVO = new ArticleVO();
+//	    articleVO.setArticleId(Integer.valueOf(articleId));
+//	    BuyerVO buyerVO = new BuyerVO();
+//	    buyerVO.setMemberId(1);
+//	    /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+//	    replyVO.setReplyTime(new Date());
+//	    replyVO.setReplyLike(0);
+//	    replyVO.setIsEnabled(true);
+//	    
+//	    /*************************** 2.開始新增資料 *****************************************/
+//	    replySvc.addReply(replyVO);
+//	    /*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+//	    // 重定向到当前页面
+//	    response.sendRedirect(request.getRequestURI());
+//	}
+	@PostMapping("/insert")
+    public ResponseEntity<String> insertReply(@RequestParam("commentContent") String commentContent,
+                                              @RequestParam("articleId") String articleId) {
+        try {
+            // 创建一个新的回复对象
+            ReplyVO replyVO = new ReplyVO();
+            ArticleVO articleVO = new ArticleVO();
+            articleVO.setArticleId(Integer.valueOf(articleId));
+            replyVO.setReplyContent(commentContent);
+            replyVO.setReplyTime(new Date());
+            replyVO.setArticleVO(articleVO);
+    	    BuyerVO buyerVO = new BuyerVO();
+    	    buyerVO.setMemberId(1);
+    	    replyVO.setBuyerVO(buyerVO);
+    	    replyVO.setReplyTime(new Date());
+    	    replyVO.setReplyLike(0);
+    	    replyVO.setIsEnabled(true);
 
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-		replyVO.setReplyTime(new Date());
-		/*************************** 2.開始新增資料 *****************************************/
-		// EmpService empSvc = new EmpService();
-		replySvc.addReply(replyVO);
-		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
-		List<ReplyVO> list = replySvc.getAll();
-		model.addAttribute("replyListData", list);
-		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/reply/listAllReply"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
-	}
-
+    	    // 设置文章 ID
+            // 这里可以根据实际情况从数据库中获取文章对象并设置
+            articleVO.setArticleId(Integer.valueOf(articleId));
+            // 保存回复到数据库
+            replySvc.addReply(replyVO);
+            // 返回成功响应
+            return ResponseEntity.ok("评论已成功保存！");
+        } catch (Exception e) {
+            // 如果保存评论时发生错误，返回错误响应
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("保存评论时出现错误：" + e.getMessage());
+        }
+    }
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST request
 	 */

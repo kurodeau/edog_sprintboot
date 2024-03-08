@@ -132,7 +132,17 @@ public class ArticleController {
 
 		        return "front-end/article/articletype-list";
 		    }
-		
+		 @GetMapping("/MyArticle")
+		 public String getMyArticle(@RequestParam("id") Integer memberId, Model model) {
+			 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
+			 model.addAttribute("buyerVO", buyerVO);
+			 List<ArticleVO> myArticleList = articleSvc.getByMemberId(buyerVO);
+			 
+			 model.addAttribute("myArticleList", myArticleList);
+			 
+			 return "front-end/article/myArticle-list";
+		 }
+		 
 		@GetMapping("getOne_For_Update")
 		public String getOneArticleUpdate(@RequestParam("id") Integer articleId, ModelMap model) {
 		    ArticleVO articleVO = articleSvc.getOneArticle(articleId);
@@ -142,7 +152,7 @@ public class ArticleController {
 		    System.out.println(articleVO);
 		    System.out.println("==============XXXXXXXXXXXXXX");
 
-		    return "front-end/update_article_input";
+		    return "front-end/article/article-edit";
 		}
 		
 
@@ -262,7 +272,7 @@ public class ArticleController {
 			}
 		}
 		if (result.hasErrors()) {
-			return "front-end/article/update_article_input";
+			return "front-end/article/article-edit";
 		}
 		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始修改資料 *****************************************/
@@ -273,7 +283,7 @@ public class ArticleController {
 		model.addAttribute("success", "- (修改成功)");
 		articleVO = articleSvc.getOneArticle(Integer.valueOf(articleVO.getArticleId()));
 		model.addAttribute("articleVO", articleVO);
-		return "front-end/article/listOneArticle"; // 修改成功後轉交listOneEmp.html
+		return "redirect:/article/listAll"; // 修改成功後轉交listOneEmp.html
 	}
 
 	/*
@@ -365,15 +375,4 @@ public class ArticleController {
 		return result;
 	}
 	
-	/*
-	 * This method will be called on select_page.html form submission, handling POST request
-	 */
-//	@PostMapping("listArticles_ByCompositeQuery")
-//	public String listAllArticle(HttpServletRequest req, Model model) {
-//		Map<String, String[]> map = req.getParameterMap();
-//		List<ArticleVO> list = articleSvc.getAll(map);
-//		model.addAttribute("articleListData", list); // for listAllEmp.html 第85行用
-//		return "front-end/article/listAllArticle";
-//	}
-
 }

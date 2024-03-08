@@ -89,57 +89,73 @@
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
-		<div class="seller-container">
+		<div class="seller-container article-container">
 			<div class="pagetitle"></div>
 			<div style="margin-top: 30px;" th:fragment="listOneArticle-div">
 				<!-- 				<span th:text="${articleVO.articleId}"></span><br/> -->
-				<span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
-				
-				<hr>
-				
-				<span class="title-category"> 
-					<span class="article-title" th:text="${articleVO.articleTitle}"></span> 
-					<span class="category-name" th:text="${articleVO.articleTypeVO.articleTypeName}"></span>
-				</span> 
-				
-				<span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
-				<span><img th:if="${articleVO.upFiles != null}"
-					th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
-					width="100px"></span><br/>
+				<div class="article-info-container">
+    <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
+    
+    <hr>
+    
+    <span class="title-category"> 
+        <span class="article-title" th:text="${articleVO.articleTitle}"></span> 
+        <span class="category-name" th:text="${articleVO.articleTypeVO.articleTypeName}"></span>
+    </span> 
+    
+    <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
+    <span><img th:if="${articleVO.upFiles != null}"
+        th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
+        width="100px"></span><br/>
 
-				<div class="interaction-section">
-					<i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
-					<span class="article-like" th:text="${articleVO.articleLike}"></span>
-					<i class="bi bi-chat-dots"></i>
-					<span class="article-comment" th:text="${articleVO.articleComment}"></span> 
-					<i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
-					<span class="post-time time" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-				</div>
+    <div class="interaction-section">
+        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
+        <span class="article-like" th:text="${articleVO.articleLike}"></span>
+        <i class="bi bi-chat-dots" id="commentIcon"></i>
+        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
+        <i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
+        <span class="post-time time" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+    </div>
+</div>
 
+<hr style="margin-top: 10px; width: 600px;">
 				<table id="example" class="display" style="width: 100%">
-					<tbody>
-						<th:block th:each="replyVO:${replyVOList}">
+    <tbody>
+        <th:block th:each="replyVO:${replyVOList}">
+            <tr>
+                <td>
+                        <div>
+                            <span class="avatar-name" th:text="${replyVO.buyerVO.memberName}"></span>
+                        </div>
+                        <div class="message-container">
+                            <span th:text="${replyVO.replyContent}"></span>
+                        </div>
+                    <div class="interaction-section">
+                        <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
+                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId"></i>
+                        <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
+                        <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
+                        <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+    </tbody>
+</table>
 
-							<td>
-								<hr style="margin-top: 10px;"> <span class="avatar-name"
-								th:text="${replyVO.buyerVO.memberName}"> </span>
-							</td>
-							<tr>
-								<td th:text="${replyVO.replyContent}"></td>
-							</tr>
-							<tr>
-								<td class="interaction-section">
-									<span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
-									<i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId"></i>
-									<span class="reply-like" th:text="${replyVO.replyLike}"></span> 
-									<i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
-									<span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-								</td>
-							</tr>
 
-						</th:block>
-					</tbody>
-				</table>
+				
+			<div class="comment-input-container" style="margin-top: 20px;">
+    <div id="commentInput" style="position: relative;">
+        <textarea id="commentInputtext" required placeholder="留言..." style="flex: 1; resize: none;"></textarea>
+       <i class="bi bi-send" id="sendCommentBtn" style="cursor: not-allowed; position: absolute; bottom: 5px; right: 5px;"></i>
+    </div>
+</div>
+
+
+
+
+				
 			</div>
 		</div>
 		
@@ -464,7 +480,74 @@ $('.reply-like-btn').click(function() {
     console.log('reply ID:', replyId);
 });
 
+var commentIcon = document.getElementById('commentIcon');
+var commentInput = document.getElementById('commentInput');
 
+commentIcon.addEventListener('click', function() {
+    commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('commentInputtext').focus();
+});
+
+//获取 textarea 元素
+var commentInput = document.getElementById("commentInputtext");
+
+// 获取发送按钮元素
+var sendButton = document.getElementById("sendCommentBtn");
+
+// 检查 textarea 内容是否为空
+function checkTextarea() {
+    if (commentInput.value.trim() !== "") {
+        // 如果 textarea 中有内容，则启用发送按钮
+        sendButton.style.cursor = "pointer";
+        sendButton.addEventListener("click", sendComment);
+    } else {
+        // 如果 textarea 中没有内容，则禁用发送按钮
+        sendButton.style.cursor = "not-allowed";
+        sendButton.removeEventListener("click", sendComment);
+    }
+}
+
+// 检查 textarea 内容是否为空
+commentInput.addEventListener("input", checkTextarea);
+
+// 发送评论的函数
+function sendComment() {
+    // 在这里编写发送评论的代码
+    console.log("Sending comment...");
+}
+
+document.getElementById('sendCommentBtn').addEventListener('click', function() {
+    var commentContent = document.getElementById('commentInputtext').value;
+    var articleId = $('.report-article-button').attr('id');
+    
+    // 创建一个新的 XMLHttpRequest 对象
+    var xhr = new XMLHttpRequest();
+    
+    // 设置请求方法和 URL
+    xhr.open('POST', 'http://localhost:8081/edogSpringMVC_Thymeleaf/reply/insert', true);
+    
+    // 设置请求头
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    // 定义请求完成后的回调函数
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // 请求成功，您可以在此处处理成功后的逻辑
+        	window.location.reload();
+        } else {
+            // 请求失败，您可以在此处处理失败后的逻辑
+//             alert('請輸入留言：' + xhr.statusText);
+        }
+    };
+    
+    // 定义请求错误时的处理逻辑
+    xhr.onerror = function () {
+        alert('请求错误！');
+    };
+    
+    // 发送请求并将评论内容和文章 ID 作为参数发送
+    xhr.send('commentContent=' + encodeURIComponent(commentContent) + '&articleId=' + encodeURIComponent(articleId));
+});
 
 	</script>
 </body>
