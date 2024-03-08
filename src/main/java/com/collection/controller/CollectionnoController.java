@@ -2,6 +2,7 @@ package com.collection.controller;
 
 import java.util.*;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -19,116 +20,61 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.collection.service.CollectionService;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
 import com.redis.JedisUtil;
 import com.seller.entity.SellerVO;
+import com.seller.service.SellerService;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 @Controller
 @RequestMapping("/front/buyer/collection")
-public class CollectionnoController {
+public class CollectionnoController extends HttpServlet {
 
 	@Autowired
 	ProductService productSvc;
 
-	// 定義自訂方法, 將String 轉為Set<String>, 改成存list 應該用不到
-//	private static Set<String> parseAndConvertToSet(String value) {
-//		// 如果資料為空或不合法，回傳空集合
-//		if (value == null || value.isEmpty() || value.equals("null")) {
-//			System.out.println("來源資料是空的,或只由null,空白組成");
-//			return new HashSet<>();
-//		}
-//
-//		// 移除字串頭尾的方括號以及空白
-//		value = value.substring(1, value.length() - 1).trim();
-//
-//		// 以逗號分割字串並建立集合
-//		return new HashSet<>(Arrays.asList(value.split("\\s*,\\s*")));
-//	}
+	@Autowired
+	SellerService sellerSvc;
 
-	// 用戶取出自己所有購物車資料
-	// //front/buyer/collection/list
+	@Autowired
+	CollectionService collectionService;
+
+	// 用戶取出自己所有收藏清單資料 /front/buyer/collection/list
 	@GetMapping("list")
-	public String collectionlist(Model model) {
-		/***************************
-		 * 0.(測試) 假定memberID以利測試
-		 *********************************************/
-		String memberId = "9";
-
-		// 取得連線
-		JedisPool jedisPool = JedisUtil.getJedisPool();
-
-		// 本方法會用到的變數,
-		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
-		List<ProductVO> productList = new ArrayList();
-		ProductVO product = new ProductVO();
-
-		// 索取redis連線, 用try 整個包起來
-		try (
-				/****************************
-				 * 1.透過已知的 memberId 自 Redis 要出收藏清單
-				 *********************************************/
-				Jedis jedis = jedisPool.getResource()) {
-			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
-			jedis.select(10);
-
-			// 將所有收藏的資料包入 List<ProductVO>, 並透過公司名稱分為Map
-			// Set<String> sellerCompanySet = new HashSet();
-			int count = 0;
-			for (String str : jedis.lrange(memberId, 0, -1)) {
-				product = productSvc.getOneProduct(Integer.parseInt(str));
-				String sellerCompany = product.getSellerVO().getSellerCompany();
-
-				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
-				productList = collectionClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
-																								// List，再對其更新
-				productList.add(product);
-				collectionClassfi.put(sellerCompany, productList);
-			}
-//			System.out.println("測試" + collectionClassfi.toString()); // 有成功分類並包成Map
-
-			// 將 collectList 中的 Product 根据 sellerId 分组, 不知道怎麼用Stream寫
-			// Map<String, List<ProductVO> > groupedProducts = collectList.stream()
-			// .collect(Collectors.groupingBy(ProductVO::getSellerCompany ));
-
-		} catch (Exception e) {
-			System.out.println("從redis讀出資料有問題");
-			e.printStackTrace();
-		}
-		
-		
-		model.addAttribute("collectionClassfi", collectionClassfi);
+	public String collectionlist(String memberId, Model model) {
+		// 先給定 memberId 以便測試
+		memberId = "9";
+		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId)); 
 		return "front-end/buyer/buyer-collection-list";
 	}
 
-//	@PostMapping("getOne_For_Display")
-//	public String getOne_For_Display(/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 *************************/
-//	@RequestParam("productId") String productId, ModelMap model) {
-//		/***************************
-//		 * 2.開始查詢資料
-//		 *********************************************/
-//
-//		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
-//
-//		List<ProductVO> list = productSvc.getAll();
-//		model.addAttribute("productListData", list);
-//
-//		if (productVO == null) {
-//			model.addAttribute("errorMessage", "查無資料");
-//			return null;
-//		}
-//		/***************************
-//		 * 3.查詢完成,準備轉交(Send the Success view)
-//		 *****************/
-//		model.addAttribute("ProductVO", productVO);
-//		model.addAttribute("getOne_FOR_Display", "true");
-//
-//		return "front-end/seller/seller-product-all";
+	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/switchState
+	@PostMapping("switchState") //改用POST
+	public String switchOneToCollection(String memberId,@RequestParam("productId") String productId, Model model) {
+		// 先給定 memberId , productId 以便測試
+		System.out.println("到controller");
+		memberId = "9";
+//		productId = "5";
+		model.addAttribute("collectionClassfi", collectionService.switchStateByProductId(memberId, productId)); 
+		return "front-end/buyer/buyer-collection-list";
+	}
+	
+	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/isCollection
+//	@GetMapping("isCollection")
+//	public String isCollection(String memberId, String productId, Model model) {
+//		// 先給定 memberId 以便測試
+//		// 先給定 memberId , productId 以便測試
+//		memberId = "9";
+//		productId = "1";
+//		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId)); 
+//		return "front-end/buyer/buyer-collection-list";
 //	}
-//
+	
+
 //	@ModelAttribute("productListData")
 //	protected List<ProductVO> referenceListData(Model model) {
 //

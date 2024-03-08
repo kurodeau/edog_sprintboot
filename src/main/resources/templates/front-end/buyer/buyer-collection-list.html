@@ -29,27 +29,28 @@
 					<div class="col d-flex justify-content-center">操作</div>
 				</div>
 
+				<!-- 如果你沒有任何收藏, 顯示這裡 -->
+				<div class="col-12" th:if="${#maps.isEmpty(collectionClassfi) }">你還沒有任何收藏~</div>
+
 				<!-- 先進行大迴圈, 區分 -->
 				<section class="cart-seller mt-3"
 					th:each="sellerCompany : ${collectionClassfi}">
 					<div class="row header-row-custom">
 						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp; <span class="sellerName"
-								th:text="${sellerCompany.key}"></span>
+							賣家名稱&nbsp;&nbsp;&nbsp; <span class="sellerName"> <b
+								th:text="${sellerCompany.key}"></b>
+							</span>
 						</div>
 					</div>
 
 					<!-- 後套入小迴圈的資料 -->
 					<div class="row item-row-custom"
 						th:each="productVO : ${collectionClassfi[ sellerCompany.key ]}">
-						<div class="col-5">
-							<img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+						<div class="col-1-5">
+							<img
+								th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${productVO.productId}"
+								width="100px" />
 						</div>
-						<!-- 						<div class="col-1-5"> -->
-						<!-- 							<img -->
-						<!-- 								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}" -->
-						<!-- 								width="100px" /> -->
-						<!-- 						</div> -->
 						<div class="col-3" th:text="${productVO.productName}"></div>
 						<div class="col-2 d-flex justify-content-end cart-price"
 							th:text="${productVO.productPrice}"></div>
@@ -57,7 +58,43 @@
 							class="col d-flex flex-column align-items-center justify-content-center">
 							<button class="btn-func add-cart">加入購物車</button>
 							<button class="btn-func check-product">查看商品</button>
-							<button class="btn-func cart-item-delete">取消收藏</button>
+							<!-- 						<a class="btn" -->
+							<!-- 							th:href="@{switchState(memberId=9,productId=${productVO.productId})}">編輯</a> -->
+
+							<button class="btn-func cart-item-delete"
+								id="switchCollectionBTN" th:data-memberId="9"
+								th:data-productId="${productVO.productId}">取消收藏</button>
+							<!-- 用 Ajex 讓 BTN POST 送出請求 -->
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								document
+										.getElementById('switchCollectionBTN')
+										.addEventListener(	'click',
+												function() {
+													var memberId = this
+															.getAttribute('data-memberId');
+													var productId = this
+															.getAttribute('data-productId');
+													var url = /*[[@{switchState}]]*/''; // 设置您的URL
+
+													var xhr = new XMLHttpRequest();
+													xhr.open('POST', url, true);
+													xhr.setRequestHeader(
+																	'Content-Type',
+																	'application/x-www-form-urlencoded');
+													xhr.onreadystatechange = function() {
+														if (xhr.readyState === 4
+																&& xhr.status === 200) {
+															// 请求成功处理
+															console.log(xhr.responseText);
+														}
+													};
+													xhr.send('memberId='+ memberId + 
+															 '&productId=' + productId);
+												});
+								/*]]>*/
+							</script>
+
 						</div>
 					</div>
 				</section>
@@ -112,68 +149,68 @@
 	<!-- Local JS File -->
 
 	<script>
-		document
-				.addEventListener(
-						"DOMContentLoaded",
-						function() {
-							function handleItemDelete(event) {
-								event.stopPropagation();
+// 		document
+// 				.addEventListener(
+// 						"DOMContentLoaded",
+// 						function() {
+// 							function handleItemDelete(event) {
+// 								event.stopPropagation();
 
-								const rowItem = this
-										.closest(".item-row-custom");
+// 								const rowItem = this
+// 										.closest(".item-row-custom");
 
-								if (!rowItem)
-									return;
+// 								if (!rowItem)
+// 									return;
 
-								const secCart = rowItem.parentElement;
+// 								const secCart = rowItem.parentElement;
 
-								rowItem.remove();
+// 								rowItem.remove();
 
-								if (secCart
-										&& secCart
-												.querySelectorAll(".item-row-custom").length === 0) {
-									secCart.remove();
-								}
+// 								if (secCart
+// 										&& secCart
+// 												.querySelectorAll(".item-row-custom").length === 0) {
+// 									secCart.remove();
+// 								}
 
-								updateCheckoutAmount();
-							}
+// 								updateCheckoutAmount();
+// 							}
 
-							const itemDeleteEls = document
-									.querySelectorAll(".cart-item-delete");
+// 							const itemDeleteEls = document
+// 									.querySelectorAll(".cart-item-delete");
 
-							itemDeleteEls.forEach(function(itemDeleteEl) {
-								itemDeleteEl.addEventListener("click",
-										handleItemDelete);
-							});
+// 							itemDeleteEls.forEach(function(itemDeleteEl) {
+// 								itemDeleteEl.addEventListener("click",
+// 										handleItemDelete);
+// 							});
 
-							function updateCheckoutAmount() {
-								let totalAmount = 0;
+// 							function updateCheckoutAmount() {
+// 								let totalAmount = 0;
 
-								// Iterate over all checked items
-								document
-										.querySelectorAll(
-												".cart-item-click:checked")
-										.forEach(
-												function(item) {
-													const rowItem = item
-															.closest(".item-row-custom");
-													console.log(rowItem);
+// 								// Iterate over all checked items
+// 								document
+// 										.querySelectorAll(
+// 												".cart-item-click:checked")
+// 										.forEach(
+// 												function(item) {
+// 													const rowItem = item
+// 															.closest(".item-row-custom");
+// 													console.log(rowItem);
 
-													if (rowItem) {
-														const priceElement = rowItem
-																.querySelector(".cart-price");
-														const price = parseFloat(priceElement.textContent);
-														totalAmount += price;
-													}
-												});
+// 													if (rowItem) {
+// 														const priceElement = rowItem
+// 																.querySelector(".cart-price");
+// 														const price = parseFloat(priceElement.textContent);
+// 														totalAmount += price;
+// 													}
+// 												});
 
-								// Update the displayed total amount
-								const totalAmountElement = document
-										.querySelector(".cart-payment .payment");
-								totalAmountElement.textContent = totalAmount
-										.toFixed(2); // Assuming you want to display with 2 decimal places
-							}
-						});
+// 								// Update the displayed total amount
+// 								const totalAmountElement = document
+// 										.querySelector(".cart-payment .payment");
+// 								totalAmountElement.textContent = totalAmount
+// 										.toFixed(2); // Assuming you want to display with 2 decimal places
+// 							}
+// 						});
 	</script>
 </body>
 </html>
