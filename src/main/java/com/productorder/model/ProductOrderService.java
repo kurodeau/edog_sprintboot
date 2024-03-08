@@ -84,7 +84,8 @@ public List<ProductOrderVO> getProductOrderSellerProcessing() {
 	List<ProductOrderVO> allProductOrders = repository.findAll();		
 	
 	 List<ProductOrderVO> list = allProductOrders.stream()
-             .filter(productOrder -> "5".equals(productOrder.getOrderStatus().toString()))
+             .filter(productOrder -> "5".equals(productOrder.getOrderStatus().toString())
+            		 				|| "6".equals(productOrder.getOrderStatus().toString()))
              .collect(Collectors.toList());									 
 			return list;		
 }
@@ -105,6 +106,17 @@ public List<ProductOrderVO> getProductOrderCompleted() {
 	
 	 List<ProductOrderVO> list = allProductOrders.stream()
              .filter(productOrder -> "7".equals(productOrder.getOrderStatus().toString()))
+             .collect(Collectors.toList());									 
+			return list;		
+}
+
+public List<ProductOrderVO> getProductOrderCanceled() {
+	
+	List<ProductOrderVO> allProductOrders = repository.findAll();		
+	
+	 List<ProductOrderVO> list = allProductOrders.stream()
+             .filter(productOrder -> "2".equals(productOrder.getOrderStatus().toString())
+            		 			  || "3".equals(productOrder.getOrderStatus().toString()))
              .collect(Collectors.toList());									 
 			return list;		
 }
