@@ -29,8 +29,6 @@
 					<div class="col d-flex justify-content-center">操作</div>
 				</div>
 
-
-
 				<!-- 先進行大迴圈, 區分 -->
 				<section class="cart-seller mt-3"
 					th:each="sellerCompany : ${collectionClassfi}">
@@ -47,6 +45,11 @@
 						<div class="col-5">
 							<img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
 						</div>
+						<!-- 						<div class="col-1-5"> -->
+						<!-- 							<img -->
+						<!-- 								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}" -->
+						<!-- 								width="100px" /> -->
+						<!-- 						</div> -->
 						<div class="col-3" th:text="${productVO.productName}"></div>
 						<div class="col-2 d-flex justify-content-end cart-price"
 							th:text="${productVO.productPrice}"></div>

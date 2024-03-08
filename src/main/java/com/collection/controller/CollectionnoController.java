@@ -58,16 +58,13 @@ public class CollectionnoController {
 		 *********************************************/
 		String memberId = "9";
 
-		// 裝回傳結果用的
-		List<ProductVO> collectList = new ArrayList<>();
-
-		// 測試用的, 建立連線池
+		// 取得連線
 		JedisPool jedisPool = JedisUtil.getJedisPool();
-		
-		// 本方法會用到的變數
+
+		// 本方法會用到的變數,
+		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 		List<ProductVO> productList = new ArrayList();
 		ProductVO product = new ProductVO();
-		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 
 		// 索取redis連線, 用try 整個包起來
 		try (
@@ -79,33 +76,30 @@ public class CollectionnoController {
 			jedis.select(10);
 
 			// 將所有收藏的資料包入 List<ProductVO>, 並透過公司名稱分為Map
-//			Set<String> sellerCompanySet = new HashSet();
-
+			// Set<String> sellerCompanySet = new HashSet();
+			int count = 0;
 			for (String str : jedis.lrange(memberId, 0, -1)) {
 				product = productSvc.getOneProduct(Integer.parseInt(str));
 				String sellerCompany = product.getSellerVO().getSellerCompany();
 
 				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
-				productList = collectionClassfi.getOrDefault(
-						sellerCompany, new ArrayList<>()); // 拉出對應Key的value List，再對其更新
+				productList = collectionClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
+																								// List，再對其更新
 				productList.add(product);
 				collectionClassfi.put(sellerCompany, productList);
 			}
-			System.out.println("測試" + collectionClassfi.toString()); //有成功分類並包成Map
+//			System.out.println("測試" + collectionClassfi.toString()); // 有成功分類並包成Map
 
 			// 將 collectList 中的 Product 根据 sellerId 分组, 不知道怎麼用Stream寫
-//	        Map<String, List<ProductVO> > groupedProducts = collectList.stream()
-//	                .collect(Collectors.groupingBy(ProductVO::getSellerCompany ));
+			// Map<String, List<ProductVO> > groupedProducts = collectList.stream()
+			// .collect(Collectors.groupingBy(ProductVO::getSellerCompany ));
 
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
 		}
-		// 好像不需要特別加上這個, 但還要研究為什麼
-//		finally {
-//            // 無論連線操作是否成功都釋放當前的 Jedis 連線，將其返回到連線池中
-//			jedisPool.close();
-//		}
+		
+		
 		model.addAttribute("collectionClassfi", collectionClassfi);
 		return "front-end/buyer/buyer-collection-list";
 	}

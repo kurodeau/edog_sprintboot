@@ -1,15 +1,12 @@
 package com.redis;
 
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import com.google.gson.Gson;
-import java.util.TreeSet;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Set;
-import com.product.model.*;
 
 public class JedisUtil {
 	// Singleton單例模式, 使連線池是唯一存在
@@ -48,7 +45,7 @@ public class JedisUtil {
 
 	
 	//測試用的main 方法
-//	public static void main(String[] args) {
+//	public void test(String[] args) {
 //		// 取得 JedisPool 實例
 //
 //		JedisPool jedisPool = JedisUtil.getJedisPool();
@@ -67,8 +64,8 @@ public class JedisUtil {
 //			System.out.println("不知道為啥, 存入資料失敗");
 //			e.printStackTrace();
 //		}
-
-		// 從 JedisPool 中取得 Jedis 連線
+//
+//		// 從 JedisPool 中取得 Jedis 連線
 //		try (Jedis jedis = jedisPool.getResource()) {
 //			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
 //			jedis.select(10);
