@@ -47,4 +47,9 @@ public class ArticleService {
 		System.out.println("TypeId="+articleTypeVO.getArticleTypeId());
 		return articleType;
 	}
-}
+	
+	 public List<ArticleVO> searchArticles(String searchText) {
+	         return repository.findByArticleTitleContaining(searchText);
+
+	    }
+	}

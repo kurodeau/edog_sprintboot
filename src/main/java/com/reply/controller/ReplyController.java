@@ -7,6 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -119,7 +121,33 @@ public class ReplyController {
 		return "back-end/reply/listAllReply"; // 刪除完成後轉交listAllEmp.html
 	}
 
-
+	@PostMapping("/like")
+	public ResponseEntity<String> increaseLikes(@RequestParam("replyId") String replyId) {
+		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId)); // 根据文章 ID 获取文章对象
+	    if (replyVO != null) {
+	    	replyVO.setReplyLike(replyVO.getReplyLike()+1); // 增加喜欢数
+	    	replySvc.updateReply(replyVO); // 更新文章信息到数据库
+	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
+	}
+	@PostMapping("/unlike")
+	public ResponseEntity<String> decreaseLikes(@RequestParam("replyId") String replyId) {
+		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId)); // 根据文章 ID 获取文章对象
+	    if (replyVO != null) {
+	        int currentLikes = replyVO.getReplyLike();
+	        if (currentLikes > 0) { // 只有喜欢数大于 0 时才能执行减少操作
+	        	replyVO.setReplyLike(currentLikes - 1); // 减少喜欢数
+	        	replySvc.updateReply(replyVO); // 更新文章信息到数据库
+	            return new ResponseEntity<>("Likes decreased successfully", HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>("Likes already at minimum", HttpStatus.BAD_REQUEST);
+	        }
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
+	}
 	/*
 	 * 第一種作法 Method used to populate the List Data in view. 如 : 
 	 * <form:select path="deptno" id="deptno" items="${deptListData}" itemValue="deptno" itemLabel="dname" />

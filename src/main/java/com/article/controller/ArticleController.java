@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -288,6 +290,34 @@ public class ArticleController {
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (刪除成功)");
 		return "front-end/article/listAllArticle"; // 刪除完成後轉交listAllEmp.html
+	}
+
+	@PostMapping("/like")
+	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId) {
+	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
+	    if (articleVO != null) {
+	        articleVO.setArticleLike(articleVO.getArticleLike()+1); // 增加喜欢数
+	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
+	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
+	}
+	@PostMapping("/unlike")
+	public ResponseEntity<String> decreaseLikes(@RequestParam("articleId") String articleId) {
+	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
+	    if (articleVO != null) {
+	        int currentLikes = articleVO.getArticleLike();
+	        if (currentLikes > 0) { // 只有喜欢数大于 0 时才能执行减少操作
+	            articleVO.setArticleLike(currentLikes - 1); // 减少喜欢数
+	            articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
+	            return new ResponseEntity<>("Likes decreased successfully", HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>("Likes already at minimum", HttpStatus.BAD_REQUEST);
+	        }
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
 	}
 
 

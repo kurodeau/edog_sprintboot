@@ -20,5 +20,9 @@ public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 	void deleteByArticleId(int articleId);
 	
 	List<ArticleVO> findByArticleTypeVO(ArticleTypeVO articleTypeVO);
+	
+	List<ArticleVO> findByArticleTitleContaining(String articleTitle);
+
+
 
 }

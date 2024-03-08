@@ -94,6 +94,26 @@ display:flex;
   color: var(--text-placeholder);
   margin-left: auto;
 }
+/* 默认样式 */
+.like-btn {
+    color: black; /* 未喜欢状态 */
+    cursor: pointer;
+}
+
+/* 喜欢状态样式 */
+.like-btn.liked {
+    color: red; /* 喜欢状态 */
+}
+.reply-like-btn {
+    color: black; /* 未喜欢状态 */
+    cursor: pointer;
+}
+
+/* 喜欢状态样式 */
+.reply-like-btn.liked {
+    color: red; /* 喜欢状态 */
+}
+
 /*--------------------------------------------------------------
   # 頁籤
   --------------------------------------------------------------*/
