@@ -1,468 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>EDog</title>
-    <script src="loadcss.js"></script>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
   </head>
+
   <body>
-    <!-- ======= Header ======= -->
     <header class="fixed-top">
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
-              <li class="nav-item d-flex align-items-center">
-                <a class="nav-link active" aria-current="page" href="#"
-                  >電子商城</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="seller-login.html">賣家中心</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">論壇</a>
-              </li>
-            </ul>
-
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">註冊</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">登入</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
+    <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
     </header>
-    <!-- ======= Sidebar ======= -->
-    <aside class="sidebar sidebar-layout-seller">
-      <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-          <a class="nav-link nav-seller-entry" href="seller-main.html">
-            <i class="bi bi-grid"></i>
-            <span>賣家中心</span>
-          </a>
-        </li>
-        <!-- End Dashboard Nav -->
 
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#seller-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-person"></i>
-            <span>賣家帳戶</span><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="seller-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-level.html">
-                <i class="bi bi-circle"></i><span>賣家等級</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-edit.html">
-                <i class="bi bi-circle"></i><span>修改賣家資料</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-check-payment.html">
-                <i class="bi bi-circle"></i><span>查看金流</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Seller Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#product-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-bag"></i>
-            <span>商品管理</span><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="product-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-product-add.html">
-                <i class="bi bi-circle"></i><span>新增商品</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-product-all.html">
-                <i class="bi bi-circle"></i><span>商品列表</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End product Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#service-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-headset"></i><span>客戶服務</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="service-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-service-form.html">
-                <i class="bi bi-circle"></i><span>意見表單</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-service-reply.html">
-                <i class="bi bi-circle"></i><span>查詢回覆</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Tables Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#charts-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-bar-chart"></i><span>銷售報表</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="charts-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-report.html">
-                <i class="bi bi-circle"></i><span>銷售數據</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- End Charts Nav -->
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#order-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-stickies"></i><span>訂單管理</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="order-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-order-overall.html">
-                <i class="bi bi-circle"></i><span>全部訂單</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-order-search.html">
-                <i class="bi bi-circle"></i><span>訂單查詢</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            data-bs-target="#ads-nav"
-            data-bs-toggle="collapse"
-            href="#"
-          >
-            <i class="bi bi-badge-ad"></i><span>廣告管理</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="ads-nav"
-            class="nav-content collapse"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a href="seller-ads-add.html">
-                <i class="bi bi-circle"></i><span>新增廣告</span>
-              </a>
-            </li>
-            <li>
-              <a href="seller-ads-all.html">
-                <i class="bi bi-circle"></i><span>查看廣告</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <!-- End Icons Nav -->
-      </ul>
-    </aside>
-    <!-- ======= Main ======= -->
+   <aside th:replace="@{front-end/seller/aside-seller}"></aside>
 
     <main class="main main-layout-seller">
-      <div class="container-fluid seller-container">
-        <h1>訂單查詢</h1>
-        <form id="orderQuery" method="POST">
-          <div class="row">
-            <div class="col-md-4">
-              <label for="orderId" class="form-label">訂單序號</label>
-              <input
-                type="text"
-                class="form-control"
-                id="orderId"
-                name="orderId"
-              />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <label for="startDate" class="form-label">起始日期</label>
-              <input
-                type="date"
-                class="form-control"
-                id="startDate"
-                name="startDate"
-              />
-            </div>
-
-            <div class="col-md-4">
-              <label for="endDate" class="form-label">結束日期</label>
-              <input
-                type="date"
-                class="form-control"
-                id="endDate"
-                name="endDate"
-              />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-4">
-              <label for="minPaidAmount" class="form-label">最小實付金額</label>
-              <input
-                type="text"
-                class="form-control"
-                id="minPaidAmount"
-                name="minPaidAmount"
-              />
-            </div>
-
-            <div class="col-md-4">
-              <label for="maxPaidAmount" class="form-label">最大實付金額</label>
-              <input
-                type="text"
-                class="form-control"
-                id="maxPaidAmount"
-                name="maxPaidAmount"
-              />
-            </div>
-          </div>
-
-          <div class="text-center mt-3">
-            <button type="reset" class="btn btn-secondary">重設</button>
-            <button
-              type="submit"
-              id="submitCompositeQuery"
-              class="btn btn-primary"
-            >
-              提交複合查詢
-            </button>
-          </div>
-        </form>
-
-        <div class="tab-content pt-2" id="borderedTabContent">
-          <div
-            class="tab-pane show active"
-            id="bordered-all-orders"
-            role="tabpanel"
-            aria-labelledby="all-orders-tab"
-          >
-            <div class="container mt-3 container-list-custom">
-              <div class="row header-row-custom">
-                <div class="col-2">訂單序號</div>
-                <div class="col-3">訂單日期</div>
-                <div class="col-2">買家實付金額</div>
-                <div class="col-3">狀態</div>
-                <div class="col-2">操作</div>
-              </div>
-
-              <!-- Item 1 -->
-              <div class="row item-row-custom">
-                <div class="col-2">123456</div>
-                <div class="col-3">2024-02-18</div>
-                <div class="col-2">50</div>
-                <div class="col-3">等待中<br />待賣家確認</div>
-                <div class="col-2 d-flex flex-column align-items-center">
-                  <button class="product align-self-start btn-func">
-                    接受訂單
-                  </button>
-                  <button class="product align-self-start btn-func">
-                    取消訂單
-                  </button>
-                  <button class="product align-self-start btn-func">
-                    查看詳情
-                  </button>
-                </div>
-              </div>
-
-              <!-- Item 2 -->
-              <div class="row item-row-custom">
-                <div class="col-2">123456</div>
-                <div class="col-3">2024-02-18</div>
-                <div class="col-2">50</div>
-                <div class="col-3">不成立<br />買家不接受</div>
-                <div class="col-2 d-flex flex-column align-items-center">
-                  <button class="product align-self-start btn-func">
-                    查看詳情
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Content for All Orders Tab -->
-          </div>
-          <div
-            class="tab-pane"
-            id="bordered-pending"
-            role="tabpanel"
-            aria-labelledby="pending-tab"
-          >
-            <!-- Content for Pending Orders Tab -->
-          </div>
-          <div
-            class="tab-pane"
-            id="bordered-shipped"
-            role="tabpanel"
-            aria-labelledby="shipped-tab"
-          >
-            <!-- Content for Cancelled Orders Tab -->
-          </div>
-          <div
-            class="tab-pane"
-            id="bordered-cancel"
-            role="tabpanel"
-            aria-labelledby="cancel-tab"
-          >
-            <!-- Content for Shipped Orders Tab -->
-          </div>
-          <div
-            class="tab-pane"
-            id="bordered-completed"
-            role="tabpanel"
-            aria-labelledby="completed-tab"
-          >
-            <!-- Content for Completed Orders Tab -->
-          </div>
+      <div class="seller-container">
+        <div class="pagetitle">
+          <h1>訂單查詢</h1>
         </div>
+        <table
+          id="example"
+          class="table table-striped table-bordered "
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th class="text-center">訂單序號</th>
+              <th class="text-center">訂單日期</th>
+              <th class="text-center">買家實付金額</th>
+              <th class="text-center">狀態</th>
+              <th class="text-center">操作</th>
+            </tr>
+          </thead>
+          
+          
+          <tbody>
+            <th:block th:each="productOrderVO : ${productOrderList}">
+              <tr>
+                <td class="text-center" th:text="${productOrderVO.orderId}"></td>
+                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
+                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
+                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
+                <td class="text-center" >
+                  <a
+                    class="btn"
+                    th:href="@{getOne_For_Display(orderId=${productOrderVO.orderId})}"
+                    >查看詳情</a
+                  >
+                  
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+        </table>
       </div>
     </main>
 
-    <!-- End #main -->
-
     <!-- End Main -->
 
-    <!-- ======= Footer ======= -->
-    <footer class="footer footer-layout on">
-      <div
-        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
-      >
-        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+    
 
-        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-          <h5 class="mb-3">關於我們</h5>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-          <h5 class="mb-3">常見問題</h5>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="row footer-container-custom">
-        <div class="col-3"></div>
-
-        <div class="col-auto">
-          <a
-            href="/"
-            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
-          >
-            <svg class="bi" width="32" height="32" fill="currentColor">
-              <use xlink:href="bootstrap-icons.svg#heart-fill" />
-            </svg>
-          </a>
-          <p class="text-body-secondary">
-            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
-            CatTom.版權所有。
-          </p>
-        </div>
-      </div>
-    </footer>
-    <!-- End Footer -->
+    <!-- ======= Footer, 後臺應該不需要footer ======= -->
 
     <!-- Vendor & Main JS Files -->
-    <script src="loadjs.js"></script>
+    <div th:replace="~{/fragment-js}"></div>
+    <div th:replace="~{/fragment-datatableJs}"></div>
 
-    <!-- Local JS File -->
-    <script></script>
+    <!-- Include DataTables JavaScript library -->
+    <!-- Include FixedColumns JavaScript library -->
+
+    <!-- Your custom script to initialize the DataTable with fixed columns -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 初始化 DataTables
+
+        let table = $("#example").DataTable({
+          columnDefs: [
+            {
+              targets: -1,
+              width: 150,
+            }, // 調整最後一列寬度
+          ],
+          fixedColumns: true,
+          paging: true,
+          lengthMenu: [25, 50, 75, 100],
+          language: {
+            lengthMenu: "顯示 _MENU_ 筆資料",
+          },
+          pageLength: 25,
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: 600,
+          pagingType: "full_numbers",
+          drawCallback: function () {
+            var api = this.api();
+            var rowCount = api
+              .rows({
+                page: "current",
+              })
+              .count();
+
+            // Loop to add empty rows if needed
+            for (
+              var i = 0;
+              i < api.page.len() - (rowCount === 0 ? 1 : rowCount);
+              i++
+            ) {
+              var emptyRow = $("<tr><td>&nbsp;</td></tr>").addClass("empty"); // 添加 'white-bg' 類別
+              $("#example tbody").append(emptyRow);
+            }
+          },
+        });
+
+        // 設定 DataTables 寬度為 100%
+        window.onload = function () {
+          table.columns.adjust().draw();
+        };
+
+        function resetTable() {
+          table.clear().draw();
+        }
+
+        $(".btn-del").on("click", function () {
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Btn: " + deleteId);
+          $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
+        });
+
+        // Listen to the confirmDeleteBtn click event
+        $("#confirmDeleteBtn").on("click", function () {
+          // Retrieve the deleteId from data-delete-id attribute
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Modal: " + deleteId);
+
+          let myModalEl = document.getElementById("deleteModal");
+          let modal = bootstrap.Modal.getInstance(myModalEl);
+
+          let currentLoc = window.location.href;
+          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+          console.log(currentLoc);
+
+          // Your AJAX request for deletion
+          $.ajax({
+            url: currentLoc + "/delete?id=" + deleteId,
+            method: "DELETE",
+            success: function (response) {
+              if (response.success) {
+                alert(response.message);
+                // true 表示強制從伺服器重新加載頁面，忽略緩存
+                location.reload(true);
+              } else {
+                // 刪除失敗
+                alert(response.message);
+              }
+            },
+            error: function () {
+              alert(response.message);
+            },
+            complete: function () {
+              // This will be called regardless of success or error
+              // Close the modal after the AJAX request is completed
+              // Reload the DataTable
+              modal.hide();
+            },
+          });
+        });
+      });
+    </script>
   </body>
 </html>

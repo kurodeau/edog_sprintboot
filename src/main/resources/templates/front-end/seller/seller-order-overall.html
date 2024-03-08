@@ -50,10 +50,39 @@
                   aria-controls="pending"
                   aria-selected="false"
                 >
-                  未處理訂單
+                  未處理
                 </button>
               </li>
-
+			<li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link"
+                  id="shipped-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-shipped"
+                  type="button"
+                  role="tab"
+                  aria-controls="shipped"
+                  aria-selected="false"
+                >
+                  處理中
+                </button>
+             </li>
+             
+             <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link seller-nav-link"
+                  id="completed-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bordered-completed"
+                  type="button"
+                  role="tab"
+                  aria-controls="completed"
+                  aria-selected="false"
+                >
+                  已完成
+                </button>
+              </li>
+              
               <li class="nav-item" role="presentation">
                 <button
                   class="nav-link seller-nav-link"
@@ -65,89 +94,14 @@
                   aria-controls="cancel"
                   aria-selected="false"
                 >
-                  已取消訂單
+                  已取消
                 </button>
               </li>
-              <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link seller-nav-link"
-                  id="shipped-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#bordered-shipped"
-                  type="button"
-                  role="tab"
-                  aria-controls="shipped"
-                  aria-selected="false"
-                >
-                  已出貨訂單
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link seller-nav-link"
-                  id="completed-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#bordered-completed"
-                  type="button"
-                  role="tab"
-                  aria-controls="completed"
-                  aria-selected="false"
-                >
-                  已完成訂單
-                </button>
-              </li>
+              
+              
             </ul>
             
-            
-            
-            
-            
-            <div class="tab-content pt-2" id="borderedTabContent">
-              <div
-                class="tab-pane show active"
-                id="bordered-all-orders"
-                role="tabpanel"
-                aria-labelledby="all-orders-tab"
-              >
-                <div class="container mt-3 container-list-custom">
-                 <div class="row header-row-custom">
-                    <div class="col-2">訂單序號</div>
-                    <div class="col-3">訂單日期</div>
-                    <div class="col-2">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
-                  
-
-                  <!-- Item 1 -->
-                   <div class="row item-row-custom" th:each="productOrderVO : ${productOrderList}">
-                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-3" th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-2" th:text="${productOrderVO.actualPay}"></div>
-                    <div class="col-3" th:text="${productOrderVO.orderStatus}"></div>
-                    <div class="col-2 d-flex flex-column align-items-center"> </div>
-                   
-                 <!--   <form method="post" th:action="@{/front/seller/productorder/confirm}">
-                      <button type="submit"
-                      		 class="product align-self-start btn-func">接受訂單</button>
-                      		 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
-					</form> -->
-                      		 
-                    <!--   <button class="product align-self-start btn-func">
-                        取消訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div> -->
-
-
-
-
-
-
-                  <!-- Item 2 -->
+    <!-- 假資料 -->
                  <!--  <div class="row item-row-custom">
                     <div class="col-2">123456</div>
                     <div class="col-3">2024-02-18</div>
@@ -160,18 +114,69 @@
                     </div>
                   </div>
                 </div> -->
+            
+            
+     <!-- 所有訂單 -->
+     
+     
+            
+           <div class="tab-content pt-2" id="borderedTabContent">
+              <div
+                class="tab-pane show active"
+                id="bordered-all-orders"
+                role="tabpanel"
+                aria-labelledby="all-orders-tab"
+              >
+                <div class="container mt-3 container-list-custom">
+                 <div class="row header-row-custom">
+                    <div class="col-2">訂單序號</div>
+                    <div class="col-2">訂單日期</div>
+                    <div class="col-3">買家實付金額</div>
+                    <div class="col-3">狀態</div>
+                    <div class="col-2">操作</div>
+                  </div>
+                  
+
+                  
+                  <div class="row item-row-custom" th:each="productOrderVO : ${productOrderList}">
+                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+                    <div class="col-3 d-flex flex-column align-items-center"> 
+                   
+                  		  <form method="post" th:action="@{/front/seller/productorder/confirm}">
+                    			  <button type="submit" class="product align-self-start btn-func">
+                      				 接受訂單
+                      			  </button>
+                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+						  </form> 
+                      		
+                      		
+               		      <form method="post" th:action="@{/front/seller/productorder/cancel}">
+                    			  <button class="product align-self-start btn-func">
+                    			  取消訂單
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      
+                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                    			  <button class="product align-self-start btn-func">
+                    			  查看詳情
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      	 
+                      	 </div>
+                    </div>
+                  </div> 
+                 </div>
+
+
+
+                 			
                 
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                <!-- Content for All Orders Tab -->
-              </div>
+    <!-- 未處理 -->
               <div
                 class="tab-pane"
                 id="bordered-pending"
@@ -179,49 +184,52 @@
                 aria-labelledby="pending-tab"
               >
               
-              <div class="container mt-3 container-list-custom">
-                  <div class="row header-row-custom">
+             <div class="container mt-3 container-list-custom">
+                 <div class="row header-row-custom">
                     <div class="col-2">訂單序號</div>
-                    <div class="col-3">訂單日期</div>
-                    <div class="col-2">買家實付金額</div>
+                    <div class="col-2">訂單日期</div>
+                    <div class="col-3">買家實付金額</div>
                     <div class="col-3">狀態</div>
                     <div class="col-2">操作</div>
                   </div>
 
-                  <!-- Item 1 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">等待中<br />待賣家確認</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        接受訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        取消訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
+             	<div class="row item-row-custom" th:each="productOrderVO : ${productOrderPendingConfirm}">
+                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+                    <div class="col-3 d-flex flex-column align-items-center"> 
+                   
+                  		  <form method="post" th:action="@{/front/seller/productorder/confirm}">
+                    			  <button type="submit" class="product align-self-start btn-func">
+                      				 接受訂單
+                      			  </button>
+                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+						  </form> 
+                      		
+                      		
+               		      <form method="post" th:action="@{/front/seller/productorder/cancel}">
+                    			  <button class="product align-self-start btn-func">
+                    			  取消訂單
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      
+                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                    			  <button class="product align-self-start btn-func">
+                    			  查看詳情
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      	 
+                      	 </div>
                     </div>
-                  </div>
-
-                  <!-- Item 2 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">不成立<br />買家不接受</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div>
+                  
                 </div>
-                <!-- Content for Pending Orders Tab -->
               </div>
+              
+              
+    <!-- 處理中 -->
               <div
                 class="tab-pane"
                 id="bordered-shipped"
@@ -231,96 +239,45 @@
               <div class="container mt-3 container-list-custom">
                   <div class="row header-row-custom">
                     <div class="col-2">訂單序號</div>
-                    <div class="col-3">訂單日期</div>
-                    <div class="col-2">買家實付金額</div>
+                    <div class="col-2">訂單日期</div>
+                    <div class="col-3">買家實付金額</div>
                     <div class="col-3">狀態</div>
                     <div class="col-2">操作</div>
                   </div>
 
                   <!-- Item 1 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">等待中<br />待賣家確認</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        接受訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        取消訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
+                  <div class="row item-row-custom" th:each="productOrderVO : ${productOrderSellerProcessing}">
+                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+                    <div class="col-3 d-flex flex-column align-items-center"> 
+                   
+                  		  <form method="post" th:action="@{/front/seller/productorder/shipping}">
+                    			  <button type="submit" class="product align-self-start btn-func">
+                      				 出貨
+                      			  </button>
+                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+						  </form> 
+                      		
+               		     
+                      
+                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                    			  <button class="product align-self-start btn-func">
+                    			  查看詳情
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      	 
+                      	 </div>
                     </div>
-                  </div>
 
-                  <!-- Item 2 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">不成立<br />買家不接受</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div>
+                  
                 </div>
-                <!-- Content for Cancelled Orders Tab -->
               </div>
-              <div
-                class="tab-pane"
-                id="bordered-cancel"
-                role="tabpanel"
-                aria-labelledby="cancel-tab"
-              >
               
-              <div class="container mt-3 container-list-custom">
-                  <div class="row header-row-custom">
-                    <div class="col-2">訂單序號</div>
-                    <div class="col-3">訂單日期</div>
-                    <div class="col-2">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
-
-                  <!-- Item 1 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">等待中<br />待賣家確認</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        接受訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        取消訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Item 2 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">不成立<br />買家不接受</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <!-- Content for Shipped Orders Tab -->
-              </div>
+       
+     <!-- 已完成 -->
               <div
                 class="tab-pane"
                 id="bordered-completed"
@@ -331,47 +288,87 @@
               <div class="container mt-3 container-list-custom">
                   <div class="row header-row-custom">
                     <div class="col-2">訂單序號</div>
-                    <div class="col-3">訂單日期</div>
-                    <div class="col-2">買家實付金額</div>
+                    <div class="col-2">訂單日期</div>
+                    <div class="col-3">買家實付金額</div>
+                    <div class="col-3">狀態</div>
+                    <div class="col-2">操作</div>
+                  </div>
+
+                 <div class="row item-row-custom" th:each="productOrderVO : ${productOrderCompleted}">
+                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+                    <div class="col-3 d-flex flex-column align-items-center"> 
+                   
+                      		
+                      
+                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                    			  <button class="product align-self-start btn-func">
+                    			  查看詳情
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      	 
+                      	 </div>
+                    </div>
+                
+                
+                
+                
+                </div>
+              </div>
+       
+       
+              
+   <!-- 已取消 -->
+                
+                
+              <div
+                class="tab-pane"
+                id="bordered-cancel"
+                role="tabpanel"
+                aria-labelledby="cancel-tab"
+              >
+              
+              <div class="container mt-3 container-list-custom">
+                  <div class="row header-row-custom">
+                    <div class="col-2">訂單序號</div>
+                    <div class="col-2">訂單日期</div>
+                    <div class="col-3">買家實付金額</div>
                     <div class="col-3">狀態</div>
                     <div class="col-2">操作</div>
                   </div>
 
                   <!-- Item 1 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">等待中<br />待賣家確認</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        接受訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        取消訂單
-                      </button>
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
+                 <div class="row item-row-custom" th:each="productOrderVO : ${productOrderCanceled}">
+                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+                    <div class="col-3 d-flex flex-column align-items-center"> 
+                   
+                      		
+                      
+                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                    			  <button class="product align-self-start btn-func">
+                    			  查看詳情
+                    		 	</button>
+                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+                  		  </form>
+                      	 
+                      	 </div>
                     </div>
-                  </div>
 
                   <!-- Item 2 -->
-                  <div class="row item-row-custom">
-                    <div class="col-2">123456</div>
-                    <div class="col-3">2024-02-18</div>
-                    <div class="col-2">50</div>
-                    <div class="col-3">不成立<br />買家不接受</div>
-                    <div class="col-2 d-flex flex-column align-items-center">
-                      <button class="product align-self-start btn-func">
-                        查看詳情
-                      </button>
-                    </div>
-                  </div>
+                 
                 </div>
-                <!-- Content for Completed Orders Tab -->
               </div>
+              
             </div>
+            
+            
+            
             <!-- End Bordered Tabs -->
           </div>
         </div>
