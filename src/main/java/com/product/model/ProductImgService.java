@@ -18,20 +18,26 @@ public class ProductImgService {
 		repository.save(productImgVO);
 	}
 	
-	public void updateProduct(ProductImgVO productImgVO) {
+	public void updateProductImg(ProductImgVO productImgVO) {
 		repository.save(productImgVO);
 	}
 	
-	public void deleteProduct(Integer productId) {
-		if(repository.existsById(productId))
-		   repository.deleteByProductId(productId);
+	public void deleteProductImg(Integer productImgId) {
+		if(repository.existsById(productImgId))
+		   repository.deleteByProductId(productImgId);
 	}
 	
-	public ProductImgVO getOneProduct(Integer productId) {
-		Optional<ProductImgVO> optional = repository.findById(productId);
+	public ProductImgVO getOneProductImg(Integer productImgId) {
+		Optional<ProductImgVO> optional = repository.findById(productImgId);
 		return optional.orElse(null);
 		
 	}
+	
+	public ProductImgVO getProductImgs(ProductVO productId) {
+		Optional<ProductImgVO> optional = repository.findByProductId(productId);
+		return optional.orElse(null);
+	}
+	
 	
 	public List<ProductImgVO> getAll(){
 	
