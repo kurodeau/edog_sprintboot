@@ -5,12 +5,13 @@ package com.product.model;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface ProductRepository extends JpaRepository<ProductVO, Integer> {
+public interface ProductRepository extends JpaRepository<ProductVO, Integer>, JpaSpecificationExecutor<ProductVO> {
 
 	@Transactional
 	@Modifying
@@ -20,5 +21,17 @@ public interface ProductRepository extends JpaRepository<ProductVO, Integer> {
 	
 	@Query("SELECT p FROM ProductVO p WHERE p.productName LIKE %:keyword%")
 	List<ProductVO> findByKeyword(@Param("keyword") String keyword);
+
+
+//	@FindWithOptionalParams
+//	void findProductSortVOProductSortNameInAndTotalStarsInAndProductPriceGreaterThanAndProductPriceLessThanOrKeywordBy(
+////			List<String> animalType, 
+//			List<String> productCategory, 
+//			List<Integer> ratings, 
+//			String priceFrom,
+//			String priceTo, 
+//			String keyword);
+	
+
 
 }

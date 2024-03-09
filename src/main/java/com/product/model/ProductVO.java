@@ -31,19 +31,31 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
     private Integer productId;   
     private byte[] productCoverImg;
     private String productName;    
-    private BigDecimal productPrice;
+    private BigDecimal price;
     private Integer productStockQuantity;   
     private Integer productSoldQuantity;
 	private String productDetails;    
     private String productStatus;
     private Timestamp productCreationTime; 
-    private Integer totalStars;    
+    private Integer ratings;    
     private Integer totalReviews;
     private ProductSortVO productSortVO;
     private Boolean isEnabled;   
     private SellerVO sellerVO;
+    private String animalType;	
     
-    //OnetoMany需要加上
+    
+    
+    @Column(name = "animalType")
+    public String getAnimalType() {
+		return animalType;
+	}
+
+	public void setAnimalType(String animalType) {
+		this.animalType = animalType;
+	}
+
+	//OnetoMany需要加上
     private Set<ProductImgVO> productImgVO = new HashSet<ProductImgVO>();
     
 	
@@ -100,13 +112,13 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.productName = productName;
 	}
 	
-	@Column(name = "productPrice")
-	public BigDecimal getProductPrice() {
-		return productPrice;
+	@Column(name = "price")
+	public BigDecimal getPrice() {
+		return price;
 	}
 
-	public void setProductPrice(BigDecimal productPrice) {
-		this.productPrice = productPrice;
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 	@Column(name = "productStockQuantity")
@@ -145,13 +157,13 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.productCreationTime = productCreationTime;
 	}
 
-	@Column(name = "totalStars")
-	public Integer getTotalStars() {
-		return totalStars;
+	@Column(name = "Ratings")
+	public Integer getRatings() {
+		return ratings;
 	}
 
-	public void setTotalStars(Integer totalStars) {
-		this.totalStars = totalStars;
+	public void setRatings(Integer ratings) {
+		this.ratings = ratings;
 	}
 
 	@Column(name = "totalReviews")
@@ -192,11 +204,11 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	    this.sellerVO = sellerVO;
 	}
 
-    public int compareTo(ProductVO other) {
-        // 根據需要指定比較邏輯
-        // 這裡假設根據商品ID進行比較
-        return this.productId.compareTo(other.getProductId());
-    }
+	@Override
+	public String toString() {
+		return "ProductVO [productId=" + productId + ", productName=" + productName + ", price=" + price + ", ratings="
+				+ ratings + "]";
+	}
 
     // Add getters and setters
 

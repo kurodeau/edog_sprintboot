@@ -96,14 +96,18 @@
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productListData}">
-									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
+										<a th:href="'/product/' + ${productVO.productId}"> <span
+											th:text="${productVO.productId}"></span>
+										</a>
+									</div>
 									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
 									<div class="col-1-5" th:text="${productVO.productName}"></div>
-									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1" th:text="${productVO.Price}"></div>
 									<div class="col-1-5">
 										<span
 											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
@@ -159,14 +163,18 @@
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productSellOut}">
-									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
+										<a th:href="'/product/' + ${productVO.productId}"> <span
+											th:text="${productVO.productId}"></span>
+										</a>
+									</div>
 									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
 									<div class="col-1-5" th:text="${productVO.productName}"></div>
-									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1" th:text="${productVO.Price}"></div>
 									<div class="col-1-5">
 										<span
 											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
@@ -219,14 +227,18 @@
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productUnLaunch}">
-									<div class="col-1-5" th:text="${productVO.productId}"></div>
+									<div class="col-1-5">
+										<a th:href="'/product/' + ${productVO.productId}"> <span
+											th:text="${productVO.productId}"></span>
+										</a>
+									</div>
 									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
 									<div class="col-1-5" th:text="${productVO.productName}"></div>
-									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1" th:text="${productVO.Price}"></div>
 									<div class="col-1-5">
 										<span
 											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
@@ -286,24 +298,23 @@
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productLaunch}">
-									
-									
+
+
 									<div class="col-1-5">
-										<a
-											th:href="'/product/' + ${productVO.productId}">
-											<span th:text="${productVO.productId}"></span>
+										<a th:href="'/product/' + ${productVO.productId}"> <span
+											th:text="${productVO.productId}"></span>
 										</a>
 									</div>
-									
-									
-									
+
+
+
 									<div class="col-1-5">
 										<img
 											th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 											width="100px" />
 									</div>
 									<div class="col-1-5" th:text="${productVO.productName}"></div>
-									<div class="col-1" th:text="${productVO.productPrice}"></div>
+									<div class="col-1" th:text="${productVO.Price}"></div>
 									<div class="col-1-5">
 										<span
 											th:text="${productVO.productStockQuantity + '/' + productVO.productSoldQuantity}"></span>
