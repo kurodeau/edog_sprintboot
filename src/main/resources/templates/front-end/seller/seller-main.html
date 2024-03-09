@@ -11,7 +11,7 @@
     </header>
 
     <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 
     <!-- ======= Main ======= -->
 
@@ -75,8 +75,8 @@
 
     <!-- ======= Footer ======= -->
 
-    <div th:replace="@{fragment-footer}"></div>
-    <div th:replace="@{fragment-js}"></div>
+    <div th:replace="@{/fragment-footer}"></div>
+    <div th:replace="@{/fragment-js}"></div>
     <script>
       window.onload = function () {
         let updateSuccess = document.querySelector("#updateSuccess");
