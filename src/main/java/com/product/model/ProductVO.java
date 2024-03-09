@@ -206,23 +206,25 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	}
 
 	@Override
-	public String toString() {
-		return "ProductVO [productId=" + productId + ", productName=" + productName + ", price=" + price + ", ratings="
-				+ ratings + "]";
+	public int compareTo(ProductVO o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
     // Add getters and setters
 
     // You can also add additional methods or annotations as needed
 
-    @Override
+	@Override
 	public String toString() {
 		return "ProductVO [productId=" + productId + ", productCoverImg=" + Arrays.toString(productCoverImg)
-				+ ", productName=" + productName + ", productPrice=" + productPrice + ", productStockQuantity="
-				+ productStockQuantity + ", productSoldQuantity=" + productSoldQuantity + ", productDetails="
-				+ productDetails + ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime
-				+ ", totalStars=" + totalStars + ", totalReviews=" + totalReviews + ", productSortVO=" + productSortVO
-				+ ", isEnabled=" + isEnabled + ", sellerVO=" + sellerVO + ", productImgVO=" + productImgVO + "]";
+				+ ", productName=" + productName + ", price=" + price + ", productStockQuantity=" + productStockQuantity
+				+ ", productSoldQuantity=" + productSoldQuantity + ", productDetails=" + productDetails
+				+ ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime + ", ratings="
+				+ ratings + ", totalReviews=" + totalReviews + ", productSortVO=" + productSortVO + ", isEnabled="
+				+ isEnabled + ", sellerVO=" + sellerVO + ", animalType=" + animalType + ", productImgVO=" + productImgVO
+				+ "]";
 	}
+    
     
 }
