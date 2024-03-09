@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
+	</header>
+
+
+	<!-- 	這個Script產品專用 -->
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/js/lightslider.min.js"></script>
+
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
+
+	<main class="main main-layout">
+		<!-- ## ListItems -->
+		<div class="container mt-4 container-commidity-custom py-4">
+			<div class="row">
+				<div class="col-6">
+					<div class="container-fluid mt-2 mb-3">
+						<div class="row">
+							<div class="card commidity-card-custom">
+								<ul id="lightSlider">
+									<li data-thumb="https://fakeimg.pl/1000x580/"><img
+										class="img-fluid"
+										th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+										width="100px" /></li>
+										
+									<li th:each="img : ${productVO.productImgVO}"
+										data-thumb="https://fakeimg.pl/1000x580/"><img
+										class="img-fluid"
+										src= "https://fakeimg.pl/1000x580/"
+										width="100px" /></li>
+
+
+
+
+
+
+									<!-- 									<li th:each="img : ${productVO.productImgVO}" -->
+									<!-- 										data-thumb="https://fakeimg.pl/1000x580/"><img -->
+									<!-- 										class="img-fluid" -->
+									<!-- 										th:src="@{/front/seller/product/DBGifReader1(ㄞ)}" -->
+									<!-- 										width="100px" /></li> -->
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-6">
+					<h1 class="fw-bold" th:text=${productVO.productName}>A狗屋</h1>
+					<section class="commidity-details-custom d-flex">
+						<h2 class="fw-bold col-5">商品售價</h2>
+						<h2 class="fw-bold col-7 text-userdark" id="price"
+							th:text="'NT$'+${productVO.Price}"></h2>
+					</section>
+
+					<section class="commidity-details-custom d-flex">
+						<h5 class="fw-bold col-5">庫存</h5>
+						<h5 class="fw-bold col-7" id="stock"
+							th:text=${productVO.productStockQuantity}>50件</h5>
+					</section>
+
+					<section class="commidity-details-custom d-flex">
+						<h5 class="fw-bold col-5">數量</h5>
+						<h5 class="fw-bold col-7" id="orderNum"></h5>
+					</section>
+
+					<section class="commidity-details-custom d-flex">
+						<h5 class="fw-bold col-5">結帳方式</h5>
+						<h5 class="fw-bold col-7" id="orderNum">信用卡</h5>
+					</section>
+
+					<section class="commidity-details-custom d-flex">
+						<h5 class="fw-bold col-5">運費</h5>
+						<h5 class="fw-bold col-7" id="orderNum">NT$ 60</h5>
+					</section>
+
+					<section
+						class="commidity-details-custom d-flex justify-content-start gap-3">
+						<div class="col-auto d-flex">
+							<button class="btn btn-shopcart-custom">
+								<i class="ri-heart-line"></i>&nbsp;&nbsp;加入收藏
+							</button>
+
+							<button class="btn btn-like-custom" style="display: none">
+								<i class="ri-heart-fill"></i>&nbsp;&nbsp;取消收藏
+							</button>
+						</div>
+						<div class="col-auto d-flex">
+							<button class="btn btn-shopcart-custom">
+								<i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
+							</button>
+						</div>
+						<div class="col-auto d-flex">
+							<button class="btn btn-userdark text-white">
+								&nbsp;&nbsp;直接購買</button>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+		<div class="container mt-4 container-commidity-custom">
+			<div class="row">
+				<div class="col-12 bg-user">
+					<h5 class="d-flex mb-0 py-2">商品描述</h5>
+				</div>
+			</div>
+
+			<div class="row py-3">
+				<div class="col-12 text-wrap commidity-desp-custom" id="description"
+					th:text=${productVO.productDetails}></div>
+
+				<div>⚠️為了讓各位有愉快的消費經驗 ⚠️購買前務必詳細閱讀 ◇◆◇◆◇◆◇◆◇下單須知◇◆◇◆◇◆◇◆◇
+					🐻本賣場能下單的商品大部份都是現貨 如遇缺貨會即時告知 🐻商品有任何問題請先聊聊反應 我們會即時處理，切勿以評價作為溝通
+					🐻出貨時間:周一至周五，六日及國定假日是店休日 🐻台灣出貨，非海外賣家，寄出3~4個工作天即到門市 🐻本賣場由蝦皮代開電子發票
+					需要統編的朋友記得在結帳步驟中選填 有任何發票問題都可以直接詢問蝦皮客服</div>
+
+			</div>
+		</div>
+
+		<div class="container mt-4 container-commidity-custom">
+			<div class="row">
+				<div class="col-12 bg-user">
+					<h5 class="d-flex mb-0 py-2">商品評價</h5>
+				</div>
+			</div>
+
+			<div class="row py-3">
+				<div class="col-12 d-flex commidity-rate-custom" id="description">
+					<div
+						class="d-flex align-items-center justify-content-end user-icon">
+						<i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
+					</div>
+					<div class="d-flex flex-column user-comment">
+						<h5 class="comment-account fw-bold mb-0">account1</h5>
+						<div class="comment-star d-flex">
+							<i class="bi bi-star-fill text-userdark"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i>
+						</div>
+						<div class="comment-time">2023-01-1</div>
+					</div>
+					<div class="col-3 user-commentarea d-flex text-wrap">
+						SSSSSSSSSSSS SSSSSSSSS</div>
+				</div>
+				<div class="col-12 d-flex commidity-rate-custom" id="description">
+					<div
+						class="d-flex align-items-center justify-content-end user-icon">
+						<i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
+					</div>
+					<div class="d-flex flex-column user-comment">
+						<h5 class="comment-account fw-bold mb-0">account1</h5>
+						<div class="comment-star d-flex">
+							<i class="bi bi-star-fill text-userdark"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i>
+						</div>
+						<div class="comment-time">2023-01-1</div>
+					</div>
+					<div class="col-3 user-commentarea d-flex text-wrap">
+						SSSSSSSSSSSS SSSSSSSSS</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- End Footer -->
+	<div th:replace="@{fragment-footer}"></div>
+	<div th:replace="@{fragment-js}"></div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			$("#lightSlider").lightSlider({
+				gallery : true,
+				item : 1,
+				loop : true,
+				slideMargin : 50,
+				thumbItem : 6
+			});
+		});
+	</script>
+</body>
+</html>

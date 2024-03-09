@@ -99,16 +99,16 @@ public class IndexControllerMain {
 	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
-		// System.out.println("==============================");
-		// list.forEach(data -> System.out.println(data));
-		// System.out.println("==============================");
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
 		return list;
 	}
 
 	@GetMapping("/seller/register")
 	public String registerSeller(ModelMap model) throws IOException {
 
-		model.addAttribute("verificationCode", "");
+	
 		SellerVO sellerVO = new SellerVO();
 
 		// TEST
@@ -133,8 +133,8 @@ public class IndexControllerMain {
 		sellerVO.setIsConfirm(false);
 
 		model.addAttribute("sellerVO", sellerVO);
-		return "/front-end/seller/seller-register";
-	}
+        return "/front-end/seller/seller-register";
+    }
 
 	@GetMapping({ "/seller/login", "/seller/login/errors" })
 	public String loginSeller(ModelMap model, HttpServletRequest req) throws IOException {
@@ -147,45 +147,47 @@ public class IndexControllerMain {
 		return "front-end/seller/seller-login";
 	}
 
-	@GetMapping("/buyer/register")
-	public String registerBuyer(ModelMap model) throws IOException {
-		BuyerVO buyerVO = new BuyerVO();
-
-		// TEST
-		buyerVO.setMemberEmail("lulu.doe@example.com");
-		buyerVO.setThirdFrom(null);
-		buyerVO.setMemberName("Lulu");
-		buyerVO.setMemberPhone("03123321");
-		buyerVO.setMemberMobile("09777666");
-		buyerVO.setMemberBirthday(null);
-		buyerVO.setMemberAddress("地址");
-		buyerVO.setIsMemberEmail(false);
-
-		java.util.Date utilDate = new java.util.Date();
+    @GetMapping("/buyer/register")
+    public String registerBuyer(ModelMap model) throws IOException {
+    	BuyerVO buyerVO = new BuyerVO();
+    	
+    	// TEST 
+    	buyerVO.setMemberEmail("lulu.doe@example.com");
+    	buyerVO.setThirdFrom(null);
+    	buyerVO.setMemberName("Lulu");
+    	buyerVO.setMemberPhone("03123321");
+    	buyerVO.setMemberMobile("09777666");
+    	buyerVO.setMemberBirthday(null);
+    	buyerVO.setMemberAddress("地址");
+    	buyerVO.setIsMemberEmail(false);
+    	
+    	java.util.Date utilDate = new java.util.Date();
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		buyerVO.setMemberRegistrationTime(sqlDate);
-		buyerVO.setPetName("寵物啦");
-		buyerVO.setPetImg(null);
-		buyerVO.setPetImgUploadTime(null);
-		buyerVO.setPetVaccName1(null);
-		buyerVO.setPetVaccTime1(null);
-		buyerVO.setPetVaccName2(null);
-		buyerVO.setPetVaccTime2(null);
-
-		// 防止被修改
-		buyerVO.setMemberPassword(null);
-		buyerVO.setIsConfirm(true);
-
+    	buyerVO.setMemberRegistrationTime( sqlDate );
+    	buyerVO.setPetName("寵物啦");
+    	buyerVO.setPetImg(null);
+    	buyerVO.setPetImgUploadTime(null);
+    	buyerVO.setPetVaccName1(null);
+    	buyerVO.setPetVaccTime1(null);
+    	buyerVO.setPetVaccName2(null);
+    	buyerVO.setPetVaccTime2(null);
+   	
+    	    
+    	// 防止被修改
+    	buyerVO.setMemberPassword(null);
+    	buyerVO.setIsConfirm(true);
+    	    
 		model.addAttribute("buyerVO", buyerVO);
-		return "/front-end/buyer/buyer-register";
-	}
-
-	@GetMapping("/buyer/login")
-	public String loginBuyer(ModelMap model) throws IOException {
-		return "/front-end/buyer/buyer-login";
-	}
-
-	@PostMapping("/seller/register/checkVerificationCode")
+        return "/front-end/buyer/buyer-register";
+    }   
+    
+    
+    @GetMapping("/buyer/login")
+    public String loginBuyer(ModelMap model) throws IOException {
+        return "/front-end/buyer/buyer-login";
+    }
+    
+    @PostMapping("/seller/register/checkVerificationCode")
 	public ResponseEntity<?> checkVerificationCode(@RequestBody String json) {
 		JSONObject jsonObj = new JSONObject(json);
 		String email = (String) jsonObj.get("email");
@@ -380,14 +382,110 @@ public class IndexControllerMain {
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		
-		
 		SellerVO sellerVO = sellerSvc.getById(sellerId);
 		sellerVO.setSellerPassword(form.getPassword());
 		sellerSvc.updateUserDetails(sellerVO);
-	
-		
-
 		return "redirect:/seller/login";
 	}
+	
+	    @GetMapping("/product/{id}")
+    public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
+    	Integer productId =null;
+    	try {
+    	 productId = Integer.valueOf(id);
+    	} catch (NumberFormatException e) {
+//    		e.printStackTrace();
+    		return "/";
+    	}
+    	
+    	ProductVO productVO = productSvc.getOneProduct(productId);
+    	
+    	
+    	model.addAttribute("productVO",productVO);
+        // 使用從URL獲取的id參數執行你的邏輯
+        // 在這裡，你可以使用id來進行相應的處理，例如查找特定商品
+    	
+        return "/front-end/buyer/buyer-commidity";
+    }
+    
+    
+    
+    @GetMapping("/test")
+    public String loginBuyer2( ModelMap model) throws IOException {
+    
+        return "/front-end/buyer/buyer-commidityV2";
+    }
+    
+	@PostMapping("/search")
+	public ResponseEntity<?>  seachProducts(@RequestBody FormData formData) {
+		
+		System.out.println(formData);
+		
+		List<ProductVO> prodList = productSvc.compositeQuery(formData);
+		System.out.println("Size = " + prodList.size());
+		prodList.forEach(System.out::println);
+		
+		productSvc.getBy(formData.getAnimalType(),
+				formData.getProductCategory(),
+				formData.getRatings(),
+				formData.getPriceFrom(),
+				formData.getPriceTo(),
+				formData.getKeyword()
+				);
+		
+		return ResponseEntity.ok(formData);
+	}
+	
+	
+	public static class FormData {
+	    public List<String> getAnimalType() {
+			return animalType;
+		}
+		public void setAnimalType(List<String> animalType) {
+			this.animalType = animalType;
+		}
+		public List<String> getProductCategory() {
+			return productCategory;
+		}
+		public void setProductCategory(List<String> productCategory) {
+			this.productCategory = productCategory;
+		}
+		public List<Integer> getRatings() {
+			return ratings;
+		}
+		public void setRatings(List<Integer> ratings) {
+			this.ratings = ratings;
+		}
+		public String getPriceFrom() {
+			return priceFrom;
+		}
+		public void setPriceFrom(String priceFrom) {
+			this.priceFrom = priceFrom;
+		}
+		public String getPriceTo() {
+			return priceTo;
+		}
+		public void setPriceTo(String priceTo) {
+			this.priceTo = priceTo;
+		}
+		public String getKeyword() {
+			return keyword;
+		}
+		public void setKeyword(String keyword) {
+			this.keyword = keyword;
+		}
+		@Override
+		public String toString() {
+			return "FormData [animalType=" + animalType + ", productCategory=" + productCategory + ", ratings="
+					+ ratings + ", priceFrom=" + priceFrom + ", priceTo=" + priceTo + ", keyword=" + keyword + "]";
+		}
+		private List<String> animalType;
+	    private List<String> productCategory;
+	    private List<Integer> ratings;
+	    private String priceFrom;
+	    private String priceTo;
+	    private String keyword;
+
+	}
+
 }
