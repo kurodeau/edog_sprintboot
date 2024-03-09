@@ -101,7 +101,7 @@
 				style="width: 100%">
 				<tbody>
 					<th:block th:each="articleVO : ${articleListData}">
-						<tr class="forum-article" th:onclick="'redirectToUpdatePage(\'' + @{/article/getOne(id=${articleVO.articleId})} + '\')'">
+						<tr th:if="${articleVO.isEnabled}" class="forum-article" th:onclick="'redirectToUpdatePage(\'' + @{/article/getOne(id=${articleVO.articleId})} + '\')'">
 						<td style="display: none;" th:text="${articleVO.articleId}"></td>
 							<td class="avatar-category">
 						        <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span>
@@ -114,7 +114,8 @@
 						        <i class="bi bi-chat-dots"></i>
 						        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
 						    
-							<span class="post-time time" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							<span class="post-time time" th:if="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')} + ' 更新'"></span>
+							<span class="post-time time" th:unless="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
 							</td>
 						</tr>
 					</th:block>

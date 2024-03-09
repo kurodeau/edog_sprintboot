@@ -167,6 +167,10 @@ public class ArticleController {
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(articleVO, result, "upFiles");
 		articleVO.setArtUpdateTime(new Date());
+		articleVO.setArtCreateTime(null);
+		articleVO.setArticleLike(0);
+		articleVO.setArticleComment(0);
+		articleVO.setIsEnabled(true);
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
 			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
 		} else {
@@ -274,6 +278,7 @@ public class ArticleController {
 		if (result.hasErrors()) {
 			return "front-end/article/article-edit";
 		}
+		
 		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始修改資料 *****************************************/
 		// EmpService empSvc = new EmpService();

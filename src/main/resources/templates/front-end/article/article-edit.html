@@ -96,16 +96,16 @@
 			<div style="margin-top: 30px;">
 				<form th:action="@{update}" method="post" th:object="${articleVO}"
 					enctype="multipart/form-data">
+					
 					<div class="hide">
-			<label>文章編號:</label>
-			<input type="text" th:field="*{articleId}" style="border:0px ; font-weight: bold;" readonly /><br/>
-
-			</div>
-			<div class="hide">
-			<label>會員編號:</label>
-			<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly /><br/>
-
-			</div>
+					<label>文章編號:</label>
+					<input type="text" th:field="*{articleId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+					</div>
+					
+					<div class="hide">
+					<label>會員編號:</label>
+					<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+					</div>
 
 					<div>
 						<input id="title" type="text" th:field="*{articleTitle}" onclick="hideContent('articleTitle.errors');" required /> 
@@ -122,14 +122,14 @@
 							id="articleContent.errors"></span>
 					</div>
 
-					<!-- 			<div class="hide"> -->
-					<!-- 			<label>上傳時間:</label> -->
-					<!-- 			<input type="date" th:field="*{artCreateUpdateTime}" onclick="hideContent('artUpdateTime.errors');" /><br/> -->
-					<!-- 			</div> -->
-
-
 					<div class="hide">
 						<label>上傳時間:</label> <input type="date"
+							th:field="*{artCreateTime}"
+							onclick="hideContent('artCreateTime.errors');" /><br />
+					</div>
+					
+					<div class="hide">
+						<label>更新時間:</label> <input type="date"
 							th:field="*{artUpdateTime}"
 							onclick="hideContent('artUpdateTime.errors');" /><br />
 					</div>
@@ -147,19 +147,7 @@
 							name="articleComment"
 							onclick="hideContent('articleComment.errors');" /><br />
 					</div>
-					<div class="hide">
-						<label>分享數:</label> <input type="text"
-							th:value="*{articleShare == null ? '0' : articleShare}"
-							name="articleShare" onclick="hideContent('articleShare.errors');" /><br />
-					</div>
-					<div class="hide">
-						<label>啟用:</label> <select th:field="*{isEnabled}"
-							onchange="hideContent('isEnabled.errors');">
-							<option th:value="true" th:text="是"></option>
-							<option th:value="false" th:text="否"></option>
-						</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
-							th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
-					</div>
+					
 
 					<div style="display: flex; align-items: center; justify-content: space-between;">
 					
@@ -174,7 +162,7 @@
 							<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
 							<div id="blob_holder"><img th:if="${articleVO.upFiles != null}" th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></div>
 						</div>
-
+						
 						<div style="display: flex; align-items: center;">
 							<div style="margin-right: 10px;">
 								<label>文章分類:</label>
@@ -191,7 +179,15 @@
 									id="articleTypeVO.articleTypeId.errors"></span>
 							</div>
 						</div>
-
+						
+						<div style="display: flex; align-items: center;">
+							<select class="form-select" th:field="*{isEnabled}"
+								onchange="hideContent('isEnabled.errors');">
+								<option th:value="true" th:text="顯示文章"></option>
+								<option th:value="false" th:text="隱藏文章"></option>
+							</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
+								th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
+						</div>
 
 						<div>
 							<div

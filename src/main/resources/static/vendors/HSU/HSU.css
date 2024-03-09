@@ -30,6 +30,10 @@
         color: #6cb7e6; /* 鼠标移过时图标颜色变为蓝色 */
         cursor: pointer; /* 鼠标移过时鼠标形状变为手指形状 */
     }
+.articleType:hover {
+        color: #43d196; /* 鼠标移过时图标颜色变为蓝色 */
+        cursor: pointer; /* 鼠标移过时鼠标形状变为手指形状 */
+    }
 .category-options {
   /* 這裡放上點點的樣式 */
 }
@@ -114,7 +118,9 @@ display:flex;
     color: black; /* 未喜欢状态 */
     cursor: pointer;
 }
-
+.bi-suit-heart-fill{
+	color: red;
+}
 /* 喜欢状态样式 */
 .like-btn.liked {
     color: red; /* 喜欢状态 */

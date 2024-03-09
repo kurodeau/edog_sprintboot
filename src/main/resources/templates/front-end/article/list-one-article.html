@@ -94,29 +94,30 @@
 			<div style="margin-top: 30px;" th:fragment="listOneArticle-div">
 				<!-- 				<span th:text="${articleVO.articleId}"></span><br/> -->
 				<div class="article-info-container">
-    <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
-    
-    <hr>
-    
-    <span class="title-category"> 
-        <span class="article-title" th:text="${articleVO.articleTitle}"></span> 
-        <span class="category-name" th:text="${articleVO.articleTypeVO.articleTypeName}"></span>
-    </span> 
-    
-    <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
-    <span><img th:if="${articleVO.upFiles != null}"
-        th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
-        width="100px"></span><br/>
-
-    <div class="interaction-section">
-        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
-        <span class="article-like" th:text="${articleVO.articleLike}"></span>
-        <i class="bi bi-chat-dots" id="commentIcon"></i>
-        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
-        <i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
-        <span class="post-time time" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
-    </div>
-</div>
+				    <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
+				    
+				    <hr>
+				    
+				    <span class="title-category"> 
+				        <span class="article-title" th:text="${articleVO.articleTitle}"></span> 
+				        <span class="category-name articleType" th:text="${articleVO.articleTypeVO.articleTypeName}"th:onclick="'redirectToUpdatePage(\'' + @{/article/TypeList(id=${articleVO.articleTypeVO.articleTypeId})} + '\')'"></span>
+				    </span> 
+				    
+				    <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
+				    <span><img th:if="${articleVO.upFiles != null}"
+				        th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
+				        width="100px"></span><br/>
+				
+				    <div class="interaction-section">
+				        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
+				        <span class="article-like" th:text="${articleVO.articleLike}"></span>
+				        <i class="bi bi-chat-dots" id="commentIcon"></i>
+				        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
+				        <i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
+				        <span class="post-time time" th:if="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')} + ' 更新'"></span>
+						<span class="post-time time" th:unless="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				    </div>
+				</div>
 
 <hr style="margin-top: 10px; width: 600px;">
 				<table id="example" class="display" style="width: 100%">
@@ -132,7 +133,7 @@
                         </div>
                     <div class="interaction-section">
                         <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
-                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId"></i>
+                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
                         <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
                         <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
                         <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
@@ -146,16 +147,12 @@
 
 				
 			<div class="comment-input-container" style="margin-top: 20px;">
-    <div id="commentInput" style="position: relative;">
-        <textarea id="commentInputtext" required placeholder="留言..." style="flex: 1; resize: none;"></textarea>
-       <i class="bi bi-send" id="sendCommentBtn" style="cursor: not-allowed; position: absolute; bottom: 5px; right: 5px;"></i>
-    </div>
-</div>
+			    <div id="commentInput" style="position: relative;">
+			        <textarea id="commentInputtext" required placeholder="留言..." style="flex: 1; resize: none;"></textarea>
+			       <i class="bi bi-send" id="sendCommentBtn" style="cursor: not-allowed; position: absolute; bottom: 5px; right: 5px;"></i>
+			    </div>
+			</div>
 
-
-
-
-				
 			</div>
 		</div>
 		
@@ -417,10 +414,13 @@ $('.like-btn').click(function() {
             }
         });
     }
-
+    
     // 打印文章ID到控制台
     console.log('Article ID:', articleId);
 });
+
+
+
 
 
 //留言喜歡
@@ -432,7 +432,7 @@ $('.reply-like-btn').click(function() {
     var isLiked = $(this).hasClass('liked');
     
     // 获取文章ID
-    var replyId = $('.report-reply-button').attr('id');
+    var replyId = $(this).attr('id');
     
     if (isLiked) {
         // 如果已经喜欢，取消喜欢
@@ -548,6 +548,86 @@ document.getElementById('sendCommentBtn').addEventListener('click', function() {
     // 发送请求并将评论内容和文章 ID 作为参数发送
     xhr.send('commentContent=' + encodeURIComponent(commentContent) + '&articleId=' + encodeURIComponent(articleId));
 });
+const likeBtn = document.querySelector('.like-btn');
+
+//定义变量来跟踪按钮的喜爱状态
+let isLiked = false;
+
+//添加点击事件监听器
+likeBtn.addEventListener('click', function() {
+ // 切换填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ } else {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+ // 切换喜爱状态
+ isLiked = !isLiked;
+});
+
+//添加鼠标移入事件监听器
+likeBtn.addEventListener('mouseover', function() {
+ // 如果按钮处于喜爱状态，则保持填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+});
+
+//添加鼠标移出事件监听器
+likeBtn.addEventListener('mouseout', function() {
+ // 如果按钮处于非喜爱状态，则恢复为空心
+ if (!isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ }
+});
+
+	// 获取所有留言的 tr 元素
+	const replyRows = document.querySelectorAll('#example tbody tr');
+
+// 遍历每个留言的 tr 元素
+replyRows.forEach(function(replyRow) {
+    // 获取当前留言的愛心图标元素
+    const replylikeBtn = replyRow.querySelector('.reply-like-btn');
+
+    // 定义变量来跟踪愛心状态
+    let isLiked = false;
+
+    // 为愛心图标添加点击事件监听器
+    replylikeBtn.addEventListener('click', function() {
+        // 根据愛心状态切换填充状态
+        if (isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        } else {
+        	replylikeBtn.classList.remove('bi-suit-heart');
+        	replylikeBtn.classList.add('bi-suit-heart-fill');
+        }
+        // 切换愛心状态
+        isLiked = !isLiked;
+    });
+
+    // 为愛心图标添加鼠标移入事件监听器
+    replylikeBtn.addEventListener('mouseover', function() {
+        // 将愛心图标变为实心
+        replylikeBtn.classList.remove('bi-suit-heart');
+        replylikeBtn.classList.add('bi-suit-heart-fill');
+    });
+
+    // 为愛心图标添加鼠标移出事件监听器
+    replylikeBtn.addEventListener('mouseout', function() {
+        // 如果愛心处于空心状态则恢复为空心
+        if (!isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        }
+    });
+});
+
+
 
 	</script>
 </body>

@@ -127,45 +127,6 @@
 							id="articleContent.errors"></span>
 					</div>
 
-					<!-- 			<div class="hide"> -->
-					<!-- 			<label>上傳時間:</label> -->
-					<!-- 			<input type="date" th:field="*{artCreateUpdateTime}" onclick="hideContent('artUpdateTime.errors');" /><br/> -->
-					<!-- 			</div> -->
-
-
-					<div class="hide">
-						<label>上傳時間:</label> <input type="date"
-							th:field="*{artUpdateTime}"
-							onclick="hideContent('artUpdateTime.errors');" /><br />
-					</div>
-
-
-					<div class="hide">
-						<label>喜歡數:</label> <input type="text"
-							th:value="*{articleLike == null ? '0' : articleLike}"
-							name="articleLike" onclick="hideContent('articleLike.errors');" /><br />
-					</div>
-
-					<div class="hide">
-						<label>留言數:</label> <input type="text"
-							th:value="*{articleComment == null ? '0' : articleComment}"
-							name="articleComment"
-							onclick="hideContent('articleComment.errors');" /><br />
-					</div>
-					<div class="hide">
-						<label>分享數:</label> <input type="text"
-							th:value="*{articleShare == null ? '0' : articleShare}"
-							name="articleShare" onclick="hideContent('articleShare.errors');" /><br />
-					</div>
-					<div class="hide">
-						<label>啟用:</label> <select th:field="*{isEnabled}"
-							onchange="hideContent('isEnabled.errors');">
-							<option th:value="true" th:text="是"></option>
-							<option th:value="false" th:text="否"></option>
-						</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
-							th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
-					</div>
-
 					<div
 						style="display: flex; align-items: center; justify-content: space-between;">
 						<div>

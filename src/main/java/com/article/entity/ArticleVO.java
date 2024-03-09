@@ -50,7 +50,7 @@ public class ArticleVO implements java.io.Serializable {
     private String articleContent;
     private Integer articleLike;
     private Integer articleComment;
-    private Integer articleShare; 
+    private Date artCreateTime; 
     private Date artUpdateTime; 
     private ArticleTypeVO articleTypeVO;
     private Boolean isEnabled;
@@ -110,6 +110,17 @@ public class ArticleVO implements java.io.Serializable {
         this.articleContent = articleContent;
     }
 
+    @Column(name = "artCreateTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    public Date getArtCreateTime() {
+    	return this.artCreateTime;
+    }
+    
+    public void setArtCreateTime(Date artCreateTime) {
+    	this.artCreateTime = artCreateTime;
+    }
+    
     @Column(name = "artUpdateTime")
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -139,15 +150,6 @@ public class ArticleVO implements java.io.Serializable {
         this.articleComment = articleComment;
     }
     
-    @Column(name = "articleShare")
-    public Integer getArticleShare() {
-        return this.articleShare;
-    }
-    
-    public void setArticleShare(Integer articleShare) {
-        this.articleShare = articleShare;
-    }
-
     public Boolean getIsEnabled() {
         return this.isEnabled;
     }
