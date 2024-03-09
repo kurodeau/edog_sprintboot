@@ -156,15 +156,37 @@ public class IndexControllerMain {
     	
         return "/front-end/buyer/buyer-commidity";
     }
+    
+    
+    
+    @GetMapping("/test")
+    public String loginBuyer2( ModelMap model) throws IOException {
+    
+        return "/front-end/buyer/buyer-commidityV2";
+    }
+    
 	@PostMapping("/search")
 	public ResponseEntity<?>  seachProducts(@RequestBody FormData formData) {
+		
 		System.out.println(formData);
+		
+		List<ProductVO> prodList = productSvc.compositeQuery(formData);
+		System.out.println("Size = " + prodList.size());
+		prodList.forEach(System.out::println);
+		
+		productSvc.getBy(formData.getAnimalType(),
+				formData.getProductCategory(),
+				formData.getRatings(),
+				formData.getPriceFrom(),
+				formData.getPriceTo(),
+				formData.getKeyword()
+				);
 		
 		return ResponseEntity.ok(formData);
 	}
 	
 	
-	static class FormData {
+	public static class FormData {
 	    public List<String> getAnimalType() {
 			return animalType;
 		}
@@ -214,5 +236,7 @@ public class IndexControllerMain {
 	    private String keyword;
 
 	}
+	
+	
     
 }
