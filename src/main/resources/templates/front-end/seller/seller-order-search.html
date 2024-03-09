@@ -34,7 +34,7 @@
           
           
           <tbody>
-            <th:block th:each="productOrderVO : ${productOrderList}">
+            <th:block th:each="productOrderVO : ${sellerProductOrderList}">
               <tr>
                 <td class="text-center" th:text="${productOrderVO.orderId}"></td>
                 <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
