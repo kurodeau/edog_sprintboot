@@ -2,16 +2,14 @@ package com.productorder.controller;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ad.model.AdVO;
+import com.orderdetails.model.OrderDetailsService;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
@@ -36,14 +34,15 @@ public class ProductOrderIdController {
 	
 	@Autowired
 	ProductOrderService productOrderSvc;
-	
+	@Autowired
+	OrderDetailsService orderDetailsSvc;
 	/*
 	 * This method will be called on select_page.html form submission, handling POST
 	 * request It also validates the user input
 	 */
 	
-	@GetMapping("productorderlist") 
-	public String selleradlist(Model model){
+	@GetMapping("sellerproductorderlistall") 
+	public String sellerProductOrderlist(Model model){
         return "front-end/seller/seller-order-overall";
     }
 	
@@ -51,6 +50,28 @@ public class ProductOrderIdController {
 	public String productordersearch(Model model){
         return "front-end/seller/seller-order-search";
     }
+	
+	@GetMapping("getOrderdetails") 
+	public String getOneOrderdetails(@RequestParam("orderId")  String orderId, ModelMap model) {
+		
+		List <OrderDetailsVO> orderdetails = null;
+			try {
+				orderdetails = orderDetailsSvc.findByOrderId(Integer.valueOf(orderId));
+
+			} catch (NumberFormatException e) {
+				model.addAttribute("errorMessage", "Invalid orderId format");
+				return "errorPage";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+//			System.out.println("==============XXXXXXXXXXXXXX");
+//			System.out.println("getOne_For_Update");
+//			System.out.println(sellerLvVO);
+//			System.out.println("==============XXXXXXXXXXXXXX");
+			model.addAttribute("Orderdetails", orderdetails);
+			return "front-end/seller/seller-orderdetails-searchforone";
+
+		}
 	
 	
 	@PostMapping("getOne_For_Display")
@@ -87,13 +108,60 @@ public class ProductOrderIdController {
 	
 /////////////////// ModelAttribute /////////////////////////////////
 	
-	@ModelAttribute("productOrderList") 
-	protected List<ProductOrderVO> productOrderList(Model model) {
+	//顯示所有的訂單
+	@ModelAttribute("allProductOrder") 
+	protected List<ProductOrderVO> allProductOrder(Model model) {
 		
     	List<ProductOrderVO> list = productOrderSvc.getAll();
 		return list;
 	}
 	
+////賣家訂單管理//////////////////////////////////////////////////////
+	
+	//顯示所有訂單
+	@ModelAttribute("sellerProductOrderList") 
+	protected List<ProductOrderVO> sellerProductOrderList(Integer sellerId,Model model) {
+		sellerId =1;
+		List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerId);
+		return list;
+	}
+	
+	//顯示未處理訂單
+	@ModelAttribute("sellerProductOrderPendingConfirm") 
+	protected List<ProductOrderVO> sellerProductOrderPendingConfirm(Integer sellerId, Model model) {
+		sellerId =1;
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderPendingConfirm(sellerId);
+		return list;
+	}
+	
+	//顯示處理中訂單
+	@ModelAttribute("sellerProductOrderSellerProcessing")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	protected List<ProductOrderVO> sellerProductOrderSellerProcessing(Integer sellerId, Model model) {
+		sellerId =1;
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
+		return list;
+	}
+	
+	//顯示已完成訂單
+	@ModelAttribute("sellerProductOrderCompleted") 
+	protected List<ProductOrderVO> getSellerProductOrderCompleted(Integer sellerId, Model model) {
+		sellerId =1;
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCompleted(sellerId);
+		return list;
+	}
+	
+	//顯示已取消訂單
+	@ModelAttribute("sellerProductOrderCanceled") 
+	protected List<ProductOrderVO> getSellerProductOrderCanceled(Integer sellerId, Model model) {
+		sellerId =1;
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
+		return list;
+	}
+	
+	
+	
+	
+///平台管理//////////////////////////////////////////////////////
 	@ModelAttribute("productOrderPendingConfirm")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
 	protected List<ProductOrderVO> productOrderPendingConfirm(Model model) {
 		

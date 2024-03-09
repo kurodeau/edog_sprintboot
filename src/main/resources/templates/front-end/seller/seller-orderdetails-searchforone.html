@@ -15,7 +15,7 @@
     <main class="main main-layout-seller">
       <div class="seller-container">
         <div class="pagetitle">
-          <h1>訂單查詢</h1>
+          <h1>訂單明細查詢</h1>
         </div>
         <table
           id="example"
@@ -24,30 +24,29 @@
         >
           <thead>
             <tr>
-              <th class="text-center">訂單序號</th>
-              <th class="text-center">建立時間</th>
-              <th class="text-center">買家實付金額</th>
-              <th class="text-center">狀態</th>
-              <th class="text-center">操作</th>
+              <th class="text-center">訂單編號</th>
+              <th class="text-center">商品編號</th>
+              <!-- 這邊串接以後會加入商品名稱 -->
+              <th class="text-center">商品購買數量</th>
+              <th class="text-center">已評論</th>
+              <th class="text-center">評分星數</th>
+              <th class="text-center">評論時間</th>
+              <th class="text-center">評論內容</th>
             </tr>
           </thead>
           
           
           <tbody>
-            <th:block th:each="productOrderVO : ${productOrderList}">
+            <th:block th:each="orderDetailsVO : ${Orderdetails}">
               <tr>
-                <td class="text-center" th:text="${productOrderVO.orderId}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
-                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
-                <td class="text-center" >
-                  <a
-                    class="btn"
-                    th:href="@{getOrderdetails(orderId=${productOrderVO.orderId})}"
-                    >查看詳情</a
-                  >
-                  
-                </td>
+                <td class="text-center" th:text="${orderDetailsVO.productOrderVO.orderId}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.productId}"></td>
+                <!-- 這裡會加入商品名稱 -->
+                <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '無'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? orderDetailsVO.commentedTime : '無'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.comments != null ? orderDetailsVO.comments : '尚無評論'}"></td>
               </tr>
             </th:block>
           </tbody>
