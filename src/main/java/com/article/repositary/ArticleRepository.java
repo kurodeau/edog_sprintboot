@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.article.entity.ArticleVO;
 import com.articleType.entity.ArticleTypeVO;
+import com.buyer.entity.BuyerVO;
 
 public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 
@@ -20,5 +21,11 @@ public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 	void deleteByArticleId(int articleId);
 	
 	List<ArticleVO> findByArticleTypeVO(ArticleTypeVO articleTypeVO);
+	
+	List<ArticleVO> findByBuyerVO(BuyerVO buyerVO);
+	
+	List<ArticleVO> findByArticleTitleContaining(String articleTitle);
+
+
 
 }
