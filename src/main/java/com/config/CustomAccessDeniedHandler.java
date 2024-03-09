@@ -25,7 +25,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
 		   
-		   
 		   // 处理 AccessDeniedException 的逻辑
 	        response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 设置HTTP状态码为403
 	        // 处理 AccessDeniedException 的逻辑

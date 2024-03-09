@@ -24,6 +24,9 @@ public interface SellerService {
 
     SellerVO findByOnlyOneEmail(String email);
     
-    
+    SellerVO findByOnlyPhone(String phone);
+
+    void updateUserDetails(SellerVO sellerVO);
+
      void saveUserDetails(SellerVO sellerVO);
 }

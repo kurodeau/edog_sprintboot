@@ -25,6 +25,10 @@ public interface SellerRepository extends JpaRepository<SellerVO, Integer>{
 	
 	 @Query(value = "FROM SellerVO WHERE sellerEmail = :email")
 	 SellerVO findByEmail(String email);
+	 
+	 
+	 @Query(value = "FROM SellerVO WHERE sellerMobile = :phone")
+	 SellerVO findByOnlyPhone(String phone);
 
 }
 

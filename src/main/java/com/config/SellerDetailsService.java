@@ -34,10 +34,7 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	@Autowired
 	SellerRepository sellerRepo;
 
-	@Override
-	public void createUser(UserDetails user) {
 
-	}
 	
 	public void createUser(UserDetails user,SellerVO sellerVO) {
 	
@@ -46,8 +43,6 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 		sellerVO.setSellerPassword(sellerPasswordEncoder.encode(user.getPassword()));
 		sellerVO.setIsConfirm(true);
 
-		
-		
 		
 		sellerRepo.save(sellerVO);
 	}
@@ -64,9 +59,18 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	@Override
 	public void deleteUser(String username) {
 	}
+	
+	public void changePassword(UserDetails user,SellerVO sellerVO) {
+		sellerVO.setSellerPassword(sellerPasswordEncoder.encode(user.getPassword()));
+
+		sellerRepo.save(sellerVO);
+	}
+
 
 	@Override
 	public void changePassword(String oldPassword, String newPassword) {
+		
+		
 	}
 
 	@Override
@@ -119,6 +123,12 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 	        );
 	    }
 
+	}
+
+	@Override
+	public void createUser(UserDetails user) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

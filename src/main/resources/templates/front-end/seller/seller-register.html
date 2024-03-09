@@ -1,425 +1,292 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-	
-    <!-- ======= Main ======= -->
-    <main class="main-nosidebar">
-      <div class="container-fluid seller-container">
-        <h1>註冊賣家資料</h1>
 
-        <form
-          class="row g-3"
-          id="myForm"
-          th:action="@{/seller/register/check}"
-          th:object="${sellerVO}"
-          method="post"
-          enctype="multipart/form-data"
-          onsubmit="return updateHiddenFields();"
-        >
-          <div class="col-md-12">
-            <label for="sellerLvId" class="form-label">賣家等級</label>
-            <div class="col-md-2">
-              <select
-                class="form-select"
-                name="sellerLvId"
-                id="sellerLvId"
-                th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}"
-              >
-                <option
-                  th:each="sellerLv : ${sellerLvListData}"
-                  th:value="${sellerLv.getSellerLvId()}"
-                  th:text="${sellerLv.getLvName()}"
-                ></option>
-              </select>
-            </div>
-          </div>
+	<!-- ======= Main ======= -->
+	<main class="main-nosidebar">
+		<div class="container-fluid seller-container">
+			<h1>註冊賣家資料</h1>
 
-          <div class="col-md-12">
-            <label for="inputSellerId" class="form-label">公司名稱</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputSellerCompany"
-              name="sellerCompany"
-              th:field="*{sellerCompany}"
-              aria-describedby="sellerCompanyFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''"
-            />
-            <div id="sellerCompanyFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompany')}"
-                th:errors="*{sellerCompany}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+			<form class="row g-3" id="myForm"
+				th:action="@{/seller/register/check}" th:object="${sellerVO}"
+				method="post" enctype="multipart/form-data"
+				onsubmit="return updateHiddenFields();">
+				<div class="col-md-12">
+					<label for="sellerLvId" class="form-label">賣家等級</label>
+					<div class="col-md-2">
+						<select class="form-select" name="sellerLvId" id="sellerLvId"
+							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
+							<option th:each="sellerLv : ${sellerLvListData}"
+								th:value="${sellerLv.getSellerLvId()}"
+								th:text="${sellerLv.getLvName()}"></option>
+						</select>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerContact" class="form-label"
-              >公司負責人</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerContact"
-              name="sellerContact"
-              th:value="${sellerVO.sellerContact}"
-              aria-describedby="sellerContactFeedback"
-              th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputSellerId" class="form-label">公司名稱</label> <input
+						type="text" class="form-control" id="inputSellerCompany"
+						name="sellerCompany" th:field="*{sellerCompany}"
+						aria-describedby="sellerCompanyFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''" />
+					<div id="sellerCompanyFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompany')}"
+							th:errors="*{sellerCompany}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerContactFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerContact')}"
-                th:errors="*{sellerContact}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputsellerContact" class="form-label">公司負責人</label> <input
+						type="text" class="form-control" id="inputsellerContact"
+						name="sellerContact" th:value="${sellerVO.sellerContact}"
+						aria-describedby="sellerContactFeedback"
+						th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''" />
 
-          <div class="col-md-12">
-            <label for="inputsellerEmail" class="form-label">電子郵件</label>
-            <input
-              type="email"
-              class="form-control"
-              id="inputsellerEmail"
-              name="sellerEmail"
-              th:value="${sellerVO.sellerEmail}"
-              aria-describedby="sellerEmailFeedback"
-              th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''"
-            />
+					<div id="sellerContactFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerContact')}"
+							th:errors="*{sellerContact}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerEmailFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerEmail')}"
-                th:errors="*{sellerEmail}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="d-flex align-self-end align-items-end">
+					<div class="col-md-6">
+						<label for="inputsellerEmail" class="form-label">電子郵件</label> <input
+							type="email" class="form-control" id="inputsellerEmail"
+							name="sellerEmail" th:value="${sellerVO.sellerEmail}"
+							aria-describedby="sellerEmailFeedback"
+							th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''" />
 
-          <div class="col-md-12">
-            <label for="inputsellerTaxId" class="form-label">統一編號</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerTaxId"
-              name="sellerTaxId"
-              th:value="${sellerVO.sellerTaxId}"
-              aria-describedby="sellerTaxIdFeedback"
-              th:classappend="${#fields.hasErrors('sellerTaxId')} ? 'is-invalid' : ''"
-            />
 
-            <div id="sellerTaxIdFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerTaxId')}"
-                th:errors="*{sellerTaxId}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+						<div id="sellerEmailFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('sellerEmail')}"
+								th:errors="*{sellerEmail}">欄位有誤</p>
+						</div>
+					</div>
+					<div class="px-5 col-md-2">
+						<button type="button" class="btn btn-primary"
+							onclick="sendVerificationCode()">發送驗證碼</button>
+					</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCapital" class="form-label">資本額</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCapital"
-              name="sellerCapital"
-              th:value="${sellerVO.sellerCapital}"
-              aria-describedby="sellerCapitalFeedback"
-              th:classappend="${#fields.hasErrors('sellerCapital')} ? 'is-invalid' : ''"
-            />
+					<div class="col-md-3">
+						<label for="inputVerificationCode" class="form-label">驗證碼</label>
+						<input type="text" class="form-control" id="inputVerificationCode"
+							name="verificationCode"
+							aria-describedby="verificationCodeFeedback" />
+						<div class="valid-feedback">Looks good!</div>
+						<div id="verificationCodeFeedback" class="invalid-feedback">
+							驗證碼輸入有誤</div>
+					</div>
+				</div>
 
-            <div id="sellerCapitalFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCapital')}"
-                th:errors="*{sellerCapital}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCompanyPhone" class="form-label"
-              >公司電話</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCompanyPhone"
-              name="sellerCompanyPhone"
-              th:value="${sellerVO.sellerCompanyPhone}"
-              aria-describedby="sellerCompanyPhoneFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompanyPhone')} ? 'is-invalid' : ''"
-            />
 
-            <div id="sellerCompanyPhoneFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompanyPhone')}"
-                th:errors="*{sellerCompanyPhone}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCompanyExtension" class="form-label"
-              >公司分機</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCompanyExtension"
-              name="sellerCompanyExtension"
-              th:value="${sellerVO.sellerCompanyExtension}"
-              aria-describedby="sellerCompanyExtensionFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompanyExtension')} ? 'is-invalid' : ''"
-            />
 
-            <div id="sellerCompanyExtensionFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompanyExtension')}"
-                th:errors="*{sellerCompanyExtension}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputsellerTaxId" class="form-label">統一編號</label> <input
+						type="text" class="form-control" id="inputsellerTaxId"
+						name="sellerTaxId" th:value="${sellerVO.sellerTaxId}"
+						aria-describedby="sellerTaxIdFeedback"
+						th:classappend="${#fields.hasErrors('sellerTaxId')} ? 'is-invalid' : ''" />
 
-          <div class="col-md-12">
-            <label for="inputsellerMobile" class="form-label">手機號碼</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerMobile"
-              name="sellerMobile"
-              th:value="${sellerVO.sellerMobile}"
-              aria-describedby="sellerMobileFeedback"
-              th:classappend="${#fields.hasErrors('sellerMobile')} ? 'is-invalid' : ''"
-            />
+					<div id="sellerTaxIdFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerTaxId')}"
+							th:errors="*{sellerTaxId}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerMobileFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerMobile')}"
-                th:errors="*{sellerMobile}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputsellerCapital" class="form-label">資本額</label> <input
+						type="text" class="form-control" id="inputsellerCapital"
+						name="sellerCapital" th:value="${sellerVO.sellerCapital}"
+						aria-describedby="sellerCapitalFeedback"
+						th:classappend="${#fields.hasErrors('sellerCapital')} ? 'is-invalid' : ''" />
 
-          <input
-            type="hidden"
-            id="sellerCountyValue"
-            name="sellerCounty"
-            th:value="${sellerVO.sellerCounty ?: ''}"
-            aria-describedby="sellerCountyFeedback"
-          />
-          <input
-            type="hidden"
-            id="sellerDistrictValue"
-            name="sellerDistrict"
-            th:value="${sellerVO.sellerDistrict ?: ''}"
-            aria-describedby="sellerDistrictFeedback"
-          />
+					<div id="sellerCapitalFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCapital')}"
+							th:errors="*{sellerCapital}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputAddress" class="form-label">地址</label>
-            <div class="city-selector-set col-md-12 d-flex flex-row">
-              <div class="col-md-2">
-                <select
-                  class="county form-select"
-                  th:value="${sellerVO.sellerCounty ?: ''}"
-                  th:classappend="${#fields.hasErrors('sellerCounty')} ? 'is-invalid' : ''"
-                ></select>
-              </div>
-              <div class="col-md-2">
-                <select
-                  class="district form-select"
-                  th:value="${sellerVO.sellerDistrict ?: ''}"
-                  th:classappend="${#fields.hasErrors('sellerDistrict')} ? 'is-invalid' : ''"
-                ></select>
-              </div>
-              <div class="col-md-2">
-                <input
-                  class="zipcode form-control"
-                  type="text"
-                  size="3"
-                  readonly
-                  placeholder="郵遞區號"
-                  name="zipcode"
-                />
-              </div>
-            </div>
-            <input
-              type="text"
-              class="form-control mt-2"
-              id="inputAddress"
-              name="sellerAddress"
-              th:value="${sellerVO.sellerAddress ?: 'XX路A巷54號'}"
-              th:classappend="${#fields.hasErrors('sellerAddress')} ? 'is-invalid' : ''"
-              aria-describedby="sellerAddressFeedback"
-            />
-            <div id="sellerCountyFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCounty')}"
-                th:errors="*{sellerCounty}"
-              >
-                欄位有誤
-              </p>
-            </div>
+				<div class="col-md-12">
+					<label for="inputsellerCompanyPhone" class="form-label">公司電話</label>
+					<input type="text" class="form-control"
+						id="inputsellerCompanyPhone" name="sellerCompanyPhone"
+						th:value="${sellerVO.sellerCompanyPhone}"
+						aria-describedby="sellerCompanyPhoneFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompanyPhone')} ? 'is-invalid' : ''" />
 
-            <div id="sellerDistrictFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerDistrict')}"
-                th:errors="*{sellerDistrict}"
-              >
-                欄位有誤
-              </p>
-            </div>
+					<div id="sellerCompanyPhoneFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompanyPhone')}"
+							th:errors="*{sellerCompanyPhone}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerAddressFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerAddress')}"
-                th:errors="*{sellerAddress}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputsellerCompanyExtension" class="form-label">公司分機</label>
+					<input type="text" class="form-control"
+						id="inputsellerCompanyExtension" name="sellerCompanyExtension"
+						th:value="${sellerVO.sellerCompanyExtension}"
+						aria-describedby="sellerCompanyExtensionFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompanyExtension')} ? 'is-invalid' : ''" />
 
-          <div class="col-md-3">
-            <label for="inputsellerBankAccount" class="form-label"
-              >銀行帳號名稱</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankAccount"
-              name="sellerBankAccount"
-              th:value="${sellerVO.sellerBankAccount}"
-              aria-describedby="sellerBankAccountFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankAccount')} ? 'is-invalid' : ''"
-            />
+					<div id="sellerCompanyExtensionFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompanyExtension')}"
+							th:errors="*{sellerCompanyExtension}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerBankAccountFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankAccount')}"
-                th:errors="*{sellerBankAccount}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputsellerMobile" class="form-label">手機號碼</label> <input
+						type="text" class="form-control" id="inputsellerMobile"
+						name="sellerMobile" th:value="${sellerVO.sellerMobile}"
+						aria-describedby="sellerMobileFeedback"
+						th:classappend="${#fields.hasErrors('sellerMobile')} ? 'is-invalid' : ''" />
 
-          <div class="col-md-2">
-            <label for="inputsellerBankCode" class="form-label"
-              >銀行代碼
-            </label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankCode"
-              name="sellerBankCode"
-              th:value="${sellerVO.sellerBankCode}"
-              aria-describedby="sellerBankCodeFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''"
-            />
+					<div id="sellerMobileFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerMobile')}"
+							th:errors="*{sellerMobile}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerBankCodeFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankCode')}"
-                th:errors="*{sellerBankCode}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<input type="hidden" id="sellerCountyValue" name="sellerCounty"
+					th:value="${sellerVO.sellerCounty ?: ''}"
+					aria-describedby="sellerCountyFeedback" /> <input type="hidden"
+					id="sellerDistrictValue" name="sellerDistrict"
+					th:value="${sellerVO.sellerDistrict ?: ''}"
+					aria-describedby="sellerDistrictFeedback" />
 
-          <div class="col-md-7">
-            <label for="inputsellerBankAccountNumber" class="form-label"
-              >銀行帳戶</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankAccountNumber"
-              name="sellerBankAccountNumber"
-              th:value="${sellerVO.sellerBankAccountNumber}"
-              aria-describedby="sellerBankAccountNumberFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankAccountNumber')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputAddress" class="form-label">地址</label>
+					<div class="city-selector-set col-md-12 d-flex flex-row">
+						<div class="col-md-2">
+							<select class="county form-select"
+								th:value="${sellerVO.sellerCounty ?: ''}"
+								th:classappend="${#fields.hasErrors('sellerCounty')} ? 'is-invalid' : ''"></select>
+						</div>
+						<div class="col-md-2">
+							<select class="district form-select"
+								th:value="${sellerVO.sellerDistrict ?: ''}"
+								th:classappend="${#fields.hasErrors('sellerDistrict')} ? 'is-invalid' : ''"></select>
+						</div>
+						<div class="col-md-2">
+							<input class="zipcode form-control" type="text" size="3" readonly
+								placeholder="郵遞區號" name="zipcode" />
+						</div>
+					</div>
+					<input type="text" class="form-control mt-2" id="inputAddress"
+						name="sellerAddress"
+						th:value="${sellerVO.sellerAddress ?: 'XX路A巷54號'}"
+						th:classappend="${#fields.hasErrors('sellerAddress')} ? 'is-invalid' : ''"
+						aria-describedby="sellerAddressFeedback" />
+					<div id="sellerCountyFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCounty')}"
+							th:errors="*{sellerCounty}">欄位有誤</p>
+					</div>
 
-            <div id="sellerBankAccountNumberFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankAccountNumber')}"
-                th:errors="*{sellerBankAccountNumber}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerDistrictFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerDistrict')}"
+							th:errors="*{sellerDistrict}">欄位有誤</p>
+					</div>
 
-          <div class="col-md-12">
-            <label for="inputPassword" class="form-label">密碼</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputPassword"
-              name="sellerPassword"
-              th:value="${sellerVO.sellerPassword}"
-              aria-describedby="sellerPasswordFeedback"
-              th:classappend="${#fields.hasErrors('sellerPassword')} ? 'is-invalid' : ''"
-            />
+					<div id="sellerAddressFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerAddress')}"
+							th:errors="*{sellerAddress}">欄位有誤</p>
+					</div>
+				</div>
 
-            <div id="sellerPasswordFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerPassword')}"
-                th:errors="*{sellerPassword}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+				<div class="col-md-3">
+					<label for="inputsellerBankAccount" class="form-label">銀行帳號名稱</label>
+					<input type="text" class="form-control" id="inputsellerBankAccount"
+						name="sellerBankAccount" th:value="${sellerVO.sellerBankAccount}"
+						aria-describedby="sellerBankAccountFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankAccount')} ? 'is-invalid' : ''" />
 
-          <div class="text-center d-flex flex-row gap-5 justify-content-center">
-            <button type="reset" class="btn btn-secondary">取消並離開</button>
-            <button type="submit" class="btn btn-primary">提交修改</button>
-          </div>
-        </form>
-      </div>
-    </main>
+					<div id="sellerBankAccountFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankAccount')}"
+							th:errors="*{sellerBankAccount}">欄位有誤</p>
+					</div>
+				</div>
 
-    <!-- End Main -->
+				<div class="col-md-2">
+					<label for="inputsellerBankCode" class="form-label">銀行代碼 </label> <input
+						type="text" class="form-control" id="inputsellerBankCode"
+						name="sellerBankCode" th:value="${sellerVO.sellerBankCode}"
+						aria-describedby="sellerBankCodeFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''" />
 
-    <!-- ======= Footer ======= -->
+					<div id="sellerBankCodeFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankCode')}"
+							th:errors="*{sellerBankCode}">欄位有誤</p>
+					</div>
+				</div>
 
-    <div th:replace="@{fragment-js}"></div>
+				<div class="col-md-7">
+					<label for="inputsellerBankAccountNumber" class="form-label">銀行帳戶</label>
+					<input type="text" class="form-control"
+						id="inputsellerBankAccountNumber" name="sellerBankAccountNumber"
+						th:value="${sellerVO.sellerBankAccountNumber}"
+						aria-describedby="sellerBankAccountNumberFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankAccountNumber')} ? 'is-invalid' : ''" />
 
-    <!-- Local JS File -->
+					<div id="sellerBankAccountNumberFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankAccountNumber')}"
+							th:errors="*{sellerBankAccountNumber}">欄位有誤</p>
+					</div>
+				</div>
 
-    <script>
+				<div class="col-md-12">
+					<label for="inputPassword" class="form-label">密碼</label> <input
+						type="text" class="form-control" id="inputPassword"
+						name="sellerPassword" th:value="${sellerVO.sellerPassword}"
+						aria-describedby="sellerPasswordFeedback"
+						th:classappend="${#fields.hasErrors('sellerPassword')} ? 'is-invalid' : ''" />
+
+					<div id="sellerPasswordFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerPassword')}"
+							th:errors="*{sellerPassword}">欄位有誤</p>
+					</div>
+				</div>
+
+				<div
+					class="text-center d-flex flex-row gap-5 justify-content-center">
+					<button type="reset" class="btn btn-secondary">取消並離開</button>
+					<button type="submit" class="btn btn-primary">提交修改</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+
+	<div th:replace="@{/fragment-footer-noaside}"></div>
+    <div th:replace="@{/fragment-js}"></div>
+
+	<!-- Local JS File -->
+
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         var countyValue = document
           .querySelector(".county")
           .getAttribute("data-countyValue");
         console.log(countyValue); // 將印出 "台北市"
+        
+        
+        var verificationCodeInput = document.getElementById("inputVerificationCode");
+        verificationCodeInput.addEventListener("blur", function () {
+            checkVerificationCode();
+        });
       });
 
       window.onload = function () {
@@ -466,58 +333,81 @@
         // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
         return true;
       }
+      
+      
+      function sendVerificationCode() {
+    	    var email = document.getElementById('inputsellerEmail').value;
+    	    email = decodeURIComponent(email);
+
+    	    let url = window.location.href;
+
+    	    if (!url.endsWith('/')) {
+    	        url += "/";
+    	    }
+
+
+    	    // 使用 Fetch API 发送 POST 请求
+    	    fetch(url + 'sendVerificationCode', {
+    	        method: 'POST',
+    	        headers: {
+    	            'Content-Type': 'application/json',
+    	        },
+    	        body: JSON.stringify({ email: email }),
+    	    })
+    	    .then(response => {
+    	        if (!response.ok) {
+    	            throw new Error('發送驗證碼失敗');
+    	        }
+    	        alert("已經發送信件")
+    	    })
+    	    .catch(error => {
+    	        console.error('發送驗證碼失敗', error);
+    	    });
+    	}
+      
+      
+      function checkVerificationCode() {
+    	    // 获取验证码和邮箱
+    	    var verificationCode = document.getElementById("inputVerificationCode").value;
+    	    var email = document.getElementById("inputsellerEmail").value;
+
+    	    // 示例：假设验证规则是验证码长度必须为6
+    	    if (verificationCode.length === 6) {
+    	        // 构建请求体数据
+    	        var requestData = {
+    	            email: email,
+    	            code: verificationCode  // 注意这里使用 "code"，与后端对应
+    	        };
+
+    	        // 发送 AJAX 请求
+    	        fetch('/seller/register/checkVerificationCode', {
+    	            method: 'POST',
+    	            headers: {
+    	                'Content-Type': 'application/json',
+    	            },
+    	            body: JSON.stringify(requestData),
+    	        })
+    	        .then(response => {
+    	            if (!response.ok) {
+    	                throw new Error('請輸入正確驗證碼');
+    	            }
+    	            document.getElementById('inputVerificationCode').classList.remove('is-invalid');
+    	            document.getElementById('inputVerificationCode').classList.add('is-valid');
+
+    	        }).catch(error => {
+    	            document.getElementById('inputVerificationCode').classList.remove('is-valid');
+    	            document.getElementById('inputVerificationCode').classList.add('is-invalid');
+    	        });
+    	    } else {
+    	        document.getElementById('inputVerificationCode').classList.remove('is-valid');
+    	        document.getElementById('inputVerificationCode').classList.add('is-invalid');
+    	    }
+    	}
+
     </script>
-  </body>
-  
-   <!-- ======= Footer ======= -->
-    <footer class="footer-nosidebar">
-      <div
-        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
-      >
-        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+</body>
 
-        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-          <h5 class="mb-3">關於我們</h5>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
-            </li>
-          </ul>
-        </div>
+<!-- ======= Footer ======= -->
 
-        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-          <h5 class="mb-3">常見問題</h5>
-          <ul class="nav flex-column">
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
-            </li>
-            <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="row footer-container-custom">
-        <div class="col-3"></div>
 
-        <div class="col-auto">
-          <a
-            href="/"
-            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
-          >
-          </a>
-          <p class="text-body-secondary">
-            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
-            CatTom.版權所有。
-          </p>
-        </div>
-      </div>
-    </footer>
-    
-    
-    <div th:replace="fragment-js"></div>
-    
 </html>

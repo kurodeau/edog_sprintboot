@@ -67,6 +67,13 @@ public class SellerServiceImpl implements SellerService {
 	public SellerVO findByOnlyOneEmail(String email) {
 		return repo.findByOnlyOneEmail(email);
 	}
+	
+
+	@Override
+	public SellerVO findByOnlyPhone(String phone) {
+		 
+		return repo.findByOnlyPhone(phone);
+	}
 
 
 	public void saveUserDetails(SellerVO sellerVO) {
@@ -79,11 +86,29 @@ public class SellerServiceImpl implements SellerService {
 		UserDetails userdetails = User.builder()
 				.username(sellerVO.getSellerEmail())
 				.password(sellerVO.getSellerPassword())
-			    .authorities("ROLE_USER", "ROLE_ADMIN")  
+			    .authorities("ROLE_SELLER")  
 				.build();
 
 		sellerDetailsService.createUser(userdetails, sellerVO);
 
 	}
+	
+	public void updateUserDetails(SellerVO sellerVO) {
+
+		if (sellerVO == null) {
+			throw new UsernameNotFoundException("User not found with username ");
+		}
+		
+
+		UserDetails userdetails = User.builder()
+				.username(sellerVO.getSellerEmail())
+				.password(sellerVO.getSellerPassword())
+			    .authorities("ROLE_SELLER")  
+				.build();
+
+		sellerDetailsService.changePassword(userdetails, sellerVO);
+
+	}
+
 
 }

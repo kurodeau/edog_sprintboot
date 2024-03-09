@@ -20,9 +20,9 @@ public class GenerateLoginToken {
 	public static Optional<StringBuilder> generateRedisToken(String name, long timesecond) {
 		Jedis jedis = null;
 		StringBuilder sb = new StringBuilder();
-				
 		try {
 			jedis = JedisUtil.getJedisPool().getResource();
+			jedis.select(15);
 			sb = returnAuthCode();
 			jedis.setex(name, (int) timesecond, sb.toString());
 
