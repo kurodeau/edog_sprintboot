@@ -164,16 +164,24 @@ public class MultiSecurityConfiguration {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+		// formal
+//		http.authorizeRequests(authorize -> authorize
+//			    .antMatchers("/auth/phone/check" , "/auth/phone").permitAll()
+//			    .antMatchers("/seller/register", "/seller/register/**").permitAll()
+//			    .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
+//			    .antMatchers("/front/seller/**").hasRole("SELLER")
+//			    .antMatchers("/front/buyer/**").hasRole("BUYER")
+//			    .antMatchers("/auth/email/check","/auth/email").permitAll()
+//			    .antMatchers("/").permitAll()
+//			    .anyRequest().authenticated()
+//			);
+		
+		// TESTING
 		http.authorizeRequests(authorize -> authorize
-			    .antMatchers("/auth/phone/check" , "/auth/phone").permitAll()
-			    .antMatchers("/seller/register", "/seller/register/**").permitAll()
-			    .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
-			    .antMatchers("/front/seller/**").hasRole("SELLER")
-			    .antMatchers("/front/buyer/**").hasRole("BUYER")
-			    .antMatchers("/auth/email/check","/auth/email").permitAll()
-			    .antMatchers("/").permitAll()
+			    .antMatchers("/**").permitAll()
 			    .anyRequest().authenticated()
 			);
+		
 		
 		
 		http.formLogin(form -> form
