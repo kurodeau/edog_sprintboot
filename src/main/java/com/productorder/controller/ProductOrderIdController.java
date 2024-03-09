@@ -154,7 +154,7 @@ public class ProductOrderIdController {
 	@ModelAttribute("sellerProductOrderCanceled") 
 	protected List<ProductOrderVO> getSellerProductOrderCanceled(Integer sellerId, Model model) {
 		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCanceled(sellerId);
 		return list;
 	}
 	

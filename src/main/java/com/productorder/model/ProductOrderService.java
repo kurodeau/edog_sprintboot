@@ -66,7 +66,7 @@ public class ProductOrderService {
 					return list;	
 		}
 	
-	
+		//顯示已完成訂單
 		public List<ProductOrderVO> getSellerProductOrderCompleted(Integer sellerId) {
 			
 			List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);			
@@ -76,7 +76,7 @@ public class ProductOrderService {
 		             .collect(Collectors.toList());									 
 					return list;		
 		}
-
+		//顯示已取消訂單
 		public List<ProductOrderVO> getSellerProductOrderCanceled(Integer sellerId) {
 			
 			List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);		
