@@ -29,14 +29,14 @@
 								<ul id="lightSlider">
 									<li data-thumb="https://fakeimg.pl/1000x580/"><img
 										class="img-fluid"
-										th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+										th:src="@{/front/seller/product/DBGifReader1}?productId=${productVO.productId}&productId=${productVO.productImgVO}"
 										width="100px" /></li>
 										
-									<li th:each="img : ${productVO.productImgVO}"
-										data-thumb="https://fakeimg.pl/1000x580/"><img
-										class="img-fluid"
-										src= "https://fakeimg.pl/1000x580/"
-										width="100px" /></li>
+<!-- 									<li th:each="img : ${productVO.productImgVO.productImg}" -->
+<!-- 										data-thumb="https://fakeimg.pl/1000x580/"><img -->
+<!-- 										class="img-fluid" -->
+<!-- 										th:src= "@{/front/seller/product/DBGifReader1} + '?productId=' + ${productVO.productId}" -->
+<!-- 										width="100px" /></li> -->
 
 
 

@@ -107,7 +107,7 @@ public class ProductService {
 				if (typeList != null && typeList.size() > 0) {
 
 					predicateList.add(root.get("animalType").in(typeList));
-
+					System.out.println(predicateList);
 //					for (String type : typeList) {				
 //						predicateList.add(criteriaBuilder.or(criteriaBuilder.equal(root.get("animalType"), type)));
 
@@ -160,7 +160,7 @@ public class ProductService {
 				}
 
 				query.orderBy(criteriaBuilder.asc(root.get("productId")));
-
+				
 				return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
 			}
 		};

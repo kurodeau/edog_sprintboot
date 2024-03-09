@@ -1,6 +1,7 @@
 package com.product.controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class ProductController {
 
 	@Autowired
 	ProductImgService pdtImgSvc;
-	
+
 	@Autowired
 	ProductSortService pdstSvc;
 
@@ -49,8 +50,21 @@ public class ProductController {
 
 	@GetMapping("add")
 	public String sellerProductAdd(Model model) {
+		
 		ProductVO productVO = new ProductVO();
+		productVO.setProductName("假商品名稱");
+		productVO.setPrice(BigDecimal.valueOf(99.99));
+		productVO.setProductStockQuantity(100);
+		productVO.setProductDetails("這是假商品的描述");
+		productVO.setProductStatus("在售");
+		productVO.setProductCreationTime(new Timestamp(System.currentTimeMillis()));
+		productVO.setRatings(4);
+		productVO.setTotalReviews(50);
+		productVO.setIsEnabled(true);
+
 		model.addAttribute("product", productVO);
+
+		
 		return "front-end/seller/seller-product-add";
 	}
 
@@ -82,11 +96,9 @@ public class ProductController {
 		SellerVO sellerVO = srSvc.getById(5);
 		productVO.setSellerVO(sellerVO);
 
-		
 		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
 		productVO.setProductSortVO(productSortVO);
-		
-		
+
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
 		productVO.setProductCreationTime(timestamp);

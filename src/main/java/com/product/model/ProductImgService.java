@@ -33,9 +33,10 @@ public class ProductImgService {
 		
 	}
 	
-	public ProductImgVO getProductImgs(ProductVO productId) {
-		Optional<ProductImgVO> optional = repository.findByProductId(productId);
-		return optional.orElse(null);
+	public List<ProductImgVO> getProductImgs(Integer productId) {
+		List<ProductImgVO> productImgVOs = repository.findByProductId(productId);
+		
+		return productImgVOs;
 	}
 	
 	
