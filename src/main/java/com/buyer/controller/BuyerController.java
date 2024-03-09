@@ -56,9 +56,9 @@ public class BuyerController {
 	@ModelAttribute("buyerListData")
 	protected List<BuyerVO> referenceListData(Model model) {
 		List<BuyerVO> list = buyerSvc.getAll();
-		System.out.println("==============================");
-		list.forEach(data -> System.out.println(data));
-		System.out.println("==============================");
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
 		return list;
 	}
 
