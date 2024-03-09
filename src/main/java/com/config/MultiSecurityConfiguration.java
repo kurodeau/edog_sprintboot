@@ -20,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -161,6 +162,9 @@ public class MultiSecurityConfiguration {
         return (web) -> web.ignoring().antMatchers("/auth/phone", "/auth/phone/check", "/image/**","/css/**", "/vendors/**", "/mainjs/**","/icons/**");
     }
 	
+	
+
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -168,9 +172,11 @@ public class MultiSecurityConfiguration {
 			    .antMatchers("/auth/phone/check" , "/auth/phone").permitAll()
 			    .antMatchers("/seller/register", "/seller/register/**").permitAll()
 			    .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
+			    .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2","SELLERLV3")
 			    .antMatchers("/front/seller/**").hasRole("SELLER")
 			    .antMatchers("/front/buyer/**").hasRole("BUYER")
 			    .antMatchers("/auth/email/check","/auth/email").permitAll()
+			    .antMatchers("/activate/seller/**").permitAll()
 			    .antMatchers("/").permitAll()
 			    .anyRequest().authenticated()
 			);
@@ -185,6 +191,8 @@ public class MultiSecurityConfiguration {
 			
 			.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
 			.csrf().disable();
+		
+
 		
 		return http.build();
 	}

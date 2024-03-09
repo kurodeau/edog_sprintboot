@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 
+		// (1) SellerVOToSecurityContext去取的用戶資訊
 		// 在這裡獲取登入成功的使用者資訊，例如 SellerVO
 		String sellerEmail = getLoggedInSellerVO(authentication);
 
@@ -34,6 +36,11 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 		// 將 SellerVO 存儲在安全上下文中
 		setSellerVOToSecurityContext(sellerVO, authentication);
 
+		
+		// (2) HttpSession去取的用戶資訊
+		HttpSession session = request.getSession();
+		session.setAttribute("sellerVO", sellerVO);
+		
 		// 這裡可以進行其他登入成功後的處理，例如重定向等
 		response.sendRedirect("/front/seller/main");
 	}

@@ -45,6 +45,7 @@ public class IndexControllerSeller {
 	SellerLvService sellerLvSvc;
 
 	
+	
 	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
@@ -78,15 +79,15 @@ public class IndexControllerSeller {
 		model.addAttribute("success", "註冊成功");
 		sellerSvc.saveUserDetails(sellerVO);
 		
-		// TESTING 註冊登入後保存sellerVO狀態
-		session.setAttribute("sellerVO", sellerVO);
-		
-		return "redirect:/front/seller/main";
+		return "redirect:/front/seller/login";
 	}
 	
 	
 
-	 
+	@GetMapping("seller/error403")
+	public String error403(Model model) {
+		return  "error/sellerError403";
+	}
 	
 
 

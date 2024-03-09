@@ -12,6 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,12 +56,15 @@ public class SellerLvControllerFront extends HttpServlet {
 //			System.out.println("==============================");
 		return list;
 	}
-	
+
 	@GetMapping("edit")
 	public String selleredit(Model model, HttpSession session) {
 
-		// TESTING 從登入後SESSION取得用戶
-		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerVO");
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		System.out.println("secCtx" + secCtx);
+
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 		model.addAttribute("sellerVO", sellerVO);
 
 		return "front-end/seller/seller-sellerLv-edit";
@@ -80,7 +89,7 @@ public class SellerLvControllerFront extends HttpServlet {
 	@PutMapping("edit/api/v1/sellers/{id}")
 	@ResponseBody
 	public ResponseEntity<?> ajaxUpdate(@PathVariable("id") Integer targetSellerId,
-			@RequestBody Map<String, Object> requestData ,HttpSession session) {
+			@RequestBody Map<String, Object> requestData, HttpSession session) {
 		System.out.println(targetSellerId);
 		System.out.println(requestData);
 		try {
@@ -91,14 +100,12 @@ public class SellerLvControllerFront extends HttpServlet {
 			// Deserialize JSON to MyData object
 			UpdateData updateData = objectMapper.readValue(jsonData, UpdateData.class);
 			// System.out.println(updateData);
-			
-		
-			
+
 			Integer targetLvId = updateData.data.getTargetSellerLvId();
 			SellerLvVO sellerLvVO = sellerLvSvc.getById(targetLvId);
-			SellerVO sellerVO = sellerSvc.getById(targetSellerId);
-			sellerVO.setSellerLvId(sellerLvVO);
-			sellerSvc.updateSeller(sellerVO);
+			SellerVO sellerUpdateVO = sellerSvc.getById(targetSellerId);
+			sellerUpdateVO.setSellerLvId(sellerLvVO);
+			sellerSvc.updateSeller(sellerUpdateVO);
 
 			List<SellerLvVO> firstThreeElements = null;
 			List<SellerLvVO> sellerLvVOList = sellerLvSvc.getAll();
@@ -107,17 +114,34 @@ public class SellerLvControllerFront extends HttpServlet {
 
 			}
 			System.out.println(sellerLvVOList);
-			
-			ResponseData responseData = new ResponseData(targetSellerId,targetLvId,firstThreeElements);
+
+			ResponseData responseData = new ResponseData(targetSellerId, targetLvId, firstThreeElements);
 			String jsonString = objectMapper.writeValueAsString(responseData);
 
 			System.out.println(jsonString);
 
-			
-			
-			// TESTING-UPDATE SELLER INFO
-			session.setAttribute("session", sellerSvc.getById(targetSellerId));
+			// SECURIT設定資訊
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			Integer sellerLvId = sellerUpdateVO.getSellerLvId().getSellerLvId();
+			List<GrantedAuthority> authorities = new ArrayList<>();
 
+
+			switch (sellerLvId) {
+			case 1:
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
+				break;
+			case 2:
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV2"));
+				break;
+			case 3:
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
+				break;
+			}
+			
+			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(sellerUpdateVO, null, authorities));
 			
 			return ResponseEntity.status(HttpStatus.OK).body(jsonString);
 
@@ -159,17 +183,30 @@ public class SellerLvControllerFront extends HttpServlet {
 
 				System.out.println(targetList);
 
-				// TESTING-UPDATE SELLER INFO
-				SellerVO sellerVO = (SellerVO) session.getAttribute("sellerVO");
-				Integer targetSellerId = sellerVO.getSellerId();
-				SellerVO sellerTargetVO = sellerSvc.getById(targetSellerId);
-				Integer sellerLvId = sellerTargetVO.getSellerLvId().getSellerLvId();
-				
+				Integer targetSellerId = null;
+				SellerVO sellerTargetVO = null;
+				Integer sellerLvId = null;
+
+				// SESSOIN取得資訊
+				SellerVO sellerVOFromSession = (SellerVO) session.getAttribute("sellerVO");
+				if (sellerVOFromSession != null) {
+					targetSellerId = sellerVOFromSession.getSellerId();
+					sellerTargetVO = sellerSvc.getById(targetSellerId);
+					sellerLvId = sellerTargetVO.getSellerLvId().getSellerLvId();
+				}
+				// SECURITY取得資訊
+				SecurityContext securityContext = SecurityContextHolder.getContext();
+				Authentication authentication = securityContext.getAuthentication();
+				SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+				if (sellerVO != null) {
+					targetSellerId = sellerVO.getSellerId();
+					sellerTargetVO = sellerVO;
+					sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
+				}
+
 				// @JsonIgnore // Prevent including SellerLvVO reference during serialization
 				ResponseData responseData = new ResponseData(targetSellerId, sellerLvId, targetList);
 				String jsonString = objectMapper.writeValueAsString(responseData);
-
-//				System.out.println(jsonString);
 
 				return ResponseEntity.status(HttpStatus.OK).body(jsonString);
 

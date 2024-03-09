@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,18 +57,20 @@ public class IndexControllerMain {
 
 	@Autowired
 	SellerService sellerSvc;
+	
+	
+	
 
 	@GetMapping("/")
 	public String index(Model model) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		Authentication authentication = securityContext.getAuthentication();
 
-		if (authentication != null && authentication.isAuthenticated()) {
-			// 用户已认证，添加相应属性
-			
-			System.out.println("loggedIn true");
-			System.out.println(authentication.getPrincipal());
-			
+		boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
+		if (isAnonymous) {
+			// 用戶登入後，預設會使用anonymousUser
+			model.addAttribute("loggedIn", false);
+		} else if (authentication != null && authentication.isAuthenticated()) {
 			model.addAttribute("loggedIn", true);
 			Object principal = authentication.getPrincipal();
 			if (principal instanceof SellerVO) {
@@ -75,15 +78,10 @@ public class IndexControllerMain {
 				model.addAttribute("sellerVO", sellerVO);
 				model.addAttribute("theName", sellerVO.getSellerCompany());
 			}
-
 		} else {
-			System.out.println("loggedIn false");
 			model.addAttribute("loggedIn", false);
 		}
 
-		System.out.println("loggedIn false");
-
-		// System.out.println("authentication" + authentication);
 		Object principal = authentication.getPrincipal();
 		if (principal instanceof UserDetails) {
 			String username = ((UserDetails) principal).getUsername();
@@ -92,6 +90,7 @@ public class IndexControllerMain {
 			System.out.println("getDetails" + authentication.getDetails());
 			System.out.println("getAuthorities" + authentication.getAuthorities());
 		}
+		
 		return "index";
 		// resources/template//index.html
 	}
