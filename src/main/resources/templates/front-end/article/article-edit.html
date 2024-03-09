@@ -4,10 +4,10 @@
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
 <style type="text/css">
-.hide {
-	display: none;
-}
-</style>
+ .hide {
+		display: none;
+	}
+	</style>
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -89,31 +89,26 @@
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
-		<div class="seller-container">
-			<div class="pagetitle">
-				<h1 style="margin-top: 30px;">發表文章</h1>
-				<hr>
-			</div>
+		<div class="seller-container ">
+			<div class="pagetitle"></div>
+			<h1  style="margin-top: 30px;">編輯文章</h1>
+			<hr>
 			<div style="margin-top: 30px;">
-				<form th:action="@{insert}" method="post" th:object="${articleVO}"
+				<form th:action="@{update}" method="post" th:object="${articleVO}"
 					enctype="multipart/form-data">
-
-					<div>
-						<select class="form-select" th:field="*{buyerVO.memberId}">
-							<option th:each="buyerVO : ${buyerListData}"
-								th:value="${buyerVO.memberId}" th:text="${buyerVO.memberName}" />
-						</select> <span th:if="${#fields.hasErrors('buyerVO.memberId')}"
-							th:errors="*{buyerVO.memberId}" class="error"
-							id="buyerVO.memberId.errors"></span>
+					
+					<div class="hide">
+					<label>文章編號:</label>
+					<input type="text" th:field="*{articleId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+					</div>
+					
+					<div class="hide">
+					<label>會員編號:</label>
+					<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly /><br/>
 					</div>
 
 					<div>
-						<input id="title" type="text" th:field="*{articleTitle}"
-							onclick="hideContent('articleTitle.errors');" required
-							placeholder="標題..." /> <span
-							th:if="${#fields.hasErrors('articleTitle')}"
-							th:errors="*{articleTitle}" class="error"
-							id="articleTitle.errors"></span>
+						<input id="title" type="text" th:field="*{articleTitle}" onclick="hideContent('articleTitle.errors');" required /> 
 					</div>
 
 					<hr class="dashed-hr">
@@ -121,30 +116,53 @@
 					<div>
 						<textarea id="content" rows="10" th:field="*{articleContent}"
 							onclick="hideContent('articleContent.errors');" required
-							placeholder="內容..." style="resize: none;"></textarea>
+							style="resize: none;"></textarea>
 						<span th:if="${#fields.hasErrors('articleContent')}"
 							th:errors="*{articleContent}" class="error"
 							id="articleContent.errors"></span>
 					</div>
 
-					<div
-						style="display: flex; align-items: center; justify-content: space-between;">
+					<div class="hide">
+						<label>上傳時間:</label> <input type="date"
+							th:field="*{artCreateTime}"
+							onclick="hideContent('artCreateTime.errors');" /><br />
+					</div>
+					
+					<div class="hide">
+						<label>更新時間:</label> <input type="date"
+							th:field="*{artUpdateTime}"
+							onclick="hideContent('artUpdateTime.errors');" /><br />
+					</div>
+
+
+					<div class="hide">
+						<label>喜歡數:</label> <input type="text"
+							th:value="*{articleLike == null ? '0' : articleLike}"
+							name="articleLike" onclick="hideContent('articleLike.errors');" /><br />
+					</div>
+
+					<div class="hide">
+						<label>留言數:</label> <input type="text"
+							th:value="*{articleComment == null ? '0' : articleComment}"
+							name="articleComment"
+							onclick="hideContent('articleComment.errors');" /><br />
+					</div>
+					
+
+					<div style="display: flex; align-items: center; justify-content: space-between;">
+					
 						<div>
-							<input type="file" id="upFiles" th:field="*{upFiles}"
-								onclick="previewImage()" multiple="multiple"
-								onchange="hideContent('upFiles.errors');" style="display: none;" />
-							<button type="button"
-								onclick="document.getElementById('upFiles').click();"
-								style="border: none; background: transparent;">
+							<input type="file" id="upFiles" th:field="*{upFiles}" onclick="previewImage()" multiple="multiple" onchange="hideContent('upFiles.errors');" style="display: none;" />
+								
+							<button type="button" onclick="document.getElementById('upFiles').click();" style="border: none; background: transparent;">
 								<div class="icon-container">
 									<i class="bi bi-image"></i>
 								</div>
 							</button>
-							<span class="error" th:utext="${errorMessage}"
-								id="upFiles.errors">${errorMessage}</span>
-							<div id="blob_holder"></div>
+							<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
+							<div id="blob_holder"><img th:if="${articleVO.upFiles != null}" th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></div>
 						</div>
-
+						
 						<div style="display: flex; align-items: center;">
 							<div style="margin-right: 10px;">
 								<label>文章分類:</label>
@@ -161,7 +179,15 @@
 									id="articleTypeVO.articleTypeId.errors"></span>
 							</div>
 						</div>
-
+						
+						<div style="display: flex; align-items: center;">
+							<select class="form-select" th:field="*{isEnabled}"
+								onchange="hideContent('isEnabled.errors');">
+								<option th:value="true" th:text="顯示文章"></option>
+								<option th:value="false" th:text="隱藏文章"></option>
+							</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
+								th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
+						</div>
 
 						<div>
 							<div
@@ -179,6 +205,7 @@
 
 			</div>
 		</div>
+
 	</main>
 	<!-- End Main -->
 
@@ -229,95 +256,82 @@
 	<div th:replace="~{/fragment-js}"></div>
 	<div th:replace="~{/fragment-datatableJs}"></div>
 	<script>
-		$("a.tab").on("click", function(e) {
-			e.preventDefault();
-			console.log("aaa");
-			/* 將頁籤列表移除所有 -on，再將指定的加上 -on */
-			$(this).closest("ul").find("a.tab").removeClass("-on");
-			$(this).addClass("-on");
+	function redirectToUpdatePage(url) {
+		window.location.href = url;
+	}
 
-			/* 找到對應的頁籤內容，加上 -on 來顯示 */
-			$("div.tab").removeClass("-on");
-			$("div.tab." + $(this).attr("data-target")).addClass("-on");
-		});
-		function redirectToUpdatePage(url) {
-			window.location.href = url;
-		}
+	var filereader_support = typeof FileReader != 'undefined';
+	if (!filereader_support) {
+		alert("No FileReader support");
+	}
+	acceptedTypes = {
+		'image/png' : true,
+		'image/jpeg' : true,
+		'image/gif' : true
+	};
+	function previewImage() {
+		var upfile1 = document.getElementById("upFiles");
+		upfile1.addEventListener("change", function(event) {
+			var files = event.target.files || event.dataTransfer.files;
+			for (var i = 0; i < files.length; i++) {
+				previewfile(files[i])
+			}
+		}, false);
+	}
+	function previewfile(file) {
+	    if (filereader_support === true && acceptedTypes[file.type] === true) {
+	        var reader = new FileReader();
+	        reader.onload = function(event) {
+	            // 清除 blob_holder 中的所有子元素
+	            blob_holder.innerHTML = '';
 
-		var filereader_support = typeof FileReader != 'undefined';
-		if (!filereader_support) {
-			alert("No FileReader support");
-		}
-		acceptedTypes = {
-			'image/png' : true,
-			'image/jpeg' : true,
-			'image/gif' : true
-		};
-		function previewImage() {
-			var upfile1 = document.getElementById("upFiles");
-			upfile1.addEventListener("change", function(event) {
-				var files = event.target.files || event.dataTransfer.files;
-				for (var i = 0; i < files.length; i++) {
-					previewfile(files[i])
-				}
-			}, false);
-		}
-		function previewfile(file) {
-		    if (filereader_support === true && acceptedTypes[file.type] === true) {
-		        var reader = new FileReader();
-		        reader.onload = function(event) {
-		            // 清除 blob_holder 中的所有子元素
-		            blob_holder.innerHTML = '';
+	            // 添加新的图片
+	            var image = new Image();
+	            image.src = event.target.result;
+	            image.width = 100;
+	            image.height = 75;
+	            image.border = 2;
+	            blob_holder.appendChild(image);
 
-		            // 添加新的图片
-		            var image = new Image();
-		            image.src = event.target.result;
-		            image.width = 100;
-		            image.height = 75;
-		            image.border = 2;
-		            blob_holder.appendChild(image);
-
-		            // 添加取消按钮
-		            var cancelButton = document.createElement("button");
-		            cancelButton.setAttribute("type", "button");
-		            cancelButton.setAttribute("onclick", "cancelImageSelection()");
-		            cancelButton.style.border = "none";
-		            cancelButton.style.background = "transparent";
-		            cancelButton.innerHTML = '<div class="icon-container"><i class="bi bi-x-lg"></i></div>';
-		            blob_holder.appendChild(cancelButton);
-		        };
-		        reader.readAsDataURL(file);
-		        document.getElementById('submit').disabled = false;
-		    } else {
-		        blob_holder.innerHTML = "<div  style='text-align: left;'>"
-		            + "● filename: "
-		            + file.name
-		            + "<br>"
-		            + "● ContentTyp: "
-		            + file.type
-		            + "<br>"
-		            + "● size: "
-		            + file.size
-		            + "bytes"
-		            + "<br>"
-		            + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-		        document.getElementById('submit').disabled = true;
-		    }
-		}
+	            // 添加取消按钮
+	            var cancelButton = document.createElement("button");
+	            cancelButton.setAttribute("type", "button");
+	            cancelButton.setAttribute("onclick", "cancelImageSelection()");
+	            cancelButton.style.border = "none";
+	            cancelButton.style.background = "transparent";
+	            cancelButton.innerHTML = '<div class="icon-container"><i class="bi bi-x-lg"></i></div>';
+	            blob_holder.appendChild(cancelButton);
+	        };
+	        reader.readAsDataURL(file);
+	        document.getElementById('submit').disabled = false;
+	    } else {
+	        blob_holder.innerHTML = "<div  style='text-align: left;'>"
+	            + "● filename: "
+	            + file.name
+	            + "<br>"
+	            + "● ContentTyp: "
+	            + file.type
+	            + "<br>"
+	            + "● size: "
+	            + file.size
+	            + "bytes"
+	            + "<br>"
+	            + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+	        document.getElementById('submit').disabled = true;
+	    }
+	}
 
 
-		function cancelImageSelection() {
-		    // 清除预览图片
-		    var blobHolder = document.getElementById("blob_holder");
-		    blobHolder.innerHTML = "";
+	function cancelImageSelection() {
+	    // 清除预览图片
+	    var blobHolder = document.getElementById("blob_holder");
+	    blobHolder.innerHTML = "";
 
-		    // 清除文件输入字段的值
-		    var fileInput = document.getElementById("upFiles");
-		    fileInput.value = "";
+	    // 清除文件输入字段的值
+	    var fileInput = document.getElementById("upFiles");
+	    fileInput.value = "";
 
-		}
-
-
+	}
 	</script>
 </body>
 </html>
