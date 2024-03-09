@@ -8,6 +8,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,6 +32,10 @@ import com.reply.service.ReplyService;
 import com.seller.entity.SellerVO;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
+import com.report.entity.ReportVO;
+import com.report.service.ReportService;
+import com.reportType.entity.ReportTypeVO;
+import com.reportType.service.ReportTypeService;
 
 @Controller
 @ComponentScan(basePackages = {"com.article", "com.articleType"})
@@ -48,6 +54,12 @@ public class ArticleController {
 	@Autowired
 	ReplyService replySvc;
 
+	@Autowired
+	ReportService reportSvc;
+
+
+	@Autowired
+	ReportTypeService reportTypeSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -72,7 +84,19 @@ public class ArticleController {
 			List<BuyerVO> list = buyerSvc.getAll();
 			return list;
 		}
-
+	 @ModelAttribute("reportListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	    protected List<ReportVO> referenceListData_Report(Model model) {
+	    	
+	    	List<ReportVO> list = reportSvc.getAll();
+	    	return list;
+	    }
+		
+		@ModelAttribute("reportTypeListData") // for select_page.html 第135行用
+		protected List<ReportTypeVO> referenceListData_ReportType(Model model) {
+			model.addAttribute("reportTypeVO", new ReportTypeVO()); // for select_page.html 第133行用
+			List<ReportTypeVO> list = reportTypeSvc.getAll();
+			return list;
+		}
 	
 	// /front/article/listAll
 		@GetMapping("listAll")
@@ -93,20 +117,32 @@ public class ArticleController {
 			model.addAttribute("articleVO", articleVO);
 			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		    model.addAttribute("replyVOList", replyVOList);
+		    ReportVO reportVO = new ReportVO();
+		    model.addAttribute("reportVO", reportVO);
 			return "front-end/article/list-one-article";
 		}
 		
 		 @GetMapping("/TypeList")
 		    public String getTypeList(@RequestParam("id") Integer articleTypeId, Model model) {
 		        ArticleTypeVO articleTypeVO = articleTypeSvc.getOneArticleType(articleTypeId);
-
+		        model.addAttribute("articleTypeVO", articleTypeVO);
 		        List<ArticleVO> articleList = articleSvc.getByArticleTypeId(articleTypeVO);
 		        
 		        model.addAttribute("articleList", articleList);
 
-		        return "front-end/article/forum-home";
+		        return "front-end/article/articletype-list";
 		    }
-		
+		 @GetMapping("/MyArticle")
+		 public String getMyArticle(@RequestParam("id") Integer memberId, Model model) {
+			 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
+			 model.addAttribute("buyerVO", buyerVO);
+			 List<ArticleVO> myArticleList = articleSvc.getByMemberId(buyerVO);
+			 
+			 model.addAttribute("myArticleList", myArticleList);
+			 
+			 return "front-end/article/myArticle-list";
+		 }
+		 
 		@GetMapping("getOne_For_Update")
 		public String getOneArticleUpdate(@RequestParam("id") Integer articleId, ModelMap model) {
 		    ArticleVO articleVO = articleSvc.getOneArticle(articleId);
@@ -116,7 +152,7 @@ public class ArticleController {
 		    System.out.println(articleVO);
 		    System.out.println("==============XXXXXXXXXXXXXX");
 
-		    return "front-end/update_article_input";
+		    return "front-end/article/article-edit";
 		}
 		
 
@@ -131,6 +167,10 @@ public class ArticleController {
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(articleVO, result, "upFiles");
 		articleVO.setArtUpdateTime(new Date());
+		articleVO.setArtCreateTime(null);
+		articleVO.setArticleLike(0);
+		articleVO.setArticleComment(0);
+		articleVO.setIsEnabled(true);
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
 			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
 		} else {
@@ -164,7 +204,40 @@ public class ArticleController {
 		model.addAttribute("success", "- (新增成功)");
 		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
 	}
-
+	@PostMapping("insert-reply-report")
+	public String insertReplyReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setReportTargetType(1);
+		reportVO.setArticleVO(null);
+		reportVO.setReportState(0);
+		reportVO.setReportTime(new Date());
+		/*************************** 2.開始新增資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.addReport(reportVO);
+		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+		List<ReportVO> list = reportSvc.getAll();
+		model.addAttribute("reportListData", list);
+		
+		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+	}
+	@PostMapping("insert-article-report")
+	public String insertArticleReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setReportTargetType(0);
+		reportVO.setReplyVO(null);
+		reportVO.setReportState(0);
+		reportVO.setReportTime(new Date());
+		/*************************** 2.開始新增資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.addReport(reportVO);
+		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+		List<ReportVO> list = reportSvc.getAll();
+		model.addAttribute("reportListData", list);
+		
+		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+	}
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST request
 	 */
@@ -203,8 +276,9 @@ public class ArticleController {
 			}
 		}
 		if (result.hasErrors()) {
-			return "front-end/article/update_article_input";
+			return "front-end/article/article-edit";
 		}
+		
 		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始修改資料 *****************************************/
 		// EmpService empSvc = new EmpService();
@@ -214,7 +288,7 @@ public class ArticleController {
 		model.addAttribute("success", "- (修改成功)");
 		articleVO = articleSvc.getOneArticle(Integer.valueOf(articleVO.getArticleId()));
 		model.addAttribute("articleVO", articleVO);
-		return "front-end/article/listOneArticle"; // 修改成功後轉交listOneEmp.html
+		return "redirect:/article/listAll"; // 修改成功後轉交listOneEmp.html
 	}
 
 	/*
@@ -231,6 +305,34 @@ public class ArticleController {
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (刪除成功)");
 		return "front-end/article/listAllArticle"; // 刪除完成後轉交listAllEmp.html
+	}
+
+	@PostMapping("/like")
+	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId) {
+	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
+	    if (articleVO != null) {
+	        articleVO.setArticleLike(articleVO.getArticleLike()+1); // 增加喜欢数
+	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
+	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
+	}
+	@PostMapping("/unlike")
+	public ResponseEntity<String> decreaseLikes(@RequestParam("articleId") String articleId) {
+	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
+	    if (articleVO != null) {
+	        int currentLikes = articleVO.getArticleLike();
+	        if (currentLikes > 0) { // 只有喜欢数大于 0 时才能执行减少操作
+	            articleVO.setArticleLike(currentLikes - 1); // 减少喜欢数
+	            articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
+	            return new ResponseEntity<>("Likes decreased successfully", HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>("Likes already at minimum", HttpStatus.BAD_REQUEST);
+	        }
+	    } else {
+	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
+	    }
 	}
 
 
@@ -278,15 +380,4 @@ public class ArticleController {
 		return result;
 	}
 	
-	/*
-	 * This method will be called on select_page.html form submission, handling POST request
-	 */
-//	@PostMapping("listArticles_ByCompositeQuery")
-//	public String listAllArticle(HttpServletRequest req, Model model) {
-//		Map<String, String[]> map = req.getParameterMap();
-//		List<ArticleVO> list = articleSvc.getAll(map);
-//		model.addAttribute("articleListData", list); // for listAllEmp.html 第85行用
-//		return "front-end/article/listAllArticle";
-//	}
-
 }

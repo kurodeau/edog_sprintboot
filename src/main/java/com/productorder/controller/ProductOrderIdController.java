@@ -47,14 +47,19 @@ public class ProductOrderIdController {
         return "front-end/seller/seller-order-overall";
     }
 	
+	@GetMapping("productordersearch") 
+	public String productordersearch(Model model){
+        return "front-end/seller/seller-order-search";
+    }
+	
 	
 	@PostMapping("getOne_For_Display")
 	public String getOne_For_Display(
 		/***************************1.接收請求參數 - 輸入格式的錯誤處理*************************/
-			@NotEmpty(message="訂單編號: 請勿空白")
-			@Digits(integer = 4, fraction = 0, message = "訂單編號: 請填數字-請勿超過{integer}位數")
-			@Min(value = 1, message = "訂單編號: 不能小於{value}")
-			@Max(value = 9999, message = "訂單編號: 不能超過{value}")
+//			@NotEmpty(message="訂單編號: 請勿空白")
+//			@Digits(integer = 4, fraction = 0, message = "訂單編號: 請填數字-請勿超過{integer}位數")
+//			@Min(value = 1, message = "訂單編號: 不能小於{value}")
+//			@Max(value = 9999, message = "訂單編號: 不能超過{value}")
 			@RequestParam("orderId") String orderId,
 		ModelMap model) {
 		
@@ -67,15 +72,14 @@ public class ProductOrderIdController {
 		
 		if (productOrderVO == null) {
 			model.addAttribute("errorMessage", "查無資料");
-			return "back-end/productOrder/select_page";
+			return "";
 		}
 		
 		/***************************3.查詢完成,準備轉交(Send the Success view)*****************/
 		model.addAttribute("productOrderVO", productOrderVO);
 		model.addAttribute("getOne_For_Display", "true"); // 旗標getOne_For_Display見select_page.html的第126行 -->
 		
-//		return "back-end/emp/listOneProductOrder";  // 查詢完成後轉交listOneProductOrder.html
-		return "back-end/productOrder/select_page"; // 查詢完成後轉交select_page.html由其第128行insert listOneProductOrder.html內的th:fragment="listOneProductOrder-div
+		return ""; // 查詢完成後轉交select_page.html由其第128行insert listOneProductOrder.html內的th:fragment="listOneProductOrder-div
 	}
 
 	
@@ -96,6 +100,8 @@ public class ProductOrderIdController {
 		List<ProductOrderVO> list = productOrderSvc.getProductOrderPendingConfirm();
 		return list;
 	}
+	
+	
 	
 	
 	@ModelAttribute("productOrderNotAcceptedByBuyer")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
@@ -139,6 +145,13 @@ public class ProductOrderIdController {
 	protected List<ProductOrderVO> productOrderCompleted(Model model) {
 		
 		List<ProductOrderVO> list = productOrderSvc.getProductOrderCompleted();
+		return list;
+	}
+	
+	@ModelAttribute("productOrderCanceled")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+	protected List<ProductOrderVO> productOrderCanceled(Model model) {
+		
+		List<ProductOrderVO> list = productOrderSvc.getProductOrderCanceled();
 		return list;
 	}
 	

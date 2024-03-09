@@ -71,7 +71,11 @@ public class IndexControllerBuyer {
         // resources/template//index.html
     }
 	
-	
+    @GetMapping("/front/buyer/buyer-like")
+    public String buyerLike(Model model) {
+        return "/front-end/buyer/buyer-like";
+        // resources/template//index.html
+    }
 	
 }
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.article.entity.ArticleVO;
 import com.article.repositary.ArticleRepository;
 import com.articleType.entity.ArticleTypeVO;
+import com.buyer.entity.BuyerVO;
 
 @Service("articleService")
 public class ArticleService {
@@ -44,6 +45,17 @@ public class ArticleService {
 	}
 	public List<ArticleVO> getByArticleTypeId(ArticleTypeVO articleTypeVO){
 		List<ArticleVO> articleType=repository.findByArticleTypeVO(articleTypeVO);
+		System.out.println("TypeId="+articleTypeVO.getArticleTypeId());
 		return articleType;
 	}
-}
+	public List<ArticleVO> getByMemberId(BuyerVO buyerVO){
+		List<ArticleVO> myArticle=repository.findByBuyerVO(buyerVO);
+		System.out.println("MemberId="+buyerVO.getMemberId());
+		return myArticle;
+	}
+	
+	 public List<ArticleVO> searchArticles(String searchText) {
+	         return repository.findByArticleTitleContaining(searchText);
+
+	    }
+	}

@@ -32,7 +32,7 @@ import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
 
 @Controller
-@RequestMapping("/report")
+@RequestMapping("/back/report")
 public class ReportController {
 
 	@Autowired
@@ -58,6 +58,33 @@ public class ReportController {
     	List<ReportVO> list = reportSvc.getAll();
     	return list;
     }
+	@ModelAttribute("reportListArtData")
+	protected List<ReportVO> referenceListArtData_Report(Model model) {
+	    List<ReportVO> list = reportSvc.getAll();
+	    List<ReportVO> filteredList = new ArrayList<>();
+
+	    for (ReportVO report : list) {
+	        if (report.getReportTargetType() != null && report.getReportTargetType() == 0) {
+	            filteredList.add(report);
+	        }
+	    }
+
+	    return filteredList;
+	}
+	@ModelAttribute("reportListReplyData")
+	protected List<ReportVO> referenceListReplyData_Report(Model model) {
+		List<ReportVO> list = reportSvc.getAll();
+		List<ReportVO> filteredList = new ArrayList<>();
+		
+		for (ReportVO report : list) {
+			if (report.getReportTargetType() != null && report.getReportTargetType() == 1) {
+				filteredList.add(report);
+			}
+		}
+		
+		return filteredList;
+	}
+
 	
 	@ModelAttribute("reportTypeListData") // for select_page.html 第135行用
 	protected List<ReportTypeVO> referenceListData_ReportType(Model model) {
@@ -82,11 +109,22 @@ public class ReportController {
 		return "back-end/back-report-list";
 	}
 	
+	@GetMapping("listartAll")
+	public String listArtAllReport(ModelMap model) {
+		return "back-end/back-reportart-list";
+	}
+	@GetMapping("listreplyAll")
+	public String listReplyAllReport(ModelMap model) {
+		return "back-end/back-reportreply-list";
+	}
+	
 	@GetMapping("addReport")
 	public String addReport(ModelMap model) {
 		ReportVO reportVO = new ReportVO();
 		model.addAttribute("reportVO", reportVO);
-		return "back-end/report/addReport";
+//		return "back-end/report/addReport";
+		return "back-end/report";
+		
 //		return "back-end/article/post-article";
 
 	}
@@ -99,12 +137,9 @@ public class ReportController {
 	public String insert(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
 		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		if (reportVO.getReportTargetType() == 0) {
-	        reportVO.setReplyVO(null); 
-	    } else if (reportVO.getReportTargetType() == 1) {
-	        reportVO.setArticleVO(null); 
-	    }
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
+		reportVO.setReportTargetType(0);
+		reportVO.setReplyVO(null);
+		reportVO.setReportState(0);
 		reportVO.setReportTime(new Date());
 		/*************************** 2.開始新增資料 *****************************************/
 		// EmpService empSvc = new EmpService();
@@ -112,25 +147,56 @@ public class ReportController {
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<ReportVO> list = reportSvc.getAll();
 		model.addAttribute("reportListData", list);
-		model.addAttribute("success", "- (新增成功)");
-		return "redirect:/report/listAllReport"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
+		
+		return "back-end/back-report-list"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
 	}
+	
 
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST
 	 * request
 	 */
+//	@PostMapping("getOne_For_Update")
+//	public String getOne_For_Update(@RequestParam("reportId") String reportId, ModelMap model) {
+//
+//		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+//		/*************************** 2.開始查詢資料 *****************************************/
+//		ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
+//
+//		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+//		model.addAttribute("reportVO", reportVO);
+//		return "back-end/report/update_report_input"; // 查詢完成後轉交update_emp_input.html
+//	}
 	@PostMapping("getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("reportId") String reportId, ModelMap model) {
-
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		/*************************** 2.開始查詢資料 *****************************************/
-		ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
-
-		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
-		model.addAttribute("reportVO", reportVO);
-		return "back-end/report/update_report_input"; // 查詢完成後轉交update_emp_input.html
+	    // 接收请求参数，这里省略了格式错误处理部分
+	    ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
+	    
+	    // 获取对应的ArticleVO对象
+//	    ArticleVO articleVO = reportVO.getArticleVO();
+//	    
+//	    // 添加ArticleVO对象到模型中
+//	    model.addAttribute("articleVO", articleVO);
+	    
+	    // 添加reportVO对象到模型中
+	    model.addAttribute("reportVO", reportVO);
+	    
+	    // 返回视图
+	    return "back-end/back-reportart-edit";
 	}
+
+	
+	@PostMapping("getOne_For_Add")
+	public String getOne_For_Add(@RequestParam("articleId") String articleId, ModelMap model) {
+		
+		ReportVO reportVO = new ReportVO();
+		ArticleVO articleVO = new ArticleVO();
+		articleVO.setArticleId(Integer.valueOf(articleId));
+		reportVO.setArticleVO(articleVO);
+		model.addAttribute("reportVO", reportVO);
+		return "back-end/report";
+	}
+	
 
 	/*
 	 * This method will be called on update_emp_input.html form submission, handling
