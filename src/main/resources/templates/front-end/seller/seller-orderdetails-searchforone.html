@@ -46,7 +46,7 @@
           <thead>
             <tr>
               <th class="text-center">商品編號</th>
-              <!-- 這邊串接以後會加入商品名稱 -->
+              <th class="text-center">商品名稱</th>
               <th class="text-center">商品購買數量</th>
               <th class="text-center">已評論</th>
               <th class="text-center">評分星數</th>
@@ -60,7 +60,7 @@
             <th:block th:each="orderDetailsVO : ${Orderdetails}">
               <tr>
                 <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
-                <!-- 這裡會加入商品名稱 -->
+                <td class="text-center" th:text="${orderDetailsVO.productVO.productName}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '無'}"></td>

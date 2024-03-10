@@ -11,12 +11,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.allenum.ProductOrderStatus;
 import com.orderdetails.model.OrderDetailsVO;
+import com.seller.entity.SellerVO;
 
 @Entity  //要加上@Entity才能成為JPA的一個Entity類別
 @Table(name = "productOrder") //代表這個class是對應到資料庫的實體table，目前對應的table是EMP2 
@@ -24,26 +26,37 @@ public class ProductOrderVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-/////關聯大禮包/////////////////////////////////////////
-	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
-	@OrderBy("orderId asc")
-	public Set<OrderDetailsVO> getOrderDetailss() {
-		return this.orderDetailss;
-	}
 
-	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
-		this.orderDetailss = orderDetailss;
-	}
-	
-/////////////////////////////////////////
 	
 	
 	private Integer orderId;//PK
 	
-	private Integer sellerId;//FK1
 	
+/////////////////////////////////
+	
+//	private SellerVO sellerVO;//FK:sellerId
+//	
+//	
+//	@ManyToOne
+//	@JoinColumn(name = "sellerId" ,referencedColumnName="sellerId") 
+//	public SellerVO getSellerVO() {
+//		return sellerVO;
+//	}
+//
+//	public void setSellerVO(SellerVO sellerVO) {
+//		this.sellerVO = sellerVO;
+//	}
+///////////////////////////////
+	private Integer sellerId;//FK2
+	public Integer getSellerId() {
+		return sellerId;
+	}
+
+
+	public void setSellerId(Integer sellerId) {
+		this.sellerId = sellerId;
+	}
+
 	private Integer memberId;//FK2
 	private Integer couponId;//FK3
 	
@@ -76,15 +89,7 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "sellerId")	
-	public Integer getSellerId() {
-		return sellerId;
-	}
-
-
-	public void setSellerId(Integer sellerId) {
-		this.sellerId = sellerId;
-	}
+	
 
 	@Column(name = "memberId")	
 	public Integer getMemberId() {
@@ -241,7 +246,20 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.shippingTime = shippingTime;
 	}
 	
+/////訂單明細關聯/////////////////////////////////////////
+	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
 	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
+	@OrderBy("orderId asc")
+	public Set<OrderDetailsVO> getOrderDetailss() {
+		return this.orderDetailss;
+	}
+
+	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
+		this.orderDetailss = orderDetailss;
+	}
+	
+/////////////////////////////////////////
 	
 	
 	

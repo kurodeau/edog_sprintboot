@@ -29,37 +29,9 @@ public class OrderDetailsVO implements java.io.Serializable {
 	
 	
 	private Integer orderDetailsId;
+	private ProductOrderVO productOrderVO; //FK:orderId
+	private ProductVO productVO; //FK:productId
 	
-	
-	
-/////關聯大禮包/////////////////////////////////////////
-	private ProductOrderVO productOrderVO;
-	
-	@ManyToOne
-	@JoinColumn(name = "orderId")   // 指定用來join table的column
-	public ProductOrderVO getProductOrderVO() {//FK1
-		return productOrderVO;
-	}
-	
-
-	public void setProductOrderVO(ProductOrderVO productOrderVO) {
-		this.productOrderVO = productOrderVO;
-	}
-/////////////////////商品與訂單明細的關聯//////////////////////////////////////////	
-private ProductVO productVO;
-	
-	@ManyToOne
-	@JoinColumn(name = "productId")   // 指定用來join table的column
-	public ProductVO getProductVO() {//FK1
-		return productVO;
-	}
-	
-
-	public void setProductVO(ProductVO productVO) {
-		this.productVO = productVO;
-	}
-
-/////////////////////////////////////////////////////////////
 	private Integer purchaseQuantity;
 	private Boolean isCommented;
 	private Integer stars;
@@ -165,8 +137,33 @@ private ProductVO productVO;
 		this.isEnable = isEnable;
 	}
 	
+/////訂單與訂單明細的關聯/////////////////////////////////////////
 	
 	
+	@ManyToOne
+	@JoinColumn(name = "orderId")   // 指定用來join table的column
+	public ProductOrderVO getProductOrderVO() {//FK1
+		return productOrderVO;
+	}
+	
+
+	public void setProductOrderVO(ProductOrderVO productOrderVO) {
+		this.productOrderVO = productOrderVO;
+	}
+
+	
+/////////////////////商品與訂單明細的關聯//////////////////////////////////////////	
+	@ManyToOne
+	@JoinColumn(name = "productId")   // 指定用來join table的column
+	public ProductVO getProductVO() {//FK1
+		return productVO;
+	}
+	
+	
+	public void setProductVO(ProductVO productVO) {
+		this.productVO = productVO;
+	}
+/////////////////////////////////////////////////////////////
 	
 	
 	

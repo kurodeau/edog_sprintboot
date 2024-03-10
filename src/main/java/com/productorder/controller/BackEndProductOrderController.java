@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.orderdetails.model.OrderDetailsService;
-import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
 
@@ -36,6 +35,7 @@ public class BackEndProductOrderController {
 	ProductOrderService productOrderSvc;
 	@Autowired
 	OrderDetailsService orderDetailsSvc;
+
 
 	
 	

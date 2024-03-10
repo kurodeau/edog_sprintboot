@@ -30,20 +30,7 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
-//////////////商品與訂單明細的關聯///////////////////////
-	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productVO")
-	@OrderBy("orderId asc")
-	public Set<OrderDetailsVO> getOrderDetailss() {
-		return this.orderDetailss;
-	}
 
-	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
-		this.orderDetailss = orderDetailss;
-	}
-	
-///////////////////////////////////////
 	
 	private Integer productId;   
     private byte[] productCoverImg;
@@ -220,6 +207,22 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setSellerVO(SellerVO sellerVO) {
 	    this.sellerVO = sellerVO;
 	}
+
+	
+//////////////商品與訂單明細的關聯///////////////////////
+private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productVO")
+@OrderBy("orderId asc")
+public Set<OrderDetailsVO> getOrderDetailss() {
+return this.orderDetailss;
+}
+
+public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
+this.orderDetailss = orderDetailss;
+}
+
+///////////////////////////////////////
 
 	@Override
 	public String toString() {
