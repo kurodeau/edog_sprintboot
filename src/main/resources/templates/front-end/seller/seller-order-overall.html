@@ -12,6 +12,8 @@
   
     <!-- ======= Sidebar ======= -->
      <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+   
+   
     <!-- ======= Main ======= -->
 
     <main class="main main-layout-seller">
@@ -116,61 +118,71 @@
                 </div> -->
             
             
-     <!-- 所有訂單 -->
-     
-     
-            
-           <div class="tab-content pt-2" id="borderedTabContent">
-              <div
-                class="tab-pane show active"
-                id="bordered-all-orders"
-                role="tabpanel"
-                aria-labelledby="all-orders-tab"
-              >
-                <div class="container mt-3 container-list-custom">
-                 <div class="row header-row-custom">
-                    <div class="col-2">訂單序號</div>
-                    <div class="col-2">訂單日期</div>
-                    <div class="col-3">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
-                  
 
-                  
-                  <div class="row item-row-custom" th:each="productOrderVO : ${productOrderList}">
-                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
-                    <div class="col-3 d-flex flex-column align-items-center"> 
-                   
-                  		  <form method="post" th:action="@{/front/seller/productorder/confirm}">
-                    			  <button type="submit" class="product align-self-start btn-func">
-                      				 接受訂單
-                      			  </button>
-                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
-						  </form> 
-                      		
-                      		
-               		      <form method="post" th:action="@{/front/seller/productorder/cancel}">
-                    			  <button class="product align-self-start btn-func">
-                    			  取消訂單
-                    		 	</button>
-                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
-                  		  </form>
-                      
-                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
-                    			  <button class="product align-self-start btn-func">
-                    			  查看詳情
-                    		 	</button>
-                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
-                  		  </form>
-                      	 
-                      	 </div>
-                    </div>
-                  </div> 
-                 </div>
+     
+     
+           <div class="tab-content pt-2" id="borderedTabContent">
+            
+           
+           
+     <!-- 所有訂單 -->
+           
+		     		  <div
+		                class="tab-pane show active"
+		                id="bordered-all-orders"
+		                role="tabpanel"
+		                aria-labelledby="all-orders-tab">
+		              
+		              
+		                <div class="container mt-3 container-list-custom">
+		                 <div class="row header-row-custom">
+		                    <div class="col-2">訂單序號</div>
+		                    <div class="col-2">訂單日期</div>
+		                    <div class="col-3">買家實付金額</div>
+		                    <div class="col-3">狀態</div>
+		                    <div class="col-2">操作</div>
+		                  </div>
+		                  
+		                  
+		
+		                  
+		                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderList}">
+		                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
+		                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
+		                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+		                    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+		                    <div class="col-3 d-flex flex-column align-items-center"> 
+		                   
+		                  		  <form method="post" th:action="@{/front/seller/productorder/confirm}">
+		                    			  <button type="submit" class="product align-self-start btn-func">
+		                      				 接受訂單
+		                      			  </button>
+		                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+								  </form> 
+		                      		
+		                      		
+		               		      <form method="post" th:action="@{/front/seller/productorder/cancel}">
+		                    			  <button class="product align-self-start btn-func">
+		                    			  取消訂單
+		                    		 	</button>
+		                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+		                  		  </form>
+		                  		  
+		               		      
+		                  		  
+		                      
+		                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+		                    			  <button class="product align-self-start btn-func">
+		                    			  查看詳情
+		                    		 	</button>
+		                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+		                  		  </form>
+		                      	 
+		                      	 </div>
+		                    </div>
+		                  </div> 
+		         </div>
+
 
 
 
@@ -193,7 +205,9 @@
                     <div class="col-2">操作</div>
                   </div>
 
-             	<div class="row item-row-custom" th:each="productOrderVO : ${productOrderPendingConfirm}">
+
+             	<div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderPendingConfirm}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -215,7 +229,8 @@
                     		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
                   		  </form>
                       
-                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+
+                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -246,7 +261,8 @@
                   </div>
 
                   <!-- Item 1 -->
-                  <div class="row item-row-custom" th:each="productOrderVO : ${productOrderSellerProcessing}">
+                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderSellerProcessing}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -262,7 +278,8 @@
                       		
                		     
                       
-                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -293,8 +310,8 @@
                     <div class="col-3">狀態</div>
                     <div class="col-2">操作</div>
                   </div>
+                 <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCompleted}">
 
-                 <div class="row item-row-custom" th:each="productOrderVO : ${productOrderCompleted}">
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -303,7 +320,9 @@
                    
                       		
                       
-                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+
+                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -341,7 +360,9 @@
                   </div>
 
                   <!-- Item 1 -->
-                 <div class="row item-row-custom" th:each="productOrderVO : ${productOrderCanceled}">
+
+                 <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCanceled}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -350,7 +371,9 @@
                    
                       		
                       
-                     	 <form method="post" th:action="@{/front/seller/productorder/getOne_For_OrderDetail}">
+
+                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -434,6 +457,9 @@
     <!-- Vendor & Main JS Files -->
 <div th:replace="fragment-js"></div>
     <!-- Local JS File -->
-    <script></script>
+    
+   
+    
+    
   </body>
 </html>
