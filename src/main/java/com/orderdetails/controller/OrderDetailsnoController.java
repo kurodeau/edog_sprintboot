@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.orderdetails.model.OrderDetailsService;
 import com.orderdetails.model.OrderDetailsVO;
+import com.productorder.model.ProductOrderVO;
 
 @Controller
 @Validated
@@ -69,6 +71,16 @@ public class OrderDetailsnoController {
 		return "back-end/orderdetails/select_page"; // 查詢完成後轉交select_page.html由其第128行insert listOneEmp.html內的th:fragment="listOneEmp-div
 	}
 
+	
+///////////////// ModelAttribute /////////////////////////////////
+@ModelAttribute("productOrderList") 
+protected List<OrderDetailsVO> productOrderList(Model model) {
+
+List<OrderDetailsVO> list = orderDetailsSvc.getAll();
+return list;
+}
+	
+	
 	
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	//@ResponseStatus(value = HttpStatus.BAD_REQUEST)

@@ -27,6 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.buyer.entity.BuyerVO;
+import com.product.model.ProductImgService;
+import com.product.model.ProductImgVO;
+import com.product.model.ProductService;
+import com.product.model.ProductVO;
 import com.login.PasswordForm;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
@@ -53,6 +57,16 @@ public class IndexControllerMain {
 
 	@Autowired
 	SellerLvService sellerLvSvc;
+
+    
+  @Autowired
+  ProductService productSvc;
+    
+    
+  @Autowired
+	ProductImgService productImgSvc;
+	
+
 
 	@Autowired
 	SellerService sellerSvc;
@@ -392,7 +406,14 @@ public class IndexControllerMain {
     public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
     	Integer productId =null;
     	try {
+    		
     	 productId = Integer.valueOf(id);
+    	 List<ProductImgVO>  productImgVOs= productImgSvc.getProductImgs(productId);
+    	
+    	 
+    	 model.addAttribute("productImageList",productImgVOs);
+    	 
+    	 
     	} catch (NumberFormatException e) {
 //    		e.printStackTrace();
     		return "/";
@@ -487,5 +508,17 @@ public class IndexControllerMain {
 	    private String keyword;
 
 	}
+
+	
+	
+	@ModelAttribute("allProductListData")
+	protected List<ProductVO> referenceListData1() {
+		List<ProductVO> list = productSvc.getProductLaunch();
+//		System.out.println("==============================");
+//		list.forEach(data -> System.out.println(data));
+//		System.out.println("==============================");
+		return list;
+	}
+	
 
 }
