@@ -44,25 +44,12 @@ public class IndexControllerBuyer {
 	
 	@Autowired
 	BuyerService buyerSvc;
-
-	// 沒有要抓的關聯表註解起來
-//	@Autowired
-//	SellerLvService sellerLvSvc;
-
-	// 沒有要抓的關聯表註解起來
-//	@ModelAttribute("sellerLvListData")
-//	protected List<SellerLvVO> referenceListData() {
-//		List<SellerLvVO> list = sellerLvSvc.getAll();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
-//		return list;
-//	}
-	
 	
 	@PostMapping("/buyer/register/check")
 	public String checkregisterBuyer(@Valid @NonNull BuyerVO buyerVO, BindingResult result, ModelMap model, HttpSession session) throws IOException {
 		System.out.println("有進入buyer/register/check");
+		
+		// 方便註冊測試, 先把錯誤驗證關閉, 之後要補
 //		if (result.hasErrors()) {
 //	        return "/front-end/buyer/buyer-register";
 //		}
@@ -87,7 +74,11 @@ public class IndexControllerBuyer {
         return "/front-end/buyer/buyer-commidityV2";
     }
 	
-	
+    @GetMapping("/front/buyer/buyer-like")
+    public String buyerLike(Model model) {
+        return "/front-end/buyer/buyer-like";
+        // resources/template//index.html
+    }
 	
 }
 

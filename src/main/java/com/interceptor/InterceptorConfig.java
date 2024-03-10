@@ -14,7 +14,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/main"); 
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/report"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/sellerLv/edit"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/seller/edit"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/product/add"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/report");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/product/productlist"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/productorder/productorderlist"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/productorder/productordersearch"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/add"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/adlist"); 
+
+		
 	}
 
 }

@@ -124,8 +124,7 @@ public class SellerLvControllerFront extends HttpServlet {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			Integer sellerLvId = sellerUpdateVO.getSellerLvId().getSellerLvId();
 			List<GrantedAuthority> authorities = new ArrayList<>();
-
-
+			
 			switch (sellerLvId) {
 			case 1:
 				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
@@ -142,6 +141,9 @@ public class SellerLvControllerFront extends HttpServlet {
 			}
 			
 			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(sellerUpdateVO, null, authorities));
+			
+			
+			
 			
 			return ResponseEntity.status(HttpStatus.OK).body(jsonString);
 

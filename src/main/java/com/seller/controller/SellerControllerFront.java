@@ -1,5 +1,6 @@
 package com.seller.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -70,34 +72,35 @@ public class SellerControllerFront extends HttpServlet {
 //		System.out.println("==============================");
 		return list;
 	}
-
-	@GetMapping("/seller/edit")
-	public String selleredit(Model model, HttpSession session) {
+	
+	
+	
+	@GetMapping("seller/edit")
+	public String selleredit( ModelMap model) {
 		SecurityContext secCtx = SecurityContextHolder.getContext();
 		Authentication authentication = secCtx.getAuthentication();
 		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		System.out.println(sellerVO.getSellerLvId().getSellerLvId());
+		sellerVO.setSellerPassword("");
 		model.addAttribute("sellerVO", sellerVO);
 
-		return "front-end/seller/seller-seller-edit";
+
+		return "front-end/seller/seller-seller-editv3";
 	}
 
-	@PostMapping("/seller/update")
-	public String sellerupdate(@Valid @NonNull SellerVO sellerVO, Model model, BindingResult result,
-			HttpSession session) {
+	@PostMapping("seller/update")
+	public String updateSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,HttpSession session)
+			throws IOException {
 //		System.out.println(sellerVO);
 
 		if (result.hasErrors()) {
-//			System.out.println("==============XXXXXXXXXXXXXX");
-//			System.out.println("updateSeller");
-//			System.out.println(result);
-//			System.out.println("==============XXXXXXXXXXXXXX");
-			return "front-end/seller/seller-seller-edit";
+			return "front-end/seller/seller-seller-editv3";
 		}
 		
 		// 原則上重新更改後，也需要驗證才能登入
-//		sellerVO.setIsConfirm(true);
+		sellerVO.setIsConfirm(true);
 
-		sellerSvc.updateSeller(sellerVO);
+		sellerSvc.updateUserDetails(sellerVO);
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Integer sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
@@ -126,7 +129,8 @@ public class SellerControllerFront extends HttpServlet {
 		// 如果成功消息未显示过，则设置标志位并重定向到带有成功消息的 URL
 		session.setAttribute("sellerEditSuccess", true);
 		return "redirect:/front/seller/main";
-
 	}
+
+
 
 }

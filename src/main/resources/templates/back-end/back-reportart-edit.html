@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <!-- start帳戶管理 -->
+
+    <aside th:replace="back-end/aside-back.html"></aside>
+
+    <!-- ======= Main ======= -->
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>編輯賣家資料</h1>
+
+<!--         <form -->
+<!--           class="row g-3" -->
+<!--           id="myForm" -->
+<!--           th:action="@{update}" -->
+<!--           th:object="${reportVO}" -->
+<!--           method="post" -->
+<!--           enctype="multipart/form-data" -->
+<!--           onsubmit="return updateHiddenFields();" -->
+<!--         > -->
+<!--           <div class="col-md-12"> -->
+<!--             <label for="inputReportId" class="form-label">檢舉ID</label> -->
+<!--             <input -->
+<!--               type="text" -->
+<!--               class="form-control" -->
+<!--               id="inputReportId" -->
+<!--               name="reportId" -->
+<!--               th:field="*{reportId}" -->
+<!--               aria-describedby="sellerIdFeedback" -->
+<!--               readonly -->
+<!--             /> -->
+<!--           </div> -->
+          
+<!--           <div class="col-md-12"> -->
+<!--             <label for="inputArticleContent" class="form-label">文章內容</label> -->
+<!--             <input -->
+<!--               type="text" -->
+<!--               class="form-control" -->
+<!--               id="inputArticleContent" -->
+<!--               name="articleContent" -->
+<!--               th:field="*{articleVO.articleContent}" -->
+<!--               aria-describedby="sellerIdFeedback" -->
+<!--               readonly -->
+<!--             /> -->
+<!--           </div> -->
+
+<!--           <div class="col-md-2"> -->
+<!-- 			    <label for="inputIsConfirm" class="form-label">是否下架</label> -->
+<!-- 			    <select class="form-select" name="isConfirm" id="inputIsConfirm"> -->
+<!-- 			        <option value="true" th:selected="${articleVO.isEnabled}">保留</option> -->
+<!-- 			        <option value="false" th:selected="${!articleVO.isEnabled}">下架</option> -->
+<!-- 			    </select> -->
+<!-- 			</div> -->
+
+<!--           <div class="text-center d-flex flex-row gap-5 justify-content-center"> -->
+<!--             <button type="reset" class="btn btn-secondary">取消並離開</button> -->
+<!--             <button type="submit" class="btn btn-primary">提交修改</button> -->
+<!--           </div> -->
+<!--         </form> -->
+<div align="center">
+		<h3><b>所有欄位皆為必填欄位</b></h3>
+		<form th:action="@{update}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
+			
+			<div>
+			<label>回復編號:</label>
+			<input type="text" th:field="*{reportId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+			</div>
+			
+<div>
+    <label>檢舉目標類型:</label>
+    <input type="text" th:field="*{reportTargetType}" th:value="${reportVO.reportTargetType == 0 ? '舉報文章' : '舉報回复'}" style="border:0px ; font-weight: bold;" readonly />
+</div>
+
+<div th:if="${reportVO.reportTargetType == 0}">
+    <div>
+        <label>文章編號:</label>
+        <input type="text" th:value="${reportVO.articleVO != null} ? ${reportVO.articleVO.articleId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/>
+        <input type="hidden" th:field="*{articleVO.articleId}" />
+    </div>
+<!--     <div class="hide"> -->
+<!--         <label>回復編號:</label> -->
+<!--         <input type="text" th:value="${reportVO.replyVO != null} ? ${reportVO.replyVO.replyId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/> -->
+<!--         <input type="hidden" th:field="*{replyVO.replyId}" /> -->
+<!--     </div> -->
+</div>
+
+<div th:if="${reportVO.reportTargetType == 1}">
+<!--     <div class="hide"> -->
+<!--         <label>文章編號:</label> -->
+<!--         <input type="text" th:value="${reportVO.articleVO != null} ? ${reportVO.articleVO.articleId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/> -->
+<!--         <input type="hidden" th:field="*{articleVO.articleId}" /> -->
+<!--     </div> -->
+    <div>
+        <label>回復編號:</label>
+        <input type="text" th:value="${reportVO.replyVO != null} ? ${reportVO.replyVO.replyId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/>
+        <input type="hidden" th:field="*{replyVO.replyId}" />
+    </div>
+</div>
+
+
+			
+			<div>
+			<label>檢舉分類:</label>
+			<input type="text" th:field="*{reportTypeVO.reportTypeId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+			</div>
+			
+<!-- 			<div> -->
+<!-- 			<label>檢舉狀態:</label> -->
+<!-- 			<input type="text" th:field="*{reportState}" onclick="hideContent('reportState.errors');" /><br/> -->
+<!-- 			<span  th:if="${#fields.hasErrors('reportState')}" th:errors="*{reportState}" class="error" id="reportState.errors"></span> -->
+<!-- 			</div> -->
+
+			<div>
+			    <label>檢舉狀態:</label>
+			    <select th:field="*{reportState}" onclick="hideContent('reportState.errors');">
+			        <option th:value="0" th:selected="${reportVO.reportState == 0}">未處理</option>
+			        <option th:value="1" th:selected="${reportVO.reportState == 1}">已處理</option>
+			    </select><br/>
+			    <span  th:if="${#fields.hasErrors('reportState')}" th:errors="*{reportState}" class="error" id="reportState.errors"></span>
+			</div>
+
+			
+			<div class="hide">
+			<label>檢舉時間:</label>
+			<input type="date" th:field="*{reportTime}" onclick="hideContent('reportTime.errors');" /><br/>
+			</div>
+			
+			<div class="hide">
+			<label>檢舉處理時間:</label>
+			<input type="date" th:field="*{reportDealTime}" onclick="hideContent('reportDealTime.errors');" /><br/>
+			</div>
+			
+			<div>
+				<div></div>
+				<div><button type="submit" id="submit"> 送出修改 </button></div>
+				<div></div>
+			</div>		
+		</form>
+	
+	</div>
+      </div>
+    </main>
+
+    <!-- End Main -->
+    <div th:replace="fragment-js"></div>
+
+    <script>
+
+      function checkFormBeforeSubmit() {
+        // 取得表單元素
+        var form = document.getElementById("myForm");
+
+        // 檢視表單內容
+        var formData = new FormData(form);
+        var formContent = "";
+
+        for (var pair of formData.entries()) {
+          formContent += pair[0] + ": " + pair[1] + "\n";
+        }
+
+        // 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+        alert("表單內容：\n" + formContent);
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return true;
+      }
+    </script>
+
+    <!-- simpletable -->
+  </body>
+</html>

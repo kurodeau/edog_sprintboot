@@ -1,6 +1,6 @@
 package com.product.model;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +16,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
 
 
 
 @Entity
 @Table(name = "product")  // Replace "your_table_name" with the actual table name
-public class ProductVO {
+public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
@@ -30,18 +31,31 @@ public class ProductVO {
     private Integer productId;   
     private byte[] productCoverImg;
     private String productName;    
-    private BigDecimal productPrice;
-    private Integer productStockQuantity;    
-    private String productDetails;    
+    private BigDecimal price;
+    private Integer productStockQuantity;   
+    private Integer productSoldQuantity;
+	private String productDetails;    
     private String productStatus;
     private Timestamp productCreationTime; 
-    private Integer totalStars;    
+    private Integer ratings;    
     private Integer totalReviews;
-    private Integer productSort;
+    private ProductSortVO productSortVO;
     private Boolean isEnabled;   
     private SellerVO sellerVO;
+    private String animalType;	
     
-    //OnetoMany需要加上
+    
+    
+    @Column(name = "animalType")
+    public String getAnimalType() {
+		return animalType;
+	}
+
+	public void setAnimalType(String animalType) {
+		this.animalType = animalType;
+	}
+
+	//OnetoMany需要加上
     private Set<ProductImgVO> productImgVO = new HashSet<ProductImgVO>();
     
 	
@@ -54,6 +68,20 @@ public class ProductVO {
 		this.productImgVO = productImgVO;
 	}
    
+	   
+    
+	 @Column(name = "productSoldQuantity")
+    public Integer getProductSoldQuantity() {
+		return productSoldQuantity;
+	}
+    
+
+	public void setProductSoldQuantity(Integer productSoldQuantity) {
+		this.productSoldQuantity = productSoldQuantity;
+	}
+	
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "productId")
@@ -84,13 +112,13 @@ public class ProductVO {
 		this.productName = productName;
 	}
 	
-	@Column(name = "productPrice")
-	public BigDecimal getProductPrice() {
-		return productPrice;
+	@Column(name = "price")
+	public BigDecimal getPrice() {
+		return price;
 	}
 
-	public void setProductPrice(BigDecimal productPrice) {
-		this.productPrice = productPrice;
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 	@Column(name = "productStockQuantity")
@@ -120,7 +148,7 @@ public class ProductVO {
 		this.productStatus = productStatus;
 	}
 
-	@Column(name = "productCreationTime")
+	@Column(name = "productCreationTime" , updatable = false)
 	public Timestamp getProductCreationTime() {
 		return productCreationTime;
 	}
@@ -129,13 +157,13 @@ public class ProductVO {
 		this.productCreationTime = productCreationTime;
 	}
 
-	@Column(name = "totalStars")
-	public Integer getTotalStars() {
-		return totalStars;
+	@Column(name = "Ratings")
+	public Integer getRatings() {
+		return ratings;
 	}
 
-	public void setTotalStars(Integer totalStars) {
-		this.totalStars = totalStars;
+	public void setRatings(Integer ratings) {
+		this.ratings = ratings;
 	}
 
 	@Column(name = "totalReviews")
@@ -147,13 +175,14 @@ public class ProductVO {
 		this.totalReviews = totalReviews;
 	}
 
-	@Column(name = "productSort")
-	public Integer getProductSort() {
-		return productSort;
+	@ManyToOne
+	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")	
+	public ProductSortVO getProductSortVO() {
+		return productSortVO;
 	}
 
-	public void setProductSort(Integer productSort) {
-		this.productSort = productSort;
+	public void setProductSortVO(ProductSortVO productSortVO) {
+		this.productSortVO = productSortVO;
 	}
 
     @Column(name = "isEnabled")
@@ -175,11 +204,11 @@ public class ProductVO {
 	    this.sellerVO = sellerVO;
 	}
 
-
-
-
-	
-	
+	@Override
+	public String toString() {
+		return "ProductVO [productId=" + productId + ", productName=" + productName + ", price=" + price + ", ratings="
+				+ ratings + "]";
+	}
 
     // Add getters and setters
 

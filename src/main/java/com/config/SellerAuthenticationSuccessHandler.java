@@ -31,7 +31,7 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 		// 在這裡獲取登入成功的使用者資訊，例如 SellerVO
 		String sellerEmail = getLoggedInSellerVO(authentication);
 
-		SellerVO sellerVO = sellerSvc.findUserEmail(sellerEmail);
+		SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(sellerEmail);
 
 		// 將 SellerVO 存儲在安全上下文中
 		setSellerVOToSecurityContext(sellerVO, authentication);
