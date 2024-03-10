@@ -167,8 +167,8 @@ public class ReportController {
 //		model.addAttribute("reportVO", reportVO);
 //		return "back-end/report/update_report_input"; // 查詢完成後轉交update_emp_input.html
 //	}
-	@PostMapping("getOne_For_Update")
-	public String getOne_For_Update(@RequestParam("reportId") String reportId, @RequestParam("articleId") String articleId, ModelMap model) {
+	@PostMapping("getArticle_For_Update")
+	public String getArticle_For_Update(@RequestParam("reportId") String reportId, @RequestParam("articleId") String articleId, ModelMap model) {
 	    // 接收请求参数，这里省略了格式错误处理部分
 	    ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
 	    
@@ -183,6 +183,23 @@ public class ReportController {
 	    
 	    // 返回视图
 	    return "back-end/back-reportart-edit";
+	}
+	@PostMapping("getReply_For_Update")
+	public String getReply_For_Update(@RequestParam("reportId") String reportId, @RequestParam("replyId") String replyId, ModelMap model) {
+		// 接收请求参数，这里省略了格式错误处理部分
+		ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
+		
+		// 获取对应的ArticleVO对象
+		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId));
+		
+		// 添加ArticleVO对象到模型中
+		model.addAttribute("replyVO", replyVO);
+		
+		// 添加reportVO对象到模型中
+		model.addAttribute("reportVO", reportVO);
+		
+		// 返回视图
+		return "back-end/back-reportreply-edit";
 	}
 
 	
@@ -259,6 +276,31 @@ public class ReportController {
 		reportVO = reportSvc.getOneReport(Integer.valueOf(reportVO.getReportId()));
 		model.addAttribute("reportVO", reportVO);
 		return "back-end/back-reportart-list"; // 修改成功後轉交listOneEmp.html
+	}
+	
+	@PostMapping("update-reply-report")
+	public String updateReplyReport(@Valid ReportVO reportVO,@Valid ReplyVO replyVO, BindingResult result, ModelMap model) throws IOException {
+		
+		if (result.hasErrors()) {
+			return "back-end/back-reportreply-list";
+		}
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setArticleVO(null); 
+		
+		reportVO.setReportState(1);
+		reportVO.setReportDealTime(new Date());
+		/*************************** 2.開始修改資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.updateReport(reportVO);
+		replySvc.updateReply(replyVO);
+		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("success", "- (修改成功)");
+		replyVO = replySvc.getOneReply(Integer.valueOf(replyVO.getReplyId()));
+		model.addAttribute("replyVO", replyVO);
+		reportVO = reportSvc.getOneReport(Integer.valueOf(reportVO.getReportId()));
+		model.addAttribute("reportVO", reportVO);
+		return "back-end/back-reportreply-list"; // 修改成功後轉交listOneEmp.html
 	}
 
 	/*
