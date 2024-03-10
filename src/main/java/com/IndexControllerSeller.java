@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,9 @@ import com.seller.service.SellerService;
 import com.sellerLv.entity.SellerLvVO;
 import com.sellerLv.service.SellerLvService;
 import com.user.model.UserService;
+import com.util.JedisUtil;
+
+import redis.clients.jedis.Jedis;
 
 //@PropertySource("classpath:application.properties") 
 // 於https://start.spring.io 建立Spring Boot專案時
@@ -52,14 +56,27 @@ public class IndexControllerSeller {
 	
 	
 	@PostMapping("/seller/register/check")
-	public String checkregisterSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,HttpSession session) 	throws IOException {
-		
+	public String checkregisterSeller(@Valid @NonNull SellerVO sellerVO, ModelMap model, BindingResult result,HttpSession session) 	throws IOException {
 		if (result.hasErrors()) {
 	        return "/front-end/seller/seller-register";
 		}
-		sellerSvc.addSeller(sellerVO);
-		model.addAttribute("success", "註冊成功");
+		
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+			String code = jedis.get("email:"+sellerVO.getSellerEmail());
 
+
+			if(code!= null && code.equals("ok")) {
+				jedis.del("email:"+sellerVO.getSellerEmail());
+			} else {
+		        return "/front-end/seller/seller-register";
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("success", "註冊成功");
+		sellerSvc.saveUserDetails(sellerVO);
 		
 		// TESTING 註冊登入後保存sellerVO狀態
 		session.setAttribute("sellerVO", sellerVO);

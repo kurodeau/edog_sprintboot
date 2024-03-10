@@ -118,6 +118,7 @@
                 </div> -->
             
             
+
      
      
            <div class="tab-content pt-2" id="borderedTabContent">
@@ -184,6 +185,7 @@
 
 
 
+
                  			
                 
     <!-- 未處理 -->
@@ -203,7 +205,9 @@
                     <div class="col-2">操作</div>
                   </div>
 
+
              	<div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderPendingConfirm}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -225,6 +229,7 @@
                     		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
                   		  </form>
                       
+
                      	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
@@ -257,6 +262,7 @@
 
                   <!-- Item 1 -->
                   <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderSellerProcessing}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -273,6 +279,7 @@
                		     
                       
                      	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -303,8 +310,8 @@
                     <div class="col-3">狀態</div>
                     <div class="col-2">操作</div>
                   </div>
-
                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCompleted}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -313,7 +320,9 @@
                    
                       		
                       
+
                      	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>
@@ -351,7 +360,9 @@
                   </div>
 
                   <!-- Item 1 -->
+
                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCanceled}">
+
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
                     <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
                     <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
@@ -360,7 +371,9 @@
                    
                       		
                       
+
                      	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
+
                     			  <button class="product align-self-start btn-func">
                     			  查看詳情
                     		 	</button>

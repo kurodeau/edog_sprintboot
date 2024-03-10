@@ -22,13 +22,24 @@ public class ProductSortVO implements Serializable{
 	private Integer productSortId;
 	private Integer productSortNo;
 	private String productSortName;
+	private String productCategory;
 	private Boolean isEnabled;
 	
 	private Set<ProductVO> productVO = new HashSet<ProductVO>();
 	
 	
 	
-	
+	@Column(name = "productCategory")
+	public String getProductCategory() {
+		return productCategory;
+	}
+
+
+	public void setProductCategory(String productCategory) {
+		this.productCategory = productCategory;
+	}
+
+
 	@OneToMany(cascade = CascadeType.ALL , mappedBy="productSortVO")
 	public Set<ProductVO> getProductVO() {
 		return productVO;

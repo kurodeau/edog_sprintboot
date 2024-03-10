@@ -16,5 +16,8 @@ public interface BuyerRepository extends JpaRepository<BuyerVO, Integer> {
 	@Modifying
 	@Query(value = "delete from buyer where memberId =?1", nativeQuery = true)
 	void deleteByMemberId(int memberId);
+	
+	@Query(value = "SELECT * FROM buyer WHERE memberEmail = ?1 LIMIT 1", nativeQuery = true)
+	BuyerVO findByOnlyOneEmail(String email);
 
 }

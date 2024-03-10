@@ -31,9 +31,9 @@ public class ProductOrderController {
 //		CouponService couponService;
 
 		
-		
 
 //更改訂單狀態/////////////////////////////////////////
+
 		
 		@PostMapping("confirm")
 		public String confirmProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
@@ -45,6 +45,7 @@ public class ProductOrderController {
 			model.addAttribute("productOrderList",list);
 			model.addAttribute("success" , "-(接受訂單成功)");
 			return "redirect:/front/seller/productorder/sellerproductorderlistall";
+
 		}
 		
 		@PostMapping("shipping")
@@ -57,6 +58,7 @@ public class ProductOrderController {
 			model.addAttribute("productOrderList",list);
 			model.addAttribute("success" , "-(接受訂單成功)");
 			return "redirect:/front/seller/productorder/sellerproductorderlistall";
+
 		}
 
 		@PostMapping("cancel")
@@ -68,6 +70,7 @@ public class ProductOrderController {
 			model.addAttribute("productOrderList",list);
 			model.addAttribute("success" , "-(接受訂單成功)");
 			return "redirect:/front/seller/productorder/sellerproductorderlistall";
+
 		}
 		
 		

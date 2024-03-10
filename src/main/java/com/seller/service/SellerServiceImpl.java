@@ -8,28 +8,30 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.config.DBUserDetailsManagerSeller;
+import com.config.SellerDetailsService;
 import com.seller.entity.SellerVO;
 import com.seller.repositary.SellerRepository;
 
 @Service
+@ComponentScan("com.config")
 public class SellerServiceImpl implements SellerService {
 
-	private DBUserDetailsManagerSeller dbUserDetailsManagerSeller;
-	private SellerRepository repo;
-	
+	private SellerDetailsService sellerDetailsService;
+
 	@Autowired
-	public void setDbUserDetailsManagerSeller(DBUserDetailsManagerSeller dbUserDetailsManagerSeller) {
-		this.dbUserDetailsManagerSeller = dbUserDetailsManagerSeller;
+	public void setSellerDetailsService(SellerDetailsService sellerDetailsService) {
+		this.sellerDetailsService = sellerDetailsService;
 	}
+
+	private SellerRepository repo;
 
 	@Autowired
 	public void setSellerRepository(SellerRepository repo) {
 		this.repo = repo;
 	}
-
 
 	public void addSeller(@NonNull SellerVO sellerVO) {
 		repo.save(sellerVO);
@@ -59,17 +61,54 @@ public class SellerServiceImpl implements SellerService {
 	public SellerVO findUserEmail(String email) {
 		return repo.findByEmail(email);
 	}
+	
+	
 
-	 public void saveUserDetails(SellerVO sellerVO) {
-	 UserDetails userdetails =
-//	 User.withDefaultPasswordEncoder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("USER")
-//	 .build();
+	public SellerVO findByOnlyOneEmail(String email) {
+		return repo.findByOnlyOneEmail(email);
+	}
+	
 
-	 User.withDefaultPasswordEncoder().username(sellerVO.getSellerEmail()).password(sellerVO.getSellerPassword()).roles("USER")
-	 .build();
-	 
+	@Override
+	public SellerVO findByOnlyPhone(String phone) {
+		 
+		return repo.findByOnlyPhone(phone);
+	}
 
-	 dbUserDetailsManagerSeller.createUser(userdetails,sellerVO);
-	 }
+
+	public void saveUserDetails(SellerVO sellerVO) {
+
+		if (sellerVO == null) {
+			throw new UsernameNotFoundException("User not found with username ");
+		}
+		
+		
+		UserDetails userdetails = User.builder()
+				.username(sellerVO.getSellerEmail())
+				.password(sellerVO.getSellerPassword())
+			    .authorities("ROLE_SELLER")  
+				.build();
+
+		sellerDetailsService.createUser(userdetails, sellerVO);
+
+	}
+	
+	public void updateUserDetails(SellerVO sellerVO) {
+
+		if (sellerVO == null) {
+			throw new UsernameNotFoundException("User not found with username ");
+		}
+		
+
+		UserDetails userdetails = User.builder()
+				.username(sellerVO.getSellerEmail())
+				.password(sellerVO.getSellerPassword())
+			    .authorities("ROLE_SELLER")  
+				.build();
+
+		sellerDetailsService.changePassword(userdetails, sellerVO);
+
+	}
+
 
 }

@@ -47,8 +47,8 @@ public class ArticleIdController {
 	 * This method will be called on select_page.html form submission, handling POST
 	 * request It also validates the user input
 	 */
-	@PostMapping("getOne_For_Display")
-	public String getOne_For_Display(
+	@PostMapping("getOne_For_Display1")
+	public String getOne_For_Display1(
 		/***************************1.接收請求參數 - 輸入格式的錯誤處理*************************/
 		@NotEmpty(message="文章編號: 請勿空白")
 		//@Digits(integer = 4, fraction = 0, message = "員工編號: 請填數字-請勿超過{integer}位數")
@@ -79,6 +79,16 @@ public class ArticleIdController {
 //		return "back-end/emp/listOneEmp";  // 查詢完成後轉交listOneEmp.html
 		return "back-end/article/select_page"; // 查詢完成後轉交select_page.html由其第158行insert listOneEmp.html內的th:fragment="listOneEmp-div
 	}
+	
+	@PostMapping("/getOne_For_Display")
+    public String handleSearch(@RequestParam("searchText") String searchText, Model model) {
+		System.out.println("搜索内容：" + searchText);
+		
+		List<ArticleVO> searchResults = articleSvc.searchArticles(searchText);
+       
+		model.addAttribute("searchResults", searchResults);
+		return "front-end/article/forum-homesearch";
+    }
 	
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	//@ResponseStatus(value = HttpStatus.BAD_REQUEST)
