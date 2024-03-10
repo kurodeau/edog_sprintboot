@@ -29,8 +29,8 @@ import com.productorder.model.ProductOrderVO;
 
 @Controller
 @Validated
-@RequestMapping("/front/seller/productorder")
-public class ProductOrderIdController {
+@RequestMapping("/back/productorder")
+public class BackEndProductOrderController {
 	
 	@Autowired
 	ProductOrderService productOrderSvc;
@@ -43,39 +43,6 @@ public class ProductOrderIdController {
 	
 //畫面跳轉/////////////////////////
 	
-	
-  //賣家部分//
-	
-	//訂單管理（側邊欄）
-	@GetMapping("sellerproductorderlistall") 
-	public String sellerProductOrderlist(Model model){
-        return "front-end/seller/seller-order-overall";
-    }
-	//訂單查詢（側邊欄）
-	@GetMapping("sellerproductordersearch") 
-	public String sellerProductordersearch(Model model){
-        return "front-end/seller/seller-order-search";
-    }
-	//查看詳情按鈕
-	@GetMapping("getOrderdetails") 
-	public String getOneOrderdetails(@RequestParam("orderId")  String orderId, ModelMap model) {
-		
-		List <OrderDetailsVO> orderdetails = null;
-			try {
-				orderdetails = orderDetailsSvc.findByOrderId(Integer.valueOf(orderId));
-
-			} catch (NumberFormatException e) {
-				model.addAttribute("errorMessage", "Invalid orderId format");
-				return "errorPage";
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			model.addAttribute("Orderdetails", orderdetails);
-			return "front-end/seller/seller-orderdetails-searchforone";
-
-		}
-	
-   //平台部分//	
 	//訂單管理（側邊欄）
 		@GetMapping("productordersearch") 
 		public String productordersearch(Model model){
@@ -130,47 +97,7 @@ public class ProductOrderIdController {
 		return list;
 	}
 	
-////賣家訂單管理//////////////////////////////////////////////////////
-	
-	//顯示所有訂單
-	@ModelAttribute("sellerProductOrderList") 
-	protected List<ProductOrderVO> sellerProductOrderList(Integer sellerId,Model model) {
-		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerId);
-		return list;
-	}
-	
-	//顯示未處理訂單
-	@ModelAttribute("sellerProductOrderPendingConfirm") 
-	protected List<ProductOrderVO> sellerProductOrderPendingConfirm(Integer sellerId, Model model) {
-		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderPendingConfirm(sellerId);
-		return list;
-	}
-	
-	//顯示處理中訂單
-	@ModelAttribute("sellerProductOrderSellerProcessing")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-	protected List<ProductOrderVO> sellerProductOrderSellerProcessing(Integer sellerId, Model model) {
-		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
-		return list;
-	}
-	
-	//顯示已完成訂單
-	@ModelAttribute("sellerProductOrderCompleted") 
-	protected List<ProductOrderVO> getSellerProductOrderCompleted(Integer sellerId, Model model) {
-		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCompleted(sellerId);
-		return list;
-	}
-	
-	//顯示已取消訂單
-	@ModelAttribute("sellerProductOrderCanceled") 
-	protected List<ProductOrderVO> getSellerProductOrderCanceled(Integer sellerId, Model model) {
-		sellerId =1;
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCanceled(sellerId);
-		return list;
-	}
+
 	
 	
 	

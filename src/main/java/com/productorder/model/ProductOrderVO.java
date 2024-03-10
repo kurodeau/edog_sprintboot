@@ -25,13 +25,13 @@ public class ProductOrderVO implements java.io.Serializable {
 	
 	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
 
+	private Integer orderId;//PK
 	
 	private Integer sellerId;//FK1
 	
 	private Integer memberId;//FK2
 	private Integer couponId;//FK3
 	
-	private Integer orderId;//PK
 	private Integer memberPaysShipping;
 	private Integer sellerPaysShipping;
 	private Integer orderOrigPrice;
