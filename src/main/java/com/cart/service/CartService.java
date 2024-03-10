@@ -27,6 +27,7 @@ import com.seller.entity.SellerVO;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.json.*;
 
 @Service("cartService")
 public class CartService {
@@ -35,31 +36,31 @@ public class CartService {
 	ProductService productSvc;
 	
 	// 創建一個 Class 用來接 json 的東西
-//	class CollectionAndCart {
-//	    private String[] collectionList;
-//	    private String[] cartList;
-//
-//	    public CollectionAndCart() {}
-//	    
-//		public String[] getCollectionList() {
-//			return collectionList;
-//		}
-//		public void setCollectionList(String[] collectionList) {
-//			this.collectionList = collectionList;
-//		}
-//		public String[] getCartList() {
-//			return cartList;
-//		}
-//		public void setCartList(String[] cartList) {
-//			this.cartList = cartList;
-//		}
-//		
-//		@Override
-//		public String toString() {
-//			return "CollectionAndCart [collectionList=" + Arrays.toString(collectionList) + ", cartList="
-//					+ Arrays.toString(cartList) + "]";
-//		}
-//	}
+	class CollectionAndCart {
+	    private String[] collectionList;
+	    private String[] cartList;
+
+	    public CollectionAndCart() {}
+	    
+		public String[] getCollectionList() {
+			return collectionList;
+		}
+		public void setCollectionList(String[] collectionList) {
+			this.collectionList = collectionList;
+		}
+		public String[] getCartList() {
+			return cartList;
+		}
+		public void setCartList(String[] cartList) {
+			this.cartList = cartList;
+		}
+		
+		@Override
+		public String toString() {
+			return "CollectionAndCart [collectionList=" + Arrays.toString(collectionList) + ", cartList="
+					+ Arrays.toString(cartList) + "]";
+		}
+	}
 	
 	public Map<String, List<ProductVO>> getAllByMemberId(String memberId) {
 
@@ -77,30 +78,30 @@ public class CartService {
 				
 			// 與 Redis 取得連線 並且指定為db10
 			Jedis jedis = jedisPool.getResource()) {
-//			jedis.select(10);
-//			
+			jedis.select(10);
+			
 //			UnifiedJedis j = new 
 //
-//			System.out.println("2222222");
-//			//將撈出的 json 摘出 cart 分類的內容 另存為 List
-//			String jsonString = jedis
-//			System.out.println("333333");
-//			Gson gson = new Gson();
-//			CollectionAndCart collectionAndCart = gson.fromJson(jsonString, CollectionAndCart.class);
-//			System.out.println("test" + collectionAndCart);
+			System.out.println("2222222");
+			//將撈出的 json 摘出 cart 分類的內容 另存為 List
+			String jsonString = jedis.jsonGet(memberId);
+			System.out.println("333333");
+			Gson gson = new Gson();
+			CollectionAndCart collectionAndCart = gson.fromJson(jsonString, CollectionAndCart.class);
+			System.out.println("test" + collectionAndCart);
 //			List<String> memberCart = collectionAndCart.getCartList();
 			
 			// 將所有購物車的資料包入 List<ProductVO>, 並透過公司名稱分為Map
-//			for (String str : memberCart) {
-//				product = productSvc.getOneProduct(Integer.parseInt(str));
-//				String sellerCompany = product.getSellerVO().getSellerCompany();
-//
-//				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
-//				productList = cartClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
-//																								// List，再對其更新
-//				productList.add(product);
-//				cartClassfi.put(sellerCompany, productList);
-//			}
+			for (String str : memberCart) {
+				product = productSvc.getOneProduct(Integer.parseInt(str));
+				String sellerCompany = product.getSellerVO().getSellerCompany();
+
+				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
+				productList = cartClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
+																								// List，再對其更新
+				productList.add(product);
+				cartClassfi.put(sellerCompany, productList);
+			}
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
