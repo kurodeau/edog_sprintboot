@@ -45,7 +45,6 @@
         >
           <thead>
             <tr>
-              <th class="text-center">訂單編號</th>
               <th class="text-center">商品編號</th>
               <!-- 這邊串接以後會加入商品名稱 -->
               <th class="text-center">商品購買數量</th>
@@ -60,7 +59,6 @@
           <tbody>
             <th:block th:each="orderDetailsVO : ${Orderdetails}">
               <tr>
-                <td class="text-center" th:text="${orderDetailsVO.productOrderVO.orderId}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.productId}"></td>
                 <!-- 這裡會加入商品名稱 -->
                 <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
