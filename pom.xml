@@ -69,6 +69,7 @@
 			<!-- <version>2.7.0</version> -->
 		</dependency>
 
+
 		<!--
 		========================================================================================== -->
 		<!-- ●前面的jpa已經包含有hibernate，以下為純 hibernate 使用● -->
@@ -215,12 +216,8 @@
 		</dependency>
 
 		<!-- Optional, for bootstrap -->
-		<dependency>
-			<groupId>org.webjars</groupId>
-			<artifactId>bootstrap</artifactId>
-			<version>4.2.1</version>
-		</dependency>
-		<!--ˋ自己新增 -->
+
+		<!--自己使用 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -244,6 +241,17 @@
 			<artifactId>jedis</artifactId>
 			<version>3.7.0</version>  <!-- 比照小吳老師使用3.2版本的Redis -->
 		</dependency>
+
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>5.1.0</version>
+		</dependency>
+
+
+
+		<!-- https://mvnrepository.com/artifact/com.twilio.sdk/twilio -->
 
 
 	</dependencies>

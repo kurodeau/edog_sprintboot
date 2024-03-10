@@ -10,11 +10,21 @@
 		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
 	</header>
 
+
+	<!-- 	這個Script產品專用 -->
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/lightslider/1.1.6/js/lightslider.min.js"></script>
+
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
 
-	<!-- ======= Main ======= -->
 	<main class="main main-layout">
+
+		<div th:each="productImgVO, iterStat : ${productImageList}">
+			<!-- 			<a -->
+			<!-- 				th:href="@{'/front/seller/product/DBGifProductImgsReader?productImgId=' + ${productImgVO.productImgId}}">link</a> -->
+		</div>
+
 		<!-- ## ListItems -->
 		<div class="container mt-4 container-commidity-custom py-4">
 			<div class="row">
@@ -23,40 +33,48 @@
 						<div class="row">
 							<div class="card commidity-card-custom">
 								<ul id="lightSlider">
-									<li data-thumb="https://fakeimg.pl/1000x580/"><img
-										class="img-fluid" th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
-											width="100px"/></li>
-									<li data-thumb="https://fakeimg.pl/1000x580/"><img
-										class="img-fluid" src="https://fakeimg.pl/1000x580/" /></li>
+									<li
+										th:data-thumb="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
+										<img class="img-fluid"
+										th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+										width="1000px" height="580px" />
+									</li>
+									<li th:each="productImgVO, iterStat : ${productImageList}"
+										th:data-thumb="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
+										<img class="img-fluid"
+										th:src="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
+										width="1000px" height="580px" />
+									</li>
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-
-
 				<div class="col-6">
 					<h1 class="fw-bold" th:text=${productVO.productName}></h1>
 					<section class="commidity-details-custom d-flex">
 						<h2 class="fw-bold col-5">商品售價</h2>
 						<h2 class="fw-bold col-7 text-userdark" id="price"
-							th:text="'NT $ ' + ${productVO.productPrice}"></h2>
+							th:text="'NT$'+${productVO.Price}"></h2>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">庫存</h5>
 						<h5 class="fw-bold col-7" id="stock"
-							th:text=${productVO.productStockQuantity}></h5>
+							th:text=${productVO.productStockQuantity}>50件</h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
-						<h5 class="fw-bold col-5">購買數量</h5>
-						<h5 class="fw-bold col-7" id="orderNum"></h5>
+						<h5 class="fw-bold col-5">數量</h5>
+						<h5 class="fw-bold col-7" id="orderNum">
+							<input type="number" class="form-control mx-2" id="quantityInput"
+								value="1" min="1" style="width: 150px;">
+						</h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">結帳方式</h5>
-						<h5 class="fw-bold col-7" id="orderNum">50件</h5>
+						<h5 class="fw-bold col-7" id="orderNum">信用卡</h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
@@ -86,9 +104,6 @@
 						</div>
 					</section>
 				</div>
-
-
-
 			</div>
 		</div>
 		<div class="container mt-4 container-commidity-custom">
@@ -99,11 +114,14 @@
 			</div>
 
 			<div class="row py-3">
-				<div class="col-12 text-wrap commidity-desp-custom" id="description">
-					⚠️為了讓各位有愉快的消費經驗 ⚠️購買前務必詳細閱讀 ◇◆◇◆◇◆◇◆◇下單須知◇◆◇◆◇◆◇◆◇
+				<div class="col-12 text-wrap commidity-desp-custom" id="description"
+					th:text=${productVO.productDetails}></div>
+
+				<div>⚠️為了讓各位有愉快的消費經驗 ⚠️購買前務必詳細閱讀 ◇◆◇◆◇◆◇◆◇下單須知◇◆◇◆◇◆◇◆◇
 					🐻本賣場能下單的商品大部份都是現貨 如遇缺貨會即時告知 🐻商品有任何問題請先聊聊反應 我們會即時處理，切勿以評價作為溝通
 					🐻出貨時間:周一至周五，六日及國定假日是店休日 🐻台灣出貨，非海外賣家，寄出3~4個工作天即到門市 🐻本賣場由蝦皮代開電子發票
 					需要統編的朋友記得在結帳步驟中選填 有任何發票問題都可以直接詢問蝦皮客服</div>
+
 			</div>
 		</div>
 
@@ -152,24 +170,32 @@
 			</div>
 		</div>
 	</main>
-	<!-- End Main -->
-
 
 	<!-- End Footer -->
 	<div th:replace="@{fragment-footer}"></div>
 	<div th:replace="@{fragment-js}"></div>
-	<div th:replace="@{front-end/buyer/fragment-lightbarJs}"></div>
 	<script>
-	document.addEventListener('DOMContentLoaded', function() {
-	    $("#lightSlider").lightSlider({
-	        gallery: true,
-	        item: 1,
-	        loop: true,
-	        slideMargin: 50,
-	        thumbItem: 6
-	    });
-	});
+		document.addEventListener('DOMContentLoaded', function() {
+			$("#lightSlider").lightSlider({
+				gallery : true,
+				item : 1,
+				loop : true,
+				slideMargin : 50,
+				thumbItem : 6
+			});
+		});
 
+		function decrementQuantity() {
+			var quantityInput = document.getElementById("quantityInput");
+			if (quantityInput.value > 1) {
+				quantityInput.value--;
+			}
+		}
+
+		function incrementQuantity() {
+			var quantityInput = document.getElementById("quantityInput");
+			quantityInput.value++;
+		}
 	</script>
 </body>
 </html>

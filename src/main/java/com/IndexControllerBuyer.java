@@ -53,11 +53,9 @@ public class IndexControllerBuyer {
 //		if (result.hasErrors()) {
 //	        return "/front-end/buyer/buyer-register";
 //		}
-		System.out.println("11111111111");
-		buyerSvc.addBuyer(buyerVO);
+		buyerSvc.saveUserDetails(buyerVO);
 		model.addAttribute("success", "買家用戶註冊成功");
 
-		System.out.println("22222222");
 		// TESTING 註冊登入後保存sellerVO狀態
 		session.setAttribute("buyerVO", buyerVO);
 		
@@ -70,8 +68,17 @@ public class IndexControllerBuyer {
         return "/front-end/buyer/buyer-main";
         // resources/template//index.html
     }
+    
+    @GetMapping("/front/buyer/pic")
+    public String TestV2(Model model) {
+        return "/front-end/buyer/buyer-commidityV2";
+    }
 	
-	
+    @GetMapping("/front/buyer/buyer-like")
+    public String buyerLike(Model model) {
+        return "/front-end/buyer/buyer-like";
+        // resources/template//index.html
+    }
 	
 }
 

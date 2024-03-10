@@ -51,6 +51,7 @@ public class ProductOrderIdController {
         return "front-end/seller/seller-order-search";
     }
 	
+
 	@GetMapping("getOrderdetails") 
 	public String getOneOrderdetails(@RequestParam("orderId")  String orderId, ModelMap model) {
 		
@@ -72,7 +73,7 @@ public class ProductOrderIdController {
 			return "front-end/seller/seller-orderdetails-searchforone";
 
 		}
-	
+
 	
 	@PostMapping("getOne_For_Display")
 	public String getOne_For_Display(
