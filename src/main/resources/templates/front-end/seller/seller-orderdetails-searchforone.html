@@ -59,7 +59,7 @@
           <tbody>
             <th:block th:each="orderDetailsVO : ${Orderdetails}">
               <tr>
-                <td class="text-center" th:text="${orderDetailsVO.productId}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
                 <!-- 這裡會加入商品名稱 -->
                 <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>

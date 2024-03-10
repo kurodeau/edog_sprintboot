@@ -23,8 +23,23 @@ import com.orderdetails.model.OrderDetailsVO;
 public class ProductOrderVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	
+/////關聯大禮包/////////////////////////////////////////
 	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
+	@OrderBy("orderId asc")
+	public Set<OrderDetailsVO> getOrderDetailss() {
+		return this.orderDetailss;
+	}
 
+	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
+		this.orderDetailss = orderDetailss;
+	}
+	
+/////////////////////////////////////////
+	
+	
 	private Integer orderId;//PK
 	
 	private Integer sellerId;//FK1
@@ -226,20 +241,7 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.shippingTime = shippingTime;
 	}
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
-	@OrderBy("orderId asc")
-	//註1:【現在是設定成 cascade="all" lazy="false" inverse="true"之意】
-	//註2:【mappedBy="多方的關聯屬性名"：用在雙向關聯中，把關係的控制權反轉】【deptVO是EmpVO的屬性】
-	//註3:【原預設為@OneToMany(fetch=FetchType.LAZY, mappedBy="deptVO")之意】--> 【是指原為  lazy="true"  inverse="true"之意】
-	//FetchType.EAGER : Defines that data must be eagerly fetched
-	//FetchType.LAZY  : Defines that data can be lazily fetched
-	public Set<OrderDetailsVO> getOrderDetailss() {
-		return this.orderDetailss;
-	}
-
-	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
-		this.orderDetailss = orderDetailss;
-	}
+	
 	
 	
 	
