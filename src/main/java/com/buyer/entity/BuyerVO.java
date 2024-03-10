@@ -1,38 +1,17 @@
 package com.buyer.entity;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.io.IOException;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Past;
-
-//import org.hibernate.validator.constraints.NotEmpty;
-import javax.validation.constraints.NotEmpty;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-//import com.petdraw.entity.PetDrawVO;
 
 /*
  * 註1: classpath必須有javax.persistence-api-x.x.jar 
@@ -43,6 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Table(name = "buyer")
 public class BuyerVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
+
+	public BuyerVO() {
+		super();
+	};
 	
 	private Integer memberId;
 	private String memberEmail; 
@@ -64,53 +47,6 @@ public class BuyerVO implements java.io.Serializable{
 	private Date petVaccTime2; 
 	private Boolean isConfirm;
 
-//	@OneToMany(mappedBy = "memberMain", cascade = CascadeType.ALL)
-//	@OrderBy("memberId asc") 
-//	private Set<PetDrawVO> PetDrawVOMemnerIds;
-
-//	@OneToMany (mappedBy = "memberPair" ,cascade = CascadeType.ALL)
-//	@OrderBy("memberId asc")
-//	private Set<PetDrawVO> PetDrawVOMemnerPairIds;
-	
-	
-	//這不知道幹嘛的
-//	public Set<BuyerVO> getMembers() {
-//		return members;
-//	}
-
-	//這不知道幹嘛的
-//	public void setMembers(Set<BuyerVO> members) {
-//		this.members = members;
-//	}
-
-	public BuyerVO() {
-		super();
-	};
-
-	public BuyerVO(String memberEmail, String thirdFrom, String memberName, String memberPhone, String memberMobile,
-			Date memberBirthday, String memberPassword, String memberAddress, Boolean isMemberEmail,
-			Date memberRegistrationTime, String petName, byte[] petImg, Date petImgUploadTime, String petVaccName1,
-			Date petVaccTime1, String petVaccName2, Date petVaccTime2, Boolean isConfirm) {
-		super();
-		this.memberEmail = memberEmail;
-		this.thirdFrom = thirdFrom;
-		this.memberName = memberName;
-		this.memberPhone = memberPhone;
-		this.memberMobile = memberMobile;
-		this.memberBirthday = memberBirthday;
-		this.memberPassword = memberPassword;
-		this.memberAddress = memberAddress;
-		this.isMemberEmail = isMemberEmail;
-		this.memberRegistrationTime = memberRegistrationTime;
-		this.petName = petName;
-		this.petImg = petImg;
-		this.petImgUploadTime = petImgUploadTime;
-		this.petVaccName1 = petVaccName1;
-		this.petVaccTime1 = petVaccTime1;
-		this.petVaccName2 = petVaccName2;
-		this.petVaccTime2 = petVaccTime2;
-		this.isConfirm = isConfirm;
-	}
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -169,8 +105,7 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "memberBirthday")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getMemberBirthday() {
 		return memberBirthday;
 	}
@@ -207,8 +142,7 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "memberRegistrationTime")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getMemberRegistrationTime() {
 		return memberRegistrationTime;
 	}
@@ -236,8 +170,7 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petImgUploadTime")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getPetImgUploadTime() {
 		return petImgUploadTime;
 	}
@@ -256,8 +189,7 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petVaccTime1")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getPetVaccTime1() {
 		return petVaccTime1;
 	}
@@ -276,7 +208,7 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petVaccTime2")
-//	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getPetVaccTime2() {
 		return petVaccTime2;
 	}

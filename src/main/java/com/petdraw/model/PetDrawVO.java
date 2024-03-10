@@ -34,7 +34,7 @@ public class PetDrawVO implements java.io.Serializable {
 	@Id
 	@Column(name = "petDrawId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer getpetDrawId() {
+	public Integer getpetDrawId() {
 		return this.petDrawId;
 	}
 
@@ -59,7 +59,7 @@ public class PetDrawVO implements java.io.Serializable {
 	}
 
 	@Column(name = "isMemberLike")
-	private Boolean getIsMemberLike() {
+	public Boolean getIsMemberLike() {
 		return isMemberLike;
 	}
 

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寵物抽卡</title>
+    <style>
+        #cardContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        #drawButton {
+            margin-top: 10px;
+        }
+
+        #countdown {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+                    <!-- Start NavBar  -->
+                    <!-- NavBar--LeftSide  -->
+                    <ul class="navbar-nav me-auto mb-2">
+                        <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+                            <i class="bi bi-list"></i> <a class="nav-link cancel-default-behavior" aria-current="page" href="#">選單</a>
+                        </li>
+                        <li class="nav-item d-flex align-items-center"><a class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+                        <li class="nav-item"><a class="nav-link" href="seller-login.html">賣家中心</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
+                    </ul>
+
+                    <!-- NavBar--RightSide  -->
+                    <ul class="navbar-nav ms-auto mb-2">
+                        <!-- 測試進入後台入口 -->
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">註冊</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- End NavBar  -->
+
+        <!-- Start SearchBar  -->
+        <div class="container-fluid bg-user search-container-custom">
+            <div class="row">
+                <!-- Start SearchBar-Logo  -->
+                <div class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+                    <img th:src="@{/image/Medium.png}" class="img-logo-custom" alt="" srcset="" />
+                </div>
+                <!-- End SearchBar-Logo  -->
+
+                <!-- Start SearchBar-Input  -->
+                <div class="col d-flex searchItem flex-column search-item-container-custom">
+                    <form class="form-inline w-100">
+                        <div class="row py-2 search-row-custom w-100 pe-2">
+                            <div class="col">
+                                <input class="form-control mr-sm-2 w-100 search-input-custom" type="search" placeholder="請在此進行商品檢索" aria-label="Search" />
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-user search-button-custom d-flex" type="submit">
+                                    <i class="me-2 ri-search-line"></i>
+                                    <div class="col-auto d-none d-md-block">Search</div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="my-2 keyword-container-custom">
+                        <span class="badge rounded-pill keyword-item-custom">寵物床</span> <span class="badge rounded-pill keyword-item-custom">玩具</span>
+                    </div>
+                </div>
+                <!-- End SearchBar-Input  -->
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="cardContainer">
+            <!-- 這裡將顯示抽到的卡片 -->
+        </div>
+        <button id="drawButton" onclick="drawCard()" style="text-align: center;">開始配對</button>
+        <button id="resetButton" onclick="resetCardDraw()">清除</button>
+        <div id="countdown" style="display: none;">
+            <!-- 這裡將顯示倒數計時 -->
+        </div>
+    </main>
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+            <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+            <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+                <h5 class="mb-3">關於我們</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">人才招募</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+                </ul>
+            </div>
+
+            <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+                <h5 class="mb-3">常見問題</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Q&A</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row footer-container-custom">
+            <div class="col-3"></div>
+
+            <div class="col-auto">
+                <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+                    <svg class="bi" width="32" height="32" fill="currentColor">
+                        <use xlink:href="bootstrap-icons.svg#heart-fill" />
+                    </svg>
+                </a>
+                <p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023 CatTom.版權所有。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let hasDrawnCard = false;
+
+        function drawCard() {
+            // 檢查是否已經抽過卡
+            if (!hasDrawnCard) {
+                // 使用 Ajax 或其他方式從後端獲取會員抽卡的數據
+                // 這裡假設你有一個名為 '/api/member/draw' 的 API
+                fetch('/api/member/draw')
+                    .then(response => response.json())
+                    .then(data => {
+                        // 處理從後端獲取的會員抽卡數據
+                        handleMemberDraw(data);
+                        showCountdown();  // 在抽卡後顯示倒數計時
+                    })
+                    .catch(error => console.error('Error fetching member draw data:', error));
+            }
+        }
+
+        function handleMemberDraw(memberData) {
+            // 在這裡處理從後端獲取的會員抽卡數據
+            const cardContainer = document.getElementById('cardContainer');
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            // 創建一個圖片元素
+            const image = document.createElement('img');
+            image.src = 'data:image/png;base64,' + memberData.petImg; // 使用 Base64 編碼的圖片資料
+            image.alt = `Pet: ${memberData.petName}`;
+            image.style.width = '320px';  // 設置圖片寬度為 320 像素
+            image.style.height = '320px'; // 設置圖片高度為 320 像素
+
+            // 創建一個文字元素
+            const text = document.createElement('p');
+            text.textContent = `ID: ${memberData.memberId}\nName: ${memberData.memberName}\nPet: ${memberData.petName}`;
+            // 如果存在 petDraw 欄位，顯示相關信息
+            if (memberData.petDraw) {
+                const mainInfo = document.createElement('p');
+                mainInfo.textContent = `Main: ${memberData.petDraw.memberMain.memberName}`;
+
+                const pairInfo = document.createElement('p');
+                pairInfo.textContent = `Pair: ${memberData.petDraw.memberPair.memberName}`;
+
+                const isMemberLikeInfo = document.createElement('p');
+                isMemberLikeInfo.textContent = `Is Member Like: ${memberData.petDraw.isMemberLike}`;
+
+                const isMemberPairLikeInfo = document.createElement('p');
+                isMemberPairLikeInfo.textContent = `Is Member Pair Like: ${memberData.petDraw.isMemberPairLike}`;
+
+                card.appendChild(mainInfo);
+                card.appendChild(pairInfo);
+                card.appendChild(isMemberLikeInfo);
+                card.appendChild(isMemberPairLikeInfo);
+            }
+
+            // 將圖片和文字添加到卡片中
+            card.appendChild(image);
+            card.appendChild(text);
+
+            // 將卡片添加到 cardContainer 中
+            cardContainer.appendChild(card);
+
+            hasDrawnCard = true; // 更新抽卡狀態
+        }
+
+        function showCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            const drawButton = document.getElementById('drawButton');
+
+            // 重新啟用抽卡按鈕
+            drawButton.disabled = false;
+
+            // 顯示倒數計時
+            countdownElement.style.display = 'block';
+
+            // 啟動倒數計時器
+            startCountdown();
+        }
+
+        // 啟動倒數計時
+        startCountdown();
+
+        function startCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            const drawButton = document.getElementById('drawButton');
+
+            let countdownSeconds = localStorage.getItem('countdownSeconds') || 86400; // 從localStorage讀取剩餘時間，預設為一天
+
+            function updateCountdown() {
+                const hours = Math.floor(countdownSeconds / 3600);
+                const minutes = Math.floor((countdownSeconds % 3600) / 60);
+                const seconds = countdownSeconds % 60;
+
+                countdownElement.textContent = `明天可抽卡倒數：${hours} 小時 ${minutes} 分鐘 ${seconds} 秒`;
+
+                if (countdownSeconds === 0) {
+                    drawButton.disabled = false; // 啟用按鈕
+                    countdownElement.textContent = ''; // 清空倒數計時顯示
+                } else {
+                    countdownSeconds--;
+                    localStorage.setItem('countdownSeconds', countdownSeconds); // 將剩餘時間存儲到localStorage
+                    setTimeout(updateCountdown, 1000); // 每秒更新一次
+                }
+            }
+
+            updateCountdown();
+        }
+
+        // 在頁面載入時檢查localStorage中是否有剩餘時間，如果有，更新按鈕狀態
+        window.onload = function() {
+            const drawButton = document.getElementById('drawButton');
+            const storedSeconds = localStorage.getItem('countdownSeconds');
+
+            if (storedSeconds && storedSeconds > 0) {
+                drawButton.disabled = true; // 禁用按鈕
+                startCountdown();
+            }
+        };
+
+        function resetCardDraw() {
+            // 重置抽卡狀態
+            hasDrawnCard = false;
+
+            // 清空卡片容器
+            const cardContainer = document.getElementById('cardContainer');
+            cardContainer.innerHTML = '';
+
+            // 隱藏倒數計時
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.style.display = 'none';
+
+            // 重新禁用抽卡按鈕
+            const drawButton = document.getElementById('drawButton');
+            drawButton.disabled = true;
+
+            // 重置 localStorage 中的剩餘時間
+            localStorage.removeItem('countdownSeconds');
+        }
+
+        function showChatWindow() {
+            // TODO: 實現顯示聊天窗口的邏輯
+            alert("聊天窗口顯示");
+        }
+    </script>
+</body>
+</html>
