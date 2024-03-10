@@ -116,8 +116,10 @@ public class ProductController {
 
 			productImg.setProductImg(buf1);
 			productImg.setProductVO(productVO); // FK
-
-			pdtImgSvc.addProductImg(productImg); //
+			productImg.setProductImgTime(timestamp);
+			productImg.setIsCover(false);
+			productImg.setIsEnabled(true);
+			pdtImgSvc.addProductImg(productImg); 
 
 		}
 

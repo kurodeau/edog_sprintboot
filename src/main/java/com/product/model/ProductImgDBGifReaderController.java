@@ -23,22 +23,31 @@ public class ProductImgDBGifReaderController {
 	@Autowired
 	ProductService productSvc;
 
-	/*
-	 * This method will serve as listOneEmp.html , listAllEmp.html handler.
-	 */
-	@GetMapping("DBGifReader1")
-	public void dBGifReader1(@RequestParam("productId") String productId, HttpServletRequest req,
-			HttpServletResponse res)
 
-			throws IOException {
-		System.out.println(productId);
-		res.setContentType("image/gif");
+	@GetMapping("DBGifProductImgsReader")
+	public void dBGifReader1(@RequestParam("productImgId") String productId
+			, HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
+			
+		
 		ServletOutputStream out = res.getOutputStream();
 
 		try {
 			
+			ProductImgVO productImgVO = pdiSvc.getOneProductImg(Integer.valueOf(productId));
 			
 			
+			res.setContentType("image/gif");
+			
+			
+//			List<ProductImgVO> productImgVOs = pdiSvc.getAllProductImg(productVO);
+			
+//			List<ProductImgVO> productImgVOs = pdiSvc.getProductImgs(Integer.valueOf(productId));
+					
+//			for(ProductImgVO productImgVOs : productImgVO) {
+//			    out.write(productImgVOs.getProductImg());
+//			     System.out.println(productImgVOs.getProductImg());
+//			}		
 			
 			
 //			Integer producMaintId = Integer.valueOf(productId);
@@ -54,7 +63,9 @@ public class ProductImgDBGifReaderController {
 //			for(ProductImgVO productImgVO : productImgVOs) {
 //				out.write(productImgVO.getProductImg());
 //			}
-//			out.write(pdiSvc.getOneProductImg(producMaintId));
+
+			// System.out.println(productImgVO);
+			out.write(productImgVO.getProductImg());
 
 		} catch (Exception e) {
 			byte[] buf = java.util.Base64.getDecoder().decode(

@@ -33,8 +33,18 @@ public class ProductImgService {
 		
 	}
 	
+	public List<ProductImgVO> getAllProductImg(ProductVO productVO) {
+    List<ProductImgVO> prdoductImgs = repository.findProductImgsByProductId(productVO);
+	
+		return prdoductImgs;
+		
+	}
+	
+	
 	public List<ProductImgVO> getProductImgs(Integer productId) {
-		List<ProductImgVO> productImgVOs = repository.findByProductId(productId);
+		List<ProductImgVO> productImgVOs = repository.findProductImgVOListByProductId(productId);
+		
+		
 		
 		return productImgVOs;
 	}

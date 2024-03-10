@@ -210,6 +210,12 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 				+ ratings + "]";
 	}
 
+	@Override
+	public int compareTo(ProductVO o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
     // Add getters and setters
 
     // You can also add additional methods or annotations as needed

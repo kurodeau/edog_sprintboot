@@ -26,7 +26,8 @@ public class ProductService {
 
 	@Autowired
 	ProductRepository repository;
-
+	
+	
 	public void addProduct(ProductVO productVO) {
 		repository.save(productVO);
 	}
@@ -47,7 +48,6 @@ public class ProductService {
 	}
 
 	public List<ProductVO> searchProducts(String keyword) {
-
 		List<ProductVO> searchResults = repository.findByKeyword(keyword);
 		return searchResults;
 	}
