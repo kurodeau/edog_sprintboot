@@ -37,19 +37,18 @@ public class CollectionService {
 		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 		List<ProductVO> productList = new ArrayList();
 		ProductVO product = new ProductVO();
+		String collectionMember = "collection" + memberId;
+		//測試Key用的參數
+		System.out.println("collectionMember=" + collectionMember);
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-				/****************************
-				 * 1.透過已知的 memberId 自 Redis 要出收藏清單
-				 *********************************************/
-				Jedis jedis = jedisPool.getResource()) {
-			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
+
+			// 從 Redis 中讀取資料 並且指定為db10
+			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
 
-			// 將所有收藏的資料包入 List<ProductVO>, 並透過公司名稱分為Map
-			// Set<String> sellerCompanySet = new HashSet();
-			for (String str : jedis.lrange(memberId, 0, -1)) {
+			for (String str : jedis.lrange(collectionMember, 0, -1)) {
 				product = productSvc.getOneProduct(Integer.parseInt(str));
 				String sellerCompany = product.getSellerVO().getSellerCompany();
 
@@ -77,34 +76,33 @@ public class CollectionService {
 		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 		List<ProductVO> productList = new ArrayList();
 		ProductVO product = new ProductVO();
+		String collectionMember = "collection" + memberId;
+		// 測試Key用的參數
+		System.out.println("collectionMember=" + collectionMember);
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-				/****************************
-				 * 1.透過已知的 memberId 自 Redis 要出收藏清單
-				 *********************************************/
-				Jedis jedis = jedisPool.getResource()) {
-			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料
+
+			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料		
+			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
 
-			List<String> memberCollection = jedis.lrange(memberId, 0, -1);
+			List<String> memberCollection = jedis.lrange(collectionMember, 0, -1);
 			// 判斷 Jedis 該用戶是否已經有登錄該商品收藏
 			if (memberCollection.contains(prouductId)) {
 				memberCollection.remove(prouductId); // 如果存在prouductId，则移除
 			} else {
 				memberCollection.add(prouductId); // 如果不存在prouductId，则新增
 			}
-//			System.out.println(memberCollection); // 測試用訊息
-			
+
 			// 如果已經存在該用戶的收藏清單, 則清除並加入修改過的清單
-			if (jedis.exists(memberId)) {
-				jedis.del(memberId); // 刪除已存在的 key
+			if (jedis.exists(collectionMember)) {
+				jedis.del(collectionMember); // 刪除已存在的 key
 			}
-			for ( String s : memberCollection ) {
-				jedis.lpush(memberId, s);	
+			for (String s : memberCollection) {
+				jedis.lpush(collectionMember, s);
 			}
-			
-//			jedis.lpush(memberId, memberCollection);
+
 
 			// 將所有收藏的資料包入 List<ProductVO>, 並透過公司名稱分為Map
 			// Set<String> sellerCompanySet = new HashSet();
@@ -122,7 +120,7 @@ public class CollectionService {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
 		}
-		System.out.println(collectionClassfi.toString()); // 測試資料
+//		System.out.println(collectionClassfi.toString()); // 測試資料
 		return collectionClassfi;
 	}
 

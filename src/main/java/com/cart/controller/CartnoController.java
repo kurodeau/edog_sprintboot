@@ -1,4 +1,4 @@
-package com.cart.controller;
+	package com.cart.controller;
 
 import java.util.*;
 
@@ -44,14 +44,28 @@ public class CartnoController extends HttpServlet {
 	@Autowired
 	CartService cartService;
 
+	
 	// 用戶取出自己所有收藏清單資料 /front/buyer/cart/list
 	@GetMapping("list")
 	public String cartlist(String memberId, Model model) {
 		// 先給定 memberId 以便測試
-		memberId = "10";
+		memberId = "9";
 		model.addAttribute("cartClassfi", cartService.getAllByMemberId(memberId)); 
 		return "front-end/buyer/buyer-cart-list";
 	}
+
+	
+	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/switchState
+//	@PostMapping("switchState") //改用POST
+//	public String switchOneToCart(String memberId,@RequestParam("productId") String productId, Model model) {
+//		// 先給定 memberId , productId 以便測試
+//		System.out.println("到controller");
+//		memberId = "9";
+////		productId = "5";
+//		model.addAttribute("collectionClassfi", cartService.switchStateByProductId(memberId, productId)); 
+//		return "front-end/buyer/buyer-cart-list";
+//	}
+	
 
 //	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/switchState
 //	@PostMapping("switchState") //改用POST

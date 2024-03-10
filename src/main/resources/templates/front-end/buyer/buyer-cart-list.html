@@ -2,6 +2,8 @@
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
+
+
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -24,9 +26,9 @@
 							value="" aria-label="Checkbox for following text input" />
 					</div>
 					<div class="col-3">商品圖片</div>
-					<div class="col-3">商品名稱</div>
+					<div class="col-2">商品名稱</div>
 					<div class="col-2 d-flex justify-content-end">購買數量</div>
-					<div class="col-1 d-flex justify-content-end">價格</div>
+					<div class="col-2 d-flex justify-content-end">單個價格</div>
 					<div class="col d-flex justify-content-center">操作</div>
 				</div>
 
@@ -35,29 +37,36 @@
 				<a href="/">你的購物車是空的，馬上去逛逛吧~</a></div>
 
                 <!-- 先進行大迴圈, 從redis 取出資料 -->
-				<section class="cart-seller mt-3">
+				<section class="cart-seller mt-3" 
+				    th:each="sellerCompany : ${cartClassfi}">
 					<div class="row header-row-custom">
 						<div class="col-auto px-0">
 							<input class="form-check-input cart-header-click" type="checkbox"
 								value="" aria-label="Checkbox for following text input" />
 						</div>
 						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName">ABC</span>
+							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName">
+							<b th:text="${sellerCompany.key}"></b>
+							</span>
 						</div>
 					</div>
 
-					<!-- Item -->
-					<div class="row item-row-custom">
+					<!-- 後套入小迴圈的資料 -->
+					<div class="row item-row-custom"
+					     th:each="productVO : ${cartClassfi[ sellerCompany.key ]}">
 						<div class="col-1 px-0">
 							<input class="form-check-input cart-item-click" type="checkbox"
 								value="" aria-label="Checkbox for following text input" />
 						</div>
 						<div class="col-3">
-							<img src="https://fakeimg.pl/100x100/" alt="" srcset="" />
+							<img th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${productVO.productId}" 
+							     width="100px"  alt="" srcset="" />
 						</div>
-						<div class="col-3">AA</div>
-						<div class="col-2 d-flex justify-content-end cart-qty">1</div>
-						<div class="col-2 d-flex justify-content-end cart-price">23</div>
+						<div class="col-2"
+						     th:text="${productVO.productName}">商品名稱</div>
+						<div class="col-2 d-flex justify-content-end cart-qty">購買數量</div>
+						<div class="col-2 d-flex justify-content-end cart-price"
+						     th:text="${productVO.price}">商品金額</div>
 						<div
 							class="col d-flex flex-column align-items-center justify-content-center">
 							<button class="product btn-func">查看商品</button>

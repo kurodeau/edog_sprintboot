@@ -1,5 +1,6 @@
 package com.collection.controller;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.servlet.http.HttpServlet;
@@ -15,12 +16,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cart.service.CartService;
 import com.collection.service.CollectionService;
+import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
 import com.redis.JedisUtil;
@@ -43,84 +47,55 @@ public class CollectionnoController extends HttpServlet {
 	@Autowired
 	CollectionService collectionService;
 
+	@Autowired
+	CartService cartService;
+	
 	// 用戶取出自己所有收藏清單資料 /front/buyer/collection/list
 	@GetMapping("list")
 	public String collectionlist(String memberId, Model model) {
 		// 先給定 memberId 以便測試
 		memberId = "9";
-		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId)); 
+		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId));
 		return "front-end/buyer/buyer-collection-list";
 	}
 
 	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/switchState
-	@PostMapping("switchState") //改用POST
-	public String switchOneToCollection(String memberId,@RequestParam("productId") String productId, Model model) {
+	@PostMapping("switchState") // 改用POST
+	public String switchOneToCollection(@RequestParam("memberId") String memberId,
+			@RequestParam("productId") String productId, Model model) {
 		// 先給定 memberId , productId 以便測試
 		System.out.println("到controller");
-		memberId = "9";
+//		memberId = "9";
 //		productId = "5";
-		model.addAttribute("collectionClassfi", collectionService.switchStateByProductId(memberId, productId)); 
+		model.addAttribute("collectionClassfi", collectionService.switchStateByProductId(memberId, productId));
+		return "front-end/buyer/buyer-collection-list";
+	}
+
+	// /front/buyer/collection/product/{id}
+	@GetMapping("/product/{id}")
+	public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
+
+		System.out.println("有進到找商品詳細的controller");
+
+		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(id));
+		model.addAttribute("productVO", productVO);
+		
+		// 使用從URL獲取的id參數執行你的邏輯
+		// 在這裡，你可以使用id來進行相應的處理，例如查找特定商品
+		
+		System.out.println("只差沒有跳轉她媽的");
+		return "front-end/buyer/buyer-commidity";
+	}
+
+	// 將指定商品加到購物車, 並回到我的收藏 /front/buyer/collection/addToCart
+	@PostMapping("addToCart") 
+	public String addToCart(@RequestParam("memberId") String memberId,
+			@RequestParam("productId") String productId, Model model) {
+		System.out.println("有到加入購物車 controller");
+//		model.addAttribute("collectionClassfi", cartService.memberAddOneByProductId(memberId, productId));
+		cartService.memberAddOneByProductId(memberId, productId);
 		return "front-end/buyer/buyer-collection-list";
 	}
 	
-	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/isCollection
-//	@GetMapping("isCollection")
-//	public String isCollection(String memberId, String productId, Model model) {
-//		// 先給定 memberId 以便測試
-//		// 先給定 memberId , productId 以便測試
-//		memberId = "9";
-//		productId = "1";
-//		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId)); 
-//		return "front-end/buyer/buyer-collection-list";
-//	}
-	
-
-//	@ModelAttribute("productListData")
-//	protected List<ProductVO> referenceListData(Model model) {
-//
-//		List<ProductVO> list = productSvc.getAll();
-//		return list;
-//	}
-//
-//	@ModelAttribute("productSellOut")
-//	protected List<ProductVO> referenceListData1(Model model) {
-//
-//		List<ProductVO> list = productSvc.getSellOutProduct();
-//		return list;
-//	}
-//
-//	@ModelAttribute("productLaunch")
-//	protected List<ProductVO> referenceListData3(Model model) {
-//
-//		List<ProductVO> list = productSvc.getProductLaunch();
-//		return list;
-//	}
-//
-//	@ModelAttribute("productUnLaunch")
-//	protected List<ProductVO> referenceListData2(Model model) {
-//
-//		List<ProductVO> list = productSvc.getProductUnLaunch();
-//		return list;
-//	}
-//
-//	@ExceptionHandler(value = { ConstraintViolationException.class })
-//	// @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-//	public ModelAndView handleError(HttpServletRequest req, ConstraintViolationException e, Model model) {
-//		Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-//		StringBuilder strBuilder = new StringBuilder();
-//		for (ConstraintViolation<?> violation : violations) {
-//			strBuilder.append(violation.getMessage() + "<br>");
-//		}
-//		// ==== 以下第80~85行是當前面第69行返回
-//		// /src/main/resources/templates/back-end/emp/select_page.html 第97行 與 第109行 用的
-//		// ====
-////	    model.addAttribute("empVO", new EmpVO());
-////    	EmpService empSvc = new EmpService();
-//		List<ProductVO> list = productSvc.getAll();
-//		model.addAttribute("productListData", list); // for select_page.html 第97 109行用
-//
-//		String message = strBuilder.toString();
-//		return new ModelAndView("front-end/seller/seller-product-all", "errorMessage", "請修正以下錯誤:<br>" + message);
-//	}
 
 }
