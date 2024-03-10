@@ -187,9 +187,21 @@
 				reader.onload = function(event) {
 					var image = new Image();
 					image.src = event.target.result;
-					image.width = 200;
-					image.height = 150;
-					image.border = 2;
+// 					image.maxWidth = 1000;
+// 					image.maxHeight = 580;
+// 					image.border = 2;
+					
+				var maxWidth = 1000;
+                var maxHeight = 580;
+                var width = image.width;
+                var height = image.height;
+					
+					  if (width > maxWidth || height > maxHeight) {
+		                    var ratio = Math.min(maxWidth / width, maxHeight / height);
+		                    width *= ratio;
+		                    height *= ratio;
+		                }
+					
 					if (blob_holder.hasChildNodes()) {
 						consle.log("5k4ux3");
 						blob_holder.removeChild(blob_holder.childNodes[0]);

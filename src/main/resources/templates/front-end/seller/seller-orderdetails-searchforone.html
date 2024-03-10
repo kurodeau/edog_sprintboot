@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+  </head>
+
+  <body>
+    <header class="fixed-top">
+    <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+
+   <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+
+    <main class="main main-layout-seller">
+      <div class="seller-container">
+        <div class="pagetitle">
+          <h1>訂單明細查詢</h1>
+        </div>
+        
+        
+              
+        
+       	 <div>
+  			  <div th:text=" '訂單編號：' + ${Orderdetails[0].productOrderVO.orderId}"></div>
+  			  <div th:text=" '訂單金額：' + ${Orderdetails[0].productOrderVO.actualPay}"></div>
+  			  <div th:text=" '成立時間：' + ${Orderdetails[0].productOrderVO.orderTime}"></div>
+  			  <div th:text=" '訂單狀態：' + ${Orderdetails[0].productOrderVO.orderStatus}"></div>
+  			  <div th:text=" '收貨人姓名：' + ${Orderdetails[0].productOrderVO.receiver}"></div>
+  			  <div th:text=" '聯絡電話：' + ${Orderdetails[0].productOrderVO.mobile}"></div>
+  			  <div th:text=" '收貨地址：' + ${Orderdetails[0].productOrderVO.contactAddress}"></div>
+  			  <div th:text=" '發票號碼：' + ${Orderdetails[0].productOrderVO.invoiceNumber}"></div>
+		</div>
+		<br>
+		<br>
+		<br>
+		
+        <div>品項內容：</div>
+        
+  <!-- 複合查詢表單 -->      
+        <table
+          id="example"
+          class="table table-striped table-bordered "
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th class="text-center">訂單編號</th>
+              <th class="text-center">商品編號</th>
+              <!-- 這邊串接以後會加入商品名稱 -->
+              <th class="text-center">商品購買數量</th>
+              <th class="text-center">已評論</th>
+              <th class="text-center">評分星數</th>
+              <th class="text-center">評論時間</th>
+              <th class="text-center">評論內容</th>
+            </tr>
+          </thead>
+          
+          
+          <tbody>
+            <th:block th:each="orderDetailsVO : ${Orderdetails}">
+              <tr>
+                <td class="text-center" th:text="${orderDetailsVO.productOrderVO.orderId}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.productId}"></td>
+                <!-- 這裡會加入商品名稱 -->
+                <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '無'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? orderDetailsVO.commentedTime : '無'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.comments != null ? orderDetailsVO.comments : '尚無評論'}"></td>
+              </tr>
+            </th:block>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- End Main -->
+
+    
+
+    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+    <!-- Vendor & Main JS Files -->
+    <div th:replace="~{/fragment-js}"></div>
+    <div th:replace="~{/fragment-datatableJs}"></div>
+
+    <!-- Include DataTables JavaScript library -->
+    <!-- Include FixedColumns JavaScript library -->
+
+    <!-- Your custom script to initialize the DataTable with fixed columns -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 初始化 DataTables
+
+        let table = $("#example").DataTable({
+          columnDefs: [
+            {
+              targets: -1,
+              width: 150,
+            }, // 調整最後一列寬度
+          ],
+          fixedColumns: true,
+          paging: true,
+          lengthMenu: [25, 50, 75, 100],
+          language: {
+            lengthMenu: "顯示 _MENU_ 筆資料",
+          },
+          pageLength: 25,
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: 600,
+          pagingType: "full_numbers",
+          drawCallback: function () {
+            var api = this.api();
+            var rowCount = api
+              .rows({
+                page: "current",
+              })
+              .count();
+
+            // Loop to add empty rows if needed
+            for (
+              var i = 0;
+              i < api.page.len() - (rowCount === 0 ? 1 : rowCount);
+              i++
+            ) {
+              var emptyRow = $("<tr><td>&nbsp;</td></tr>").addClass("empty"); // 添加 'white-bg' 類別
+              $("#example tbody").append(emptyRow);
+            }
+          },
+        });
+
+        // 設定 DataTables 寬度為 100%
+        window.onload = function () {
+          table.columns.adjust().draw();
+        };
+
+        function resetTable() {
+          table.clear().draw();
+        }
+
+        $(".btn-del").on("click", function () {
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Btn: " + deleteId);
+          $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
+        });
+
+        // Listen to the confirmDeleteBtn click event
+        $("#confirmDeleteBtn").on("click", function () {
+          // Retrieve the deleteId from data-delete-id attribute
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Modal: " + deleteId);
+
+          let myModalEl = document.getElementById("deleteModal");
+          let modal = bootstrap.Modal.getInstance(myModalEl);
+
+          let currentLoc = window.location.href;
+          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+          console.log(currentLoc);
+
+          // Your AJAX request for deletion
+          $.ajax({
+            url: currentLoc + "/delete?id=" + deleteId,
+            method: "DELETE",
+            success: function (response) {
+              if (response.success) {
+                alert(response.message);
+                // true 表示強制從伺服器重新加載頁面，忽略緩存
+                location.reload(true);
+              } else {
+                // 刪除失敗
+                alert(response.message);
+              }
+            },
+            error: function () {
+              alert(response.message);
+            },
+            complete: function () {
+              // This will be called regardless of success or error
+              // Close the modal after the AJAX request is completed
+              // Reload the DataTable
+              modal.hide();
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

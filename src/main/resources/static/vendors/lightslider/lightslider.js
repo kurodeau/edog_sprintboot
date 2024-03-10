@@ -1,4 +1,4 @@
-(function ($, undefined) {
+(function ($) {
     'use strict';
     var defaults = {
         item: 3,

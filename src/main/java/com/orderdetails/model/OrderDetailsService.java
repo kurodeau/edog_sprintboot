@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import com.productorder.model.ProductOrderVO;
 
 
 @Service("orderDetailsService")
@@ -37,5 +41,14 @@ public class OrderDetailsService {
 	public List<OrderDetailsVO> getAll() {
 		return repository.findAll();
 	}
+	
+	public List<OrderDetailsVO> findByOrderId(Integer orderId) {
+	    return repository.findByOrderId(orderId);
+	}
+	
+
+	
+	
+	
 	
 }
