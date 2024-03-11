@@ -21,11 +21,10 @@
 		<div class="container-fluid seller-container">
 			<h1>編輯賣家資料</h1>
 
-			<form class="row g-3" id="myForm"
-				th:action="@{/front/seller/seller/update}" th:object="${sellerVO}"
-				method="post" enctype="multipart/form-data"
+			<form class="row g-3" id="myForm" th:action="@{update}"
+				th:object="${sellerVO}" method="post" enctype="multipart/form-data"
 				onsubmit="return updateHiddenFields();">
-				<div class="col-md-12" style="display: none">
+				<div class="col-md-12">
 					<label for="inputSellerId" class="form-label">賣家ID</label> <input
 						type="text" class="form-control" id="inputSellerId"
 						name="sellerId" th:field="*{sellerId}"
@@ -42,8 +41,7 @@
 					<div class="col-md-2">
 						<select class="form-select" name="sellerLvId" id="sellerLvId"
 							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
-							<option 
-								th:each="sellerLv : ${sellerLvListData}"
+							<option th:each="sellerLv : ${sellerLvListData}"
 								th:value="${sellerLv.getSellerLvId()}"
 								th:text="${sellerLv.getLvName()}"
 								th:selected="${sellerLv.getSellerLvId() == sellerVO.sellerLvId.getSellerLvId()}"></option>
@@ -59,13 +57,13 @@
 						th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''" />
 					<div id="sellerCompanyFeedback" class="invalid-feedback">
 						<p th:if="${#fields.hasErrors('sellerCompany')}"
-							th:errors="*{sellerCompany}">欄位有誤</p>
+							th:errors="*{sellerCompany}"></p>
 					</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputsellerContact" class="form-label">公司負責人</label>
-					<input type="text" class="form-control" id="inputsellerContact"
+					<label for="inputsellerContact" class="form-label">公司負責人</label> <input
+						type="text" class="form-control" id="inputsellerContact"
 						name="sellerContact" th:value="${sellerVO.sellerContact}"
 						aria-describedby="sellerContactFeedback"
 						th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''" />
@@ -158,8 +156,8 @@
 
 				<input type="hidden" id="sellerCountyValue" name="sellerCounty"
 					th:value="${sellerVO.sellerCounty ?: ''}"
-					aria-describedby="sellerCountyFeedback" /> <input
-					type="hidden" id="sellerDistrictValue" name="sellerDistrict"
+					aria-describedby="sellerCountyFeedback" /> <input type="hidden"
+					id="sellerDistrictValue" name="sellerDistrict"
 					th:value="${sellerVO.sellerDistrict ?: ''}"
 					aria-describedby="sellerDistrictFeedback" />
 
@@ -216,8 +214,8 @@
 				</div>
 
 				<div class="col-md-2">
-					<label for="inputsellerBankCode" class="form-label">銀行代碼
-					</label> <input type="text" class="form-control" id="inputsellerBankCode"
+					<label for="inputsellerBankCode" class="form-label">銀行代碼 </label> <input
+						type="text" class="form-control" id="inputsellerBankCode"
 						name="sellerBankCode" th:value="${sellerVO.sellerBankCode}"
 						aria-describedby="sellerBankCodeFeedback"
 						th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''" />
@@ -255,43 +253,41 @@
 					</div>
 				</div>
 
+				<div class="col mb-3">
+					<label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="sellerCreateTime"
+							th:value="${#dates.format(sellerVO.sellerCreateTime, 'yyyy-MM-dd')}"
+							aria-describedby="sellerCreateTimeFeedback"
+							th:classappend="${#fields.hasErrors('sellerCreateTime')} ? 'is-invalid' : ''" />
+
+						<div id="sellerCreateTimeFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('sellerCreateTime')}"
+								th:errors="*{sellerCreateTime}">欄位有誤</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-2">
+					<label for="inputIsConfirm" class="form-label">帳號是否審核過</label> <select
+						class="isConfirm form-select" name="isConfirm" id="inputIsConfirm"
+						th:value="${sellerVO.isConfirm}">
+						<option value="true" th:selected="${sellerVO.isConfirm}">
+							通過</option>
+						<option value="false" th:selected="${!sellerVO.isConfirm}">
+							未通過</option>
+					</select>
+				</div>
+
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button type="button" class="btn btn-secondary"
-						onclick="window.history.back()">取消並離開</button>
+					<button type="reset" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
 			</form>
 		</div>
 	</main>
 
-	<div th:if="${updateSuccess}">
-		<!-- 這裡放置你的 Modal 代碼 -->
-		<div class="modal fade" id="updateSuccessModal" tabindex="-1"
-			role="dialog" aria-labelledby="updateSuccessModalLabel"
-			aria-hidden="true">
-
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- 這裡可以放置更新成功的提示信息 -->
-						賣家資料已成功更新！
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">確定</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- End Main -->
 	<div th:replace="fragment-js"></div>
 

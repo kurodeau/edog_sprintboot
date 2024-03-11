@@ -1,52 +1,33 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
 </head>
-
 <body>
 	<!-- ======= Header ======= -->
+
 	<header class="fixed-top">
 		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
 	</header>
 
-	<!-- ======= Sidebar ======= -->
-	<!-- start帳戶管理 -->
-
-	<aside th:replace="front-end/seller/aside-seller.html"></aside>
 
 	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
+	<main class="main-nosidebar">
 		<div class="container-fluid seller-container">
-			<h1>編輯賣家資料</h1>
+			<h1>註冊賣家資料</h1>
 
 			<form class="row g-3" id="myForm"
-				th:action="@{/front/seller/seller/update}" th:object="${sellerVO}"
+				th:action="@{/seller/register/check}" th:object="${sellerVO}"
 				method="post" enctype="multipart/form-data"
 				onsubmit="return updateHiddenFields();">
-				<div class="col-md-12" style="display: none">
-					<label for="inputSellerId" class="form-label">賣家ID</label> <input
-						type="text" class="form-control" id="inputSellerId"
-						name="sellerId" th:field="*{sellerId}"
-						aria-describedby="sellerIdFeedback"
-						th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
-						readonly />
-					<div id="sellerIdFeedback" class="invalid-feedback">
-						<p th:if="${#fields.hasErrors('sellerId')}"
-							th:errors="*{sellerId}">欄位有誤</p>
-					</div>
-				</div>
 				<div class="col-md-12">
 					<label for="sellerLvId" class="form-label">賣家等級</label>
 					<div class="col-md-2">
 						<select class="form-select" name="sellerLvId" id="sellerLvId"
 							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
-							<option 
-								th:each="sellerLv : ${sellerLvListData}"
+							<option th:each="sellerLv : ${sellerLvListData}"
 								th:value="${sellerLv.getSellerLvId()}"
-								th:text="${sellerLv.getLvName()}"
-								th:selected="${sellerLv.getSellerLvId() == sellerVO.sellerLvId.getSellerLvId()}"></option>
+								th:text="${sellerLv.getLvName()}"></option>
 						</select>
 					</div>
 				</div>
@@ -64,8 +45,8 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputsellerContact" class="form-label">公司負責人</label>
-					<input type="text" class="form-control" id="inputsellerContact"
+					<label for="inputsellerContact" class="form-label">公司負責人</label> <input
+						type="text" class="form-control" id="inputsellerContact"
 						name="sellerContact" th:value="${sellerVO.sellerContact}"
 						aria-describedby="sellerContactFeedback"
 						th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''" />
@@ -76,18 +57,39 @@
 					</div>
 				</div>
 
-				<div class="col-md-12">
-					<label for="inputsellerEmail" class="form-label">電子郵件</label> <input
-						type="email" class="form-control" id="inputsellerEmail"
-						name="sellerEmail" th:value="${sellerVO.sellerEmail}"
-						aria-describedby="sellerEmailFeedback"
-						th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''" />
+				<div class="d-flex align-self-end align-items-end">
+					<div class="col-md-6">
+						<label for="inputsellerEmail" class="form-label">電子郵件</label> <input
+							type="email" class="form-control" id="inputsellerEmail"
+							name="sellerEmail" th:value="${sellerVO.sellerEmail}"
+							aria-describedby="sellerEmailFeedback"
+							th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''" />
 
-					<div id="sellerEmailFeedback" class="invalid-feedback">
-						<p th:if="${#fields.hasErrors('sellerEmail')}"
-							th:errors="*{sellerEmail}">欄位有誤</p>
+
+						<div id="sellerEmailFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('sellerEmail')}"
+								th:errors="*{sellerEmail}">欄位有誤</p>
+						</div>
+					</div>
+				<div class="px-5 col-md-2"> 
+						<button type="button" class="btn btn-primary"
+							onclick="sendVerificationCode()">發送驗證碼</button>
+					</div>
+
+					<div class="col-md-3">
+						<label for="inputVerificationCode" class="form-label">驗證碼</label>
+						<input type="text" class="form-control" id="inputVerificationCode"
+							name="verificationCode"
+							aria-describedby="verificationCodeFeedback" />
+						<div class="valid-feedback">Looks good!</div>
+						<div id="verificationCodeFeedback" class="invalid-feedback">
+							驗證碼輸入有誤</div>
 					</div>
 				</div>
+
+
+
+
 
 				<div class="col-md-12">
 					<label for="inputsellerTaxId" class="form-label">統一編號</label> <input
@@ -158,8 +160,8 @@
 
 				<input type="hidden" id="sellerCountyValue" name="sellerCounty"
 					th:value="${sellerVO.sellerCounty ?: ''}"
-					aria-describedby="sellerCountyFeedback" /> <input
-					type="hidden" id="sellerDistrictValue" name="sellerDistrict"
+					aria-describedby="sellerCountyFeedback" /> <input type="hidden"
+					id="sellerDistrictValue" name="sellerDistrict"
 					th:value="${sellerVO.sellerDistrict ?: ''}"
 					aria-describedby="sellerDistrictFeedback" />
 
@@ -216,8 +218,8 @@
 				</div>
 
 				<div class="col-md-2">
-					<label for="inputsellerBankCode" class="form-label">銀行代碼
-					</label> <input type="text" class="form-control" id="inputsellerBankCode"
+					<label for="inputsellerBankCode" class="form-label">銀行代碼 </label> <input
+						type="text" class="form-control" id="inputsellerBankCode"
 						name="sellerBankCode" th:value="${sellerVO.sellerBankCode}"
 						aria-describedby="sellerBankCodeFeedback"
 						th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''" />
@@ -257,43 +259,21 @@
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button type="button" class="btn btn-secondary"
-						onclick="window.history.back()">取消並離開</button>
+					<button type="reset" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
 			</form>
 		</div>
 	</main>
 
-	<div th:if="${updateSuccess}">
-		<!-- 這裡放置你的 Modal 代碼 -->
-		<div class="modal fade" id="updateSuccessModal" tabindex="-1"
-			role="dialog" aria-labelledby="updateSuccessModalLabel"
-			aria-hidden="true">
-
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- 這裡可以放置更新成功的提示信息 -->
-						賣家資料已成功更新！
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">確定</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- End Main -->
-	<div th:replace="fragment-js"></div>
+
+	<!-- ======= Footer ======= -->
+
+	<div th:replace="@{/fragment-footer-noaside}"></div>
+    <div th:replace="@{/fragment-js}"></div>
+
+	<!-- Local JS File -->
 
 	<script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -301,6 +281,12 @@
           .querySelector(".county")
           .getAttribute("data-countyValue");
         console.log(countyValue); // 將印出 "台北市"
+        
+        
+        var verificationCodeInput = document.getElementById("inputVerificationCode");
+        verificationCodeInput.addEventListener("blur", function () {
+            checkVerificationCode();
+        });
       });
 
       window.onload = function () {
@@ -347,8 +333,81 @@
         // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
         return true;
       }
-    </script>
+      
+      
+      function sendVerificationCode() {
+    	    var email = document.getElementById('inputsellerEmail').value;
+    	    email = decodeURIComponent(email);
 
-	<!-- simpletable -->
+    	    let url = window.location.href;
+
+    	    if (!url.endsWith('/')) {
+    	        url += "/";
+    	    }
+
+
+    	    // 使用 Fetch API 发送 POST 请求
+    	    fetch(url + 'sendVerificationCode', {
+    	        method: 'POST',
+    	        headers: {
+    	            'Content-Type': 'application/json',
+    	        },
+    	        body: JSON.stringify({ email: email }),
+    	    })
+    	    .then(response => {
+    	        if (!response.ok) {
+    	            throw new Error('發送驗證碼失敗');
+    	        }
+    	        alert("已經發送信件")
+    	    })
+    	    .catch(error => {
+    	        console.error('發送驗證碼失敗', error);
+    	    });
+    	}
+      
+      
+      function checkVerificationCode() {
+    	    // 获取验证码和邮箱
+    	    var verificationCode = document.getElementById("inputVerificationCode").value;
+    	    var email = document.getElementById("inputsellerEmail").value;
+
+    	    // 示例：假设验证规则是验证码长度必须为6
+    	    if (verificationCode.length === 6) {
+    	        // 构建请求体数据
+    	        var requestData = {
+    	            email: email,
+    	            code: verificationCode  // 注意这里使用 "code"，与后端对应
+    	        };
+
+    	        // 发送 AJAX 请求
+    	        fetch('/seller/register/checkVerificationCode', {
+    	            method: 'POST',
+    	            headers: {
+    	                'Content-Type': 'application/json',
+    	            },
+    	            body: JSON.stringify(requestData),
+    	        })
+    	        .then(response => {
+    	            if (!response.ok) {
+    	                throw new Error('請輸入正確驗證碼');
+    	            }
+    	            document.getElementById('inputVerificationCode').classList.remove('is-invalid');
+    	            document.getElementById('inputVerificationCode').classList.add('is-valid');
+
+    	        }).catch(error => {
+    	            document.getElementById('inputVerificationCode').classList.remove('is-valid');
+    	            document.getElementById('inputVerificationCode').classList.add('is-invalid');
+    	        });
+    	    } else {
+    	        document.getElementById('inputVerificationCode').classList.remove('is-valid');
+    	        document.getElementById('inputVerificationCode').classList.add('is-invalid');
+    	    }
+    	}
+
+    </script>
 </body>
+
+<!-- ======= Footer ======= -->
+
+
 </html>

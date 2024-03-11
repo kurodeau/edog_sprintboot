@@ -162,10 +162,7 @@ public class SellerController extends HttpServlet {
 
 	        String username = jsonNode.get("username").asText();
             String password = jsonNode.get("password").asText();
-            
-            System.out.println("=======register===========");
-            System.out.println(username);
-            System.out.println("=======register===========");
+
 
 	    	sellerVO.setSellerEmail(username);
 	    	sellerVO.setSellerPassword(password);
@@ -179,7 +176,7 @@ public class SellerController extends HttpServlet {
 			sellerVO.setSellerCompanyPhone("987654321");
 			sellerVO.setSellerCompany("ABC Company");
 			sellerVO.setSellerCompanyExtension("123");
-			
+
 	        sellerSvc.saveUserDetails(sellerVO);
 
 	        return ResponseEntity.status(HttpStatus.OK).body("{\"success\":true}");

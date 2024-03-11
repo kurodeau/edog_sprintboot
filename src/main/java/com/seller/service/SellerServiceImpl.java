@@ -82,6 +82,7 @@ public class SellerServiceImpl implements SellerService {
 			throw new UsernameNotFoundException("User not found with username ");
 		}
 		
+		System.out.println("saveUserDetails" +sellerVO);
 		
 		UserDetails userdetails = User.builder()
 				.username(sellerVO.getSellerEmail())
