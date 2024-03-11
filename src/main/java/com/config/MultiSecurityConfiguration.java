@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +21,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -61,6 +61,10 @@ public class MultiSecurityConfiguration {
 	@Autowired
 	@Qualifier("buyerPasswordEncoder")
 	private BuyerPasswordEncoder buyerPasswordEncoder;
+	
+	@Autowired
+	@Qualifier("buyerAuthenticationSuccessHandler")
+	private AuthenticationSuccessHandler buyerAuthenticationSuccessHandler;
 
 	@Autowired
 	SellerService sellerSvc;
@@ -127,6 +131,7 @@ public class MultiSecurityConfiguration {
 					throw new UsernameNotFoundException("帳號輸入有誤 SB");
 				}
 			} else if (parts[0].contains("buyer")) {
+				System.out.println("buyerbuyerbuyerbuyerbuyerbuyer");
 				// Fetch buyer details by email (assuming you have a buyer service)
 				// BuyerVO buyerVO = buyerSvc.findByOnlyOneEmail(trueName);
 				BuyerVO buyerVO = new BuyerVO();
@@ -165,35 +170,88 @@ public class MultiSecurityConfiguration {
 	}
 
 	@Bean
+	@Order(1)   
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		// TESTING
-//		http.authorizeRequests(authorize -> authorize
-//				.antMatchers("/**").permitAll()
-//				.anyRequest().authenticated());
+		http.authorizeRequests(authorize -> authorize
+				.antMatchers("/**").permitAll()
+				.anyRequest().authenticated());
 
 		// FORMAL
-		 http.authorizeRequests(authorize -> authorize
-		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()
-		 .antMatchers("/seller/register", "/seller/register/**").permitAll()
-		 .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
-		 .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-		 .antMatchers("/front/seller/**").hasRole("SELLER")
-		 .antMatchers("/front/buyer/**").hasRole("BUYER")
-		 .antMatchers("/auth/email/check", "/auth/email").permitAll()
-		 .antMatchers("/activate/seller/**").permitAll()
-		 .antMatchers("/").permitAll()
-		 .anyRequest().authenticated());
-
-		http.formLogin(form -> form
-				.loginPage("/seller/login").permitAll()
-				.usernameParameter("usernameinhtml")
-				.passwordParameter("passwordinhtml")
-				.successHandler(sellerAuthenticationSuccessHandler))
-				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
-				.csrf().disable();
-
-		return http.build();
-	}
+//		 http.authorizeRequests(authorize -> authorize
+//		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()
+//		 .antMatchers("/seller/register", "/seller/register/**").permitAll()
+//		 .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
+//		 .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+//		 .antMatchers("/front/seller/**").hasRole("SELLER")
+//		 .antMatchers("/front/buyer/**").hasRole("BUYER")
+//		 .antMatchers("/auth/email/check", "/auth/email").permitAll()
+//		 .antMatchers("/activate/seller/**").permitAll()
+//		 .antMatchers("/").permitAll()
+//		 .anyRequest().authenticated());
+//
+//		http.formLogin(form -> form
+//				.loginPage("/seller/login").permitAll()
+//				.usernameParameter("usernameinhtml")
+//				.passwordParameter("passwordinhtml")
+//				.successHandler(sellerAuthenticationSuccessHandler))
+//				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
+//				.csrf().disable();
+//
+////		http.formLogin(form -> form
+////				.loginPage("/buyer/login").permitAll()
+////				.usernameParameter("usernameinhtml")
+////				.passwordParameter("passwordinhtml")
+////				.successHandler(buyerAuthenticationSuccessHandler))
+////				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
+////				.csrf().disable();
+//		
+//		
+//		return http.build();
+//	}
+//	
+//	
+//	@Bean
+//	@Order(2)   
+//	public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+//
+//		// TESTING
+////		http.authorizeRequests(authorize -> authorize
+////				.antMatchers("/**").permitAll()
+////				.anyRequest().authenticated());
+//
+//		// FORMAL
+////		 http.authorizeRequests(authorize -> authorize
+////		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()
+////		 .antMatchers("/seller/register", "/seller/register/**").permitAll()
+////		 .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
+////		 .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+////		 .antMatchers("/front/seller/**").hasRole("SELLER")
+////		 .antMatchers("/front/buyer/**").hasRole("BUYER")
+////		 .antMatchers("/auth/email/check", "/auth/email").permitAll()
+////		 .antMatchers("/activate/seller/**").permitAll()
+////		 .antMatchers("/").permitAll()
+////		 .anyRequest().authenticated());
+//
+////		http.formLogin(form -> form
+////				.loginPage("/seller/login").permitAll()
+////				.usernameParameter("usernameinhtml")
+////				.passwordParameter("passwordinhtml")
+////				.successHandler(sellerAuthenticationSuccessHandler))
+////				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
+////				.csrf().disable();
+//
+//		http.formLogin(form -> form
+//				.loginPage("/buyer/login").permitAll()
+//				.usernameParameter("usernameinhtml")
+//				.passwordParameter("passwordinhtml")
+//				.successHandler(buyerAuthenticationSuccessHandler))
+//				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
+//				.csrf().disable();
+//		
+//		
+//		return http.build();
+//	}
 
 }

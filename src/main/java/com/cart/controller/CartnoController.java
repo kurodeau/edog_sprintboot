@@ -45,7 +45,7 @@ public class CartnoController extends HttpServlet {
 	CartService cartService;
 
 	
-	// 用戶取出自己所有收藏清單資料 /front/buyer/cart/list
+	// 用戶取出自己所有購物車資料 /front/buyer/cart/list
 	@GetMapping("list")
 	public String cartlist(String memberId, Model model) {
 		// 先給定 memberId 以便測試

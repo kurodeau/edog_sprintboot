@@ -37,55 +37,43 @@ public class CartService {
 	@Autowired
 	ProductService productSvc;
 
-	public Map<String, Map<ProductVO, String>> getAllByMemberId(String memberId) {
+	public Map<String, List<ProductVO>> getAllByMemberId(String memberId) {
 
-		// 假定memberId 測試用
-		memberId = "1";
-
-		// 取得連線
+		// 設定redisKey, 取得連線
+		String redisKey = "cart"+ memberId;
+		System.out.println("redisKey= " + redisKey); //測試訊息
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
 		// 本方法會用到的跨區域變數
-		// Key:sellerId -> key:ProductId value:String
-		Map<String, Map<ProductVO, String>> cartClassfi = new HashMap<>();
-		Map<ProductVO, String> productAndQty = new HashMap<>();
-		ProductVO product = new ProductVO();
-		String Key1 = memberId;
-		// 測試Key用的參數
-		System.out.println("Key1=" + Key1);
+		Map<String, List<ProductVO>> cartClassfi = new HashMap<>(); // 最後要傳回前端的資料包
+		List<String> redisData = new ArrayList<String>(); // Redis 中的 ProductID 撈出裝成List來遍歷或檢查
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-
-				// 從 Redis 中讀取資料 並且指定為db10
-				Jedis jedis = jedisPool.getResource()) {
+			// 從 Redis 中讀取資料 並且指定為db10
+			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
 
-			String datajsonS = jedis.get("3");
-			System.out.println("datajsonS" + datajsonS);
-			JSONObject datajasonJ = new JSONObject(datajsonS);
-			System.out.println("datajasonJ" + datajasonJ.toString());
+			redisData = jedis.lrange(redisKey, 0, -1);
+			System.out.println("redisData= " + redisData);
 
-			// 測試, 拿出每一個key
-			// 獲取 JSONObject 中所有的 key
-			Iterator<String> keys = datajasonJ.keys();
+			// 遍歷 redis 資料中所有的 ProductID
+			for (String str : redisData) {
 
-			// 遍歷 keys 並打印每個 key
-			while (keys.hasNext()) {
-				String key = keys.next();
-				System.out.println("Key: " + key);
+                // 將 ProductID 宣告為 ProductVO
+				ProductVO product = productSvc.getOneProduct(Integer.parseInt(str));
+				// 宣告出 ProductVO 裝的清單, 最後回傳用
+				List<ProductVO> productList = new ArrayList<ProductVO>(); 
+				// 將 product 對應的 sellerCompany 宣告出來以利最後回傳
+				String sellerCompany = product.getSellerVO().getSellerCompany();
+
+				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
+				productList = cartClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
+																							// List，再對其更新
+				productList.add(product);
+				cartClassfi.put(sellerCompany, productList);
 			}
-
-//			for (String str : jedis.lrange(cartMember, 0, -1)) {
-////				product = productSvc.getOneProduct(Integer.parseInt(str));
-//				String sellerCompany = product.getSellerVO().getSellerCompany();
-//
-//				// 將每個 ProductVO 透過 "sellerCompany" 鍵關聯起来
-//				productList = cartClassfi.getOrDefault(sellerCompany, new ArrayList<>()); // 拉出對應Key的value
-//																							// List，再對其更新
-//				productList.add(product);
-//				cartClassfi.put(sellerCompany, productList);
-//			}
+			
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
