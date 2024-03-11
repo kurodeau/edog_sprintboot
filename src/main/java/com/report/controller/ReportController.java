@@ -167,22 +167,39 @@ public class ReportController {
 //		model.addAttribute("reportVO", reportVO);
 //		return "back-end/report/update_report_input"; // 查詢完成後轉交update_emp_input.html
 //	}
-	@PostMapping("getOne_For_Update")
-	public String getOne_For_Update(@RequestParam("reportId") String reportId, ModelMap model) {
+	@PostMapping("getArticle_For_Update")
+	public String getArticle_For_Update(@RequestParam("reportId") String reportId, @RequestParam("articleId") String articleId, ModelMap model) {
 	    // 接收请求参数，这里省略了格式错误处理部分
 	    ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
 	    
 	    // 获取对应的ArticleVO对象
-//	    ArticleVO articleVO = reportVO.getArticleVO();
-//	    
-//	    // 添加ArticleVO对象到模型中
-//	    model.addAttribute("articleVO", articleVO);
+	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
+	    
+	    // 添加ArticleVO对象到模型中
+	    model.addAttribute("articleVO", articleVO);
 	    
 	    // 添加reportVO对象到模型中
 	    model.addAttribute("reportVO", reportVO);
 	    
 	    // 返回视图
 	    return "back-end/back-reportart-edit";
+	}
+	@PostMapping("getReply_For_Update")
+	public String getReply_For_Update(@RequestParam("reportId") String reportId, @RequestParam("replyId") String replyId, ModelMap model) {
+		// 接收请求参数，这里省略了格式错误处理部分
+		ReportVO reportVO = reportSvc.getOneReport(Integer.valueOf(reportId));
+		
+		// 获取对应的ArticleVO对象
+		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId));
+		
+		// 添加ArticleVO对象到模型中
+		model.addAttribute("replyVO", replyVO);
+		
+		// 添加reportVO对象到模型中
+		model.addAttribute("reportVO", reportVO);
+		
+		// 返回视图
+		return "back-end/back-reportreply-edit";
 	}
 
 	
@@ -203,7 +220,7 @@ public class ReportController {
 	 * POST request It also validates the user input
 	 */
 	@PostMapping("update")
-	public String update(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
+	public String update(@Valid ReportVO reportVO,@Valid ArticleVO articleVO, BindingResult result, ModelMap model) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		if (reportVO.getReportTargetType() == 0) {
@@ -221,6 +238,69 @@ public class ReportController {
 		reportVO = reportSvc.getOneReport(Integer.valueOf(reportVO.getReportId()));
 		model.addAttribute("reportVO", reportVO);
 		return "back-end/report/listOneReport"; // 修改成功後轉交listOneEmp.html
+	}
+	
+	@PostMapping("update-article-report")
+	public String updateArticleReport(@Valid ReportVO reportVO,@Valid ArticleVO articleVO, BindingResult result, ModelMap model,
+			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
+		
+		result = removeFieldError(articleVO, result, "upFiles");
+
+		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
+			// EmpService empSvc = new EmpService();
+			byte[] upFiles = articleSvc.getOneArticle(articleVO.getArticleId()).getUpFiles();
+			articleVO.setUpFiles(upFiles);
+		} else {
+			for (MultipartFile multipartFile : parts) {
+				byte[] upFiles = multipartFile.getBytes();
+				articleVO.setUpFiles(upFiles);
+			}
+		}
+		if (result.hasErrors()) {
+			return "back-end/back-reportart-list";
+		}
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setReplyVO(null); 
+			
+		reportVO.setReportState(1);
+		reportVO.setReportDealTime(new Date());
+		/*************************** 2.開始修改資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.updateReport(reportVO);
+		articleSvc.updateArticle(articleVO);
+		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("success", "- (修改成功)");
+		articleVO = articleSvc.getOneArticle(Integer.valueOf(articleVO.getArticleId()));
+		model.addAttribute("articleVO", articleVO);
+		reportVO = reportSvc.getOneReport(Integer.valueOf(reportVO.getReportId()));
+		model.addAttribute("reportVO", reportVO);
+		return "back-end/back-reportart-list"; // 修改成功後轉交listOneEmp.html
+	}
+	
+	@PostMapping("update-reply-report")
+	public String updateReplyReport(@Valid ReportVO reportVO,@Valid ReplyVO replyVO, BindingResult result, ModelMap model) throws IOException {
+		
+		if (result.hasErrors()) {
+			return "back-end/back-reportreply-list";
+		}
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		reportVO.setArticleVO(null); 
+		
+		reportVO.setReportState(1);
+		reportVO.setReportDealTime(new Date());
+		/*************************** 2.開始修改資料 *****************************************/
+		// EmpService empSvc = new EmpService();
+		reportSvc.updateReport(reportVO);
+		replySvc.updateReply(replyVO);
+		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("success", "- (修改成功)");
+		replyVO = replySvc.getOneReply(Integer.valueOf(replyVO.getReplyId()));
+		model.addAttribute("replyVO", replyVO);
+		reportVO = reportSvc.getOneReport(Integer.valueOf(reportVO.getReportId()));
+		model.addAttribute("reportVO", reportVO);
+		return "back-end/back-reportreply-list"; // 修改成功後轉交listOneEmp.html
 	}
 
 	/*
@@ -292,16 +372,15 @@ public class ReportController {
 		return result;
 	}
 
-	/*
-	 * This method will be called on select_page.html form submission, handling POST
-	 * request
-	 */
-//	@PostMapping("listArticles_ByCompositeQuery")
-//	public String listAllArticle(HttpServletRequest req, Model model) {
-//		Map<String, String[]> map = req.getParameterMap();
-//		List<ArticleVO> list = articleSvc.getAll(map);
-//		model.addAttribute("articleListData", list); // for listAllEmp.html 第85行用
-//		return "back-end/article/listAllArticle";
-//	}
+	public BindingResult removeFieldError(ArticleVO articleVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname))
+				.collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(articleVO, "articleVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
 
 }

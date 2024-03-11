@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <style type="text/css">
+ .hide {
+		display: none;
+	}
+	</style>
+  </head>
+
+  <body>
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <!-- start帳戶管理 -->
+
+    <aside th:replace="back-end/aside-back.html"></aside>
+
+    <!-- ======= Main ======= -->
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>處理檢舉文章</h1>
+
+		<form class="row g-3" id="myForm" th:action="@{update-reply-report}" method="post" enctype="multipart/form-data">
+			
+			<div class="col-md-12">
+			<label class="form-label">檢舉編號</label>
+			<input class="form-control" type="text" name="reportId" th:value="${reportVO.reportId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 檢舉會員編號 -->
+			<div class="hide" th:object="${reportVO}">
+			<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 檢舉目標類型 -->
+			<div class="hide">
+			    <input type="text" name="reportTargetType" th:value="${reportVO.reportTargetType}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 文章ID -->
+			<div th:if="${reportVO.reportTargetType == 1}">
+			    <div class="hide">
+			        <input type="text" th:value="${reportVO.replyVO != null} ? ${reportVO.replyVO.replyId} : ''" style="border:0px ; font-weight: bold;" readonly />
+			        <input type="hidden" th:field="*{reportVO.replyVO.replyId}" />
+			    </div>
+			</div>	
+			
+			<div class="col-md-12" th:object="${reportVO}">
+			    <label class="form-label">檢舉分類</label>
+				<input type="hidden" th:value="${reportVO.reportTypeVO != null} ? ${reportVO.reportTypeVO.reportTypeId} : ''" style="border:0px ; font-weight: bold;" readonly />
+				<input class="form-control" type="text" th:value="${reportVO.reportTypeVO.reportTypeSort}" style="border:0px ; font-weight: bold;" readonly />
+        		<input type="hidden" th:field="*{reportTypeVO.reportTypeId}" />
+			</div>
+
+			<!-- 檢舉時間 -->
+			<div class="hide">
+			    <input type="text" name="reportTime" th:value="${reportVO.reportTime}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- reply -->
+			
+			<!-- 回復編號 -->
+			<div class="hide">
+			<input type="text" name="replyId" th:value="${replyVO.replyId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 文章編號 -->
+			<div class="hide" th:object="${replyVO}">
+			<input type="text" th:field="*{articleVO.articleId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 會員編號 -->
+			<div class="hide" th:object="${replyVO}">
+			<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<div class="col-md-12">
+			<label class="form-label">留言內容</label>
+				<input class="form-control" type="text" name="replyContent" th:value="${replyVO.replyContent}" readonly /> 
+			</div>
+
+			<!-- 上傳時間 -->
+			<div class="hide">
+				<input type="text" name="replyTime" th:value="${replyVO.replyTime}"/>
+			</div>
+			
+			<!-- 喜歡數 -->
+			<div class="hide">
+				<input type="text" th:value="*{replyVO.replyLike == null ? '0' : replyVO.replyLike}" name="replyLike"/>
+			</div>
+
+				<div class="col-md-12">
+				<label class="form-label">是否刪除留言</label>
+				<div class="col-md-2">
+					<select class="form-select" name="isEnabled" th:value="*{replyVO.isEnabled}">
+						<option th:value="true" th:text="保留"></option>
+						<option th:value="false" th:text="刪除"></option>
+					</select>
+				</div>
+				</div>
+
+				<div class="text-center d-flex flex-row gap-5 justify-content-center">
+            <button type="button" class="btn btn-secondary" onclick="goBack()">取消並離開</button>
+            <button type="submit" class="btn btn-primary">提交修改</button>
+          </div>
+
+</form>
+	</div>
+    </main>
+
+    <!-- End Main -->
+    <div th:replace="fragment-js"></div>
+
+    <script>
+
+      function checkFormBeforeSubmit() {
+        // 取得表單元素
+        var form = document.getElementById("myForm");
+
+        // 檢視表單內容
+        var formData = new FormData(form);
+        var formContent = "";
+
+        for (var pair of formData.entries()) {
+          formContent += pair[0] + ": " + pair[1] + "\n";
+        }
+
+        // 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+        alert("表單內容：\n" + formContent);
+
+        // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+        return true;
+      }
+      
+      function goBack() {
+          // 使用 history.back() 返回上一頁
+          window.history.back();
+      }
+    </script>
+    <!-- simpletable -->
+  </body>
+</html>
