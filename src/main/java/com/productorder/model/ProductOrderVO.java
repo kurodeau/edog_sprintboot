@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.buyer.entity.BuyerVO;
 import com.orderdetails.model.OrderDetailsVO;
 import com.seller.entity.SellerVO;
 
@@ -25,41 +26,45 @@ import com.seller.entity.SellerVO;
 public class ProductOrderVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	
+
 
 	
 	
-	private Integer orderId;//PK
+/////////////////打開賣家關聯///////////////////
 	
-	
-/////////////////////////////////
-	
-//	private SellerVO sellerVO;//FK:sellerId
+//	private SellerVO sellerTargetVO;//FK:sellerId
 //	
 //	
 //	@ManyToOne
 //	@JoinColumn(name = "sellerId" ,referencedColumnName="sellerId") 
 //	public SellerVO getSellerVO() {
-//		return sellerVO;
+//		return sellerTargetVO;
 //	}
 //
 //	public void setSellerVO(SellerVO sellerVO) {
-//		this.sellerVO = sellerVO;
+//		this.sellerTargetVO = sellerVO;
 //	}
-///////////////////////////////
-	private Integer sellerId;//FK2
+////////////////////拿掉賣家關聯///////////////////
+	
+	private Integer sellerId;//FK1
 	public Integer getSellerId() {
 		return sellerId;
 	}
-
 
 	public void setSellerId(Integer sellerId) {
 		this.sellerId = sellerId;
 	}
 
-	private Integer memberId;//FK2
-	private Integer couponId;//FK3
+/////////////////////////////////////////////////
 	
+	
+	private Integer orderId;//PK
+	
+	
+	private BuyerVO buyerVO;
+	
+	
+	private Integer couponId;//FK3
 	private Integer memberPaysShipping;
 	private Integer sellerPaysShipping;
 	private Integer orderOrigPrice;
@@ -91,15 +96,7 @@ public class ProductOrderVO implements java.io.Serializable {
 
 	
 
-	@Column(name = "memberId")	
-	public Integer getMemberId() {
-		return memberId;
-	}
-
-
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
-	}
+	
 
 	@Column(name = "couponId")	
 	public Integer getCouponId() {
@@ -112,29 +109,7 @@ public class ProductOrderVO implements java.io.Serializable {
 	}
 
 
-	//	public SellerVO getSellerVO() {
-//		return sellerVO;
-//	}
-//
-//	public void setSellerVO(sellerVO sellerVO) {
-//		this.sellerVO = sellerVO;
-//	}
-//
-//	public BuyerVO getBuyerVO() {
-//		return buyerVO;
-//	}
-//
-//	public void setBuyerVO(BuyerVO buyerVO) {
-//		this.buyerVO = buyerVO;
-//	}
-//
-//	public CouponVO getCouponVO() {
-//		return couponVO;
-//	}
-//
-//	public void setCouponVO(CouponVO couponVO) {
-//		this.couponVO = couponVO;
-//	}
+	
 	@Column(name = "memberPaysShipping")
 	public Integer getMemberPaysShipping() {
 		return memberPaysShipping;
@@ -259,8 +234,16 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderDetailss = orderDetailss;
 	}
 	
-/////////////////////////////////////////
-	
+////////買家關聯/////////////////////////////////
+	@ManyToOne
+	@JoinColumn(name = "memberId")   // 指定用來join table的column
+	public BuyerVO getBuyerVO() {
+		return buyerVO;
+	}
+
+	public void setBuyerVO(BuyerVO buyerVO) {
+		this.buyerVO = buyerVO;
+	}
 	
 	
 }

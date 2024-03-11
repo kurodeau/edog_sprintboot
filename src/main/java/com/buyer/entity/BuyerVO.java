@@ -1,38 +1,24 @@
 package com.buyer.entity;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.io.IOException;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.Valid;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Past;
-
-//import org.hibernate.validator.constraints.NotEmpty;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-//import com.petdraw.entity.PetDrawVO;
+
+import com.productorder.model.ProductOrderVO;
 
 /*
  * 註1: classpath必須有javax.persistence-api-x.x.jar 
@@ -43,6 +29,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Table(name = "buyer")
 public class BuyerVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
+	
+	
+	
+	
+	//訂單關聯//
+private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+	
+
+	
 	
 	private Integer memberId;
 	private String memberEmail; 
@@ -294,6 +289,20 @@ public class BuyerVO implements java.io.Serializable{
 		this.isConfirm = isConfirm;
 	}
 		
+//////////訂單關聯/////////////////////////
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="buyerVO")
+@OrderBy("memberId asc")
+public Set<ProductOrderVO> getProductOrders() {
+return productOrders;
+}
+
+public void setProductOrders(Set<ProductOrderVO> productOrders) {
+this.productOrders = productOrders;
+}
+////////////////////////////////
+
+	
+	
 	@Override
 	public String toString() {
 		return "BuyerVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", thirdFrom=" + thirdFrom
@@ -306,5 +315,7 @@ public class BuyerVO implements java.io.Serializable{
 				+ isConfirm + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
 				+ super.toString() + "]";
 	}
+	
+	
 
 }

@@ -36,7 +36,20 @@ public class SellerVO implements java.io.Serializable {
 		super();
 	}
 
-	
+/////打開訂單關聯/////////////////////////////////////////
+//	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+//	
+//	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerTargetVO")
+//	@OrderBy("sellerId asc")
+//	public Set<ProductOrderVO> getProductOrders() {
+//		return productOrders;
+//	}
+//
+//	public void setProductOrders(Set<ProductOrderVO> productOrders) {
+//		this.productOrders = productOrders;
+//	}
+//	
+/////////////////////////////////////////////////////////
 
 	
 	
@@ -293,20 +306,7 @@ public class SellerVO implements java.io.Serializable {
 		this.isConfirm = isConfirm;
 	}
 	
-/////訂單與賣家關聯/////////////////////////////////////////
-//	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
-//	
-//	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerVO")
-//	@OrderBy("sellerId asc")
-//	public Set<ProductOrderVO> getProductOrders() {
-//		return productOrders;
-//	}
-//
-//	public void setProductOrders(Set<ProductOrderVO> productOrders) {
-//		this.productOrders = productOrders;
-//	}
-	
-/////////////////////////////////////////
+
 
 	@Override
 	public String toString() {

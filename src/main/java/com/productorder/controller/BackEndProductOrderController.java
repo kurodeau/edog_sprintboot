@@ -1,5 +1,6 @@
 package com.productorder.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -7,12 +8,14 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +52,20 @@ public class BackEndProductOrderController {
 	        return "back-end/back-order-search-all";
 	    }
 	
-
+	//訂單內容更新
+		
+		
+		@GetMapping("getOne_For_Update")
+		public String getOne_For_Uppdate(@RequestParam("orderId") String orderId, ModelMap model) {
+			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+			/*************************** 2.開始查詢資料 *****************************************/
+			// EmpService productOrderSvc = new EmpService();
+			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+			
+			/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+			model.addAttribute("productOrderVO", productOrderVO);
+			return "back-end/back-order-update"; // 查詢完成後轉交update_emp_input.html
+		}
 	
 //////////////////////////////////////
 	
@@ -84,7 +100,40 @@ public class BackEndProductOrderController {
 		return ""; // 查詢完成後轉交select_page.html由其第128行insert listOneProductOrder.html內的th:fragment="listOneProductOrder-div
 	}
 
-	
+	@PostMapping("update")
+	public String update(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model) throws IOException {
+
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		
+		if (result.hasErrors()) {
+			return "back-end/back-order-update";
+		}
+		/*************************** 2.開始修改資料 *****************************************/
+		// EmpService productOrderSvc = new EmpService();
+		productOrderSvc.updateProductOrder(productOrderVO);
+
+		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("success", "- (修改成功)");
+		productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(productOrderVO.getOrderId()));
+		model.addAttribute("productOrderVO", productOrderVO);
+		return "back-end/productOrder/listOneProductOrder"; // 修改成功後轉交listOneEmp.html
+	}
+
+	/*
+	 * This method will be called on listAllEmp.html form submission, handling POST request
+	 */
+	@PostMapping("delete")
+	public String delete(@RequestParam("sellerId") String sellerId, ModelMap model) {
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		/*************************** 2.開始刪除資料 *****************************************/
+		// EmpService productOrderSvc = new EmpService();
+		productOrderSvc.deleteProductOrder(Integer.valueOf(sellerId));
+		/*************************** 3.刪除完成,準備轉交(Send the Success view) **************/
+		List<ProductOrderVO> list = productOrderSvc.getAll();
+		model.addAttribute("productOrderListData", list);
+		model.addAttribute("success", "- (刪除成功)");
+		return "back-end/productOrder/listAllProductOrder"; // 刪除完成後轉交listAllEmp.html
+	}
 	
 	
 // ModelAttribute /////////////////////////////////
