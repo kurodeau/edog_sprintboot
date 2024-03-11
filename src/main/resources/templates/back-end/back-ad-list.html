@@ -37,7 +37,6 @@
               <th>廣告狀態</th>
               <th>廣告創立時間</th>
               <th>廣告啟用狀態</th>
-              <th>上架數量</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -45,24 +44,30 @@
             <th:block th:each="adVO : ${adListData}">
               <tr>
                 <td th:text="${adVO.adId}"></td>
-                <td th:text="${adVO.sellerVO}"></td>
+                <td th:text="${adVO.sellerVO.sellerId}"></td>
                 <td th:text="${adVO.adImg}"></td>
                 <td th:text="${adVO.adImgUploadTime}"></td>
-                <td th:text="${adVO.isExportGoldflow} ? '是' : '否'"></td>
-                <td th:text="${adVO.freightSub}"></td>
-                <td th:text="${adVO.returnSubPerMonth}"></td>
-                <td th:text="${adVO.isShowPriority} ? '是' : '否'"></td>
-                <td th:text="${adVO.shelvesNumber}"></td>
+            	<td th:text="${adVO.adName}"></td>
+            	<td th:text="${adVO.adUrl}"></td>
+            	<td th:text="${adVO.adStartTime}"></td>
+            	<td th:text="${adVO.adEndTime}"></td>
+            	<td th:text="${adVO.adLv}"></td>
+            	<td th:text="${adVO.adMemo}"></td>
+            	<td th:text="${adVO.adStatus}"></td>
+            	<td th:text="${adVO.adCreateTime}"></td>
+            	<td th:text="${adVO.isEnabled}"></td>
+            	
+            	
                 <td>
                   <a
                     class="btn"
-                    th:href="@{getOne_For_Update(id=${sellerLvVO.sellerLvId})}"
+                    th:href="@{getOne_For_Update(id=${adVO.adId})}"
                     >編輯</a
                   >
                   <button
                     type="button"
                     class="btn btn-del"
-                    th:attr="data-delete-id=${sellerLvVO.sellerLvId}"
+                    th:attr="data-delete-id=${adVO.adId}"
                     data-bs-toggle="modal"
                     data-bs-target="#deleteModal"
                   >
@@ -136,11 +141,11 @@
           ],
           fixedColumns: true,
           paging: true,
-          lengthMenu: [25, 50, 75, 100],
+          lengthMenu: [5, 50, 75, 100],
           language: {
             lengthMenu: "顯示 _MENU_ 筆資料",
           },
-          pageLength: 25,
+          pageLength: 5,
           scrollCollapse: true,
           scrollX: true,
           scrollY: 600,

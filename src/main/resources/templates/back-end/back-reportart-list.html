@@ -53,9 +53,13 @@
 <!-- 								th:href="@{getOne_For_Update(id=${reportVO.reportId})}">查看</a> -->
 <!-- 							</td> -->
 <td>
-			  <form method="post" th:action="@{/back/report/getOne_For_Update}" style="margin-bottom: 0px;">
-			     <input type="submit" value="修改">
-			     <input type="hidden" name="reportId" th:value="${reportVO.reportId}"></form>
+			  
+<form method="post" th:action="@{/back/report/getArticle_For_Update}" style="margin-bottom: 0px;">
+								    <input type="submit" value="處理">
+								    <input type="hidden" name="reportId" th:value="${reportVO.reportId}">
+								    <input type="hidden" name="articleId" th:value="${reportVO.articleVO.articleId}">
+								</form>
+
 			
 			</td>
 						</tr>

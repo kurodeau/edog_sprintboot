@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <th:block th:insert="~{/fragment-head}"></th:block>
+    <style type="text/css">
+ .hide {
+		display: none;
+	}
+	</style>
   </head>
 
   <body>
@@ -18,138 +23,116 @@
     <!-- ======= Main ======= -->
     <main class="main main-layout-seller">
       <div class="container-fluid seller-container">
-        <h1>編輯賣家資料</h1>
+        <h1>處理檢舉文章</h1>
 
-<!--         <form -->
-<!--           class="row g-3" -->
-<!--           id="myForm" -->
-<!--           th:action="@{update}" -->
-<!--           th:object="${reportVO}" -->
-<!--           method="post" -->
-<!--           enctype="multipart/form-data" -->
-<!--           onsubmit="return updateHiddenFields();" -->
-<!--         > -->
-<!--           <div class="col-md-12"> -->
-<!--             <label for="inputReportId" class="form-label">檢舉ID</label> -->
-<!--             <input -->
-<!--               type="text" -->
-<!--               class="form-control" -->
-<!--               id="inputReportId" -->
-<!--               name="reportId" -->
-<!--               th:field="*{reportId}" -->
-<!--               aria-describedby="sellerIdFeedback" -->
-<!--               readonly -->
-<!--             /> -->
-<!--           </div> -->
-          
-<!--           <div class="col-md-12"> -->
-<!--             <label for="inputArticleContent" class="form-label">文章內容</label> -->
-<!--             <input -->
-<!--               type="text" -->
-<!--               class="form-control" -->
-<!--               id="inputArticleContent" -->
-<!--               name="articleContent" -->
-<!--               th:field="*{articleVO.articleContent}" -->
-<!--               aria-describedby="sellerIdFeedback" -->
-<!--               readonly -->
-<!--             /> -->
-<!--           </div> -->
-
-<!--           <div class="col-md-2"> -->
-<!-- 			    <label for="inputIsConfirm" class="form-label">是否下架</label> -->
-<!-- 			    <select class="form-select" name="isConfirm" id="inputIsConfirm"> -->
-<!-- 			        <option value="true" th:selected="${articleVO.isEnabled}">保留</option> -->
-<!-- 			        <option value="false" th:selected="${!articleVO.isEnabled}">下架</option> -->
-<!-- 			    </select> -->
-<!-- 			</div> -->
-
-<!--           <div class="text-center d-flex flex-row gap-5 justify-content-center"> -->
-<!--             <button type="reset" class="btn btn-secondary">取消並離開</button> -->
-<!--             <button type="submit" class="btn btn-primary">提交修改</button> -->
-<!--           </div> -->
-<!--         </form> -->
-<div align="center">
-		<h3><b>所有欄位皆為必填欄位</b></h3>
-		<form th:action="@{update}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
+		<form class="row g-3" id="myForm" th:action="@{update-article-report}" method="post" enctype="multipart/form-data">
 			
-			<div>
-			<label>回復編號:</label>
-			<input type="text" th:field="*{reportId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+			<div class="col-md-12">
+			<label class="form-label">檢舉編號</label>
+			<input class="form-control" type="text" name="reportId" th:value="${reportVO.reportId}" style="border:0px ; font-weight: bold;" readonly />
 			</div>
 			
-<div>
-    <label>檢舉目標類型:</label>
-    <input type="text" th:field="*{reportTargetType}" th:value="${reportVO.reportTargetType == 0 ? '舉報文章' : '舉報回复'}" style="border:0px ; font-weight: bold;" readonly />
-</div>
-
-<div th:if="${reportVO.reportTargetType == 0}">
-    <div>
-        <label>文章編號:</label>
-        <input type="text" th:value="${reportVO.articleVO != null} ? ${reportVO.articleVO.articleId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/>
-        <input type="hidden" th:field="*{articleVO.articleId}" />
-    </div>
-<!--     <div class="hide"> -->
-<!--         <label>回復編號:</label> -->
-<!--         <input type="text" th:value="${reportVO.replyVO != null} ? ${reportVO.replyVO.replyId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/> -->
-<!--         <input type="hidden" th:field="*{replyVO.replyId}" /> -->
-<!--     </div> -->
-</div>
-
-<div th:if="${reportVO.reportTargetType == 1}">
-<!--     <div class="hide"> -->
-<!--         <label>文章編號:</label> -->
-<!--         <input type="text" th:value="${reportVO.articleVO != null} ? ${reportVO.articleVO.articleId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/> -->
-<!--         <input type="hidden" th:field="*{articleVO.articleId}" /> -->
-<!--     </div> -->
-    <div>
-        <label>回復編號:</label>
-        <input type="text" th:value="${reportVO.replyVO != null} ? ${reportVO.replyVO.replyId} : ''" style="border:0px ; font-weight: bold;" readonly /><br/>
-        <input type="hidden" th:field="*{replyVO.replyId}" />
-    </div>
-</div>
-
-
-			
-			<div>
-			<label>檢舉分類:</label>
-			<input type="text" th:field="*{reportTypeVO.reportTypeId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+			<!-- 檢舉會員編號 -->
+			<div class="hide" th:object="${reportVO}">
+			<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly />
 			</div>
 			
-<!-- 			<div> -->
-<!-- 			<label>檢舉狀態:</label> -->
-<!-- 			<input type="text" th:field="*{reportState}" onclick="hideContent('reportState.errors');" /><br/> -->
-<!-- 			<span  th:if="${#fields.hasErrors('reportState')}" th:errors="*{reportState}" class="error" id="reportState.errors"></span> -->
-<!-- 			</div> -->
-
-			<div>
-			    <label>檢舉狀態:</label>
-			    <select th:field="*{reportState}" onclick="hideContent('reportState.errors');">
-			        <option th:value="0" th:selected="${reportVO.reportState == 0}">未處理</option>
-			        <option th:value="1" th:selected="${reportVO.reportState == 1}">已處理</option>
-			    </select><br/>
-			    <span  th:if="${#fields.hasErrors('reportState')}" th:errors="*{reportState}" class="error" id="reportState.errors"></span>
-			</div>
-
-			
+			<!-- 檢舉目標類型 -->
 			<div class="hide">
-			<label>檢舉時間:</label>
-			<input type="date" th:field="*{reportTime}" onclick="hideContent('reportTime.errors');" /><br/>
+			    <input type="text" name="reportTargetType" th:value="${reportVO.reportTargetType}" style="border:0px ; font-weight: bold;" readonly />
 			</div>
 			
+			<!-- 文章ID -->
+			<div th:if="${reportVO.reportTargetType == 0}">
+			    <div class="hide">
+			        <input type="text" th:value="${reportVO.articleVO != null} ? ${reportVO.articleVO.articleId} : ''" style="border:0px ; font-weight: bold;" readonly />
+			        <input type="hidden" th:field="*{reportVO.articleVO.articleId}" />
+			    </div>
+			</div>	
+			
+			<div class="col-md-12" th:object="${reportVO}">
+			    <label class="form-label">檢舉分類</label>
+				<input type="hidden" th:value="${reportVO.reportTypeVO != null} ? ${reportVO.reportTypeVO.reportTypeId} : ''" style="border:0px ; font-weight: bold;" readonly />
+				<input class="form-control" type="text" th:value="${reportVO.reportTypeVO.reportTypeSort}" style="border:0px ; font-weight: bold;" readonly />
+        		<input type="hidden" th:field="*{reportTypeVO.reportTypeId}" />
+			</div>
+
+			<!-- 檢舉時間 -->
 			<div class="hide">
-			<label>檢舉處理時間:</label>
-			<input type="date" th:field="*{reportDealTime}" onclick="hideContent('reportDealTime.errors');" /><br/>
+			    <input type="text" name="reportTime" th:value="${reportVO.reportTime}" style="border:0px ; font-weight: bold;" readonly />
 			</div>
 			
-			<div>
-				<div></div>
-				<div><button type="submit" id="submit"> 送出修改 </button></div>
-				<div></div>
-			</div>		
-		</form>
-	
+			<!-- article -->
+			
+			<!-- 文章編號 -->
+			<div class="hide">
+			<input type="text" name="articleId" th:value="${articleVO.articleId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<!-- 會員編號 -->
+			<div class="hide" th:object="${articleVO}">
+			<input type="text" th:field="*{buyerVO.memberId}" style="border:0px ; font-weight: bold;" readonly />
+			</div>
+			
+			<div class="col-md-12" th:object="${articleVO}">
+				<label class="form-label">文章分類</label>
+				<input type="hidden" th:value="${articleVO.articleTypeVO != null} ? ${articleVO.articleTypeVO.articleTypeId} : ''" style="border:0px ; font-weight: bold;" readonly />
+				<input class="form-control" type="text" th:value="${articleVO.articleTypeVO.articleTypeName}" style="border:0px ; font-weight: bold;" readonly />
+        		<input type="hidden" th:field="*{articleTypeVO.articleTypeId}" />
+			</div>
+			
+			<div class="col-md-12">
+			<label class="form-label">文章標題</label>
+				<input class="form-control" type="text" name="articleTitle" th:value="${articleVO.articleTitle}" readonly /> 
+			</div>
+
+			<div class="col-md-12" th:object="${articleVO}">
+			<label class="form-label">文章內容</label>
+				<textarea  class="form-control" th:field="*{articleContent}" readonly style="resize: none;"></textarea>
+			</div>
+
+			<!-- 上傳時間 -->
+			<div class="hide">
+				<input type="text" name="artCreateTime" th:value="${articleVO.artCreateTime}"/>
+			</div>
+			
+			<!-- 更新時間 -->
+			<div class="hide">
+				<label>更新時間:</label> <input type="text" name="artUpdateTime" th:value="${articleVO.artUpdateTime}"/>
+			</div>
+
+			<!-- 喜歡數 -->
+			<div class="hide">
+				<input type="text" th:value="*{articleVO.articleLike == null ? '0' : articleVO.articleLike}" name="articleLike"/>
+			</div>
+
+			<!-- 留言數 -->
+			<div class="hide">
+				<input type="text" th:value="*{articleVO.articleComment == null ? '0' : articleVO.articleComment}" name="articleComment"/>
+			</div>
+			
+			<div >
+			<input class="hide" type="file" name="upFiles" th:value="*{articleVO.upFiles}" multiple="multiple" />
+			<div id="blob_holder"><img th:if="${articleVO.upFiles != null}" th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}" width="100px"></div>
+			</div>
+				
+				<div class="col-md-12">
+				<label class="form-label">是否刪除文章</label>
+				<div class="col-md-2">
+					<select class="form-select" name="isEnabled" th:value="*{articleVO.isEnabled}">
+						<option th:value="true" th:text="保留"></option>
+						<option th:value="false" th:text="刪除"></option>
+					</select>
+				</div>
+				</div>
+
+				<div class="text-center d-flex flex-row gap-5 justify-content-center">
+            <button type="button" class="btn btn-secondary" onclick="goBack()">取消並離開</button>
+            <button type="submit" class="btn btn-primary">提交修改</button>
+          </div>
+
+</form>
 	</div>
-      </div>
     </main>
 
     <!-- End Main -->
@@ -175,8 +158,79 @@
         // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
         return true;
       }
+      
+      function goBack() {
+          // 使用 history.back() 返回上一頁
+          window.history.back();
+      }
     </script>
+<script>
+	function redirectToUpdatePage(url) {
+		window.location.href = url;
+	}
 
+	var filereader_support = typeof FileReader != 'undefined';
+	if (!filereader_support) {
+		alert("No FileReader support");
+	}
+	acceptedTypes = {
+		'image/png' : true,
+		'image/jpeg' : true,
+		'image/gif' : true
+	};
+	function previewImage() {
+		var upfile1 = document.getElementById("upFiles");
+		upfile1.addEventListener("change", function(event) {
+			var files = event.target.files || event.dataTransfer.files;
+			for (var i = 0; i < files.length; i++) {
+				previewfile(files[i])
+			}
+		}, false);
+	}
+	function previewfile(file) {
+	    if (filereader_support === true && acceptedTypes[file.type] === true) {
+	        var reader = new FileReader();
+	        reader.onload = function(event) {
+	            // 清除 blob_holder 中的所有子元素
+	            blob_holder.innerHTML = '';
+
+	            // 添加新的图片
+	            var image = new Image();
+	            image.src = event.target.result;
+	            image.width = 100;
+	            image.height = 75;
+	            image.border = 2;
+	            blob_holder.appendChild(image);
+
+	            // 添加取消按钮
+	            var cancelButton = document.createElement("button");
+	            cancelButton.setAttribute("type", "button");
+	            cancelButton.setAttribute("onclick", "cancelImageSelection()");
+	            cancelButton.style.border = "none";
+	            cancelButton.style.background = "transparent";
+	            cancelButton.innerHTML = '<div class="icon-container"><i class="bi bi-x-lg"></i></div>';
+	            blob_holder.appendChild(cancelButton);
+	        };
+	        reader.readAsDataURL(file);
+	        document.getElementById('submit').disabled = false;
+	    } else {
+	        blob_holder.innerHTML = "<div  style='text-align: left;'>"
+	            + "● filename: "
+	            + file.name
+	            + "<br>"
+	            + "● ContentTyp: "
+	            + file.type
+	            + "<br>"
+	            + "● size: "
+	            + file.size
+	            + "bytes"
+	            + "<br>"
+	            + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+	        document.getElementById('submit').disabled = true;
+	    }
+	}
+
+	</script>
     <!-- simpletable -->
   </body>
 </html>
