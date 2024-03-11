@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import com.ad.model.AdVO;
+
 
 
 @Service("productOrderService")
@@ -30,9 +30,7 @@ public class ProductOrderService {
 			repository.deleteByOrderId(orderId);
 	}
 	
-	public List<ProductOrderVO> getBySellerId(Integer sellerId) {
-			return repository.findBySellerId(sellerId);
-	}
+
 
 	public ProductOrderVO getOneProductOrder(Integer orderId) {
 		Optional<ProductOrderVO> optional = repository.findById(orderId);
