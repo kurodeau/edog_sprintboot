@@ -123,7 +123,7 @@
 				<table id="example" class="display" style="width: 100%">
     <tbody>
         <th:block th:each="replyVO:${replyVOList}">
-            <tr>
+            <tr th:if="${replyVO.isEnabled}">
                 <td>
                         <div>
                             <span class="avatar-name" th:text="${replyVO.buyerVO.memberName}"></span>

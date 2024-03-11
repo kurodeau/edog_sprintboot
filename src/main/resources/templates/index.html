@@ -128,19 +128,20 @@
 					<!-- mainimage -->
 					<div id="carouselExampleControls" class="carousel slide w-100"
 						data-bs-ride="carousel">
-						<div class="carousel-inner">
-							<div class="carousel-item active">
-								<img src="https://fakeimg.pl/800x230"
+						<div class="carousel-inner" >
+							<div class="carousel-item active" th:each="adVO : ${launchAdListData}">
+								<img th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+											width="800px" height="230px"
 									class="d-block w-100 img-md-main" alt="Main Picture" />
 							</div>
-							<div class="carousel-item">
-								<img src="https://fakeimg.pl/800x230"
-									class="d-block w-100 img-md-main" alt="Main Picture" />
-							</div>
-							<div class="carousel-item">
-								<img src="https://fakeimg.pl/800x230"
-									class="d-block w-100 img-md-main" alt="Main Picture" />
-							</div>
+<!-- 							<div class="carousel-item"> -->
+<!-- 								<img src="https://fakeimg.pl/800x230" -->
+<!-- 									class="d-block w-100 img-md-main" alt="Main Picture" /> -->
+<!-- 							</div> -->
+<!-- 							<div class="carousel-item"> -->
+<!-- 								<img src="https://fakeimg.pl/800x230" -->
+<!-- 									class="d-block w-100 img-md-main" alt="Main Picture" /> -->
+<!-- 							</div> -->
 							<!-- Additional carousel items can be added here if needed -->
 						</div>
 
