@@ -1,16 +1,23 @@
 package com.orderdetails.model;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.product.model.ProductVO;
 import com.productorder.model.ProductOrderVO;
 
 
@@ -22,13 +29,8 @@ public class OrderDetailsVO implements java.io.Serializable {
 	
 	
 	private Integer orderDetailsId;
-	
-//	private String orderId;
-	private ProductOrderVO productOrderVO;
-	
-	private String productId;
-//	private ProductVO productVO;
-	
+	private ProductOrderVO productOrderVO; //FK:orderId
+	private ProductVO productVO; //FK:productId
 	
 	private Integer purchaseQuantity;
 	private Boolean isCommented;
@@ -55,27 +57,10 @@ public class OrderDetailsVO implements java.io.Serializable {
 	}
 
 	
-	@ManyToOne
-	@JoinColumn(name = "orderId")   // 指定用來join table的column
-	public ProductOrderVO getProductOrderVO() {//FK1
-		return productOrderVO;
-	}
 	
 
-	public void setProductOrderVO(ProductOrderVO productOrderVO) {
-		this.productOrderVO = productOrderVO;
-	}
-
 	
-	@Column(name = "productId")//FK2
-	public String getProductId() {
-		return productId;
-	}
-
-
-	public void setProductId(String productId) {
-		this.productId = productId;
-	}
+	
 
 	@Column(name = "purchaseQuantity")
 	public Integer getPurchaseQuantity() {
@@ -151,6 +136,36 @@ public class OrderDetailsVO implements java.io.Serializable {
 	public void setIsEnable(Boolean isEnable) {
 		this.isEnable = isEnable;
 	}
+	
+/////訂單與訂單明細的關聯/////////////////////////////////////////
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "orderId")   // 指定用來join table的column
+	public ProductOrderVO getProductOrderVO() {//FK1
+		return productOrderVO;
+	}
+	
+
+	public void setProductOrderVO(ProductOrderVO productOrderVO) {
+		this.productOrderVO = productOrderVO;
+	}
+
+	
+/////////////////////商品與訂單明細的關聯//////////////////////////////////////////	
+	@ManyToOne
+	@JoinColumn(name = "productId")   // 指定用來join table的column
+	public ProductVO getProductVO() {//FK1
+		return productVO;
+	}
+	
+	
+	public void setProductVO(ProductVO productVO) {
+		this.productVO = productVO;
+	}
+/////////////////////////////////////////////////////////////
+	
+	
 	
 	
 }

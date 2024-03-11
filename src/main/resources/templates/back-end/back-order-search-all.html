@@ -7,37 +7,16 @@
 
   <body>
     <header class="fixed-top">
-    <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    <th:block th:insert="~{/back-end/header-back}"></th:block>
     </header>
 
-   <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+   <aside th:replace="@{back-end/aside-back}"></aside>
 
     <main class="main main-layout-seller">
       <div class="seller-container">
         <div class="pagetitle">
-          <h1>訂單明細查詢</h1>
+          <h1>訂單管理</h1>
         </div>
-        
-        
-              
-        
-       	 <div>
-  			  <div th:text=" '訂單編號：' + ${Orderdetails[0].productOrderVO.orderId}"></div>
-  			  <div th:text=" '訂單金額：' + ${Orderdetails[0].productOrderVO.actualPay}"></div>
-  			  <div th:text=" '成立時間：' + ${Orderdetails[0].productOrderVO.orderTime}"></div>
-  			  <div th:text=" '訂單狀態：' + ${Orderdetails[0].productOrderVO.orderStatus}"></div>
-  			  <div th:text=" '收貨人姓名：' + ${Orderdetails[0].productOrderVO.receiver}"></div>
-  			  <div th:text=" '聯絡電話：' + ${Orderdetails[0].productOrderVO.mobile}"></div>
-  			  <div th:text=" '收貨地址：' + ${Orderdetails[0].productOrderVO.contactAddress}"></div>
-  			  <div th:text=" '發票號碼：' + ${Orderdetails[0].productOrderVO.invoiceNumber}"></div>
-		</div>
-		<br>
-		<br>
-		<br>
-		
-        <div>品項內容：</div>
-        
-  <!-- 複合查詢表單 -->      
         <table
           id="example"
           class="table table-striped table-bordered "
@@ -45,27 +24,65 @@
         >
           <thead>
             <tr>
-              <th class="text-center">商品編號</th>
-              <th class="text-center">商品名稱</th>
-              <th class="text-center">商品購買數量</th>
-              <th class="text-center">已評論</th>
-              <th class="text-center">評分星數</th>
-              <th class="text-center">評論時間</th>
-              <th class="text-center">評論內容</th>
+              <th class="text-center">訂單ID</th>
+              <th class="text-center">賣家ID</th>
+              <th class="text-center">會員ID</th>
+              <th class="text-center">訂單總金額</th>
+              <th class="text-center">買家實付金額</th>
+              <th class="text-center">發票號碼</th>
+             <!--  <th class="text-center">優惠券ID</th>  -->
+            
+              <th class="text-center">訂單建立時間</th>
+              <th class="text-center">訂單狀態</th>
+              <th class="text-center">收貨人姓名</th>
+              <th class="text-center">收貨人手機</th>
+              <th class="text-center">收貨人地址</th>
+              <th class="text-center">出貨狀態</th>
+              <th class="text-center">出貨時間</th>
+              <th class="text-center">操作</th> 
             </tr>
           </thead>
           
           
           <tbody>
-            <th:block th:each="orderDetailsVO : ${Orderdetails}">
+            <th:block th:each="productOrderVO : ${allProductOrder}">
               <tr>
-                <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.productVO.productName}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '無'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? orderDetailsVO.commentedTime : '無'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.comments != null ? orderDetailsVO.comments : '尚無評論'}"></td>
+                <td class="text-center" th:text="${productOrderVO.orderId}"></td>
+                <td class="text-center" th:text="${productOrderVO.sellerId}"></td>
+                
+                <td class="text-center" th:text="${productOrderVO.buyerVO.memberId}"></td>
+                
+                <td class="text-center" th:text="${productOrderVO.orderOrigPrice}"></td>
+                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
+                <td class="text-center" th:text="${productOrderVO.invoiceNumber}"></td>
+               <!--  <td class="text-center" th:text="${productOrderVO.couponId}"></td> -->
+                
+                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
+                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
+                <td class="text-center" th:text="${productOrderVO.receiver}"></td>
+                <td class="text-center" th:text="${productOrderVO.mobile}"></td>
+                <td class="text-center" th:text="${productOrderVO.contactAddress}"></td>
+                <td class="text-center" th:text="${productOrderVO.isDelivered}"></td>
+                <td class="text-center" th:text="${productOrderVO.shippingTime}"></td>
+                <td class="text-center" >
+                 
+                 
+                  
+                  
+                  
+                  <a
+                    class="btn"
+                    th:href="@{getOne_For_Update(orderId=${productOrderVO.orderId})}"
+                    >修改訂單</a
+                  >
+                  
+                  <a
+                    class="btn"
+                    th:href="@{getOrderdetails(orderId=${productOrderVO.orderId})}"
+                    >查看詳情</a
+                  >
+                  
+                </td>
               </tr>
             </th:block>
           </tbody>
