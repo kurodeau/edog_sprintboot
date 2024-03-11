@@ -139,7 +139,6 @@ public class ReportVO implements java.io.Serializable {
     }
     
     @Column(name = "reportState")
-    @NotNull(message="舉報狀態: 請勿空白")
     public Integer getReportState() {
         return reportState;
     }

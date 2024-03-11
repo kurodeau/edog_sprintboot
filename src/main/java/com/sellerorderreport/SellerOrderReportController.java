@@ -114,6 +114,7 @@ public class SellerOrderReportController {
 			responseData.put("data", jsonList);
 			responseData.put("msg", "正常");
 
+			System.out.println(responseData.toString());
 			return ResponseEntity.ok().body(responseData.toString());
 
 		} catch (Exception e) {

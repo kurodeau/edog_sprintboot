@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.orderdetails.model.OrderDetailsVO;
+
 
 public interface ProductOrderRepository extends JpaRepository<ProductOrderVO, Integer>{
 	@Transactional
@@ -14,8 +16,7 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrderVO, In
 	@Query(value = "delete from productOrder where orderId =?1", nativeQuery = true)
 	void deleteByOrderId(int orderId);
 
-	
+	@Query(value = "SELECT * FROM productOrder WHERE sellerId = ?1", nativeQuery = true)
+	List<ProductOrderVO> findBySellerId(int sellerId);
 
-	@Query(value = "SELECT * from productOrder where sellerId =?1", nativeQuery = true)
-	List<ProductOrderVO> getAllBySellerId(int sellerId);
 }

@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.ad.model.AdVO;
+
 
 @Service("productOrderService")
 public class ProductOrderService {
@@ -29,7 +31,7 @@ public class ProductOrderService {
 	}
 	
 	public List<ProductOrderVO> getBySellerId(Integer sellerId) {
-			return repository.getAllBySellerId(sellerId);
+			return repository.findBySellerId(sellerId);
 	}
 
 	public ProductOrderVO getOneProductOrder(Integer orderId) {
@@ -37,19 +39,74 @@ public class ProductOrderService {
 //		return optional.get();
 		return optional.orElse(null); // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
 	}
+	public List<ProductOrderVO> findBySellerId(Integer sellerId) {
+		return repository.findBySellerId(sellerId);
+	}
+	
+	
 
 	public List<ProductOrderVO> getAll() {
 		return repository.findAll();
 	}
 
+/////查詢賣家訂單狀態//////////////////////////////////////////////////////
+
+	//顯示未處理訂單
+	public List<ProductOrderVO> getSellerProductOrderPendingConfirm(Integer sellerId) {
+		
+		List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);		
+		
+		 List<ProductOrderVO> list = sellerProductOrders.stream()
+                 .filter(productOrder -> "1".equals(productOrder.getOrderStatus().toString()))
+                 .collect(Collectors.toList());									 
+				return list;		
+	}
+	
+	//顯示處理中訂單
+		public List<ProductOrderVO> getSellerProductOrderSellerProcessing(Integer sellerId) {
+			
+			List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);		
+			
+			List<ProductOrderVO> list = sellerProductOrders.stream()
+		             .filter(productOrder -> "5".equals(productOrder.getOrderStatus().toString())
+		            		 				|| "6".equals(productOrder.getOrderStatus().toString()))
+		             .collect(Collectors.toList());									 
+					return list;	
+		}
+	
+		//顯示已完成訂單
+		public List<ProductOrderVO> getSellerProductOrderCompleted(Integer sellerId) {
+			
+			List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);			
+			
+			 List<ProductOrderVO> list = sellerProductOrders.stream()
+		             .filter(productOrder -> "7".equals(productOrder.getOrderStatus().toString()))
+		             .collect(Collectors.toList());									 
+					return list;		
+		}
+		//顯示已取消訂單
+		public List<ProductOrderVO> getSellerProductOrderCanceled(Integer sellerId) {
+			
+			List<ProductOrderVO> sellerProductOrders = repository.findBySellerId(sellerId);		
+			
+			 List<ProductOrderVO> list = sellerProductOrders.stream()
+		             .filter(productOrder -> "2".equals(productOrder.getOrderStatus().toString())
+		            		 			  || "3".equals(productOrder.getOrderStatus().toString()))
+		             .collect(Collectors.toList());									 
+					return list;		
+		}
+	
+	
+/////平台查詢所有訂單//////////////////////////////////////////////////////
 	public List<ProductOrderVO> getProductOrderPendingConfirm() {
+		
+		List<ProductOrderVO> allProductOrders = repository.findAll();		
+		
+		 List<ProductOrderVO> list = allProductOrders.stream()
+                 .filter(productOrder -> "1".equals(productOrder.getOrderStatus().toString()))
+                 .collect(Collectors.toList());									 
+				return list;		
 
-		List<ProductOrderVO> allProductOrders = repository.findAll();
-
-		List<ProductOrderVO> list = allProductOrders.stream()
-				.filter(productOrder -> "1".equals(productOrder.getOrderStatus().toString()))
-				.collect(Collectors.toList());
-		return list;
 	}
 
 	public List<ProductOrderVO> getProductOrderNotAcceptedByBuyer() {
