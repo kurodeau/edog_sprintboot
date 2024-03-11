@@ -1,4 +1,4 @@
-package com.ad.controller;
+package com.product.controller;
 
 import java.util.List;
 
@@ -9,29 +9,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ad.model.AdService;
-import com.ad.model.AdVO;
+import com.product.model.ProductService;
+import com.product.model.ProductVO;
 
 @Controller
-@RequestMapping("/back/ad")
+@RequestMapping("/back/product")
 
-public class AdControllerBack {
-
+public class ProductBackController {
 	
 	@Autowired
-	private AdService adSvc;	
+	private ProductService productSvc;
 	
+
 	@GetMapping("list")
 	public String listAllProduct(ModelMap model) {
-		return "back-end/back-ad-list";
+		return "back-end/back-product-list";
 	}
 	
-	@ModelAttribute("adListData")
-	protected List<AdVO> referenceListData(){
-		List<AdVO> list = adSvc.getAll();		
-		return list;		
+	@ModelAttribute("productListData")
+	protected List<ProductVO> referenceListData(){
+		
+		List<ProductVO> list = productSvc.getAll();
+		return list;
+		
 	}
-	
-	
 
 }

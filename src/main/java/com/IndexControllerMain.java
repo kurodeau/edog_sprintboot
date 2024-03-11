@@ -26,12 +26,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ad.model.AdService;
+import com.ad.model.AdVO;
 import com.buyer.entity.BuyerVO;
+import com.login.PasswordForm;
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
-import com.login.PasswordForm;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 import com.sellerLv.entity.SellerLvVO;
@@ -59,12 +61,15 @@ public class IndexControllerMain {
 	SellerLvService sellerLvSvc;
 
     
-  @Autowired
-  ProductService productSvc;
+    @Autowired
+    ProductService productSvc;
     
     
-  @Autowired
+    @Autowired
 	ProductImgService productImgSvc;
+    
+    @Autowired
+    AdService adSvc;
 	
 
 
@@ -454,7 +459,12 @@ public class IndexControllerMain {
 				formData.getKeyword()
 				);
 		
+		
+
+	
 		return ResponseEntity.ok(formData);
+		
+		
 	}
 	
 	
@@ -514,9 +524,13 @@ public class IndexControllerMain {
 	@ModelAttribute("allProductListData")
 	protected List<ProductVO> referenceListData1() {
 		List<ProductVO> list = productSvc.getProductLaunch();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
+		return list;
+	}
+	
+	
+	@ModelAttribute("launchAdListData")
+	protected List<AdVO> referenceListData2(){
+		List<AdVO> list = adSvc.getHomePageAd();
 		return list;
 	}
 	
