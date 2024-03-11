@@ -94,12 +94,13 @@ public class IndexControllerSeller {
 	@PostMapping("seller/register/check")
 	public String checkregisterSellerv3(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model)
 			throws IOException {
-//		System.out.println(sellerVO);
+//		System.out.println("seller/register/check"+sellerVO);
 
 		if (result.hasErrors()) {
 			return "/front-end/seller/seller-registerv3";
 		}
 
+		
 		
 		sellerSvc.saveUserDetails(sellerVO);
 

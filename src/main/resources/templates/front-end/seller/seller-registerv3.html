@@ -15,7 +15,7 @@
 		<div class="container-fluid seller-container">
 			<h1>註冊賣家資料</h1>
 
-			<form class="row g-3" id="myForm" th:action="@{check}"
+			<form class="row g-3" id="myForm" th:action="@{register/check}"
 				th:object="${sellerVO}" method="post" enctype="multipart/form-data"
 				onsubmit="return updateHiddenFields();">
 				<div class="col-md-12">
