@@ -1,52 +1,31 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
 </head>
-
 <body>
 	<!-- ======= Header ======= -->
+
 	<header class="fixed-top">
 		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
 	</header>
 
-	<!-- ======= Sidebar ======= -->
-	<!-- start帳戶管理 -->
-
-	<aside th:replace="front-end/seller/aside-seller.html"></aside>
-
 	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
+	<main class="main-nosidebar">
 		<div class="container-fluid seller-container">
-			<h1>編輯賣家資料</h1>
+			<h1>註冊賣家資料</h1>
 
-			<form class="row g-3" id="myForm"
-				th:action="@{/front/seller/seller/update}" th:object="${sellerVO}"
-				method="post" enctype="multipart/form-data"
+			<form class="row g-3" id="myForm" th:action="@{register/check}"
+				th:object="${sellerVO}" method="post" enctype="multipart/form-data"
 				onsubmit="return updateHiddenFields();">
-				<div class="col-md-12" style="display: none">
-					<label for="inputSellerId" class="form-label">賣家ID</label> <input
-						type="text" class="form-control" id="inputSellerId"
-						name="sellerId" th:field="*{sellerId}"
-						aria-describedby="sellerIdFeedback"
-						th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
-						readonly />
-					<div id="sellerIdFeedback" class="invalid-feedback">
-						<p th:if="${#fields.hasErrors('sellerId')}"
-							th:errors="*{sellerId}">欄位有誤</p>
-					</div>
-				</div>
 				<div class="col-md-12">
 					<label for="sellerLvId" class="form-label">賣家等級</label>
 					<div class="col-md-2">
 						<select class="form-select" name="sellerLvId" id="sellerLvId"
 							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
-							<option 
-								th:each="sellerLv : ${sellerLvListData}"
+							<option th:each="sellerLv : ${sellerLvListData}"
 								th:value="${sellerLv.getSellerLvId()}"
-								th:text="${sellerLv.getLvName()}"
-								th:selected="${sellerLv.getSellerLvId() == sellerVO.sellerLvId.getSellerLvId()}"></option>
+								th:text="${sellerLv.getLvName()}"></option>
 						</select>
 					</div>
 				</div>
@@ -59,7 +38,7 @@
 						th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''" />
 					<div id="sellerCompanyFeedback" class="invalid-feedback">
 						<p th:if="${#fields.hasErrors('sellerCompany')}"
-							th:errors="*{sellerCompany}">欄位有誤</p>
+							th:errors="*{sellerCompany}"></p>
 					</div>
 				</div>
 
@@ -87,6 +66,21 @@
 						<p th:if="${#fields.hasErrors('sellerEmail')}"
 							th:errors="*{sellerEmail}">欄位有誤</p>
 					</div>
+				</div>
+				<div class="col-md-4">
+					<button type="button" class="btn btn-primary"
+						onclick="sendVerificationCode()">發送驗證碼</button>
+				</div>
+
+				<div class="col-md-3">
+					<label for="verificationCode" class="form-label">驗證碼</label> <input
+						type="text" class="form-control" id="verificationCode"
+						name="verificationCode"
+						aria-describedby="verificationCodeFeedback" />
+					<div id="verificationCodeFeedbackValid" class="valid-feedback">
+						驗證碼確認</div>
+					<div id="verificationCodeFeedback" class="invalid-feedback">
+						驗證碼輸入有誤</div>
 				</div>
 
 				<div class="col-md-12">
@@ -257,43 +251,17 @@
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button type="button" class="btn btn-secondary"
-						onclick="window.history.back()">取消並離開</button>
+					<a th:href="@{/}" class="btn btn-secondary">回到首頁</a>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
 			</form>
 		</div>
 	</main>
 
-	<div th:if="${updateSuccess}">
-		<!-- 這裡放置你的 Modal 代碼 -->
-		<div class="modal fade" id="updateSuccessModal" tabindex="-1"
-			role="dialog" aria-labelledby="updateSuccessModalLabel"
-			aria-hidden="true">
+	<div th:replace="@{/fragment-footer-noaside}"></div>
+	<div th:replace="@{/fragment-js}"></div>
 
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- 這裡可以放置更新成功的提示信息 -->
-						賣家資料已成功更新！
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">確定</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Main -->
-	<div th:replace="fragment-js"></div>
+	<!-- Local JS File -->
 
 	<script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -301,6 +269,11 @@
           .querySelector(".county")
           .getAttribute("data-countyValue");
         console.log(countyValue); // 將印出 "台北市"
+
+        var verificationCodeInput = document.getElementById("verificationCode");
+        verificationCodeInput.addEventListener("blur", function () {
+          checkVerificationCode();
+        });
       });
 
       window.onload = function () {
@@ -347,8 +320,139 @@
         // 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
         return true;
       }
-    </script>
 
-	<!-- simpletable -->
+      function sendVerificationCode() {
+        var email = document.getElementById("inputsellerEmail").value;
+        email = decodeURIComponent(email);
+
+        var url =
+          window.location.protocol +
+          "//" +
+          window.location.hostname +
+          ":" +
+          window.location.port +
+          "/seller/register/sendVerificationCode";
+
+        // 使用 Fetch API 发送 POST 请求
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        })
+          .then((response) => {
+            return response.text();
+          })
+          .then((dataBeforeParsed) => {
+            // 检查状态码
+            let data = JSON.parse(dataBeforeParsed);
+            if (data.status !== 200) {
+              document
+                .querySelector("#verificationCode")
+                .classList.add("is-invalid");
+              document
+                .querySelector("#verificationCode")
+                .classList.remove("is-valid");
+              document.querySelector("#verificationCodeFeedback").textContent =
+                data.msg;
+            } else {
+              document
+                .querySelector("#verificationCode")
+                .classList.remove("is-invalid");
+              document
+                .querySelector("#verificationCode")
+                .classList.add("is-valid");
+
+              // sellerEmailFeedbackValid
+            }
+          })
+          .catch((error) => {
+            console.error("發送驗證碼失敗", error);
+          });
+      }
+
+      function checkVerificationCode() {
+        // 获取验证码和邮箱
+        var verificationCode =
+          document.getElementById("verificationCode").value;
+        var email = document.getElementById("inputsellerEmail").value;
+
+        // 示例：假设验证规则是验证码长度必须为6
+        if (verificationCode.length === 6) {
+          // 构建请求体数据
+          var requestData = {
+            email: email,
+            code: verificationCode, // 注意这里使用 "code"，与后端对应
+          };
+
+          var url =
+            window.location.protocol +
+            "//" +
+            window.location.hostname +
+            ":" +
+            window.location.port +
+            "/seller/register/checkVerificationCode";
+
+          // 发送 AJAX 请求
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          })
+            .then((response) => {
+              return response.text();
+            })
+            .then((dataBeforeParsed) => {
+              console.log(dataBeforeParsed);
+              // 检查状态码
+              let data = JSON.parse(dataBeforeParsed);
+
+              if (parseInt(data.status) !== 200) {
+                document
+                  .querySelector("#verificationCode")
+                  .classList.add("is-invalid");
+                document
+                  .querySelector("#verificationCode")
+                  .classList.remove("is-valid");
+                document.querySelector(
+                  "#verificationCodeFeedback"
+                ).textContent = data.msg;
+              } else {
+                document
+                  .querySelector("#verificationCode")
+                  .classList.remove("is-invalid");
+                document
+                  .querySelector("#verificationCode")
+                  .classList.add("is-valid");
+                document.querySelector(
+                  "#verificationCodeFeedbackValid"
+                ).textContent = data.msg;
+
+                // sellerEmailFeedbackValid
+              }
+            })
+            .catch((error) => {
+              document
+                .getElementById("verificationCode")
+                .classList.remove("is-valid");
+              document
+                .getElementById("verificationCode")
+                .classList.add("is-invalid");
+            });
+        } else {
+          document
+            .getElementById("verificationCode")
+            .classList.remove("is-valid");
+          document
+            .getElementById("verificationCode")
+            .classList.add("is-invalid");
+        }
+      }
+    </script>
 </body>
+
+<!-- ======= Footer ======= -->
 </html>
