@@ -34,7 +34,7 @@
                 />
                 結束時間<input type="date" class="endDate" value="2023-06-03" />
 
-                <button class="btn btn-seller col-auto" id="search">
+                <button class="btn btn-seller" id="search">
                   <i class="bi bi-search"></i>搜尋
                 </button>
               </div>
@@ -91,14 +91,15 @@
     <!-- ======= Footer ======= -->
 
     <div th:replace="@{/fragment-footer}"></div>
-    <div th:replace="@{/fragment-for-sellerReport}"></div>
+    <div th:replace="@{/fragment-js}"></div>
 
     <!-- Local JS File -->
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         init();
+        let rawISODateData;
         const ctx = document.getElementById("lineChart").getContext("2d");
-        const rawISODateData = await loadRawData(ctx);
+        rawISODateData = await loadRawData(ctx);
         let myChart; // Declare myChart in the outer scope
 
         document
@@ -110,6 +111,7 @@
             let aggregatedData;
             const storedData = localStorage.getItem("filteredData");
             if (storedData) {
+              // console.log("storedData" + JSON.parse(storedData)[0].timestamp);
               aggregatedData = aggregateDataByYear(JSON.parse(storedData));
             } else {
               aggregatedData = aggregateDataByYear(rawISODateData);
@@ -169,6 +171,7 @@
                   rawISODateData
                 );
 
+                rawISODateData = filteredData;
                 updateChart(ctx, filteredData, "day");
               }
             }
@@ -258,7 +261,7 @@
       }
 
       async function loadRawData(ctx) {
-        let backendISODateData;
+        let rawISODateData;
         try {
           let url =
             window.location.protocol +
@@ -279,22 +282,22 @@
             let backendData = await datetimeResult.json();
             backendData = backendData.data;
 
-            backendISODateData = backendData.sort(
+            rawISODateData = backendData.sort(
               (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
             );
 
-            backendISODateData = aggregateDataByDate(backendISODateData);
+            rawISODateData = aggregateDataByDate(rawISODateData);
 
-            // console.log("====backendISODateData========");
-            // backendISODateData.forEach((backendISODateData) => {
-            //   console.log(backendISODateData.timestamp);
-            //   console.log(backendISODateData.orderCount);
-            // });
-            // console.log("====backendISODateData========");
+            console.log("====rawISODateData========");
+            rawISODateData.forEach((rawISODateData) => {
+              console.log(rawISODateData.timestamp);
+              console.log(rawISODateData.orderCount);
+            });
+            console.log("====rawISODateData========");
 
-            initializeChart(ctx, backendISODateData, (sortType = "day"));
+            initializeChart(ctx, rawISODateData, (sortType = "day"));
 
-            return backendISODateData;
+            return rawISODateData;
           } else {
             throw new Error("Failed to fetch data");
           }
@@ -324,8 +327,6 @@
             x: item.timestamp,
             y: item.orderCount,
           }));
-
-          console.log(data);
 
           myChart.options.scales.x.time.unit = type;
           if (type === "year") {

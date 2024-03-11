@@ -27,6 +27,10 @@ public class ProductOrderService {
 		if (repository.existsById(orderId))
 			repository.deleteByOrderId(orderId);
 	}
+	
+	public List<ProductOrderVO> getBySellerId(Integer sellerId) {
+			return repository.getAllBySellerId(sellerId);
+	}
 
 	public ProductOrderVO getOneProductOrder(Integer orderId) {
 		Optional<ProductOrderVO> optional = repository.findById(orderId);
