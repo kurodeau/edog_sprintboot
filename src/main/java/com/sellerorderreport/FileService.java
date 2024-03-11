@@ -50,14 +50,13 @@ public class FileService {
 
 		System.out.println("File path: " + classPathResource.getPath());
 
-		String startTimeStr = startTime.format(DateTimeFormatter.ofPattern("YYYY_MM_DD"));
-		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("YYYY_MM_DD"));
-		
-		
-        Path staticPath = Paths.get(resourceLoader.getResource("classpath:static").getURI());
-        String targetFileName = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
-        Path filePath = staticPath.resolve(targetFileName);
-		
+		String startTimeStr = startTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+
+		Path staticPath = Paths.get(resourceLoader.getResource("classpath:static").getURI());
+		String targetFileName = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
+		Path filePath = staticPath.resolve(targetFileName);
+
 		String destinationPath = targetFileName;
 
 		try (InputStream fis = classPathResource.getInputStream();
@@ -71,48 +70,49 @@ public class FileService {
 			e.printStackTrace();
 		}
 		Resource resourceDest = resourceLoader.getResource("classpath:spreadsheet/");
-		
-		
-		Path staticPath2 = Paths.get(resourceLoader.getResource("classpath:static").getURI());
-        String targetFileName2 = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
-        Path filePath2 = staticPath.resolve(targetFileName);
-        System.out.println(filePath2.toAbsolutePath());
-        
-        
-        try (FileInputStream in = new FileInputStream(filePath.toFile());
-        	     Workbook wb = WorkbookFactory.create(in);
-        	     FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
 
-        	    Sheet sheet = wb.getSheetAt(0);
-    			List<ProductOrderVO> productOrderVOs = productOrdSvc.getBySellerId(sellerId);
+//		Path staticPath2 = Paths.get(resourceLoader.getResource("classpath:static").getURI());
+//        String targetFileName2 = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
+//        Path filePath2 = staticPath.resolve(targetFileName);
+//        System.out.println(filePath2.toAbsolutePath());
 
-        	    for (int row = 1; row <= productOrderVOs.size(); row++) {
-        	        Row currentRow = sheet.getRow(row);
-        	        if (currentRow != null) {
-        	            for (int col = 0; col < currentRow.getLastCellNum(); col++) {
-        	                Cell cell = currentRow.getCell(col);
-        	                if (cell != null) {
-        	                    if (cell.getCellType() == CellType.STRING) {
-        	                        String stringValue = cell.getStringCellValue();
-        	                        cell.setCellValue(stringValue + "XXX");
-        	                    } else if (cell.getCellType() == CellType.NUMERIC) {
-        	                        double numericValue = cell.getNumericCellValue();
-        	                        cell.setCellValue(String.valueOf(numericValue) + "XXX");
-        	                    }
-        	                }
-        	            }
-        	        }
-        	    }
+		try (FileInputStream in = new FileInputStream(filePath.toFile());
+				Workbook wb = WorkbookFactory.create(in);
+				FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
 
-        	    wb.write(fos);
-        	    
-        	} catch (IOException e) {
-        	    e.printStackTrace();
-        	}
+			Sheet sheet = wb.getSheetAt(0);
+			List<ProductOrderVO> productOrderVOs = productOrdSvc.getBySellerId(sellerId);
 
-        
-        
-     
+			for (int row = 0; row <= productOrderVOs.size(); row++) {
+				Row currentRow = sheet.getRow(row);
+				if (currentRow != null) {
+					if (row == 0) {
+						// Print row title
+						for (int col = 0; col < currentRow.getLastCellNum(); col++) {
+							Cell cell = currentRow.getCell(col);
+							if (cell != null) {
+								System.out.print(cell.getStringCellValue() + "\t");
+							}
+						}
+						System.out.println(); // New line after printing row title
+					} else {
+						for (int col = 0; col < currentRow.getLastCellNum(); col++) {
+							Cell cell = currentRow.getCell(col);
+							System.out.println(row+"_"+col);
+							if (cell != null) {
+								if (cell.getCellType() == CellType.STRING) {
+									String stringValue = cell.getStringCellValue();
+									cell.setCellValue(stringValue + "XXX");
+								} else if (cell.getCellType() == CellType.NUMERIC) {
+									double numericValue = cell.getNumericCellValue();
+									cell.setCellValue(String.valueOf(numericValue) + "XXX");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		return "";
 	}
