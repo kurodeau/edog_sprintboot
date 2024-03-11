@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.orderdetails.model.OrderDetailsService;
+import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
 
@@ -51,6 +52,26 @@ public class BackEndProductOrderController {
 		public String productordersearch(Model model){
 	        return "back-end/back-order-search-all";
 	    }
+		
+		
+		//查看詳情按鈕
+		@GetMapping("getOrderdetails") 
+		public String getOneOrderdetails(@RequestParam("orderId")  String orderId, ModelMap model) {
+			
+			List <OrderDetailsVO> orderdetails = null;
+				try {
+					orderdetails = orderDetailsSvc.findByOrderId(Integer.valueOf(orderId));
+
+				} catch (NumberFormatException e) {
+					model.addAttribute("errorMessage", "Invalid orderId format");
+					return "errorPage";
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				model.addAttribute("Orderdetails", orderdetails);
+				return "back-end/back-orderdetails-searchByOrder";
+
+			}
 	
 	//訂單內容更新
 		
