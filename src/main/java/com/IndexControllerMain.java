@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,12 +27,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ad.model.AdService;
+import com.ad.model.AdVO;
 import com.buyer.entity.BuyerVO;
+import com.login.PasswordForm;
+
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
+
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
-import com.login.PasswordForm;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 import com.sellerLv.entity.SellerLvVO;
@@ -59,29 +64,33 @@ public class IndexControllerMain {
 	SellerLvService sellerLvSvc;
 
     
-  @Autowired
-  ProductService productSvc;
+    @Autowired
+    ProductService productSvc;
     
     
-  @Autowired
+    @Autowired
 	ProductImgService productImgSvc;
+    
+    @Autowired
+    AdService adSvc;
 	
 
 
 	@Autowired
 	SellerService sellerSvc;
 
+
+
 	@GetMapping("/")
 	public String index(Model model) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		Authentication authentication = securityContext.getAuthentication();
 
-		if (authentication != null && authentication.isAuthenticated()) {
-			// 用户已认证，添加相应属性
-			
-			System.out.println("loggedIn true");
-			System.out.println(authentication.getPrincipal());
-			
+		boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
+		if (isAnonymous) {
+			// 用戶登入後，預設會使用anonymousUser
+			model.addAttribute("loggedIn", false);
+		} else if (authentication != null && authentication.isAuthenticated()) {
 			model.addAttribute("loggedIn", true);
 			Object principal = authentication.getPrincipal();
 			if (principal instanceof SellerVO) {
@@ -89,15 +98,10 @@ public class IndexControllerMain {
 				model.addAttribute("sellerVO", sellerVO);
 				model.addAttribute("theName", sellerVO.getSellerCompany());
 			}
-
 		} else {
-			System.out.println("loggedIn false");
 			model.addAttribute("loggedIn", false);
 		}
 
-		System.out.println("loggedIn false");
-
-		// System.out.println("authentication" + authentication);
 		Object principal = authentication.getPrincipal();
 		if (principal instanceof UserDetails) {
 			String username = ((UserDetails) principal).getUsername();
@@ -106,6 +110,7 @@ public class IndexControllerMain {
 			System.out.println("getDetails" + authentication.getDetails());
 			System.out.println("getAuthorities" + authentication.getAuthorities());
 		}
+
 		return "index";
 		// resources/template//index.html
 	}
@@ -119,393 +124,154 @@ public class IndexControllerMain {
 		return list;
 	}
 
-	@GetMapping("/seller/register")
-	public String registerSeller(ModelMap model) throws IOException {
-
 	
-		SellerVO sellerVO = new SellerVO();
+
+	@GetMapping("/buyer/register")
+	public String registerBuyer(ModelMap model) throws IOException {
+		BuyerVO buyerVO = new BuyerVO();
 
 		// TEST
-		sellerVO.setSellerEmail("ncku4015@gmail.com");
-		sellerVO.setSellerCompany("ABC Company");
-		sellerVO.setSellerTaxId("12345");
-		sellerVO.setSellerCapital(500000);
-		sellerVO.setSellerContact("John Doe");
-		sellerVO.setSellerCompanyPhone("1234567890");
-		sellerVO.setSellerCompanyExtension("123");
-		sellerVO.setSellerMobile("0912345678");
-		sellerVO.setSellerCounty("台北市");
-		sellerVO.setSellerDistrict("大安區");
-		sellerVO.setSellerAddress("123 Main St");
-		sellerVO.setSellerPassword("Password123");
-		sellerVO.setSellerBankAccount("ABC Bank");
-		sellerVO.setSellerBankCode("123");
-		sellerVO.setSellerBankAccountNumber("0988319004");
+		buyerVO.setMemberEmail("lulu.doe@example.com");
+		buyerVO.setThirdFrom(null);
+		buyerVO.setMemberName("Lulu");
+		buyerVO.setMemberPhone("03123321");
+		buyerVO.setMemberMobile("09777666");
+		buyerVO.setMemberBirthday(null);
+		buyerVO.setMemberAddress("地址");
+		buyerVO.setIsMemberEmail(false);
+
+		java.util.Date utilDate = new java.util.Date();
+		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		buyerVO.setMemberRegistrationTime(sqlDate);
+		buyerVO.setPetName("寵物啦");
+		buyerVO.setPetImg(null);
+		buyerVO.setPetImgUploadTime(null);
+		buyerVO.setPetVaccName1(null);
+		buyerVO.setPetVaccTime1(null);
+		buyerVO.setPetVaccName2(null);
+		buyerVO.setPetVaccTime2(null);
 
 		// 防止被修改
-		sellerVO.setSellerPassword(null);
-		sellerVO.setIsConfirm(false);
+		buyerVO.setMemberPassword(null);
+		buyerVO.setIsConfirm(true);
 
-		model.addAttribute("sellerVO", sellerVO);
-        return "/front-end/seller/seller-register";
-    }
-
-	@GetMapping({ "/seller/login", "/seller/login/errors" })
-	public String loginSeller(ModelMap model, HttpServletRequest req) throws IOException {
-
-		String error = (String) req.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION.message");
-		if (error != null) {
-			model.addAttribute("error", error);
-		}
-
-		return "front-end/seller/seller-login";
-	}
-
-    @GetMapping("/buyer/register")
-    public String registerBuyer(ModelMap model) throws IOException {
-    	BuyerVO buyerVO = new BuyerVO();
-    	
-    	// TEST 
-    	buyerVO.setMemberEmail("lulu.doe@example.com");
-    	buyerVO.setThirdFrom(null);
-    	buyerVO.setMemberName("Lulu");
-    	buyerVO.setMemberPhone("03123321");
-    	buyerVO.setMemberMobile("09777666");
-    	buyerVO.setMemberBirthday(null);
-    	buyerVO.setMemberAddress("地址");
-    	buyerVO.setIsMemberEmail(false);
-    	
-    	java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-    	buyerVO.setMemberRegistrationTime( sqlDate );
-    	buyerVO.setPetName("寵物啦");
-    	buyerVO.setPetImg(null);
-    	buyerVO.setPetImgUploadTime(null);
-    	buyerVO.setPetVaccName1(null);
-    	buyerVO.setPetVaccTime1(null);
-    	buyerVO.setPetVaccName2(null);
-    	buyerVO.setPetVaccTime2(null);
-   	
-    	    
-    	// 防止被修改
-    	buyerVO.setMemberPassword(null);
-    	buyerVO.setIsConfirm(true);
-    	    
 		model.addAttribute("buyerVO", buyerVO);
-        return "/front-end/buyer/buyer-register";
-    }   
-    
-    
-    @GetMapping("/buyer/login")
-    public String loginBuyer(ModelMap model) throws IOException {
-        return "/front-end/buyer/buyer-login";
-    }
-    
-    @PostMapping("/seller/register/checkVerificationCode")
-	public ResponseEntity<?> checkVerificationCode(@RequestBody String json) {
-		JSONObject jsonObj = new JSONObject(json);
-		String email = (String) jsonObj.get("email");
-		String verifyCode = (String) jsonObj.get("code");
-		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
-			jedis.select(15);
-			String code = jedis.get("email:" + email);
-
-			// System.out.println(email);
-			// System.out.println(code);
-
-			if (code != null && (verifyCode.equals(code) || "ok".equals(code))) {
-				jedis.set("email:" + email, "ok");
-				return ResponseEntity.ok("success");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ResponseEntity.badRequest().body("輸入有誤");
+		return "/front-end/buyer/buyer-register";
 	}
 
-	@PostMapping("/seller/register/sendVerificationCode")
-	public ResponseEntity<?> sendVerificationCode(@RequestBody String emailJson) {
-
-		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
-			char[] random6 = new char[6];
-			for (int i = 0; i < 6; i++) {
-				int randomValue = (int) (Math.random() * 26);
-				random6[i] = (char) (randomValue + 65);
-			}
-
-			JSONObject jsonObj = new JSONObject(emailJson);
-			String email = jsonObj.getString("email");
-
-			System.out.println(email);
-
-			if (jedis.exists("email:" + email)) {
-				return ResponseEntity.status(HttpStatus.CONFLICT).body("稍後再試");
-			}
-
-			jedis.select(15);
-			jedis.setex("email:" + email, 300, String.valueOf(random6));
-
-			MailService mailSvc = new MailService();
-			mailSvc.sendMail(email, "驗證信件", "您的驗證碼是" + String.valueOf(random6));
-			mailSvc = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body("信箱格式錯誤");
-
-		}
-		// 返回成功或其他適當的回應
-		return ResponseEntity.ok("請於300秒輸入驗證碼");
+	@GetMapping("/buyer/login")
+	public String loginBuyer(ModelMap model) throws IOException {
+		return "/front-end/buyer/buyer-login";
 	}
 
-	@GetMapping({ "/auth/phone" })
-	public String authInputPhone(ModelMap model) throws IOException {
-
-		if (!model.containsAttribute("verificationCode")) {
-			model.addAttribute("verificationCode", "");
+	@GetMapping("/product/{id}")
+	public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
+		Integer productId = null;
+		try {
+			productId = Integer.valueOf(id);
+		} catch (NumberFormatException e) {
+			return "/";
 		}
 
-		if (!model.containsAttribute("sellerMobile")) {
-			model.addAttribute("sellerMobile", "");
-		}
+		ProductVO productVO = productSvc.getOneProduct(productId);
 
-		return "/login/auth-phone";
+		model.addAttribute("productVO", productVO);
+		// 使用從URL獲取的id參數執行你的邏輯
+		// 在這裡，你可以使用id來進行相應的處理，例如查找特定商品
+
+		return "/front-end/buyer/buyer-commidity";
 	}
 
-	@PostMapping({ "/auth/phone/check" })
-	@ResponseBody
-	public ResponseEntity<?> authInputPhoneCheck(@RequestBody String json, ModelMap model, BindingResult bindingResult)
-			throws IOException {
+	@GetMapping("/test")
+	public String loginBuyer2(ModelMap model) throws IOException {
 
-		JSONObject jsonObj = new JSONObject(json);
-		String sellerMobile = (String) jsonObj.get("sellerMobile");
-		System.out.println(sellerMobile);
-
-		if (sellerMobile == null || !sellerMobile.matches("09\\d{8}")) {
-			System.out.println("輸入格式錯誤");
-			return ResponseEntity.badRequest().body(new HttpResult<>(400, null, "輸入格式錯誤"));
-		}
-
-		SellerVO sellerVO = sellerSvc.findByOnlyPhone(sellerMobile);
-		if (sellerVO == null) {
-			System.out.println("找不到電話");
-			return ResponseEntity.badRequest().body(new HttpResult<>(404, null, "找不到電話"));
-		}
-
-		return ResponseEntity.ok(new HttpResult<>(200, "success", "Success"));
+		return "/front-end/buyer/buyer-commidityV2";
 	}
 
-	@GetMapping({ "/auth/email" })
-	public String authInputEmail(ModelMap model) throws IOException {
-		if (!model.containsAttribute("sellerEmail")) {
-			model.addAttribute("sellerEmail", "");
-		}
 
-		return "/login/auth-email";
-	}
-
-	@PostMapping({ "/auth/email/check" })
-	public ResponseEntity<?> authInputEmailCheck(@RequestBody String json, ModelMap model, BindingResult bindingResult,
-			HttpServletRequest req) throws IOException {
-		JSONObject jsonObj = new JSONObject(json);
-		String sellerEmail = (String) jsonObj.get("sellerEmail");
-
-		if (sellerEmail == null || !sellerEmail.matches("[\\w+_-]*\\@\\w+\\.\\w+")) {
-			// System.out.println("輸入格式錯誤");
-			return ResponseEntity.badRequest().body(new HttpResult<>(400, null, "輸入格式錯誤"));
-		}
-
-		SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(sellerEmail);
-		if (sellerVO == null) {
-			// System.out.println("找不到信箱");
-			return ResponseEntity.badRequest().body(new HttpResult<>(404, null, "找不到信箱"));
-		}
-
-		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
-			jedis.select(15);
-
-			String urlUUID = UUID.randomUUID().toString();
-			String scheme = req.getScheme();
-			String servletName = req.getServerName();
-			String port = String.valueOf(req.getServerPort());
-			String path = req.getRequestURI();
-			String url = String.format("activate/seller/%s/%s", sellerVO.getSellerId(), urlUUID);
-			String ctxPath = req.getContextPath();
-			String authPath = scheme + "://" + servletName + ":" + port + ctxPath + "/" + url + "/add";
-
-			jedis.setex("FORGOT:SELLER:" + sellerVO.getSellerId(), 1 * 60 * 60, urlUUID);
-
-			MailService mailSvc = new MailService();
-
-			mailSvc.sendMail(sellerVO.getSellerEmail(), "驗證信件", "驗證碼網址:" + authPath);
-			mailSvc = null;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.internalServerError().body(new HttpResult<>(500, null, "系統忙線中，稍後"));
-		}
-
-		return ResponseEntity.ok().body(new HttpResult<>(200, null, "傳送成功"));
-	}
-
-	@GetMapping("/activate/seller/{sellerId}/{tokenId}/add")
-	public String authenticationUser(@PathVariable Integer sellerId, @PathVariable String tokenId, ModelMap model)
-			throws IOException {
-		PasswordForm passwordForm = new PasswordForm();
-		model.addAttribute("passwordForm", passwordForm);
-
-		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
-			jedis.select(15);
-			String authKey = "FORGOT:SELLER:" + sellerId;
-			String storedToken = jedis.get(authKey);
-			if (storedToken == null) {
-				model.addAttribute("error", "驗證信已經過期");
-				return "/login/authentication-failure";
-			}
-			if (storedToken.equals(tokenId)) {
-
-				return "/login/reset-password";
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "/login/authentication-failure";
-		}
-
-		return "/login/authentication-failure";
-	}
-
-	@PostMapping("/activate/seller/{sellerId}/{tokenId}/check")
-	public String authenticationCheckUser(@Valid PasswordForm form, BindingResult bindingResult,
-			@PathVariable Integer sellerId, @PathVariable String tokenId) {
-		// System.out.println(bindingResult);
-		if (bindingResult.hasErrors()) {
-			return "/login/reset-password";
-		}
-
-		if (form != null && !form.getConfirmPassword().equals(form.getPassword())) {
-			bindingResult.rejectValue("password", "password.not.match", "密碼和確認密碼不匹配");
-			return "/login/reset-password";
-		}
-		
-		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
-		    jedis.select(15);
-		    String authKey = "FORGOT:SELLER:" + sellerId;
-		    if (jedis.get(authKey) != null) {
-		        jedis.del(authKey);
-		    }
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-		SellerVO sellerVO = sellerSvc.getById(sellerId);
-		sellerVO.setSellerPassword(form.getPassword());
-		sellerSvc.updateUserDetails(sellerVO);
-		return "redirect:/seller/login";
-	}
-	
-	    @GetMapping("/product/{id}")
-    public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
-    	Integer productId =null;
-    	try {
-    		
-    	 productId = Integer.valueOf(id);
-    	 List<ProductImgVO>  productImgVOs= productImgSvc.getProductImgs(productId);
-    	
-    	 
-    	 model.addAttribute("productImageList",productImgVOs);
-    	 
-    	 
-    	} catch (NumberFormatException e) {
-//    		e.printStackTrace();
-    		return "/";
-    	}
-    	
-    	ProductVO productVO = productSvc.getOneProduct(productId);
-    	
-    	
-    	model.addAttribute("productVO",productVO);
-        // 使用從URL獲取的id參數執行你的邏輯
-        // 在這裡，你可以使用id來進行相應的處理，例如查找特定商品
-    	
-        return "/front-end/buyer/buyer-commidity";
-    }
-    
-    
-    
-    @GetMapping("/test")
-    public String loginBuyer2( ModelMap model) throws IOException {
-    
-        return "/front-end/buyer/buyer-commidityV2";
-    }
-    
 	@PostMapping("/search")
-	public ResponseEntity<?>  seachProducts(@RequestBody FormData formData) {
-		
+	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
+
 		System.out.println(formData);
-		
+
 		List<ProductVO> prodList = productSvc.compositeQuery(formData);
 		System.out.println("Size = " + prodList.size());
 		prodList.forEach(System.out::println);
-		
-		productSvc.getBy(formData.getAnimalType(),
+
+productSvc.getBy(formData.getAnimalType(),
 				formData.getProductCategory(),
 				formData.getRatings(),
 				formData.getPriceFrom(),
 				formData.getPriceTo(),
 				formData.getKeyword()
 				);
-		
+
 		return ResponseEntity.ok(formData);
+		
+		
 	}
-	
-	
+
 	public static class FormData {
-	    public List<String> getAnimalType() {
+		public List<String> getAnimalType() {
 			return animalType;
 		}
+
 		public void setAnimalType(List<String> animalType) {
 			this.animalType = animalType;
 		}
+
 		public List<String> getProductCategory() {
 			return productCategory;
 		}
+
 		public void setProductCategory(List<String> productCategory) {
 			this.productCategory = productCategory;
 		}
+
 		public List<Integer> getRatings() {
 			return ratings;
 		}
+
 		public void setRatings(List<Integer> ratings) {
 			this.ratings = ratings;
 		}
+
 		public String getPriceFrom() {
 			return priceFrom;
 		}
+
 		public void setPriceFrom(String priceFrom) {
 			this.priceFrom = priceFrom;
 		}
+
 		public String getPriceTo() {
 			return priceTo;
 		}
+
 		public void setPriceTo(String priceTo) {
 			this.priceTo = priceTo;
 		}
+
 		public String getKeyword() {
 			return keyword;
 		}
+
 		public void setKeyword(String keyword) {
 			this.keyword = keyword;
 		}
+
 		@Override
 		public String toString() {
 			return "FormData [animalType=" + animalType + ", productCategory=" + productCategory + ", ratings="
 					+ ratings + ", priceFrom=" + priceFrom + ", priceTo=" + priceTo + ", keyword=" + keyword + "]";
 		}
+
 		private List<String> animalType;
-	    private List<String> productCategory;
-	    private List<Integer> ratings;
-	    private String priceFrom;
-	    private String priceTo;
-	    private String keyword;
+		private List<String> productCategory;
+		private List<Integer> ratings;
+		private String priceFrom;
+		private String priceTo;
+		private String keyword;
 
 	}
 
@@ -514,9 +280,13 @@ public class IndexControllerMain {
 	@ModelAttribute("allProductListData")
 	protected List<ProductVO> referenceListData1() {
 		List<ProductVO> list = productSvc.getProductLaunch();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
+		return list;
+	}
+	
+	
+	@ModelAttribute("launchAdListData")
+	protected List<AdVO> referenceListData2(){
+		List<AdVO> list = adSvc.getHomePageAd();
 		return list;
 	}
 	

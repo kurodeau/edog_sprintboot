@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+ 
+ 
+ 
+ 
+  </head>
+
+  <body>
+    <header class="fixed-top">
+    <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
+
+   <aside th:replace="@{back-end/aside-back}"></aside>
+
+  <!-- Main -->
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+    <!-- End Main -->
+
+    
+
+    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+    <!-- Vendor & Main JS Files -->
+    <div th:replace="~{/fragment-js}"></div>
+    <div th:replace="~{/fragment-datatableJs}"></div>
+
+    <!-- Include DataTables JavaScript library -->
+    <!-- Include FixedColumns JavaScript library -->
+
+    <!-- Your custom script to initialize the DataTable with fixed columns -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 初始化 DataTables
+
+        let table = $("#example").DataTable({
+          columnDefs: [
+            {
+              targets: -1,
+              width: 150,
+            }, // 調整最後一列寬度
+          ],
+          fixedColumns: true,
+          paging: true,
+          lengthMenu: [25, 50, 75, 100],
+          language: {
+            lengthMenu: "顯示 _MENU_ 筆資料",
+          },
+          pageLength: 25,
+          scrollCollapse: true,
+          scrollX: true,
+          scrollY: 600,
+          pagingType: "full_numbers",
+          drawCallback: function () {
+            var api = this.api();
+            var rowCount = api
+              .rows({
+                page: "current",
+              })
+              .count();
+
+            // Loop to add empty rows if needed
+            for (
+              var i = 0;
+              i < api.page.len() - (rowCount === 0 ? 1 : rowCount);
+              i++
+            ) {
+              var emptyRow = $("<tr><td>&nbsp;</td></tr>").addClass("empty"); // 添加 'white-bg' 類別
+              $("#example tbody").append(emptyRow);
+            }
+          },
+        });
+
+        // 設定 DataTables 寬度為 100%
+        window.onload = function () {
+          table.columns.adjust().draw();
+        };
+
+        function resetTable() {
+          table.clear().draw();
+        }
+
+        $(".btn-del").on("click", function () {
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Btn: " + deleteId);
+          $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
+        });
+
+        // Listen to the confirmDeleteBtn click event
+        $("#confirmDeleteBtn").on("click", function () {
+          // Retrieve the deleteId from data-delete-id attribute
+          let deleteId = $(this).data("delete-id");
+          console.log("deleteId in Modal: " + deleteId);
+
+          let myModalEl = document.getElementById("deleteModal");
+          let modal = bootstrap.Modal.getInstance(myModalEl);
+
+          let currentLoc = window.location.href;
+          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
+          console.log(currentLoc);
+
+          // Your AJAX request for deletion
+          $.ajax({
+            url: currentLoc + "/delete?id=" + deleteId,
+            method: "DELETE",
+            success: function (response) {
+              if (response.success) {
+                alert(response.message);
+                // true 表示強制從伺服器重新加載頁面，忽略緩存
+                location.reload(true);
+              } else {
+                // 刪除失敗
+                alert(response.message);
+              }
+            },
+            error: function () {
+              alert(response.message);
+            },
+            complete: function () {
+              // This will be called regardless of success or error
+              // Close the modal after the AJAX request is completed
+              // Reload the DataTable
+              modal.hide();
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

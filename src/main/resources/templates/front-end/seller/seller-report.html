@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
+
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+      <div class="container-fluid seller-container">
+        <h1>銷售報表</h1>
+        <div class="col-lg-12">
+          <div class="container mb-3">
+            <div class="row">
+              <div class="col-8 d-flex align-items-center gap-4">
+                起始時間<input
+                  type="date"
+                  class="startDate"
+                  value="2022-05-03"
+                />
+                結束時間<input type="date" class="endDate" value="2023-06-03" />
+
+                <button class="btn btn-seller col-auto" id="search">
+                  <i class="bi bi-search"></i>搜尋
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">銷售分析</h5>
+
+              <!-- Line Chart -->
+              <canvas id="lineChart"></canvas>
+              <!-- End Line Chart -->
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-auto d-flex gap-5">
+              <button class="btn btn-seller" id="byYear">年區分</button>
+              <button class="btn btn-seller" id="byMonth">月區分</button>
+              <button class="btn btn-seller" id="byDay">日區分</button>
+            </div>
+          </div>
+
+          <div class="row mt-5">
+            <div class="col-12 d-flex gap-3">
+              <div class="col-3">
+                匯出起始時間&nbsp;&nbsp;
+                <input type="date" class="startExportDate" value="2022-05-03" />
+              </div>
+              <div class="col-3">
+                匯出結束時間&nbsp;&nbsp;
+                <input type="date" class="endExportDate" value="2023-06-03" />
+              </div>
+              <div class="col-3">
+                <select class="form-select" aria-label="Default select example">
+                  <option value="no" selected disabled>請選擇檔案格式</option>
+                  <option value="xlsx">Excel(.xlsx)</option>
+                  <option value="ods">OpenOffice(.ods)</option>
+                </select>
+              </div>
+              <div class="col-1">
+                <button class="btn btn-seller" id="exportData">匯出</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- End #main -->
+
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+
+    <div th:replace="@{/fragment-footer}"></div>
+    <div th:replace="@{/fragment-for-sellerReport}"></div>
+
+    <!-- Local JS File -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        init();
+        const ctx = document.getElementById("lineChart").getContext("2d");
+        const rawISODateData = await loadRawData(ctx);
+        let myChart; // Declare myChart in the outer scope
+
+        document
+          .querySelector("#byYear")
+          .addEventListener("click", function () {
+            if (!rawISODateData) {
+              return;
+            }
+            let aggregatedData;
+            const storedData = localStorage.getItem("filteredData");
+            if (storedData) {
+              aggregatedData = aggregateDataByYear(JSON.parse(storedData));
+            } else {
+              aggregatedData = aggregateDataByYear(rawISODateData);
+            }
+            updateChart(ctx, aggregatedData, "year");
+          });
+
+        document
+          .querySelector("#byMonth")
+          .addEventListener("click", function () {
+            if (!rawISODateData) {
+              return;
+            }
+
+            let aggregatedData;
+            const storedData = localStorage.getItem("filteredData");
+            if (storedData) {
+              aggregatedData = aggregateDataByMonth(JSON.parse(storedData));
+            } else {
+              aggregatedData = aggregateDataByMonth(rawISODateData);
+            }
+            updateChart(ctx, aggregatedData, "month");
+
+            // You can do further processing or display the aggregated data as needed
+          });
+
+        document.querySelector("#byDay").addEventListener("click", function () {
+          if (!rawISODateData) {
+            return;
+          }
+          let aggregatedData;
+          const storedData = localStorage.getItem("filteredData");
+          if (storedData) {
+            aggregatedData = aggregateDataByDate(JSON.parse(storedData));
+          } else {
+            aggregatedData = aggregateDataByDate(rawISODateData);
+          }
+          updateChart(ctx, aggregatedData, "day");
+
+          // You can do further processing or display the aggregated data as needed
+        });
+
+        document
+          .querySelector("#search")
+          .addEventListener("click", function () {
+            let startDate = document.querySelector(".startDate").value;
+            let endDate = document.querySelector(".endDate").value;
+            if (startDate && endDate) {
+              let startTime = new Date(startDate);
+              let endTime = new Date(endDate);
+              if (endTime < startTime) {
+                alert("結束時間需大於起始時間");
+              } else {
+                const filteredData = filterDate(
+                  startTime,
+                  endTime,
+                  rawISODateData
+                );
+
+                updateChart(ctx, filteredData, "day");
+              }
+            }
+          });
+      });
+      function init() {
+        localStorage.removeItem("filteredData");
+
+        let nowUTCTime = new Date();
+        const offset = nowUTCTime.getTimezoneOffset();
+        let offsetLocalTime = new Date(
+          nowUTCTime.getTime() - offset * 60 * 1000
+        );
+
+        let trueLocalTime = offsetLocalTime.toISOString();
+        let trueLocalDate = trueLocalTime.split("T")[0];
+
+        document.querySelector(".endExportDate").value = trueLocalDate;
+
+        let offsetStartLocalTime = new Date(offsetLocalTime);
+        offsetStartLocalTime.setDate(offsetLocalTime.getDate() - 30);
+        let trueStartLocalDate = offsetStartLocalTime
+          .toISOString()
+          .split("T")[0];
+        document.querySelector(".startExportDate").value = trueStartLocalDate;
+      }
+
+      function initializeChart(ctx, data, sortType) {
+        data.forEach((data) => {
+          console.log("===initializeChart=====");
+          console.log(data.timestamp);
+          console.log(data.orderCount);
+          console.log("===initializeChart=====");
+        });
+        let xAxisTitle = "時間";
+
+        // if (data && data.length > 0) {
+        //   xAxisTitle = Object.keys(data[0])[0]; // Get the first property name dynamically
+        //   yAxisTitle = Object.keys(data[0])[1]; // Get the first property name dynamically
+        // }
+
+        myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            datasets: [
+              {
+                label: "訂單總數",
+                data: data.map((data) => ({
+                  x: data.timestamp,
+                  y: data.orderCount,
+                })),
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: xAxisTitle,
+                },
+                type: "time",
+                time: {
+                  unit: "day",
+                  round: "day",
+
+                  displayFormats: {
+                    day: "YYYY-MM-DD",
+                  },
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                },
+                ticks: {
+                  stepSize: 100 / 4,
+                },
+              },
+            },
+            hover: {
+              mode: "index",
+              intersect: false,
+            },
+          },
+        });
+      }
+
+      async function loadRawData(ctx) {
+        let backendISODateData;
+        try {
+          let url =
+            window.location.protocol +
+            "//" +
+            window.location.hostname +
+            ":" +
+            window.location.port +
+            window.location.pathname;
+
+          if (!url.endsWith("/")) {
+            url += "/";
+          }
+          url += "api/orders/1";
+          alert(url);
+
+          let datetimeResult = await fetch(url);
+          if (datetimeResult.ok) {
+            let backendData = await datetimeResult.json();
+            backendData = backendData.data;
+
+            backendISODateData = backendData.sort(
+              (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+            );
+
+            backendISODateData = aggregateDataByDate(backendISODateData);
+
+            // console.log("====backendISODateData========");
+            // backendISODateData.forEach((backendISODateData) => {
+            //   console.log(backendISODateData.timestamp);
+            //   console.log(backendISODateData.orderCount);
+            // });
+            // console.log("====backendISODateData========");
+
+            initializeChart(ctx, backendISODateData, (sortType = "day"));
+
+            return backendISODateData;
+          } else {
+            throw new Error("Failed to fetch data");
+          }
+        } catch (error) {
+          console.error(error);
+          alert(error);
+        }
+      }
+
+      function filterDate(startTime, endTime, data) {
+        const start = startTime.setHours(0, 0, 0, 0);
+        const end = endTime.setHours(0, 0, 0, 0);
+
+        const filterDates = data.filter(
+          (item) =>
+            new Date(item.timestamp).setHours(0, 0, 0, 0) >= start &&
+            new Date(item.timestamp).setHours(0, 0, 0, 0) <= end
+        );
+
+        localStorage.setItem("filteredData", JSON.stringify(filterDates));
+        return filterDates;
+      }
+
+      function updateChart(ctx, data, type) {
+        if (myChart) {
+          myChart.data.datasets[0].data = data.map((item) => ({
+            x: item.timestamp,
+            y: item.orderCount,
+          }));
+
+          console.log(data);
+
+          myChart.options.scales.x.time.unit = type;
+          if (type === "year") {
+            myChart.options.scales.x.time.displayFormats = { year: "YYYY" };
+            // myChart.options.scales.x.min =
+            // data[0].timestamp - 5 * 24 * 60 * 60 * 1000;
+          } else if (type === "month") {
+            myChart.options.scales.x.time.displayFormats = { month: "YYYY-MM" };
+            // prettier-ignore
+            myChart.options.scales.x.min =data[0].timestamp - 1 * 24 * 60 * 60 * 1000;
+            // prettier-ignore
+            myChart.options.scales.x.max =data[data.length-1].timestamp + 1 * 24 * 60 * 60 * 1000;
+          } else if (type === "day") {
+            myChart.options.scales.x.time.displayFormats = {
+              day: "YYYY-MM-DD",
+            };
+          }
+          myChart.update(); // Manually update the chart
+        }
+      }
+
+      function aggregateDataByYear(data) {
+        const aggregatedData = {};
+        let firstYear = new Date(data[0].timestamp).getFullYear();
+        let lastYear = new Date(data[data.length - 1].timestamp).getFullYear();
+
+        for (let year = firstYear; year <= lastYear; year++) {
+          // Added 'let' to declare 'year' variable
+          aggregatedData[year] = {
+            timestamp: new Date(`${year}-01-01T00:00:00.000Z`).toISOString(),
+            orderCount: 0,
+          };
+        }
+
+        data.forEach((item) => {
+          const year = new Date(item.timestamp).getFullYear();
+          aggregatedData[year].orderCount += item.orderCount;
+        });
+
+        return Object.values(aggregatedData);
+      }
+
+      function aggregateDataByMonth(data) {
+        const monthYear = new Map();
+
+        let firstMonth = new Date(data[0].timestamp);
+        let lastMonth = new Date(data[data.length - 1].timestamp);
+
+        let currentDate = new Date(firstMonth);
+
+        while (currentDate <= lastMonth) {
+          const monthKey = `${currentDate.getFullYear()}${
+            currentDate.getMonth() + 1
+          }`;
+          monthYear.set(monthKey, {
+            timestamp: new Date(
+              `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")}-01T00:00:00.000Z`
+            ).toISOString(),
+            orderCount: 0,
+          });
+
+          currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+
+        data.forEach((item) => {
+          const date = new Date(item.timestamp);
+          const monthKey = `${date.getFullYear()}${date.getMonth() + 1}`;
+          const monthData = monthYear.get(monthKey);
+          monthData.orderCount += item.orderCount;
+        });
+
+        const aggregatedData = Array.from(monthYear.values());
+
+        return aggregatedData;
+      }
+
+      function aggregateDataByDate(data) {
+        const dataContainerMap = new Map();
+
+        const startDate = new Date(data[0].timestamp);
+        // 2023-01-01T00:00:00.000000001
+        const endDate = new Date(data[data.length - 1].timestamp);
+
+        for (
+          let date = startDate;
+          date <= endDate;
+          date.setDate(date.getDate() + 1)
+        ) {
+          const year = date.getFullYear();
+          const month = date.getMonth() + 1; // 月份從 0 開始，因此需加 1
+          const day = date.getDate();
+          let dateKey =
+            year +
+            "-" +
+            month.toString().padStart(2, "0") +
+            "-" +
+            day.toString().padStart(2, "0");
+
+          dataContainerMap.set(dateKey, {
+            timestamp: new Date(
+              `${date.getFullYear()}-${month.toString().padStart(2, "0")}-${day
+                .toString()
+                .padStart(2, "0")}T00:00:00.000Z`
+            ).toISOString(),
+            orderCount: 0,
+          });
+        }
+
+        const dataContainerKeys = Array.from(dataContainerMap.keys());
+
+        data.forEach((item) => {
+          // 轉成itemDate
+          const d = new Date(item.timestamp);
+          const itemDate =
+            d.getFullYear().toString().padStart(4, "0") +
+            "-" +
+            (d.getMonth() + 1).toString().padStart(2, "0") +
+            "-" +
+            d.getDate().toString().padStart(2, "0");
+
+          // 取得dataKey
+          const dateTargetKey = itemDate.substring(0, 10);
+          const dateData = dataContainerMap.get(dateTargetKey);
+          dateData.orderCount += item.orderCount;
+        });
+        const aggregatedData = Array.from(dataContainerMap.values());
+        return aggregatedData;
+      }
+    </script>
+  </body>
+</html>

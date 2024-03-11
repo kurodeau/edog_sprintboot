@@ -1,5 +1,7 @@
 package com.seller.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -9,11 +11,15 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,24 +35,36 @@ import com.sellerLv.service.SellerLvService;
 @RequestMapping("/front/seller")
 @ComponentScan(basePackages = { "com.seller", "com.sellerLv" })
 public class SellerControllerFront extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Autowired
+	@Autowired
 	SellerService sellerSvc;
 
 	@Autowired
 	SellerLvService sellerLvSvc;
 
-	
-    
-    @GetMapping("main")
-	   public String backMain(Model model) {
-    	
+	@GetMapping("main")
+	public String backMain(Model model, HttpSession session) {
+	    Boolean updateSuccessShown = (Boolean) session.getAttribute("sellerEditSuccess");
 
-	        return "front-end/seller/seller-main"; 
-    }
-    
-    @ModelAttribute("sellerLvListData")
+	    model.addAttribute("sellerEditSuccess", false);
+
+	    if (updateSuccessShown != null) {
+	        if (updateSuccessShown) {
+	            model.addAttribute("sellerEditSuccess", true);
+	            session.setAttribute("sellerEditSuccess", false);
+	            return "front-end/seller/seller-main";
+	        } else if (!updateSuccessShown) {
+	            session.removeAttribute("sellerEditSuccess");
+	            return "redirect:/front/seller/main";
+	        }
+	    }
+
+	    return "front-end/seller/seller-main";
+	}
+
+
+	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
 //		System.out.println("==============================");
@@ -54,41 +72,65 @@ public class SellerControllerFront extends HttpServlet {
 //		System.out.println("==============================");
 		return list;
 	}
-    
+	
+	
+	
+	@GetMapping("seller/edit")
+	public String selleredit( ModelMap model) {
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		System.out.println(sellerVO.getSellerLvId().getSellerLvId());
+		sellerVO.setSellerPassword("");
+		model.addAttribute("sellerVO", sellerVO);
 
-    @GetMapping("/seller/edit")
-	   public String selleredit(
-	            Model model,HttpSession session) {
-    	
-    	SecurityContext secCtx = SecurityContextHolder.getContext();
-    	Authentication authentication = secCtx.getAuthentication();
-    	SellerVO sellerVO = (SellerVO)authentication.getPrincipal();
-		model.addAttribute("sellerVO",sellerVO);
-		
-	    return "front-end/seller/seller-seller-edit"; 
-    }
-    
-    
-    @PostMapping("/seller/update")
-	   public String sellerupdate(@Valid @NonNull SellerVO sellerVO, 
-	            Model model, BindingResult result) {
+
+		return "front-end/seller/seller-seller-editv3";
+	}
+
+	@PostMapping("seller/update")
+	public String updateSeller(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,HttpSession session)
+			throws IOException {
 //		System.out.println(sellerVO);
 
 		if (result.hasErrors()) {
-//			System.out.println("==============XXXXXXXXXXXXXX");
-//			System.out.println("updateSeller");
-//			System.out.println(result);
-//			System.out.println("==============XXXXXXXXXXXXXX");
-			return "front-end/seller/seller-seller-edit";
+			return "front-end/seller/seller-seller-editv3";
+		}
+		
+		// 原則上重新更改後，也需要驗證才能登入
+		sellerVO.setIsConfirm(true);
+
+		sellerSvc.updateUserDetails(sellerVO);
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Integer sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
+		List<GrantedAuthority> authorities = new ArrayList<>();
+
+		switch (sellerLvId) {
+		case 1:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
+			break;
+		case 2:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV2"));
+			break;
+		case 3:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
+			break;
 		}
 
-		sellerSvc.updateSeller(sellerVO);
+		SecurityContextHolder.getContext()
+				.setAuthentication(new UsernamePasswordAuthenticationToken(sellerVO, null, authorities));
 
-		
-		
-		return "redirect:/front/seller/main"+"?updateSuccess=true";
- }
-	
+		Boolean updateSuccessShown = (Boolean) session.getAttribute("sellerEditSuccess");
+
+		// 如果成功消息未显示过，则设置标志位并重定向到带有成功消息的 URL
+		session.setAttribute("sellerEditSuccess", true);
+		return "redirect:/front/seller/main";
+	}
+
 
 
 }

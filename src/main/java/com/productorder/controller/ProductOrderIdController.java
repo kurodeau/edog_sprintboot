@@ -26,6 +26,7 @@ import com.orderdetails.model.OrderDetailsService;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
+import com.seller.service.SellerService;
 
 @Controller
 @Validated
@@ -36,22 +37,26 @@ public class ProductOrderIdController {
 	ProductOrderService productOrderSvc;
 	@Autowired
 	OrderDetailsService orderDetailsSvc;
-	/*
-	 * This method will be called on select_page.html form submission, handling POST
-	 * request It also validates the user input
-	 */
 	
+	
+	
+	
+//畫面跳轉/////////////////////////
+	
+	
+  //賣家部分//
+	
+	//訂單管理（側邊欄）
 	@GetMapping("sellerproductorderlistall") 
 	public String sellerProductOrderlist(Model model){
         return "front-end/seller/seller-order-overall";
     }
-	
-	@GetMapping("productordersearch") 
-	public String productordersearch(Model model){
+	//訂單查詢（側邊欄）
+	@GetMapping("sellerproductordersearch") 
+	public String sellerProductordersearch(Model model){
         return "front-end/seller/seller-order-search";
     }
-	
-
+	//查看詳情按鈕
 	@GetMapping("getOrderdetails") 
 	public String getOneOrderdetails(@RequestParam("orderId")  String orderId, ModelMap model) {
 		
@@ -65,14 +70,22 @@ public class ProductOrderIdController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-//			System.out.println("==============XXXXXXXXXXXXXX");
-//			System.out.println("getOne_For_Update");
-//			System.out.println(sellerLvVO);
-//			System.out.println("==============XXXXXXXXXXXXXX");
 			model.addAttribute("Orderdetails", orderdetails);
 			return "front-end/seller/seller-orderdetails-searchforone";
 
 		}
+	
+   //平台部分//	
+	//訂單管理（側邊欄）
+		@GetMapping("productordersearch") 
+		public String productordersearch(Model model){
+	        return "back-end/back-order-search-all";
+	    }
+	
+
+	
+//////////////////////////////////////
+	
 
 	
 	@PostMapping("getOne_For_Display")
@@ -107,7 +120,7 @@ public class ProductOrderIdController {
 	
 	
 	
-/////////////////// ModelAttribute /////////////////////////////////
+// ModelAttribute /////////////////////////////////
 	
 	//顯示所有的訂單
 	@ModelAttribute("allProductOrder") 
