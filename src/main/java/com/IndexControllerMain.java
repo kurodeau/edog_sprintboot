@@ -63,23 +63,17 @@ public class IndexControllerMain {
 	@Autowired
 	SellerLvService sellerLvSvc;
 
-    
-    @Autowired
-    ProductService productSvc;
-    
-    
-    @Autowired
-	ProductImgService productImgSvc;
-    
-    @Autowired
-    AdService adSvc;
-	
+	@Autowired
+	ProductService productSvc;
 
+	@Autowired
+	ProductImgService productImgSvc;
+
+	@Autowired
+	AdService adSvc;
 
 	@Autowired
 	SellerService sellerSvc;
-
-
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -123,8 +117,6 @@ public class IndexControllerMain {
 //		System.out.println("==============================");
 		return list;
 	}
-
-	
 
 	@GetMapping("/buyer/register")
 	public String registerBuyer(ModelMap model) throws IOException {
@@ -188,9 +180,9 @@ public class IndexControllerMain {
 		return "/front-end/buyer/buyer-commidityV2";
 	}
 
-
 	@PostMapping("/search")
 	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
+		System.out.println("+++++++++++++++++++++++++++++++");
 
 		System.out.println(formData);
 
@@ -198,17 +190,11 @@ public class IndexControllerMain {
 		System.out.println("Size = " + prodList.size());
 		prodList.forEach(System.out::println);
 
-productSvc.getBy(formData.getAnimalType(),
-				formData.getProductCategory(),
-				formData.getRatings(),
-				formData.getPriceFrom(),
-				formData.getPriceTo(),
-				formData.getKeyword()
-				);
+		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
+				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
 
 		return ResponseEntity.ok(formData);
-		
-		
+
 	}
 
 	public static class FormData {
@@ -275,27 +261,22 @@ productSvc.getBy(formData.getAnimalType(),
 
 	}
 
-	
-	
 	@ModelAttribute("allProductListData")
 	protected List<ProductVO> referenceListData1() {
 		List<ProductVO> list = productSvc.getProductLaunch();
 		return list;
 	}
-	
-	
+
 	@ModelAttribute("launchPremiumAdListData")
-	protected List<AdVO> referenceListData2(){
+	protected List<AdVO> referenceListData2() {
 		List<AdVO> list = adSvc.getPremiumHomePageAd();
 		return list;
 	}
-	
-	
+
 	@ModelAttribute("launchBaseAdListData")
-	protected List<AdVO> referenceListData3(){
+	protected List<AdVO> referenceListData3() {
 		List<AdVO> list = adSvc.getBaseHomePageAd();
 		return list;
 	}
-	
 
 }
