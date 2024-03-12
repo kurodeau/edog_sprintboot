@@ -251,7 +251,7 @@ public class MultiSecurityConfiguration {
 //				.csrf().disable();
 //		
 //		
-//		return http.build();
-//	}
+		return http.build();
+	}
 
 }

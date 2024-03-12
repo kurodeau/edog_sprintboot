@@ -19,9 +19,10 @@ import com.seller.entity.SellerVO;
 
 public class CartVO {
 	
-	private ProductVO productVO;
-//	private SellerVO sellerVO;
-	Integer productNum;
+	private String sellerCompany;
+	private ProductVO productVO;	
+	private SellerVO sellerVO;
+	private String productNum;
 	
 	public CartVO() {
 		super();
@@ -35,22 +36,35 @@ public class CartVO {
 		this.productVO = productVO;
 	}
 
-//	public SellerVO getSellerVO() {
-//		return sellerVO;
-//	}
-//
-//	public void setSellerVO(SellerVO sellerVO) {
-//		this.sellerVO = sellerVO;
-//	}
+	public String getSellerCompany() {
+		return sellerCompany;
+	}
 
-	public Integer getProductNum() {
+	public void setSellerCompany(String sellerCompany) {
+		this.sellerCompany = sellerCompany;
+	}
+
+	public String getProductNum() {
 		return productNum;
 	}
 
-	public void setProductNum(Integer productNum) {
+	public void setProductNum(String productNum) {
 		this.productNum = productNum;
 	}
 
+	public SellerVO getSellerVO() {
+		return sellerVO;
+	}
+
+	public void setSellerVO(SellerVO sellerVO) {
+		this.sellerVO = sellerVO;
+	}
+
+	@Override
+	public String toString() {
+		return "CartVO [sellerCompany=" + sellerCompany + ", productVO=" + productVO + ", sellerVO=" + sellerVO
+				+ ", productNum=" + productNum + "]";
+	}
 
 
 }

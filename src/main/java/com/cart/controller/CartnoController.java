@@ -54,7 +54,6 @@ public class CartnoController extends HttpServlet {
 		return "front-end/buyer/buyer-cart-list";
 	}
 
-	
 	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏 /front/buyer/collection/switchState
 //	@PostMapping("switchState") //改用POST
 //	public String switchOneToCart(String memberId,@RequestParam("productId") String productId, Model model) {
