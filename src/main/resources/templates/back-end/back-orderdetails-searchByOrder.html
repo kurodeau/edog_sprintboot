@@ -15,7 +15,7 @@
     <main class="main main-layout-seller">
       <div class="seller-container">
         <div class="pagetitle">
-          <h1>訂單管理</h1>
+          <h1>訂單明細管理</h1>
         </div>
         <table
           id="example"
@@ -24,63 +24,49 @@
         >
           <thead>
             <tr>
-              <th class="text-center">訂單ID</th>
-              <th class="text-center">賣家ID</th>
-              <th class="text-center">會員ID</th>
-              <th class="text-center">訂單總金額</th>
-              <th class="text-center">買家實付金額</th>
-              <th class="text-center">發票號碼</th>
-             <!--  <th class="text-center">優惠券ID</th>  -->
-            
-              <th class="text-center">訂單建立時間</th>
-              <th class="text-center">訂單狀態</th>
-              <th class="text-center">收貨人姓名</th>
-              <th class="text-center">收貨人手機</th>
-              <th class="text-center">收貨人地址</th>
-              <th class="text-center">出貨狀態</th>
-              <th class="text-center">出貨時間</th>
+              <th class="text-center">訂單明細ID</th>
+               <th class="text-center">訂單ID</th>
+              <th class="text-center">商品ID</th>
+              <th class="text-center">商品名稱</th>
+              <th class="text-center">商品購買數量</th>
+              <th class="text-center">是否評論</th>
+              <th class="text-center">評論星數</th>
+              <th class="text-center">評論時間</th>
+              <th class="text-center">評論內容</th>
+             <!--  <th class="text-center">附件</th> -->
+              <th class="text-center">啟用狀態</th>
               <th class="text-center">操作</th> 
             </tr>
           </thead>
           
           
           <tbody>
-            <th:block th:each="productOrderVO : ${allProductOrder}">
+            <th:block th:each="orderDetailsVO : ${Orderdetails}">
               <tr>
-                <td class="text-center" th:text="${productOrderVO.orderId}"></td>
-                <td class="text-center" th:text="${productOrderVO.sellerId}"></td>
-                
-                <td class="text-center" th:text="${productOrderVO.buyerVO.memberId}"></td>
-                
-                <td class="text-center" th:text="${productOrderVO.orderOrigPrice}"></td>
-                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
-                <td class="text-center" th:text="${productOrderVO.invoiceNumber}"></td>
-               <!--  <td class="text-center" th:text="${productOrderVO.couponId}"></td> -->
-                
-                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
-                <td class="text-center" th:text="${productOrderVO.receiver}"></td>
-                <td class="text-center" th:text="${productOrderVO.mobile}"></td>
-                <td class="text-center" th:text="${productOrderVO.contactAddress}"></td>
-                <td class="text-center" th:text="${productOrderVO.isDelivered}"></td>
-                <td class="text-center" th:text="${productOrderVO.shippingTime}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.orderDetailsId}"></td>
+                 <td class="text-center" th:text="${orderDetailsVO.productOrderVO.orderId}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.productVO.productName}"></td> 
+                <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.isCommented}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.stars}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.commentedTime}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.comments}"></td>
+               <!--  <td class="text-center" th:text="${orderDetailsVO.attachments}"></td> -->
+                <td class="text-center" th:text="${orderDetailsVO.isEnable}"></td>
                 <td class="text-center" >
                  
                  
                   
                   
                   
-                  <!-- <a
+                 	 <a
                     class="btn"
-                    th:href="@{getOne_For_Update(orderId=${productOrderVO.orderId})}"
-                    >修改訂單</a
-                  > -->
+                    th:href="@{getOne_OrderDetail_For_Update(orderDetailsId=${orderDetailsVO.orderDetailsId})}"
+                    >修改明細</a
+                  > 
                   
-                  <a
-                    class="btn"
-                    th:href="@{getOrderdetails(orderId=${productOrderVO.orderId})}"
-                    >查看明細</a
-                  >
+            
                   
                 </td>
               </tr>

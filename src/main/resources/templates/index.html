@@ -1,437 +1,369 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
 
-  <body>
-    <header class="fixed-top">
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
 
-              <li class="nav-item d-flex align-items-center">
-                <a class="nav-link active" aria-current="page" th:href="@{/}"
-                  >電子商城</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{/front/seller/main}">賣家中心</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{/back/main}" style="color: red"
-                  >後台中心(測試入口)</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" th:href="@{/article/listAll}">論壇</a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  th:href="@{/front/buyer/main}"
-                  style="color: red"
-                  >買家中心(測試入口)</a
-                >
-              </li>
-            </ul>
+<body>
+	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
 
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item" th:unless="${loggedIn}">
-                <a
-                  class="nav-link"
-                  href="#"
-                  data-bs-toggle="modal"
-                  data-bs-target="#loginSelectGroup"
-                  >登入或註冊</a
-                >
-              </li>
-              <li
-                class="nav-item d-flex gap-3 align-items-center"
-                th:if="${loggedIn}"
-              >
-                <span
-                  th:if="${theName != null and theName != ''}"
-                  th:text="${theName}"
-                ></span
-                ><a class="nav-link" th:href="@{/logout}">登出</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" th:href="@{/}">電子商城</a>
+						</li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/front/seller/main}">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/back/main}" style="color: red">後台中心(測試入口)</a></li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/article/listAll}">論壇</a></li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/front/buyer/main}" style="color: red">買家中心(測試入口)</a>
+						</li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+						<li class="nav-item" th:unless="${loggedIn}"><a
+							class="nav-link" href="#" data-bs-toggle="modal"
+							data-bs-target="#loginSelectGroup">登入或註冊</a></li>
+						<li class="nav-item d-flex gap-3 align-items-center"
+							th:if="${loggedIn}"><span
+							th:if="${theName != null and theName != ''}" th:text="${theName}"></span><a
+							class="nav-link" th:href="@{/logout}">登出</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
 
 
-      <!-- Start SearchBar  -->
-      <div class="container-fluid bg-user search-container-custom">
-        <div class="row">
-          <!-- Start SearchBar-Logo  -->
-          <div
-            class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end"
-          >
-            <img
-              th:src="@{/image/Medium.png}"
-              class="img-logo-custom"
-              alt=""
-              srcset=""
-            />
-          </div>
-          <!-- End SearchBar-Logo  -->
+		<!-- Start SearchBar  -->
+		<div class="container-fluid bg-user search-container-custom">
+			<div class="row">
+				<!-- Start SearchBar-Logo  -->
+				<div
+					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
+						srcset="" />
+				</div>
+				<!-- End SearchBar-Logo  -->
 
 
-          <!-- Start SearchBar-Input  -->
-          <div
-            class="col d-flex searchItem flex-column search-item-container-custom"
-          >
-            <form class="form-inline w-100">
-              <div class="row py-2 search-row-custom w-100 pe-2">
-                <div class="col">
-                  <input
-                    class="form-control mr-sm-2 w-100 search-input-custom"
-                    type="search"
-                    placeholder="請在此進行商品檢索"
-                    aria-label="Search"
-                  />
-                </div>
-                <div class="col-auto">
-                  <button
-                    class="btn btn-user search-button-custom d-flex"
-                    type="submit"
-                  >
-                    <i class="me-2 ri-search-line"></i>
-                    <div class="col-auto d-none d-md-block">Search</div>
-                  </button>
-                </div>
-              </div>
-            </form>
-            <div class="my-2 keyword-container-custom">
-              <span class="badge rounded-pill keyword-item-custom">寵物床</span>
-              <span class="badge rounded-pill keyword-item-custom">玩具</span>
-            </div>
-          </div>
-          <!-- End SearchBar-Input  -->
+				<!-- Start SearchBar-Input  -->
+				<div
+					class="col d-flex searchItem flex-column search-item-container-custom">
+					<form class="form-inline w-100">
+						<div class="row py-2 search-row-custom w-100 pe-2">
+							<div class="col">
+								<input class="form-control mr-sm-2 w-100 search-input-custom"
+									type="search" placeholder="請在此進行商品檢索" aria-label="Search" />
+							</div>
+							<div class="col-auto">
+								<button class="btn btn-user search-button-custom d-flex"
+									type="submit">
+									<i class="me-2 ri-search-line"></i>
+									<div class="col-auto d-none d-md-block">Search</div>
+								</button>
+							</div>
+						</div>
+					</form>
+					<div class="my-2 keyword-container-custom">
+						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
+							class="badge rounded-pill keyword-item-custom">玩具</span>
+					</div>
+				</div>
+				<!-- End SearchBar-Input  -->
 
-          <!-- Start SearchBar-Function  -->
-          <div
-            class="col-2 d-block col-sm-2 d-flex align-items-start justify-content-start cart-container-custom"
-          >
-            <div
-              class="baritem d-flex align-items-center justify-content-start cart-item-custom"
-            >
-              <i class="ri-shopping-cart-2-line"></i>
-              <div class="cart d-none d-lg-block ml-1">購物車</div>
-            </div>
-          </div>
-          <!-- End SearchBar-Function  -->
-        </div>
-      </div>
-      <!-- Start Banner  -->
-      <div
-        class="container-fluid justify-content-between align-items-center banner-container-custom"
-      >
-        <div class="row">
-          <div class="col banner-content text-center banner-content-custom">
-            <p class="mb-1 mt-1 banner-para-custom">
-              This is a sample horizontal full-width banner.
-            </p>
-          </div>
-          <div
-            class="col-auto buttona mb-0 d-flex justify-content-end banner-close-custom"
-          >
-            <i class="mb-1 mt-1 ri-close-line banner-close"></i>
-          </div>
-        </div>
-      </div>
-      <!-- End Banner  -->
-    </header>
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
+				<!-- Start SearchBar-Function  -->
+				<div
+					class="col-2 d-block col-sm-2 d-flex align-items-start justify-content-start cart-container-custom">
+					<div
+						class="baritem d-flex align-items-center justify-content-start cart-item-custom">
+						<i class="ri-shopping-cart-2-line"></i>
+						<div class="cart d-none d-lg-block ml-1">購物車</div>
+					</div>
+				</div>
+				<!-- End SearchBar-Function  -->
+			</div>
+		</div>
+		<!-- Start Banner  -->
+		<div
+			class="container-fluid justify-content-between align-items-center banner-container-custom">
+			<div class="row">
+				<div class="col banner-content text-center banner-content-custom">
+					<p class="mb-1 mt-1 banner-para-custom">This is a sample
+						horizontal full-width banner.</p>
+				</div>
+				<div
+					class="col-auto buttona mb-0 d-flex justify-content-end banner-close-custom">
+					<i class="mb-1 mt-1 ri-close-line banner-close"></i>
+				</div>
+			</div>
+		</div>
+		<!-- End Banner  -->
+	</header>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
 
-    <!-- ======= Main ======= -->
-    <main class="main main-layout">
-      <!--ImageStyle_Unstable  -->
-      <!-- 非常重要!!!!! 一個頁面只能用一個輪播  否則bootStrapJS會錯-->
-      <div class="container mt-5">
-        <div class="row flex-column flex-md-row">
-          <div
-            class="col-12 col-md-8 rounded flex-grow-1 d-flex justify-content-end"
-          >
-            <!-- mainimage -->
-            <div
-              id="carouselExampleControls"
-              class="carousel slide w-100"
-              data-bs-ride="carousel"
-            >
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img
-                    src="https://fakeimg.pl/800x230"
-                    class="d-block w-100 img-md-main"
-                    alt="Main Picture"
-                  />
-                </div>
-                <div class="carousel-item">
-                  <img
-                    src="https://fakeimg.pl/800x230"
-                    class="d-block w-100 img-md-main"
-                    alt="Main Picture"
-                  />
-                </div>
-                <div class="carousel-item">
-                  <img
-                    src="https://fakeimg.pl/800x230"
-                    class="d-block w-100 img-md-main"
-                    alt="Main Picture"
-                  />
-                </div>
-                <!-- Additional carousel items can be added here if needed -->
-              </div>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout">
+		<!--ImageStyle_Unstable  -->
+		<!-- 非常重要!!!!! 一個頁面只能用一個輪播  否則bootStrapJS會錯-->
+		<div class="container mt-5">
+			<div class="row flex-column flex-md-row">
+				<div
+					class="col-12 col-md-8 rounded flex-grow-1 d-flex justify-content-end">
+					<!-- mainimage -->
+					<div id="carouselExampleControls" class="carousel slide w-100"
+						data-bs-ride="carousel">
+						<div class="carousel-inner">
 
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev"
-              >
-                <span
-                  class="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="next"
-              >
-                <span
-                  class="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
+							<div class="carousel-item active"
+								th:each="adVO : ${launchPremiumAdListData}">
+								<img
+									th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+									width="830px" height="260px" class="d-block w-100 img-md-main"
+									alt="Main Picture" />
+							</div>
 
-          <!-- subimage Section-->
-          <div
-            class="col-12 col-md-4 d-flex flex-column flex-grow-1 justify-content-between"
-          >
-            <!-- subimage Section 1-->
-            <div class="subimage-custom w-100">
-              <img
-                class="img-fluid max-width-md img-md-sub"
-                src="https://fakeimg.pl/800x230"
-                alt=""
-              />
-            </div>
+							<!-- 							JJK original version -->
+							<!-- 							<div class="carousel-item"> -->
+							<!-- 								<img src="https://fakeimg.pl/800x230" -->
+							<!-- 									class="d-block w-100 img-md-main" alt="Main Picture" /> -->
+							<!-- 							</div> -->
+							<!-- 							<div class="carousel-item"> -->
+							<!-- 								<img src="https://fakeimg.pl/800x230" -->
+							<!-- 									class="d-block w-100 img-md-main" alt="Main Picture" /> -->
+							<!-- 							</div> -->
+							<!-- Additional carousel items can be added here if needed -->
+						</div>
 
-            <!-- subimage Section 2-->
-            <div class="subimage-custom w-100">
-              <img
-                class="img-fluid max-width-md img-md-sub"
-                src="https://fakeimg.pl/800x230"
-                alt=""
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+						<button class="carousel-control-prev" type="button"
+							data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button"
+							data-bs-target="#carouselExampleControls" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+				</div>
 
-      <!-- ## ListItems -->
-      <div class="container mt-4">
-        <h2 class="mb-4">Product List</h2>
+				<!-- subimage Section-->
+				<!-- 				<div -->
+				<!-- 					class="col-12 col-md-4 d-flex flex-column flex-grow-1 justify-content-between"> -->
+				<!-- 					subimage Section 1 -->
+				<!-- 					<div class="subimage-custom w-100"> -->
+				<!-- 						<img class="img-fluid max-width-md img-md-sub" -->
+				<!-- 							src="https://fakeimg.pl/800x230" alt="" /> -->
+				<!-- 					</div> -->
 
-        <div class="row">
-          <!-- Product 1 -->
-          <div
-            class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4 product-card-container"
-          >
-            <div class="card product-card">
-              <div class="badge card-badge-custom">廣告</div>
-              <div class="card-status-custom">已售完</div>
-              <img
-                src="https://fakeimg.pl/260x260"
-                class="card-img-top"
-                alt="Product 1"
-              />
-              <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ea
-                  nobis beatae in voluptatum, animi quibusdam molestias
-                  voluptates sit exercitationem dolor suscipit consectetur, eum
-                  ex libero pariatur nulla. Esse, ut explicabo!
-                </p>
-                <h5 class="price-tag">$ <span>69</span></h5>
-              </div>
-            </div>
-          </div>
+				<!-- 					subimage Section 2 -->
+				<!-- 					<div class="subimage-custom w-100"> -->
+				<!-- 						<img class="img-fluid max-width-md img-md-sub" -->
+				<!-- 							src="https://fakeimg.pl/800x230" alt="" /> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
 
-          <!-- Product 2 -->
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card product-card">
-              <div class="badge card-badge-custom">廣告</div>
-              <div class="card-status-custom">已售完</div>
+				<div
+					class="col-12 col-md-4 d-flex flex-column flex-grow-1 justify-content-between">
+					<!-- subimage Carousel 1 -->
+					<div id="subImageCarousel1" class="carousel slide w-100"
+						data-bs-ride="carousel">
+						<div class="carousel-inner">
+							<!-- Loop through sub images -->
+							<div class="carousel-item active"
+								th:each="adVO :${launchBaseAdListData}">
+								<div class="subimage-custom w-100">
+									<img class="img-fluid max-width-md img-md-sub"
+										th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+										alt="" style="width: 330px; height: 95px;" />
+								</div>
+							</div>
 
-              <img
-                src="https://fakeimg.pl/260x260"
-                class="card-img-top"
-                alt="Product 1"
-              />
-              <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Velit
-                </p>
-                <h5 class="price-tag">$ <span>69</span></h5>
-              </div>
-            </div>
-          </div>
+							<!-- Additional subimage carousel items can be added here if needed -->
+						</div>
+						<button class="carousel-control-prev" type="button"
+							data-bs-target="#subImageCarousel1" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button"
+							data-bs-target="#subImageCarousel1" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+
+					<!-- subimage Carousel 2 -->
+					<div id="subImageCarousel2" class="carousel slide mt-3 w-100"
+						data-bs-ride="carousel">
+						<div class="carousel-inner">
+							<!-- Loop through additional sub images -->
+							<div class="carousel-item active">
+								<div class="subimage-custom w-100">
+									<img class="img-fluid max-width-md img-md-sub"
+										src="https://fakeimg.pl/800x230" alt="" />
+								</div>
+							</div>
+							<div class="carousel-item">
+								<div class="subimage-custom w-100">
+									<img class="img-fluid max-width-md img-md-sub"
+										src="https://fakeimg.pl/800x230" alt="" />
+								</div>
+							</div>
+							<!-- Additional subimage carousel items can be added here if needed -->
+						</div>
+						<button class="carousel-control-prev" type="button"
+							data-bs-target="#subImageCarousel2" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button"
+							data-bs-target="#subImageCarousel2" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+				</div>
 
 
-          <!-- Product 3 -->
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card product-card">
-              <div class="badge card-badge-custom">廣告</div>
-              <div class="card-status-custom">已售完</div>
+
+			</div>
+		</div>
+
+		<!-- ## ListItems -->
+		<div class="container mt-4">
+			<h2 class="mb-4">Product List</h2>
+
+			<div class="row">
+				<!-- Product 1 -->
+				<div
+					class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4 product-card-container"
+					th:each="productVO : ${allProductListData}">
+					<a th:href="'/product/' + ${productVO.productId}">
+						<div class="card product-card">
+							<div class="badge card-badge-custom">廣告</div>
+							<div class="card-status-custom">已售完</div>
+							<img
+								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+								class="card-img-top" alt="Product 1" />
+							<div class="card-body d-flex flex-column justify-content-between">
+								<p class="card-text" th:text="${productVO.productDetails}">
+
+								</p>
+								<h5 class="price-tag">
+									$ <span th:text="${productVO.price}"></span>
+								</h5>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<!-- 			JJK orginal version -->
+				<!--           Product 2 -->
+				<!--           <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4"> -->
+				<!--             <div class="card product-card"> -->
+				<!--               <div class="badge card-badge-custom">廣告</div> -->
+				<!--               <div class="card-status-custom">已售完</div> -->
+
+				<!--               <img -->
+				<!--                 src="https://fakeimg.pl/260x260" -->
+				<!--                 class="card-img-top" -->
+				<!--                 alt="Product 1" -->
+				<!--               /> -->
+				<!--               <div class="card-body d-flex flex-column justify-content-between"> -->
+				<!--                 <p class="card-text"> -->
+				<!--                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. -->
+				<!--                   Velit -->
+				<!--                 </p> -->
+				<!--                 <h5 class="price-tag">$ <span>69</span></h5> -->
+				<!--               </div> -->
+				<!--             </div> -->
+				<!--           </div> -->
 
 
-              <img
-                src="https://fakeimg.pl/260x260"
-                class="card-img-top"
-                alt="Product 1"
-              />
-              <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Velit
-                </p>
-                <h5 class="price-tag">$ <span>69</span></h5>
-              </div>
-            </div>
-          </div>
+				<!--           Product 3 -->
+				<!--           <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4"> -->
+				<!--             <div class="card product-card"> -->
+				<!--               <div class="badge card-badge-custom">廣告</div> -->
+				<!--               <div class="card-status-custom">已售完</div> -->
 
-          <!-- Product 4 -->
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card product-card">
-              <div class="badge card-badge-custom">廣告</div>
-              <div class="card-status-custom">已售完</div>
 
-              <img
-                src="https://fakeimg.pl/260x260"
-                class="card-img-top"
-                alt="Product 1"
-              />
-              <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Velit
-                </p>
-                <h5 class="price-tag">$ <span>69</span></h5>
-              </div>
-            </div>
-          </div>
+				<!--               <img -->
+				<!--                 src="https://fakeimg.pl/260x260" -->
+				<!--                 class="card-img-top" -->
+				<!--                 alt="Product 1" -->
+				<!--               /> -->
+				<!--               <div class="card-body d-flex flex-column justify-content-between"> -->
+				<!--                 <p class="card-text"> -->
+				<!--                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. -->
+				<!--                   Velit -->
+				<!--                 </p> -->
+				<!--                 <h5 class="price-tag">$ <span>69</span></h5> -->
+				<!--               </div> -->
+				<!--             </div> -->
+				<!--           </div> -->
 
-          <!-- Product 4 -->
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card product-card">
-              <div class="badge card-badge-custom">廣告</div>
-              <div class="card-status-custom">已售完</div>
 
-              <img
-                src="https://fakeimg.pl/260x260"
-                class="card-img-top"
-                alt="Product 1"
-              />
-              <div class="card-body d-flex flex-column justify-content-between">
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Velit
-                </p>
-                <h5 class="price-tag">$ <span>69</span></h5>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <!-- End Main -->
 
-    <div
-      class="modal fade"
-      id="loginSelectGroup"
-      tabindex="-1"
-      aria-labelledby="loginLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginLabel">登入或註冊</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div
-            class="modal-body d-flex flex-column gap-5 justify-content-center align-items-center"
-          >
-            <div class="d-flex gap-5">
-              <a th:href="@{/buyer/login}" class="btn btn-primary">買家登入</a>
-              <a th:href="@{/buyer/register}" class="btn btn-primary"
-                >買家註冊</a
-              >
-            </div>
-            <div class="d-flex gap-5">
-              <a th:href="@{/seller/login}" class="btn btn-seller">賣家登入</a>
-              <a th:href="@{/seller/register}" class="btn btn-seller"
-                >賣家註冊</a
-              >
-            </div>
-            <div class="d-flex gap-5">
-              <a th:href="@{/admin/login}" class="btn btn-primary">後台登入</a>
-              <a th:href="@{/admin/register}" class="btn btn-primary"
-                >後台註冊</a
-              >
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              取消
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+			</div>
+		</div>
+	</main>
+	<!-- End Main -->
 
-    <div th:replace="@{fragment-footer}"></div>
-    <div th:replace="@{fragment-js}"></div>
-    <!-- End Footer -->
-    <script>
+	<div class="modal fade" id="loginSelectGroup" tabindex="-1"
+		aria-labelledby="loginLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="loginLabel">登入或註冊</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div
+					class="modal-body d-flex flex-column gap-5 justify-content-center align-items-center">
+					<div class="d-flex gap-5">
+						<a th:href="@{/buyer/login}" class="btn btn-primary">買家登入</a> <a
+							th:href="@{/buyer/register}" class="btn btn-primary">買家註冊</a>
+					</div>
+					<div class="d-flex gap-5">
+						<a th:href="@{/seller/login}" class="btn btn-seller">賣家登入</a> <a
+							th:href="@{/seller/register}" class="btn btn-seller">賣家註冊</a>
+					</div>
+					<div class="d-flex gap-5">
+						<a th:href="@{/admin/login}" class="btn btn-primary">後台登入</a> <a
+							th:href="@{/admin/register}" class="btn btn-primary">後台註冊</a>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="@{fragment-footer}"></div>
+	<div th:replace="@{fragment-js}"></div>
+	<!-- End Footer -->
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         // 取得提交按鈕
         var submitBtn = document.querySelector(".btn-search");
@@ -523,5 +455,5 @@
         });
       });
     </script>
-  </body>
+</body>
 </html>

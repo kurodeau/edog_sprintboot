@@ -198,59 +198,7 @@ public class MultiSecurityConfiguration {
 //				.successHandler(sellerAuthenticationSuccessHandler))
 //				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
 //				.csrf().disable();
-//
-////		http.formLogin(form -> form
-////				.loginPage("/buyer/login").permitAll()
-////				.usernameParameter("usernameinhtml")
-////				.passwordParameter("passwordinhtml")
-////				.successHandler(buyerAuthenticationSuccessHandler))
-////				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
-////				.csrf().disable();
-//		
-//		
-//		return http.build();
-//	}
-//	
-//	
-//	@Bean
-//	@Order(2)   
-//	public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
-//
-//		// TESTING
-////		http.authorizeRequests(authorize -> authorize
-////				.antMatchers("/**").permitAll()
-////				.anyRequest().authenticated());
-//
-//		// FORMAL
-////		 http.authorizeRequests(authorize -> authorize
-////		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()
-////		 .antMatchers("/seller/register", "/seller/register/**").permitAll()
-////		 .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
-////		 .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-////		 .antMatchers("/front/seller/**").hasRole("SELLER")
-////		 .antMatchers("/front/buyer/**").hasRole("BUYER")
-////		 .antMatchers("/auth/email/check", "/auth/email").permitAll()
-////		 .antMatchers("/activate/seller/**").permitAll()
-////		 .antMatchers("/").permitAll()
-////		 .anyRequest().authenticated());
-//
-////		http.formLogin(form -> form
-////				.loginPage("/seller/login").permitAll()
-////				.usernameParameter("usernameinhtml")
-////				.passwordParameter("passwordinhtml")
-////				.successHandler(sellerAuthenticationSuccessHandler))
-////				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
-////				.csrf().disable();
-//
-//		http.formLogin(form -> form
-//				.loginPage("/buyer/login").permitAll()
-//				.usernameParameter("usernameinhtml")
-//				.passwordParameter("passwordinhtml")
-//				.successHandler(buyerAuthenticationSuccessHandler))
-//				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
-//				.csrf().disable();
-//		
-//		
+
 		return http.build();
 	}
 
