@@ -37,10 +37,10 @@ public class SellerVO implements java.io.Serializable {
 	}
 
 /////打開訂單關聯/////////////////////////////////////////
-//	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+//	private Set<ProductOrderVO> productOrders ;
 //	
 //	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerTargetVO")
-//	@OrderBy("sellerId asc")
+////	@OrderBy("sellerId asc")
 //	public Set<ProductOrderVO> getProductOrders() {
 //		return productOrders;
 //	}

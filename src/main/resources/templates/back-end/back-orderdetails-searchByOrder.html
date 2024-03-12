@@ -60,13 +60,14 @@
                   
                   
                   
-                 	 <a
-                    class="btn"
-                    th:href="@{getOne_OrderDetail_For_Update(orderDetailsId=${orderDetailsVO.orderDetailsId})}"
-                    >修改明細</a
-                  > 
+                 
                   
-            
+		                  <!-- 下面的方法用不了= = -->
+		                
+		                  <form method="post" th:action="@{getOne_OrderDetail_For_Update}" style="margin-bottom: 0px;">
+					     <input type="submit" value="修改">
+					     <input type="hidden" name="orderDetailsId" th:value="${orderDetailsVO.orderDetailsId}"></form> 
+		              
                   
                 </td>
               </tr>

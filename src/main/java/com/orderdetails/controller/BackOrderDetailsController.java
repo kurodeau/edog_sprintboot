@@ -35,16 +35,16 @@ public class BackOrderDetailsController {
 	
 	
 	//跳轉至修改內容畫面
-	@GetMapping("getOne_OrderDetail_For_Update")
+	@PostMapping("getOne_OrderDetail_For_Update")
 	public String getOneOrderDetailForUpdate(@RequestParam("orderDetailsId") String orderDetailsId, ModelMap model) {
+		System.out.println(orderDetailsId);
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
-		// EmpService empSvc = new EmpService();
 		OrderDetailsVO orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsId));
 
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("orderDetailsVO", orderDetailsVO);
-		return "back-end/back-orderdetails-update"; // 查詢完成後轉交update_emp_input.html
+		return "back-end/back-orderdetails-update"; // 
 		
 		
 	}
@@ -53,45 +53,21 @@ public class BackOrderDetailsController {
 	public String updateOrderdetailFrombackend(@Valid OrderDetailsVO orderDetailsVO, BindingResult result, ModelMap model
 			) throws IOException {
 		
-		ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(1);
-		orderDetailsVO.setProductOrderVO(productOrderVO);
-		
-//		System.out.println(orderDetailsVO.getProductOrderVO().getOrderId());
-//新增附件的版本///////////		
-//		@PostMapping("update")
-//		public String update(@Valid OrderDetailsVO orderDetailsVO, BindingResult result, ModelMap model,
-//				@RequestParam("attachments") MultipartFile[] parts) throws IOException {
-////////////////////////
-		
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-//		result = removeFieldError(orderDetailsVO, result, "attachments");
-//
-//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
-//			// EmpService empSvc = new EmpService();
-//			byte[] attachments = orderDetailsSvc.getOneOrderDetails(orderDetailsVO.getOrderDetailsId()).getAttachments();
-//			orderDetailsVO.setAttachments(attachments); //拿原本的圖片出來再存進去
-//		} else {
-//			for (MultipartFile multipartFile : parts) { //讀取新的照片存入VO
-//				byte[] attachments = multipartFile.getBytes();
-//				orderDetailsVO.setAttachments(attachments);
-//			}
-//		}
+		System.out.println(result);
 		if (result.hasErrors()) { //畫面不跳轉
 			return "back-end/back-orderdetails-update";
 		}
-		
-		
-		
 		/*************************** 2.開始修改資料 *****************************************/
-		// EmpService empSvc = new EmpService();
 		orderDetailsSvc.updateOrderDetails(orderDetailsVO);
 
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("success", "- (修改成功)");
 		orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsVO.getOrderDetailsId()));
 		model.addAttribute("orderDetailsVO", orderDetailsVO);
-		return "redirect:/back-end/back-order-search-all"; 
+		System.out.println("run here!!");
+		List<ProductOrderVO> list = productOrderSvc.getAll();
+		model.addAttribute("allProductOrder", list);
+		return "back-end/back-order-search-all"; 
 	}
 	
 	// 去除BindingResult中某個欄位的FieldError紀錄

@@ -33,7 +33,7 @@ import com.productorder.model.ProductOrderVO;
 @Controller
 @Validated
 @RequestMapping("/back/productorder")
-public class BackEndProductOrderController {
+public class BackProductOrderController {
 	
 	@Autowired
 	ProductOrderService productOrderSvc;
@@ -47,7 +47,8 @@ public class BackEndProductOrderController {
 	
 //畫面跳轉/////////////////////////
 	
-	//訂單管理（側邊欄）
+	//訂單管理
+		//側邊欄跳轉
 		@GetMapping("productordersearch") 
 		public String productordersearch(Model model){
 	        return "back-end/back-order-search-all";
@@ -61,7 +62,7 @@ public class BackEndProductOrderController {
 			List <OrderDetailsVO> orderdetails = null;
 				try {
 					orderdetails = orderDetailsSvc.findByOrderId(Integer.valueOf(orderId));
-
+//					System.out.println("run here");
 				} catch (NumberFormatException e) {
 					model.addAttribute("errorMessage", "Invalid orderId format");
 					return "errorPage";

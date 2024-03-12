@@ -24,49 +24,49 @@
 		
 			<h1>編輯買家資料</h1>
 
-			<form id="myForm" method="POST" th:action="@{updateOrderdetailFrombackend}"
+			 <form id="myForm" method="POST" th:object="${orderDetailsVO}" th:action="@{updateOrderdetailFrombackend}"
 				enctype="multipart/form-data">
 
 				<div class="col-md-12">
 					<label for="orderDetailsId" class="form-label">訂單明細ID</label> <input
 						type="text" class="form-control" id="orderDetailsId"
-						name="orderDetailsId" th:value="${orderDetailsVO.orderDetailsId}" readonly />
+						name="orderDetailsId" th:field="*{orderDetailsId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="orderId" class="form-label">訂單ID</label> <input
 						type="text" class="form-control" id="orderId"
-						name="orderId" th:value="${orderDetailsVO.productOrderVO.orderId}" readonly />
+						name="orderId" th:field="*{productOrderVO.orderId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="productId" class="form-label">商品ID</label> <input
 						type="text" class="form-control" id="productId"
-						name="productId" th:value="${orderDetailsVO.productVO.productId}" readonly />s
+						name="productId" th:field="*{productVO.productId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="purchaseQuantity" class="form-label">商品購買數量</label> <input
 						type="text" class="form-control" id="purchaseQuantity"
-						name="purchaseQuantity" th:value="${orderDetailsVO.purchaseQuantity}"  />
+						name="purchaseQuantity"  th:field="*{purchaseQuantity}" readonly />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="isCommented" class="form-label">是否評論</label> <input
 						type="text" class="form-control" id="isCommented"
-						name="isCommented" th:value="${orderDetailsVO.isCommented}"  />
+						name="isCommented" th:field="*{isCommented}"   />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="stars" class="form-label">評分星數</label> <input
 						type="text" class="form-control" id="stars"
-						name="stars" th:value="${orderDetailsVO.stars}"  />
+						name="stars" th:field="*{stars}"   />
 				</div>
 				
 				<div class="col-md-12">
 					<label for="commentedTime" class="form-label">評論時間</label> <input
 						type="text" class="form-control" id="commentedTime"
-						name="commentedTime" th:value="${orderDetailsVO.commentedTime}"  readonly />
+						name="commentedTime" th:field="*{commentedTime}"   readonly />
 				</div>
 				
 				
@@ -77,14 +77,14 @@
 				<div class="col-md-12">
 					<label for="comments" class="form-label">評論內容</label> <input
 						type="text" class="form-control" id="comments"
-						name="comments" th:value="${orderDetailsVO.comments}" />
+						name="comments" th:field="*{comments}"  />
 				</div>
 				
 				
 				<div class="col-md-3">
 					<label for="isEnable" class="form-label">啟用狀態</label>
 					<select class="isEnable form-select" id="isEnable"
-						name="isEnable" th:value="${orderDetailsVO.isEnable}">
+						name="isEnable" th:field="*{isEnable}" >
 						<option value="1">已啟用</option>
 						<option value="0">未啟用</option>
 					</select>
@@ -97,7 +97,8 @@
 					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
-			</form>
+				
+			</form> 
 		</div>
 	</main>
 	<!-- End Main -->
@@ -114,7 +115,7 @@
 		//============ 取消按鈕的跳轉事件設定 start =============
 		document.getElementById("cancel-btn").addEventListener("click",
 				function() {
-					window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
+					window.location.href = "/back/productorder/productordersearch"; // 將網頁重定向到指定的 URL
 				});
 
 		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
