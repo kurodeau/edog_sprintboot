@@ -284,9 +284,16 @@ productSvc.getBy(formData.getAnimalType(),
 	}
 	
 	
-	@ModelAttribute("launchAdListData")
+	@ModelAttribute("launchPremiumAdListData")
 	protected List<AdVO> referenceListData2(){
-		List<AdVO> list = adSvc.getHomePageAd();
+		List<AdVO> list = adSvc.getPremiumHomePageAd();
+		return list;
+	}
+	
+	
+	@ModelAttribute("launchBaseAdListData")
+	protected List<AdVO> referenceListData3(){
+		List<AdVO> list = adSvc.getBaseHomePageAd();
 		return list;
 	}
 	
