@@ -1,8 +1,7 @@
 package com.buyer.entity;
 
-
+import java.sql.Date;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ import javax.persistence.TemporalType;
 
 import com.productorder.model.ProductOrderVO;
 
-
 /*
  * 註1: classpath必須有javax.persistence-api-x.x.jar 
  * 註2: Annotation可以添加在屬性上，也可以添加在getXxx()方法之上
@@ -29,45 +27,38 @@ import com.productorder.model.ProductOrderVO;
 
 @Entity
 @Table(name = "buyer")
-public class BuyerVO implements java.io.Serializable{
+public class BuyerVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public BuyerVO() {
 		super();
 	};
-	
-	
-	
-	
-	//訂單關聯//
-private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
-	
 
-	
-	
+	// 訂單關聯//
+	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+
 	private Integer memberId;
-	private String memberEmail; 
+	private String memberEmail;
 	private String thirdFrom;
 	private String memberName;
 	private String memberPhone;
 	private String memberMobile;
-	private Date memberBirthday; 
-	private String memberPassword; 
-	private String memberAddress; 
-	private Boolean isMemberEmail; 
-	private Date memberRegistrationTime; 
-	private String petName; 
-	private byte[] petImg; 
-	private Date petImgUploadTime; 
-	private String petVaccName1; 
-	private Date petVaccTime1; 
-	private String petVaccName2; 
-	private Date petVaccTime2; 
+	private Date memberBirthday;
+	private String memberPassword;
+	private String memberAddress;
+	private Boolean isMemberEmail;
+	private Date memberRegistrationTime;
+	private String petName;
+	private byte[] petImg;
+	private Date petImgUploadTime;
+	private String petVaccName1;
+	private Date petVaccTime1;
+	private String petVaccName2;
+	private Date petVaccTime2;
 	private Boolean isConfirm;
 
-
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "memberId", updatable = false)
 	public Integer getMemberId() {
 		return memberId;
@@ -85,7 +76,7 @@ private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
 	public void setMemberEmail(String memberEmail) {
 		this.memberEmail = memberEmail;
 	}
-	
+
 	@Column(name = "thirdFrom")
 	public String getThirdFrom() {
 		return thirdFrom;
@@ -178,7 +169,7 @@ private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
 		this.petName = petName;
 	}
 
-	@Column(name = "petImg", columnDefinition = "LONGBLOB" )
+	@Column(name = "petImg", columnDefinition = "LONGBLOB")
 	public byte[] getPetImg() {
 		return petImg;
 	}
@@ -243,21 +234,19 @@ private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
 	public void setIsConfirm(Boolean isConfirm) {
 		this.isConfirm = isConfirm;
 	}
-		
-//////////訂單關聯/////////////////////////
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="buyerVO")
-@OrderBy("memberId asc")
-public Set<ProductOrderVO> getProductOrders() {
-return productOrders;
-}
 
-public void setProductOrders(Set<ProductOrderVO> productOrders) {
-this.productOrders = productOrders;
-}
-////////////////////////////////
+	////////// 訂單關聯/////////////////////////
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "buyerVO")
+	@OrderBy("memberId asc")
+	public Set<ProductOrderVO> getProductOrders() {
+		return productOrders;
+	}
 
-	
-	
+	public void setProductOrders(Set<ProductOrderVO> productOrders) {
+		this.productOrders = productOrders;
+	}
+	////////////////////////////////
+
 	@Override
 	public String toString() {
 		return "BuyerVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", thirdFrom=" + thirdFrom
@@ -270,7 +259,5 @@ this.productOrders = productOrders;
 				+ isConfirm + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
 				+ super.toString() + "]";
 	}
-	
-	
 
 }
