@@ -1,7 +1,6 @@
 package com.seller.entity;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,6 +23,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.product.model.ProductVO;
 import com.productorder.model.ProductOrderVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.validator.MyZeroValidator;
@@ -32,15 +31,22 @@ import com.validator.MyZeroValidator;
 @Entity
 @Table(name = "seller")
 public class SellerVO implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public SellerVO() {
 		super();
 	}
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "sellerId", updatable = false)
+	private Integer sellerId;
+
 
 /////打開訂單關聯/////////////////////////////////////////
-//	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
-//	
-//	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerTargetVO")
-//	@OrderBy("sellerId asc")
+//	private Set<ProductOrderVO> productOrders;
+//
+//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sellerTargetVO", fetch = FetchType.LAZY)
 //	public Set<ProductOrderVO> getProductOrders() {
 //		return productOrders;
 //	}
@@ -48,20 +54,30 @@ public class SellerVO implements java.io.Serializable {
 //	public void setProductOrders(Set<ProductOrderVO> productOrders) {
 //		this.productOrders = productOrders;
 //	}
-//	
+
 /////////////////////////////////////////////////////////
 
-	
-	
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "sellerId", updatable = false)
-	private Integer sellerId;
+//////////////商品與賣家的關聯///////////////////////
+//	private Set<ProductVO> productVOs;
+//
+//	@OneToMany(mappedBy = "sellerTargetVO", cascade = CascadeType.ALL)
+//	@JoinColumn
+//	public Set<ProductVO> getProductVO() {
+//	    return productVOs;
+//	}
+//
+//	public void setProductVO(Set<ProductVO> productVOs) {
+//		this.productVOs = productVOs;
+//	}
 
-	
+///////////////////////////////////////
 
 
+//////////////等級與賣家的關聯///////////////////////
+
+	public void setSellerLvId(SellerLvVO sellerLvId) {
+		this.sellerLvId = sellerLvId;
+	}
 	@ManyToOne
 	@JoinColumn(name = "sellerLvId", referencedColumnName = "sellerLvId")
 	private SellerLvVO sellerLvId;
@@ -69,10 +85,7 @@ public class SellerVO implements java.io.Serializable {
 	public SellerLvVO getSellerLvId() {
 		return sellerLvId;
 	}
-
-	public void setSellerLvId(SellerLvVO sellerLvId) {
-		this.sellerLvId = sellerLvId;
-	}
+///////////////////////////////////////
 
 	@Column(name = "sellerEmail")
 	private String sellerEmail;
@@ -97,13 +110,12 @@ public class SellerVO implements java.io.Serializable {
 
 	@Column(name = "sellerMobile")
 	private String sellerMobile;
-	
+
 	@Column(name = "sellerCounty ")
-	private String sellerCounty ;
-	
+	private String sellerCounty;
+
 	@Column(name = "sellerDistrict")
 	private String sellerDistrict;
-
 
 	@Column(name = "sellerAddress")
 	private String sellerAddress;
@@ -212,8 +224,8 @@ public class SellerVO implements java.io.Serializable {
 	public void setSellerMobile(String sellerMobile) {
 		this.sellerMobile = sellerMobile;
 	}
-	
-	@NotEmpty(message =" 請選擇縣市")
+
+	@NotEmpty(message = " 請選擇縣市")
 	@Pattern(regexp = "^[\\u4e00-\\u9fa5]+[市縣]{1}$", message = "縣市格式錯誤")
 	public String getSellerCounty() {
 		return sellerCounty;
@@ -223,7 +235,7 @@ public class SellerVO implements java.io.Serializable {
 		this.sellerCounty = sellerCounty;
 	}
 
-	@NotEmpty(message =" 請選擇鄉鎮市區")
+	@NotEmpty(message = " 請選擇鄉鎮市區")
 	@Pattern(regexp = "^[\\u4e00-\\u9fa5]+[鄉鎮市區]{1}$", message = "鄉鎮市區-格式錯誤")
 	public String getSellerDistrict() {
 		return sellerDistrict;
@@ -305,18 +317,16 @@ public class SellerVO implements java.io.Serializable {
 	public void setIsConfirm(Boolean isConfirm) {
 		this.isConfirm = isConfirm;
 	}
-	
-
 
 	@Override
 	public String toString() {
-		return "SellerVO [sellerId=" + sellerId + ", sellerLvId=" + sellerLvId + ", sellerEmail=" + sellerEmail
-				+ ", sellerCompany=" + sellerCompany + ", sellerTaxId=" + sellerTaxId + ", sellerCapital="
-				+ sellerCapital + ", sellerContact=" + sellerContact + ", sellerCompanyPhone=" + sellerCompanyPhone
-				+ ", sellerCompanyExtension=" + sellerCompanyExtension + ", sellerMobile=" + sellerMobile
-				+ ", sellerAddress=" + sellerAddress + ", sellerPassword=" + sellerPassword + ", sellerBankAccount="
-				+ sellerBankAccount + ", sellerBankCode=" + sellerBankCode + ", sellerBankAccountNumber="
-				+ sellerBankAccountNumber + ", sellerCreateTime=" + sellerCreateTime + ", isConfirm=" + isConfirm + "]";
+		return "SellerVO [sellerId=" + sellerId + ", sellerEmail=" + sellerEmail + ", sellerCompany=" + sellerCompany
+				+ ", sellerTaxId=" + sellerTaxId + ", sellerCapital=" + sellerCapital + ", sellerContact="
+				+ sellerContact + ", sellerCompanyPhone=" + sellerCompanyPhone + ", sellerCompanyExtension="
+				+ sellerCompanyExtension + ", sellerMobile=" + sellerMobile + ", sellerAddress=" + sellerAddress
+				+ ", sellerPassword=" + sellerPassword + ", sellerBankAccount=" + sellerBankAccount
+				+ ", sellerBankCode=" + sellerBankCode + ", sellerBankAccountNumber=" + sellerBankAccountNumber
+				+ ", sellerCreateTime=" + sellerCreateTime + ", isConfirm=" + isConfirm + "]";
 	}
 
 }

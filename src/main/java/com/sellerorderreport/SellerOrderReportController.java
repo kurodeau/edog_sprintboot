@@ -71,11 +71,7 @@ public class SellerOrderReportController {
 			final Integer finalSellerTargetId = sellerTargetId; // Make sellerTargetId effectively final
 
 			List<ProductOrderVO> productOrderVOs = productOrderService.getAll();
-//			for (ProductOrderVO filteredOrder : productOrderVOs) {
-//				System.out.println(filteredOrder.getOrderTime());
-//			}
-//			
-//			System.out.println("XXXXXXXXx");
+
 
 			List<ProductOrderVO> filteredOrders = productOrderVOs.stream()
 					.filter(order -> order.getSellerId() == finalSellerTargetId)
@@ -93,15 +89,15 @@ public class SellerOrderReportController {
 					.atZone(taipeiZone).toLocalDateTime();
 			// LocalDateTime startTime = filteredOrders.get(0).getOrderTime().toLocalTime();
 
-			List<OrderReport> orderReports = generateOrderReports(startTime, endTime, filteredOrders);
+			List<OrderDiagramDTO> orderReports = generateOrderReports(startTime, endTime, filteredOrders);
 
-			for (OrderReport orderReport : orderReports) {
+			for (OrderDiagramDTO orderReport : orderReports) {
 //				System.out.println(orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME) + "count"+ orderReport.getOrderCount());
 				String isoDateTime = orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
 			}
 
 			List<Map<String, Object>> jsonList = new ArrayList<>();
-			for (OrderReport orderReport : orderReports) {
+			for (OrderDiagramDTO orderReport : orderReports) {
 				String isoDateTime = orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
 				Map<String, Object> jsonMap = new HashMap<>();
 				jsonMap.put("timestamp", isoDateTime);
@@ -159,12 +155,12 @@ public class SellerOrderReportController {
 		return ResponseEntity.ok().build();
 	}
 
-	public List<OrderReport> generateOrderReports(LocalDateTime startTime, LocalDateTime endTime,
+	public List<OrderDiagramDTO> generateOrderReports(LocalDateTime startTime, LocalDateTime endTime,
 			List<ProductOrderVO> filteredOrders) {
 		LocalDate startDate = startTime.toLocalDate();
 		LocalDate endDate = endTime.toLocalDate().plusDays(1);
 
-		List<OrderReport> orderReports = new ArrayList<>();
+		List<OrderDiagramDTO> orderReports = new ArrayList<>();
 
 		for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
 			LocalDateTime midnight = date.atStartOfDay().plusNanos(1);
@@ -174,7 +170,7 @@ public class SellerOrderReportController {
 							&& order.getOrderTime().toLocalDateTime().isBefore(nextMidnight))
 					.count();
 
-			OrderReport orderReport = new OrderReport(midnight, (int) orderCount);
+			OrderDiagramDTO orderReport = new OrderDiagramDTO(midnight, (int) orderCount);
 			orderReports.add(orderReport);
 		}
 

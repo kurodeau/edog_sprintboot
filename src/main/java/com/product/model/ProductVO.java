@@ -45,7 +45,6 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
     private Integer totalReviews;
     private ProductSortVO productSortVO;
     private Boolean isEnabled;   
-    private SellerVO sellerVO;
     private String animalType;	
     
     
@@ -198,15 +197,20 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.isEnabled = isEnabled;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
-	public SellerVO getSellerVO() {
-	    return sellerVO;
-	}
+//////////////商品與賣家的關聯///////////////////////
+//   private SellerVO sellerTargetVO;
+//
+//	@ManyToOne
+//	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
+//	public SellerVO getSellerVO() {
+//	    return sellerTargetVO;
+//	}
+//
+//	public void setSellerVO(SellerVO sellerTargetVO) {
+//	    this.sellerTargetVO = sellerTargetVO;
+//	}
+///////////////////////////////////////
 
-	public void setSellerVO(SellerVO sellerVO) {
-	    this.sellerVO = sellerVO;
-	}
 
 	
 //////////////商品與訂單明細的關聯///////////////////////

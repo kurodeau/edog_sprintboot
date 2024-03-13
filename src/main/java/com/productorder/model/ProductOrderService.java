@@ -42,6 +42,11 @@ public class ProductOrderService {
 	}
 	
 	
+	public List<ProductOrderVO> findAllBySellerIdOrderByTime(Integer sellerId) {
+		return repository.findBySellerIdOrderByTime(sellerId);
+	}
+	
+	
 
 	public List<ProductOrderVO> getAll() {
 		return repository.findAll();

@@ -19,4 +19,6 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrderVO, In
 	@Query(value = "SELECT * FROM productOrder WHERE sellerId = ?1", nativeQuery = true)
 	List<ProductOrderVO> findBySellerId(int sellerId);
 
+	@Query(value = "SELECT * FROM productOrder WHERE sellerId = ?1 ORDER BY orderTime", nativeQuery = true)
+	List<ProductOrderVO> findBySellerIdOrderByTime(int sellerId);
 }
