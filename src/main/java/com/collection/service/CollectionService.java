@@ -69,6 +69,7 @@ public class CollectionService {
 	// 不確定是不是這樣寫, 抓取買家登入資訊的 memberId, 還有操作對象的 productId
 	public Map<String, List<ProductVO>> switchStateByProductId(String memberId, String prouductId) {
 
+		System.out.println("進入switchStateByProductId service");
 		// 取得連線
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
@@ -76,9 +77,9 @@ public class CollectionService {
 		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 		List<ProductVO> productList = new ArrayList();
 		ProductVO product = new ProductVO();
-		String collectionMember = "collection" + memberId;
+		String redisKey = "collection" + memberId;
 		// 測試Key用的參數
-		System.out.println("collectionMember=" + collectionMember);
+		System.out.println("redisKey=" + redisKey);
 
 		// 索取redis連線, 用try 整個包起來
 		try (
@@ -87,7 +88,7 @@ public class CollectionService {
 			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
 
-			List<String> memberCollection = jedis.lrange(collectionMember, 0, -1);
+			List<String> memberCollection = jedis.lrange(redisKey, 0, -1);
 			// 判斷 Jedis 該用戶是否已經有登錄該商品收藏
 			if (memberCollection.contains(prouductId)) {
 				memberCollection.remove(prouductId); // 如果存在prouductId，则移除
@@ -96,11 +97,11 @@ public class CollectionService {
 			}
 
 			// 如果已經存在該用戶的收藏清單, 則清除並加入修改過的清單
-			if (jedis.exists(collectionMember)) {
-				jedis.del(collectionMember); // 刪除已存在的 key
+			if (jedis.exists(redisKey)) {
+				jedis.del(redisKey); // 刪除已存在的 key
 			}
 			for (String s : memberCollection) {
-				jedis.lpush(collectionMember, s);
+				jedis.lpush(redisKey, s);
 			}
 
 

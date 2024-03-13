@@ -173,10 +173,16 @@ public class MultiSecurityConfiguration {
 	@Order(1)   
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+		// TryforTest 
+//		http.authorizeRequests(authorize -> authorize
+//				.antMatchers("/**").permitAll() );
+
+		
 		// TESTING
 		http.authorizeRequests(authorize -> authorize
 				.antMatchers("/**").permitAll()
-				.anyRequest().authenticated());
+				.anyRequest().authenticated())
+			.csrf().disable();
 
 		// FORMAL
 //		 http.authorizeRequests(authorize -> authorize

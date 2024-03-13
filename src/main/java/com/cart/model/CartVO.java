@@ -17,6 +17,7 @@ import com.product.model.ProductVO;
 import com.productorder.model.ProductOrderVO;
 import com.seller.entity.SellerVO;
 
+// 這其實好像應該叫做DTO ,不過無所謂
 public class CartVO {
 	
 	private String sellerCompany;

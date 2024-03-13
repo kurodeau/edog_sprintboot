@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
@@ -180,6 +181,7 @@ public class ProductVO implements Serializable{
 		this.totalReviews = totalReviews;
 	}
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")	
 	public ProductSortVO getProductSortVO() {
@@ -199,6 +201,7 @@ public class ProductVO implements Serializable{
 		this.isEnabled = isEnabled;
 	}
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	public SellerVO getSellerVO() {

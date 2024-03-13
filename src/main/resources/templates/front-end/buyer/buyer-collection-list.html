@@ -56,20 +56,19 @@
 							th:text="${productVO.price}"></div>
 						<div
 							class="col d-flex flex-column align-items-center justify-content-center">
-							<button class="btn-func add-cart"
-						        	th:data-memberId="9" 
-							        th:data-productId="${productVO.productId}"
-								    onclick="addProductToCart(this)">加入購物車</button>
+							<button class="btn-func add-cart" th:data-memberId="9"
+								th:data-productId="${productVO.productId}"
+								onclick="addProductToCart(this)">加入購物車</button>
 							<script>
 								function addProductToCart(button) {
 									var memberId = button
 											.getAttribute('data-memberId');
 									console.log("memberId:" + memberId);
-									
+
 									var productId = button
 											.getAttribute('data-productId');
 									console.log("productId:" + productId);
-									
+
 									var data = {
 										memberId : memberId,
 										productId : productId
@@ -79,7 +78,8 @@
 									for ( const key in data) {
 										formData.append(key, data[key]);
 									}
-									$.ajax({
+									$
+											.ajax({
 												url : '/front/buyer/collection/addToCart',
 												type : 'POST',
 												data : formData,
@@ -98,28 +98,29 @@
 															xhr.responseText);
 												}
 											});
-									}
+								}
 							</script>
-							
-							
-<!-- 					    <a th:href="'/product/' + ${productVO.productId}">他媽的</a> -->
-							<button class="btn-func check-product" 
-							    th:data-memberId="9" 
-							    th:data-productId="${productVO.productId}"
+
+
+							<!-- 					    <a th:href="'/product/' + ${productVO.productId}">他媽的</a> -->
+							<button class="btn-func check-product" th:data-memberId="9"
+								th:data-productId="${productVO.productId}"
 								onclick="checkProduct(this)">查看商品</button>
 							<script>
 								function checkProduct(button) {
 									var memberId = button
 											.getAttribute('data-memberId');
 									console.log("memberId:" + memberId);
-									
+
 									var productId = button
 											.getAttribute('data-productId');
 									console.log("productId:" + productId);
-									
-									var urlStr = "/front/buyer/collection/product/" + button.getAttribute('data-productId');
+
+									var urlStr = "/front/buyer/collection/product/"
+											+ button
+													.getAttribute('data-productId');
 									console.log("urlStr:" + urlStr);
-									
+
 									var data = {
 										memberId : memberId,
 										productId : productId
@@ -129,13 +130,42 @@
 									for ( const key in data) {
 										formData.append(key, data[key]);
 									}
-									$.ajax({
+									console.log("AJAX門前");
+									$
+											.ajax({
 												url : urlStr,
 												type : 'GET',
 												data : formData,
 												contentType : false,
 												processData : false,
 												success : function(responseData) {
+													
+													const pathname = location.pathname;
+													const b = pathname.split('/')
+													b.pop();
+													
+													const productId = 123;
+													const targetUrl = b.join('/') + `/product/${productId}`
+													
+													let scheme = responseData.scheme;
+													let port = responseData.port;
+													let domainName = responseData.domainName;
+
+													// 組合 URL
+													let redirectUrl = scheme
+															+ "://"
+															+ domainName;
+													if (port) {
+														redirectUrl += ":"
+																+ port
+																+ "/front-end/buyer/buyer-commidity"
+																+ "?productVO=productVO&&sellerVO=sellerVO";
+													}
+													// 這裡可以添加具體的路徑，如果有的話
+													// redirectUrl += "/path";
+
+													// 跳轉至組合後的 URL
+													window.location.href = targetUrl;
 												},
 												error : function(xhr, status,
 														error) {
@@ -148,7 +178,7 @@
 															xhr.responseText);
 												}
 											});
-									}
+								}
 							</script>
 
 
@@ -175,7 +205,8 @@
 									for ( const key in data) {
 										formData.append(key, data[key]);
 									}
-									$.ajax({
+									$
+											.ajax({
 												url : '/front/buyer/collection/switchState',
 												type : 'POST',
 												data : formData,
@@ -194,6 +225,7 @@
 															xhr.responseText);
 												}
 											});
+									console.log("已發出請求");
 									var itemRow = button
 											.closest('.item-row-custom');
 									if (itemRow) {
@@ -256,68 +288,68 @@
 	<!-- Local JS File -->
 
 	<script>
-		// 		document
-		// 				.addEventListener(
-		// 						"DOMContentLoaded",
-		// 						function() {
-		// 							function handleItemDelete(event) {
-		// 								event.stopPropagation();
+// 		document
+// 				.addEventListener(
+// 						"DOMContentLoaded",
+// 						function() {
+// 							function handleItemDelete(event) {
+// 								event.stopPropagation();
 
-		// 								const rowItem = this
-		// 										.closest(".item-row-custom");
+// 								const rowItem = this
+// 										.closest(".item-row-custom");
 
-		// 								if (!rowItem)
-		// 									return;
+// 								if (!rowItem)
+// 									return;
 
-		// 								const secCart = rowItem.parentElement;
+// 								const secCart = rowItem.parentElement;
 
-		// 								rowItem.remove();
+// 								rowItem.remove();
 
-		// 								if (secCart
-		// 										&& secCart
-		// 												.querySelectorAll(".item-row-custom").length === 0) {
-		// 									secCart.remove();
-		// 								}
+// 								if (secCart
+// 										&& secCart
+// 												.querySelectorAll(".item-row-custom").length === 0) {
+// 									secCart.remove();
+// 								}
 
-		// 								updateCheckoutAmount();
-		// 							}
+// 								updateCheckoutAmount();
+// 							}
 
-		// 							const itemDeleteEls = document
-		// 									.querySelectorAll(".cart-item-delete");
+// 							const itemDeleteEls = document
+// 									.querySelectorAll(".cart-item-delete");
 
-		// 							itemDeleteEls.forEach(function(itemDeleteEl) {
-		// 								itemDeleteEl.addEventListener("click",
-		// 										handleItemDelete);
-		// 							});
+// 							itemDeleteEls.forEach(function(itemDeleteEl) {
+// 								itemDeleteEl.addEventListener("click",
+// 										handleItemDelete);
+// 							});
 
-		// 							function updateCheckoutAmount() {
-		// 								let totalAmount = 0;
+// 							function updateCheckoutAmount() {
+// 								let totalAmount = 0;
 
-		// 								// Iterate over all checked items
-		// 								document
-		// 										.querySelectorAll(
-		// 												".cart-item-click:checked")
-		// 										.forEach(
-		// 												function(item) {
-		// 													const rowItem = item
-		// 															.closest(".item-row-custom");
-		// 													console.log(rowItem);
+// 								// Iterate over all checked items
+// 								document
+// 										.querySelectorAll(
+// 												".cart-item-click:checked")
+// 										.forEach(
+// 												function(item) {
+// 													const rowItem = item
+// 															.closest(".item-row-custom");
+// 													console.log(rowItem);
 
-		// 													if (rowItem) {
-		// 														const priceElement = rowItem
-		// 																.querySelector(".cart-price");
-		// 														const price = parseFloat(priceElement.textContent);
-		// 														totalAmount += price;
-		// 													}
-		// 												});
+// 													if (rowItem) {
+// 														const priceElement = rowItem
+// 																.querySelector(".cart-price");
+// 														const price = parseFloat(priceElement.textContent);
+// 														totalAmount += price;
+// 													}
+// 												});
 
-		// 								// Update the displayed total amount
-		// 								const totalAmountElement = document
-		// 										.querySelector(".cart-payment .payment");
-		// 								totalAmountElement.textContent = totalAmount
-		// 										.toFixed(2); // Assuming you want to display with 2 decimal places
-		// 							}
-		// 						});
+// 								// Update the displayed total amount
+// 								const totalAmountElement = document
+// 										.querySelector(".cart-payment .payment");
+// 								totalAmountElement.textContent = totalAmount
+// 										.toFixed(2); // Assuming you want to display with 2 decimal places
+// 							}
+// 						});
 	</script>
 </body>
 </html>
