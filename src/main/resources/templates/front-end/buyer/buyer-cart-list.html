@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
+	<th:block th:insert="~{/fragment-head}"></th:block>
 </head>
+
 <body>
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
@@ -19,8 +21,8 @@
 			<div class="container mt-3 container-list-custom">
 				<div class="row sec-row-custom">
 					<div class="col-1">
-						<input class="form-check-input cart-overall-click" type="checkbox"
-							value="" aria-label="Checkbox for following text input" />
+						<input class="form-check-input cart-overall-click" type="checkbox" value=""
+							aria-label="Checkbox for following text input" />
 					</div>
 					<div class="col-3">商品圖片</div>
 					<div class="col-2">商品名稱</div>
@@ -35,47 +37,40 @@
 				</div>
 
 				<!-- 先進行大迴圈, 從redis 取出資料 -->
-				<section class="cart-seller mt-3"
-					th:each="sellerCompany : ${cartClassfi}">
+				<section class="cart-seller mt-3" th:each="sellerCompany : ${cartClassfi}">
 					<div class="row header-row-custom">
 						<div class="col-auto px-0">
-							<input class="form-check-input cart-header-click" type="checkbox"
-								value="" aria-label="Checkbox for following text input" />
+							<input class="form-check-input cart-header-click" type="checkbox" value=""
+								aria-label="Checkbox for following text input" />
 						</div>
 						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
-								th:text="${sellerCompany.key}"></b>
+							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b class="cart-sellerId"
+									th:text="${sellerCompany.key}"></b>
 							</span>
 						</div>
 					</div>
 
 					<!-- 後套入小迴圈的資料 -->
-					<div class="row item-row-custom"
-						th:each="cartVO : ${cartClassfi[ sellerCompany.key ]}">
+					<div class="row item-row-custom" th:each="cartVO : ${cartClassfi[ sellerCompany.key ]}">
 						<div class="col-1 px-0">
-							<input class="form-check-input cart-item-click" type="checkbox"
-								value="" aria-label="Checkbox for following text input" />
+							<input class="form-check-input cart-item-click" type="checkbox" value=""
+								aria-label="Checkbox for following text input" />
 						</div>
 						<div class="col-3">
-							<img
-								th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
-								width="100px" alt="" srcset="" />
+							<img th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
+								width="100px" />
 						</div>
 						<div class="col-2" th:text="${cartVO.productVO.productName}">商品名稱</div>
-						<div class="col-2 d-flex justify-content-end cart-price"
-							th:text="${cartVO.productVO.price}">商品金額</div>
-						<div class="col-2 d-flex justify-content-end cart-qty"
-							th:text="${cartVO.productNum}">商品數量</div>
-						<!-- 更改數量直接退回商品頁面改好像比較好? -->
-						<!-- 						<div class="col-2 d-flex justify-content-end"> -->
-						<!-- 							<input type="number" class="cart-qty-input" -->
-						<!-- 								value="${cartVO.productNum}" min="1" max="9"> -->
-						<!-- 						</div> -->
-						<div
-							class="col d-flex flex-column align-items-center justify-content-center">
+						<div class="col-2 d-flex justify-content-end cart-price" th:text="${cartVO.productVO.price}">
+							商品金額</div>
+						<div class="col-2 d-flex justify-content-end cart-qty" th:text="${cartVO.productNum}">商品數量</div>
+						<div class="justify-content-end cart-productId"
+							th:text="${cartVO.productVO.productId}" style="display:none">productId</div>
+						<div class="col d-flex flex-column align-items-center justify-content-center">
 							<button class="product btn-func">更改數量</button>
 							<button class="btn-func cart-item-delete" th:data-memberId="9"
 								th:data-productId="${cartVO.productVO.productId}"
+								th:productId="${cartVO.productVO.productId}"
 								onclick="removeOneFromCart(this)">移出購物車</button>
 							<script>
 								function removeOneFromCart(button) {
@@ -83,46 +78,46 @@
 
 									//請求參數
 									var memberId = button
-											.getAttribute('data-memberId');
+										.getAttribute('data-memberId');
 									console.log("memberId:" + memberId);
 
 									var productId = button
-											.getAttribute('data-productId');
+										.getAttribute('data-productId');
 									console.log("productId:" + productId);
 									var data = {
-										memberId : memberId,
-										productId : productId
+										memberId: memberId,
+										productId: productId
 									}
 									const formData = new FormData();
-									for ( const key in data) {
+									for (const key in data) {
 										formData.append(key, data[key]);
 									}
 
 									// 使用 jQuery AJAX 送出 POST 請求
 									$
-											.ajax({
-												url : '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
-												type : 'POST',
-												contentType : 'application/json', // 设置请求头
-												data : JSON.stringify(data), // 将数据转换为 JSON 格式
-												success : function(responseData) {
-													console
-															.log(JSON
-																	.parse(responseData));
-													console.log(responseData);
+										.ajax({
+											url: '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
+											type: 'POST',
+											contentType: 'application/json', // 设置请求头
+											data: JSON.stringify(data), // 将数据转换为 JSON 格式
+											success: function (responseData) {
+												console
+													.log(JSON
+														.parse(responseData));
+												console.log(responseData);
 
-													console.log('POST 请求成功');
-												},
-												error : function(xhr, status,
-														error) {
-													// 请求失败处理
-													console.error('POST 请求失败:',
-															error);
-													console.log('狀態:', status);
-													console.log('回應內容:',
-															xhr.responseText);
-												}
-											});
+												console.log('POST 请求成功');
+											},
+											error: function (xhr, status,
+												error) {
+												// 请求失败处理
+												console.error('POST 请求失败:',
+													error);
+												console.log('狀態:', status);
+												console.log('回應內容:',
+													xhr.responseText);
+											}
+										});
 								}
 							</script>
 						</div>
@@ -138,41 +133,123 @@
 						<span class="payment">600</span>元
 					</div>
 					<div class="col-auto">
-						<div class="btn btn-primary">去買單</div>
+						<button class="btn btn-primary" id="checkout-btn">去買單</button>
 					</div>
 					<script>
-					    $(document).ready(function() {
-					        $('#checkout-btn').click(function() {
-					            var selectedProducts = [];
-					            $('.cart-item-click:checked').each(function() {
-					                selectedProducts.push($(this).closest('.item-row-custom').find('.cart-item-delete').data('productId'));
-					            });
-					
-					            // 將選取的商品編號封裝成資料
-					            var requestData = {
-					                selectedProducts: selectedProducts
-					            };
-					
-					            // 使用 AJAX 送出 POST 請求
-					            $.ajax({
-					                url: '/front/buyer/checkout',
-					                type: 'POST',
-					                contentType: 'application/json',
-					                data: JSON.stringify(requestData),
-					                success: function(response) {
-					                    // 處理後端返回的成功響應
-					                    console.log('結帳成功:', response);
-					                    // 在這裡你可以處理後續的操作，例如跳轉到結帳頁面或顯示成功訊息
-					                },
-					                error: function(xhr, status, error) {
-					                    // 處理錯誤情況
-					                    console.error('結帳失敗:', error);
-					                    // 在這裡你可以顯示錯誤訊息給使用者或進行其他處理
-					                }
-					            });
-					        });
-					    });
-</script>
+						$(document).ready(function () {
+							$('#checkout-btn').click(function () {
+								console.log("按鈕有綁到JS Event");
+
+								let selectedProductsMap = new Map();
+
+								// 將選取的商品編號封裝成資料
+								selectedProductsMap = collectSelectedProducts();
+								console.log(selectedProductsMap);
+								const obj = Object.fromEntries(selectedProductsMap);
+
+								// 将普通对象转换为JSON字符串
+								const selectedProductsJsonStr = JSON.stringify(obj);
+
+								// console.log(jsonString);
+
+								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
+								fetch((url), {
+									method: "POST",
+									header: {
+										'Content-Type': 'application/json'
+										// 如果還有其他的 headers，請在這裡添加
+									},
+									body: selectedProductsJsonStr
+								}).then(response => {
+
+									return response.text();
+								}).then((dataBeforeParsed) => {
+									console.log(dataBeforeParsed);
+									console.log();
+									const dataAfterParsed = JSON.parse(dataBeforeParsed);
+									console.log(dataAfterParsed); // 此处是正确的写法
+									if (parseInt(dataAfterParsed.status) !== 200) {
+										alert(dataAfterParsed.msg);
+									} else {
+										console.log('成功:', dataAfterParsed.msg);
+									}
+								}).catch(error => {
+									// 在這裡處理錯誤情況
+
+								});
+
+
+								// $('.cart-item-click:checked').each(function () {
+								// 	var $itemRow = $(this).closest('.item-row-custom'); // 獲取當前商品行
+								// 	var productId = $itemRow.find('.cart-productId').text(); // 獲取商品ID
+								// 	console.log("productId=" + productId);
+								// 	var productNum = $itemRow.find('.cart-qty').text(); // 獲取商品數量
+								// 	console.log("productNum=" + productNum);
+								// 	var itemData = {}; // 構造商品ID和數量對象
+								// 	itemData[productId] = productNum; // 添加到對象中
+								// 	requestData.push(itemData); // 添加到數組中
+								// });
+
+								// 用振宇哥的寫法送出POST (2/2)
+								// 								$.post('http://localhost:8081/front/buyer/order_checkout', selectedProductsMap)
+								// 								        .done(function(response) {
+								// 											window.alert("結帳購");
+								// // 											var crId = response.crId;
+								// // 											sessionStorage.setItem('crId', crId);
+								// 											window.location.href = '/front/buyer/order_checkout'
+								// 								        }, 'json'
+								// 								        )
+								// 								        .fail(function(error) {
+								// 								            console.error('Error:', error);
+								// 								        });
+
+
+								// 使用 AJAX 送出 POST 請求 (1/2 取其一)
+								// 								$.ajax({
+								// 									url: '/front/buyer/order_checkout',
+								// 									type: 'POST',
+								// 									contentType: 'application/json',
+								// 									data: JSON.stringify(selectedProductsMap),
+								// 									success: function (response) {
+								// 										// 處理後端返回的成功響應
+								// 										console.log('結帳成功:', response);
+								// 										// 在這裡你可以處理後續的操作，例如跳轉到結帳頁面或顯示成功訊息
+								// 									},
+								// 									error: function (xhr, status, error) {
+								// 										// 處理錯誤情況
+								// 										console.error('結帳失敗:', error);
+								// 										// 在這裡你可以顯示錯誤訊息給使用者或進行其他處理
+								// 									}
+								// 								});
+
+
+							});
+						});
+
+						function collectSelectedProducts() {
+
+							let selectedProductsMap = new Map();
+
+							// 遍歷每個選中的項目
+							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
+								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
+								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
+								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
+
+								if (selectedProductsMap.has(sellerName)) {
+									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+								} else {
+									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+								}
+							});
+							selectedProductsMap.forEach((value, key) => {
+								console.log(key);
+							});
+
+							return selectedProductsMap;
+
+						}
+					</script>
 				</div>
 			</section>
 
@@ -191,157 +268,159 @@
 
 	<script>
 		document
-				.addEventListener(
-						"DOMContentLoaded",
-						function() {
-							init();
+			.addEventListener(
+				"DOMContentLoaded",
+				function () {
+					init();
 
-							function init() {
-								updateCheckoutAmount();
-							}
+					function init() {
+						updateCheckoutAmount();
+					}
 
-							function handlesectionClick(event) {
-								const currentClicked = this.checked;
-								console.log(currentClicked);
+					function handlesectionClick(event) {
+						const currentClicked = this.checked;
+						console.log(currentClicked);
 
-								const overallSection = this
-										.closest(".container-list-custom");
-								const headerClicks = overallSection
-										.querySelectorAll(".cart-header-click");
+						const overallSection = this
+							.closest(".container-list-custom");
+						const headerClicks = overallSection
+							.querySelectorAll(".cart-header-click");
 
-								headerClicks
-										.forEach(
-												function(headerClick) {
-													if (currentClicked !== headerClick.checked) {
-														headerClick.click();
-													}
-												}, this);
-							}
-
-							function handleItemClick(event) {
-								event.stopPropagation();
-
-								const secCart = this.closest(".cart-seller");
-								const isAllItemClicked = secCart
-										.querySelectorAll(".item-row-custom input:checked").length === secCart
-										.querySelectorAll(".item-row-custom").length;
-
-								secCart.querySelector(".cart-header-click").checked = isAllItemClicked;
-								updateCheckoutAmount();
-							}
-
-							function handleHeaderClick(event) {
-								event.stopPropagation();
-
-								const secCart = this.closest(".cart-seller");
-								const subClicks = secCart
-										.querySelectorAll(".item-row-custom input");
-
-								subClicks.forEach(function(subClick) {
-									subClick.checked = this.checked;
+						headerClicks
+							.forEach(
+								function (headerClick) {
+									if (currentClicked !== headerClick.checked) {
+										headerClick.click();
+									}
 								}, this);
+					}
 
-								// Process overall click
-								const overallSection = this
-										.closest(".container-list-custom");
-								const isAllHeaderClicked = overallSection
-										.querySelectorAll(".header-row-custom input:checked").length === overallSection
-										.querySelectorAll(".header-row-custom").length;
+					function handleItemClick(event) {
+						event.stopPropagation();
 
-								overallSection
-										.querySelector(".cart-overall-click").checked = isAllHeaderClicked;
-								updateCheckoutAmount();
-							}
+						const secCart = this.closest(".cart-seller");
+						const isAllItemClicked = secCart
+							.querySelectorAll(".item-row-custom input:checked").length === secCart
+								.querySelectorAll(".item-row-custom").length;
 
-							const itemClickEls = document
-									.querySelectorAll(".cart-item-click");
-							const headerClickEls = document
-									.querySelectorAll(".cart-header-click");
-							const sectionClickEl = document
-									.querySelector(".cart-overall-click");
+						secCart.querySelector(".cart-header-click").checked = isAllItemClicked;
+						updateCheckoutAmount();
+					}
 
-							itemClickEls.forEach(function(itemClickEl) {
-								itemClickEl.addEventListener("click",
-										handleItemClick);
-							});
+					function handleHeaderClick(event) {
+						event.stopPropagation();
 
-							headerClickEls.forEach(function(headerClickEl) {
-								headerClickEl.addEventListener("click",
-										handleHeaderClick);
-							});
+						const secCart = this.closest(".cart-seller");
+						const subClicks = secCart
+							.querySelectorAll(".item-row-custom input");
 
-							sectionClickEl.addEventListener("click",
-									handlesectionClick);
+						subClicks.forEach(function (subClick) {
+							subClick.checked = this.checked;
+						}, this);
 
-							function handleItemDelete(event) {
-								event.stopPropagation();
+						// Process overall click
+						const overallSection = this
+							.closest(".container-list-custom");
+						const isAllHeaderClicked = overallSection
+							.querySelectorAll(".header-row-custom input:checked").length === overallSection
+								.querySelectorAll(".header-row-custom").length;
 
-								const rowItem = this
+						overallSection
+							.querySelector(".cart-overall-click").checked = isAllHeaderClicked;
+						updateCheckoutAmount();
+					}
+
+					const itemClickEls = document
+						.querySelectorAll(".cart-item-click");
+					const headerClickEls = document
+						.querySelectorAll(".cart-header-click");
+					const sectionClickEl = document
+						.querySelector(".cart-overall-click");
+
+					itemClickEls.forEach(function (itemClickEl) {
+						itemClickEl.addEventListener("click",
+							handleItemClick);
+					});
+
+					headerClickEls.forEach(function (headerClickEl) {
+						headerClickEl.addEventListener("click",
+							handleHeaderClick);
+					});
+
+					sectionClickEl.addEventListener("click",
+						handlesectionClick);
+
+					function handleItemDelete(event) {
+						event.stopPropagation();
+
+						const rowItem = this
+							.closest(".item-row-custom");
+
+						if (!rowItem)
+							return;
+
+						const secCart = rowItem.parentElement;
+
+						rowItem.remove();
+
+						if (secCart
+							&& secCart
+								.querySelectorAll(".item-row-custom").length === 0) {
+							secCart.remove();
+						}
+
+						updateCheckoutAmount();
+					}
+
+					const itemDeleteEls = document
+						.querySelectorAll(".cart-item-delete");
+
+					itemDeleteEls.forEach(function (itemDeleteEl) {
+						itemDeleteEl.addEventListener("click",
+							handleItemDelete);
+					});
+
+					function updateCheckoutAmount() {
+						let totalAmount = 0;
+
+						// Iterate over all checked items
+						document
+							.querySelectorAll(
+								".cart-item-click:checked")
+							.forEach(
+								function (item) {
+									const rowItem = item
 										.closest(".item-row-custom");
 
-								if (!rowItem)
-									return;
+									console.log(rowItem);
 
-								const secCart = rowItem.parentElement;
+									if (rowItem) {
 
-								rowItem.remove();
+										const priceElement = rowItem
+											.querySelector(".cart-price");
+										const price = parseFloat(priceElement.textContent);
+										console.log("price"
+											+ price);
 
-								if (secCart
-										&& secCart
-												.querySelectorAll(".item-row-custom").length === 0) {
-									secCart.remove();
-								}
+										const qtyElement = rowItem
+											.querySelector(".cart-qty");
+										const qty = parseFloat(qtyElement.textContent);
+										console
+											.log("qty"
+												+ qty);
 
-								updateCheckoutAmount();
-							}
+										totalAmount += (price * qty);
+									}
+								});
 
-							const itemDeleteEls = document
-									.querySelectorAll(".cart-item-delete");
-
-							itemDeleteEls.forEach(function(itemDeleteEl) {
-								itemDeleteEl.addEventListener("click",
-										handleItemDelete);
-							});
-
-							function updateCheckoutAmount() {
-								let totalAmount = 0;
-
-								// Iterate over all checked items
-								document
-										.querySelectorAll(
-												".cart-item-click:checked")
-										.forEach(
-												function(item) {
-													const rowItem = item
-															.closest(".item-row-custom");
-													console.log(rowItem);
-
-													if (rowItem) {
-
-														const priceElement = rowItem
-																.querySelector(".cart-price");
-														const price = parseFloat(priceElement.textContent);
-														console.log("price"
-																+ price);
-
-														const qtyElement = rowItem
-																.querySelector(".cart-qty");
-														const qty = parseFloat(qtyElement.textContent);
-														console
-																.log("qty"
-																		+ qty);
-
-														totalAmount += (price * qty);
-													}
-												});
-
-								// Update the displayed total amount
-								const totalAmountElement = document
-										.querySelector(".cart-payment .payment");
-								totalAmountElement.textContent = totalAmount
-										.toFixed(2); // Assuming you want to display with 2 decimal places
-							}
-						});
+						// Update the displayed total amount
+						const totalAmountElement = document
+							.querySelector(".cart-payment .payment");
+						totalAmountElement.textContent = totalAmount
+							.toFixed(2); // Assuming you want to display with 2 decimal places
+					}
+				});
 	</script>
 </body>
+
 </html>

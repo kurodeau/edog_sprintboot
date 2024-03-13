@@ -140,8 +140,8 @@ public class CartService {
             //===== 把Keys Map 中的值 實體化為要回傳的CartVO
 		    for (String productId : allProductId) 
 		    {
-	            System.out.println("測試訊息,productId: " + productId );
-	            System.out.println("測試訊息,productId 數量value: " + jedis.hget(redisKey, productId) );
+	            System.out.println("service測試訊息,productId: " + productId );
+	            System.out.println("service測試訊息,productId 數量value: " + jedis.hget(redisKey, productId) );
 	            CartVO cartVO = new CartVO();    
 	            ProductVO productVO = productSvc.getOneProduct( Integer.valueOf( productId ) );
 	            cartVO.setProductVO(productVO);
@@ -159,7 +159,7 @@ public class CartService {
 	        }
 			
 		} catch (Exception e) {
-			System.out.println("從redis讀出資料有問題");
+			System.out.println("service從redis讀出資料有問題");
 			e.printStackTrace();
 		}
 //		System.out.println("回傳 cartClassfi"); // 測試資料
