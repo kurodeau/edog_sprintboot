@@ -63,6 +63,7 @@ public class CollectionnoController extends HttpServlet {
 		return "front-end/buyer/buyer-collection-list";
 	}
 
+	// 備份用的
 //	@GetMapping("/product/{id}")
 //	public String productCommidity(@PathVariable("id") String id, ModelMap model) throws IOException {
 //		Integer productId = null;

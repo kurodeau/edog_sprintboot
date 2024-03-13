@@ -99,25 +99,30 @@
 									}
 
 									// 使用 jQuery AJAX 送出 POST 請求
-									$.ajax({
-										url : '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
-										type : 'POST',
-										contentType : 'application/json', // 设置请求头
-										data : JSON.stringify(data), // 将数据转换为 JSON 格式
-										success : function(responseData) {
-											console.log(JSON.parse(responseData));
-											console.log(responseData);
+									$
+											.ajax({
+												url : '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
+												type : 'POST',
+												contentType : 'application/json', // 设置请求头
+												data : JSON.stringify(data), // 将数据转换为 JSON 格式
+												success : function(responseData) {
+													console
+															.log(JSON
+																	.parse(responseData));
+													console.log(responseData);
 
-											console.log('POST 请求成功');
-										},
-										error : function(xhr, status, error) {
-											// 请求失败处理
-											console.error('POST 请求失败:', error);
-											console.log('狀態:', status);
-											console.log('回應內容:',
-													xhr.responseText);
-										}
-									});
+													console.log('POST 请求成功');
+												},
+												error : function(xhr, status,
+														error) {
+													// 请求失败处理
+													console.error('POST 请求失败:',
+															error);
+													console.log('狀態:', status);
+													console.log('回應內容:',
+															xhr.responseText);
+												}
+											});
 								}
 							</script>
 						</div>
@@ -135,6 +140,39 @@
 					<div class="col-auto">
 						<div class="btn btn-primary">去買單</div>
 					</div>
+					<script>
+					    $(document).ready(function() {
+					        $('#checkout-btn').click(function() {
+					            var selectedProducts = [];
+					            $('.cart-item-click:checked').each(function() {
+					                selectedProducts.push($(this).closest('.item-row-custom').find('.cart-item-delete').data('productId'));
+					            });
+					
+					            // 將選取的商品編號封裝成資料
+					            var requestData = {
+					                selectedProducts: selectedProducts
+					            };
+					
+					            // 使用 AJAX 送出 POST 請求
+					            $.ajax({
+					                url: '/front/buyer/checkout',
+					                type: 'POST',
+					                contentType: 'application/json',
+					                data: JSON.stringify(requestData),
+					                success: function(response) {
+					                    // 處理後端返回的成功響應
+					                    console.log('結帳成功:', response);
+					                    // 在這裡你可以處理後續的操作，例如跳轉到結帳頁面或顯示成功訊息
+					                },
+					                error: function(xhr, status, error) {
+					                    // 處理錯誤情況
+					                    console.error('結帳失敗:', error);
+					                    // 在這裡你可以顯示錯誤訊息給使用者或進行其他處理
+					                }
+					            });
+					        });
+					    });
+</script>
 				</div>
 			</section>
 
