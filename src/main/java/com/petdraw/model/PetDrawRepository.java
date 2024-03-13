@@ -15,15 +15,15 @@ public interface PetDrawRepository extends JpaRepository<PetDrawVO, Integer> {
 	@Query(value = "delete from petDrawInformation where petDrawId =?1", nativeQuery = true)
 	void deleteByPetDrawId(int PetDrawId);
 
-	// 根據 memberMain 和 petDrawTime 查詢
-	List<PetDrawVO> findByMemberMainAndPetDrawTime(BuyerVO memberMain, LocalDate petDrawTime);
-
-	// 根據 memberPair 和 memberPairResTime 查詢
-	List<PetDrawVO> findByMemberPairAndMemberPairResTime(BuyerVO memberPair, LocalDate memberPairResTime);
-	
-	@Query(value = "SELECT COUNT(*) FROM PetDrawVO", nativeQuery = true)
-	Integer findMemberCount();
-	
-	@Query(value = "SELECT * FROM PetDrawVO WHERE memberId =: memberId", nativeQuery = true)
-	List<PetDrawVO> findByMemberId(Integer memberId);
+////	 根據 memberMain 和 petDrawTime 查詢
+//	List<PetDrawVO> findByMemberIdAndPetDrawTime(BuyerVO memberId, LocalDate petDrawTime);
+//
+//	// 根據 memberPair 和 memberPairResTime 查詢
+//	List<PetDrawVO> findByMemberPairAndMemberPairIdResTime(BuyerVO memberPairId, LocalDate memberPairResTime);
+//	
+//	@Query(value = "SELECT COUNT(*) FROM PetDrawVO", nativeQuery = true)
+//	Integer findMemberCount();
+//	
+//	@Query(value = "SELECT * FROM PetDrawVO WHERE memberId =: memberId", nativeQuery = true)
+//	List<PetDrawVO> findByMemberId(Integer memberId);
 }

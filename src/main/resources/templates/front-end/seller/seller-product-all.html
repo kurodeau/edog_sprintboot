@@ -83,21 +83,21 @@
 							role="tabpanel" aria-labelledby="overall-tab">
 							<div class="container mt-3 container-list-custom">
 
-								<div class="row product-row-custom" 
+								<div class="row product-row-custom"
 									style="padding-left: 0; padding-right: 0;">
-									<div class="col-1-5">商品編號</div>
+									<div class="col-1">編號</div>
 									<div class="col-1-5">商品圖片</div>
 									<div class="col-1-5">商品名稱</div>
 									<div class="col-1">價格</div>
 									<div class="col-1-5">庫存/已出售</div>
 									<div class="col-1-5">商品分類</div>
-									<div class="col-1">狀態</div>
+									<div class="col-1-2">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productListData}">
-									<div class="col-1-5">
+									<div class="col-1">
 										<a th:href="'/product/' + ${productVO.productId}"> <span
 											th:text="${productVO.productId}"></span>
 										</a>
@@ -115,7 +115,7 @@
 									</div>
 									<div class="col-1-5"
 										th:text="${productVO.productSortVO.productSortName}"></div>
-									<div class="col-1" th:text="${productVO.productStatus}"></div>
+									<div class="col-1-2" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 
@@ -152,19 +152,19 @@
 							<div class="container mt-3 container-list-custom">
 								<div class="row product-row-custom"
 									style="padding-left: 0; padding-right: 0;">
-									<div class="col-1-5">商品編號</div>
+									<div class="col-1">編號</div>
 									<div class="col-1-5">商品圖片</div>
 									<div class="col-1-5">商品名稱</div>
 									<div class="col-1">價格</div>
 									<div class="col-1-5">庫存/已出售</div>
 									<div class="col-1-5">商品分類</div>
-									<div class="col-1">狀態</div>
+									<div class="col-1-2">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productSellOut}">
-									<div class="col-1-5">
+									<div class="col-1">
 										<a th:href="'/product/' + ${productVO.productId}"> <span
 											th:text="${productVO.productId}"></span>
 										</a>
@@ -182,7 +182,7 @@
 									</div>
 									<div class="col-1-5"
 										th:text="${productVO.productSortVO.productSortName}"></div>
-									<div class="col-1" th:text="${productVO.productStatus}"></div>
+									<div class="col-1-2" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<!-- 審核中的表單 -->
@@ -216,19 +216,19 @@
 							<div class="container mt-3 container-list-custom">
 								<div class="row product-row-custom"
 									style="padding-left: 0; padding-right: 0;">
-									<div class="col-1-5">商品編號</div>
+									<div class="col-1">編號</div>
 									<div class="col-1-5">商品圖片</div>
 									<div class="col-1-5">商品名稱</div>
 									<div class="col-1">價格</div>
 									<div class="col-1-5">庫存/已出售</div>
 									<div class="col-1-5">商品分類</div>
-									<div class="col-1">狀態</div>
+									<div class="col-1-2">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
 								<div class="row item-row-custom"
 									th:each="productVO : ${productUnLaunch}">
-									<div class="col-1-5">
+									<div class="col-1">
 										<a th:href="'/product/' + ${productVO.productId}"> <span
 											th:text="${productVO.productId}"></span>
 										</a>
@@ -246,7 +246,7 @@
 									</div>
 									<div class="col-1-5"
 										th:text="${productVO.productSortVO.productSortName}"></div>
-									<div class="col-1" th:text="${productVO.productStatus}"></div>
+									<div class="col-1-2" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<form method="post"
@@ -287,13 +287,13 @@
 							<div class="container mt-3 container-list-custom">
 								<div class="row product-row-custom"
 									style="padding-left: 0; padding-right: 0;">
-									<div class="col-1-5">商品編號</div>
+									<div class="col-1">編號</div>
 									<div class="col-1-5">商品圖片</div>
 									<div class="col-1-5">商品名稱</div>
 									<div class="col-1">價格</div>
 									<div class="col-1-5">庫存/已出售</div>
 									<div class="col-1-5">商品分類</div>
-									<div class="col-1">狀態</div>
+									<div class="col-1-2">狀態</div>
 									<div class="col-1">操作</div>
 								</div>
 
@@ -301,7 +301,7 @@
 									th:each="productVO : ${productLaunch}">
 
 
-									<div class="col-1-5">
+									<div class="col-1">
 										<a th:href="'/product/' + ${productVO.productId}"> <span
 											th:text="${productVO.productId}"></span>
 										</a>
@@ -322,7 +322,7 @@
 									</div>
 									<div class="col-1-5"
 										th:text="${productVO.productSortVO.productSortName}"></div>
-									<div class="col-1" th:text="${productVO.productStatus}"></div>
+									<div class="col-1-2" th:text="${productVO.productStatus}"></div>
 									<div class="col-1">
 										<div class="d-flex flex-column align-items-center">
 											<!-- 審核中的表單 -->

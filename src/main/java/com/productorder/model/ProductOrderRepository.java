@@ -15,10 +15,8 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrderVO, In
 	@Modifying
 	@Query(value = "delete from productOrder where orderId =?1", nativeQuery = true)
 	void deleteByOrderId(int orderId);
-	
-	@Transactional
+
 	@Query(value = "SELECT * FROM productOrder WHERE sellerId = ?1", nativeQuery = true)
 	List<ProductOrderVO> findBySellerId(int sellerId);
-	
-	
+
 }

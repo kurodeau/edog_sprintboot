@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
+import com.seller.service.SellerService;
 
 @Controller
 @RequestMapping("/front/seller/productorder")
@@ -23,7 +24,7 @@ public class ProductOrderController {
 	
 		@Autowired
 		ProductOrderService productOrderSvc;
-
+		
 //		@Autowired
 //		DeptService deptSvc;
 //		SellerService sellerService;

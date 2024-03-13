@@ -11,27 +11,60 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.allenum.ProductOrderStatus;
+import com.buyer.entity.BuyerVO;
 import com.orderdetails.model.OrderDetailsVO;
+import com.seller.entity.SellerVO;
 
 @Entity  //要加上@Entity才能成為JPA的一個Entity類別
 @Table(name = "productOrder") //代表這個class是對應到資料庫的實體table，目前對應的table是EMP2 
 public class ProductOrderVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+
 
 	
-	private Integer sellerId;//FK1
 	
-	private Integer memberId;//FK2
-	private Integer couponId;//FK3
+/////////////////打開賣家關聯///////////////////
+	
+//	private SellerVO sellerTargetVO;//FK:sellerId
+//	
+//	
+//	@ManyToOne
+//	@JoinColumn(name = "sellerId" ,referencedColumnName="sellerId") 
+//	public SellerVO getSellerVO() {
+//		return sellerTargetVO;
+//	}
+//
+//	public void setSellerVO(SellerVO sellerVO) {
+//		this.sellerTargetVO = sellerVO;
+//	}
+////////////////////拿掉賣家關聯///////////////////
+	
+	private Integer sellerId;//FK1
+	public Integer getSellerId() {
+		return sellerId;
+	}
+
+	public void setSellerId(Integer sellerId) {
+		this.sellerId = sellerId;
+	}
+
+/////////////////////////////////////////////////
+	
 	
 	private Integer orderId;//PK
+	
+	
+	private BuyerVO buyerVO;
+	
+	
+	private Integer couponId;//FK3
 	private Integer memberPaysShipping;
 	private Integer sellerPaysShipping;
 	private Integer orderOrigPrice;
@@ -61,25 +94,9 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "sellerId")	
-	public Integer getSellerId() {
-		return sellerId;
-	}
+	
 
-
-	public void setSellerId(Integer sellerId) {
-		this.sellerId = sellerId;
-	}
-
-	@Column(name = "memberId")	
-	public Integer getMemberId() {
-		return memberId;
-	}
-
-
-	public void setMemberId(Integer memberId) {
-		this.memberId = memberId;
-	}
+	
 
 	@Column(name = "couponId")	
 	public Integer getCouponId() {
@@ -92,29 +109,7 @@ public class ProductOrderVO implements java.io.Serializable {
 	}
 
 
-	//	public SellerVO getSellerVO() {
-//		return sellerVO;
-//	}
-//
-//	public void setSellerVO(sellerVO sellerVO) {
-//		this.sellerVO = sellerVO;
-//	}
-//
-//	public BuyerVO getBuyerVO() {
-//		return buyerVO;
-//	}
-//
-//	public void setBuyerVO(BuyerVO buyerVO) {
-//		this.buyerVO = buyerVO;
-//	}
-//
-//	public CouponVO getCouponVO() {
-//		return couponVO;
-//	}
-//
-//	public void setCouponVO(CouponVO couponVO) {
-//		this.couponVO = couponVO;
-//	}
+	
 	@Column(name = "memberPaysShipping")
 	public Integer getMemberPaysShipping() {
 		return memberPaysShipping;
@@ -226,13 +221,11 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.shippingTime = shippingTime;
 	}
 	
+/////訂單明細關聯/////////////////////////////////////////
+	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
 	@OrderBy("orderId asc")
-	//註1:【現在是設定成 cascade="all" lazy="false" inverse="true"之意】
-	//註2:【mappedBy="多方的關聯屬性名"：用在雙向關聯中，把關係的控制權反轉】【deptVO是EmpVO的屬性】
-	//註3:【原預設為@OneToMany(fetch=FetchType.LAZY, mappedBy="deptVO")之意】--> 【是指原為  lazy="true"  inverse="true"之意】
-	//FetchType.EAGER : Defines that data must be eagerly fetched
-	//FetchType.LAZY  : Defines that data can be lazily fetched
 	public Set<OrderDetailsVO> getOrderDetailss() {
 		return this.orderDetailss;
 	}
@@ -241,6 +234,16 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderDetailss = orderDetailss;
 	}
 	
+////////買家關聯/////////////////////////////////
+	@ManyToOne
+	@JoinColumn(name = "memberId")   // 指定用來join table的column
+	public BuyerVO getBuyerVO() {
+		return buyerVO;
+	}
+
+	public void setBuyerVO(BuyerVO buyerVO) {
+		this.buyerVO = buyerVO;
+	}
 	
 	
 }

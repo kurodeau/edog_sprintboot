@@ -8,14 +8,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
 
@@ -28,7 +32,8 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
 
-    private Integer productId;   
+	
+	private Integer productId;   
     private byte[] productCoverImg;
     private String productName;    
     private BigDecimal price;
@@ -184,7 +189,6 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductSortVO(ProductSortVO productSortVO) {
 		this.productSortVO = productSortVO;
 	}
-
     @Column(name = "isEnabled")
 	public Boolean getIsEnabled() {
 		return isEnabled;
@@ -203,6 +207,22 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setSellerVO(SellerVO sellerVO) {
 	    this.sellerVO = sellerVO;
 	}
+
+	
+//////////////商品與訂單明細的關聯///////////////////////
+private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productVO")
+@OrderBy("orderId asc")
+public Set<OrderDetailsVO> getOrderDetailss() {
+return this.orderDetailss;
+}
+
+public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
+this.orderDetailss = orderDetailss;
+}
+
+///////////////////////////////////////
 
 	@Override
 	public String toString() {

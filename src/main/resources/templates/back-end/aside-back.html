@@ -114,7 +114,35 @@
         </li>
       </ul>
     </li>
-    <!-- End廣告管理 -->
+    <!-- End商品管理 -->
+
+ <!-- Start訂單管理 -->
+    <li class="nav-item">
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#productorder-nav"
+        data-bs-toggle="collapse"
+        th:href="@{#}"
+      >
+        <i class="bi bi-bag"></i>
+        <span>訂單管理</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul
+        id="productorder-nav"
+        class="nav-content collapse"
+        data-bs-parent="#sidebar-nav"
+      >
+        <li>
+          <a th:href="@{/back/productorder/productordersearch}">
+            <i class="bi bi-circle"></i><span>所有訂單</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- End訂單管理 -->
+
+
+
 
     <!-- Strat優惠券管理 -->
     <li class="nav-item">

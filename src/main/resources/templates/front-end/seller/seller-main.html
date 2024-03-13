@@ -32,12 +32,12 @@
     </main>
     <!-- End #main -->
     <button
-      id="updateSuccess"
-      th:value="${param.updateSuccess}"
-      name="updateSuccess"
+      id="sellerEditSuccess"
+      th:value="${sellerEditSuccess}"
+      name="sellerEditSuccess"
       type="hidden"
     >
-      UpdateSuccess
+      sellerEditSuccess
     </button>
     <!-- End Main -->
     <!-- 這裡放置你的 Modal 代碼 -->
@@ -79,10 +79,14 @@
     <div th:replace="@{/fragment-js}"></div>
     <script>
       window.onload = function () {
-        let updateSuccess = document.querySelector("#updateSuccess");
-        if (updateSuccess.value === "true") {
+    
+        let sellerEditSuccess = document.querySelector("#sellerEditSuccess");
+
+        if (sellerEditSuccess.value === "true") {
+        	
           // Show the modal
           $("#updateSuccessModal").modal("show");
+          updateSuccess.value = false;
         }
       };
     </script>

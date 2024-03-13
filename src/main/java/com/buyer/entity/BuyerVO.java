@@ -1,16 +1,25 @@
 package com.buyer.entity;
 
+
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.productorder.model.ProductOrderVO;
 
 
 /*
@@ -26,6 +35,15 @@ public class BuyerVO implements java.io.Serializable{
 	public BuyerVO() {
 		super();
 	};
+	
+	
+	
+	
+	//訂單關聯//
+private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+	
+
+	
 	
 	private Integer memberId;
 	private String memberEmail; 
@@ -226,6 +244,20 @@ public class BuyerVO implements java.io.Serializable{
 		this.isConfirm = isConfirm;
 	}
 		
+//////////訂單關聯/////////////////////////
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="buyerVO")
+@OrderBy("memberId asc")
+public Set<ProductOrderVO> getProductOrders() {
+return productOrders;
+}
+
+public void setProductOrders(Set<ProductOrderVO> productOrders) {
+this.productOrders = productOrders;
+}
+////////////////////////////////
+
+	
+	
 	@Override
 	public String toString() {
 		return "BuyerVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", thirdFrom=" + thirdFrom
@@ -238,5 +270,7 @@ public class BuyerVO implements java.io.Serializable{
 				+ isConfirm + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
 				+ super.toString() + "]";
 	}
+	
+	
 
 }

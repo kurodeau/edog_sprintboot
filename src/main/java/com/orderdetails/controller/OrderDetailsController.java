@@ -94,37 +94,37 @@ public class OrderDetailsController {
 	/*
 	 * This method will be called on update_emp_input.html form submission, handling POST request It also validates the user input
 	 */
-	@PostMapping("update")
-	public String update(@Valid OrderDetailsVO orderDetailsVO, BindingResult result, ModelMap model,
-			@RequestParam("attachments") MultipartFile[] parts) throws IOException {
-
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-		result = removeFieldError(orderDetailsVO, result, "attachments");
-
-		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
-			// EmpService empSvc = new EmpService();
-			byte[] attachments = orderDetailsSvc.getOneOrderDetails(orderDetailsVO.getOrderDetailsId()).getAttachments();
-			orderDetailsVO.setAttachments(attachments); //拿原本的圖片出來再存進去
-		} else {
-			for (MultipartFile multipartFile : parts) { //讀取新的照片存入VO
-				byte[] attachments = multipartFile.getBytes();
-				orderDetailsVO.setAttachments(attachments);
-			}
-		}
-		if (result.hasErrors()) { //畫面不跳轉
-			return "back-end/orderdetails/update_orderdetails_input";
-		}
-		/*************************** 2.開始修改資料 *****************************************/
-		// EmpService empSvc = new EmpService();
-		orderDetailsSvc.updateOrderDetails(orderDetailsVO);
-
-		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
-		model.addAttribute("success", "- (修改成功)");
-		orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsVO.getOrderDetailsId()));
-		model.addAttribute("orderDetailsVO", orderDetailsVO);
-		return "back-end/orderdetails/listOneOrderDetails"; // 修改成功後轉交listOneEmp.html
-	}
+//	@PostMapping("update")
+//	public String update(@Valid OrderDetailsVO orderDetailsVO, BindingResult result, ModelMap model,
+//			@RequestParam("attachments") MultipartFile[] parts) throws IOException {
+//
+//		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+//		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
+//		result = removeFieldError(orderDetailsVO, result, "attachments");
+//
+//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
+//			// EmpService empSvc = new EmpService();
+//			byte[] attachments = orderDetailsSvc.getOneOrderDetails(orderDetailsVO.getOrderDetailsId()).getAttachments();
+//			orderDetailsVO.setAttachments(attachments); //拿原本的圖片出來再存進去
+//		} else {
+//			for (MultipartFile multipartFile : parts) { //讀取新的照片存入VO
+//				byte[] attachments = multipartFile.getBytes();
+//				orderDetailsVO.setAttachments(attachments);
+//			}
+//		}
+//		if (result.hasErrors()) { //畫面不跳轉
+//			return "back-end/orderdetails/update_orderdetails_input";
+//		}
+//		/*************************** 2.開始修改資料 *****************************************/
+//		// EmpService empSvc = new EmpService();
+//		orderDetailsSvc.updateOrderDetails(orderDetailsVO);
+//
+//		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+//		model.addAttribute("success", "- (修改成功)");
+//		orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsVO.getOrderDetailsId()));
+//		model.addAttribute("orderDetailsVO", orderDetailsVO);
+//		return "back-end/orderdetails/listOneOrderDetails"; // 修改成功後轉交listOneEmp.html
+//	}
 	
 	/*
 	 * This method will be called on listAllEmp.html form submission, handling POST request

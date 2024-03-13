@@ -88,29 +88,17 @@
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
-	<main>
-	
-    <div id="cardContainer">
-        <!-- 這裡將顯示抽到的卡片 -->
-    </div>
-     <div id="cardContainer">
-        <!-- 這裡將顯示抽到的卡片 -->
-    </div>
-    <div style="height: 300px;"></div>
-    <div id="memberProfile" style="display: none;">
-        <!-- 這裡將顯示會員的照片和個人資料 -->
-        <img id="memberPhoto" src="" alt="Member Photo">
-        <div id="memberInfo">
-            <p id="memberName"></p>
-            <p id="memberDetails"></p>
-        </div>
-    </div>
-    <button id="drawButton" onclick="drawCard()" style="text-align: center;">開始配對</button>
-    <button id="resetButton" onclick="resetCardDraw()">清除</button>
-    <div id="countdown" style="display: none;">
-        <!-- 這裡將顯示倒數計時 -->
-    </div>
-</main>
+	<main class="main main-layout-seller">
+    <div class="seller-container">
+			<div class="pagetitle">
+    <h1  style="margin-top: 30px;">寵物抽卡</h1>
+    
+      	<form method="post" th:action="@{/petdraw/insert}" style="margin-bottom: 0px;">
+	    <input type="submit" value="抽卡">
+		</form>
+		</div>
+		</div>
+	</main>
     <!-- End Main -->
     
 	<!-- ======= Footer ======= -->

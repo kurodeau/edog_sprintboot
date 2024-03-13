@@ -37,13 +37,13 @@
 										th:data-thumb="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
 										<img class="img-fluid"
 										th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
-										width="1000px" height="580px" />
+										style="width: 1000px; height: 580px;"/>
 									</li>
 									<li th:each="productImgVO, iterStat : ${productImageList}"
 										th:data-thumb="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
 										<img class="img-fluid"
 										th:src="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
-										width="1000px" height="580px" />
+										style="width: 1000px; height: 580px;" />
 									</li>
 								</ul>
 							</div>

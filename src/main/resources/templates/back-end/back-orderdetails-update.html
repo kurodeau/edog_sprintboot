@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+ 
+ 
+ 
+ 
+  </head>
+
+  <body>
+    <header class="fixed-top">
+    <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
+
+   <aside th:replace="@{back-end/aside-back}"></aside>
+
+  <!-- Main -->
+  
+  <main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+		
+		
+			<h1>編輯買家資料</h1>
+
+			<form id="myForm" method="POST" th:action="@{updateOrderdetailFrombackend}"
+				enctype="multipart/form-data">
+
+				<div class="col-md-12">
+					<label for="orderDetailsId" class="form-label">訂單明細ID</label> <input
+						type="text" class="form-control" id="orderDetailsId"
+						name="orderDetailsId" th:value="${orderDetailsVO.orderDetailsId}" readonly />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="orderId" class="form-label">訂單ID</label> <input
+						type="text" class="form-control" id="orderId"
+						name="orderId" th:value="${orderDetailsVO.productOrderVO.orderId}" readonly />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="productId" class="form-label">商品ID</label> <input
+						type="text" class="form-control" id="productId"
+						name="productId" th:value="${orderDetailsVO.productVO.productId}" readonly />s
+				</div>
+				
+				<div class="col-md-12">
+					<label for="purchaseQuantity" class="form-label">商品購買數量</label> <input
+						type="text" class="form-control" id="purchaseQuantity"
+						name="purchaseQuantity" th:value="${orderDetailsVO.purchaseQuantity}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="isCommented" class="form-label">是否評論</label> <input
+						type="text" class="form-control" id="isCommented"
+						name="isCommented" th:value="${orderDetailsVO.isCommented}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="stars" class="form-label">評分星數</label> <input
+						type="text" class="form-control" id="stars"
+						name="stars" th:value="${orderDetailsVO.stars}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="commentedTime" class="form-label">評論時間</label> <input
+						type="text" class="form-control" id="commentedTime"
+						name="commentedTime" th:value="${orderDetailsVO.commentedTime}"  readonly />
+				</div>
+				
+				
+				
+				
+				
+				
+				<div class="col-md-12">
+					<label for="comments" class="form-label">評論內容</label> <input
+						type="text" class="form-control" id="comments"
+						name="comments" th:value="${orderDetailsVO.comments}" />
+				</div>
+				
+				
+				<div class="col-md-3">
+					<label for="isEnable" class="form-label">啟用狀態</label>
+					<select class="isEnable form-select" id="isEnable"
+						name="isEnable" th:value="${orderDetailsVO.isEnable}">
+						<option value="1">已啟用</option>
+						<option value="0">未啟用</option>
+					</select>
+				</div>
+
+				
+
+				<div
+					class="text-center d-flex flex-row gap-5 justify-content-center">
+					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
+					<button type="submit" class="btn btn-primary">提交修改</button>
+				</div>
+			</form>
+		</div>
+	</main>
+	<!-- End Main -->
+
+	<!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="fragment-js"></div>
+
+	<!-- Local JS File -->
+	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+		type="text/javascript"></script>
+	<script>
+		//============ 取消按鈕的跳轉事件設定 start =============
+		document.getElementById("cancel-btn").addEventListener("click",
+				function() {
+					window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
+				});
+
+		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
+		var loadjsCompletedEvent = new Event("loadjsCompleted");
+
+		window.onload = function() {
+			// 監聽自定義事件，當 loadjs 完成時觸發
+			document.addEventListener("loadjsCompleted", function() {
+				new TwCitySelector({
+					el : ".city-selector-set",
+					elCounty : ".county",
+					elDistrict : ".district",
+					elZipcode : ".zipcode",
+				});
+			});
+
+			// 手動觸發事件，告知 TwCitySelector 可以初始化了
+			document.dispatchEvent(loadjsCompletedEvent);
+		};
+
+		//============ 照片上傳-預覽用 start =============
+		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
+		var filereader_support = typeof FileReader != 'undefined';
+		if (!filereader_support) {
+			alert("No FileReader support");
+		}
+		acceptedTypes = {
+			'image/png' : true,
+			'image/jpeg' : true,
+			'image/gif' : true
+		};
+		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
+		function previewImage() {
+			var upfile1 = document.getElementById("inputPetImg");
+			upfile1.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				for (var i = 0; i < files.length; i++) {
+					previewfile(files[i])
+				}
+				// 				previewfile(files[files.length-1])
+			}, false);
+		}
+		//檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
+		function previewfile(file) {
+			if (filereader_support === true
+					&& acceptedTypes[file.type] === true) {
+				var reader = new FileReader();
+				reader.onload = function(event) {
+
+					var image = new Image();
+					image.src = event.target.result;
+					// 設定圖片的寬度上限
+					var maxWidth = 250;
+
+					image.onload = function() {
+						// 原始圖片的寬高比
+						var aspectRatio = this.height / this.width;
+						// 計算相應的高度
+						var maxHeight = maxWidth * aspectRatio;
+						// 確保高度不超過設定的高度上限
+						if (maxHeight > 250) {
+							maxHeight = 250;
+							// 根據新的高度重新計算寬度
+							maxWidth = maxHeight / aspectRatio;
+						}
+						// 設定圖片的寬度和高度
+						this.width = maxWidth;
+						this.height = maxHeight;
+
+						image.border = 2;
+						if (blob_holder.hasChildNodes()) {
+							console.log("我執行幾次?");
+							blob_holder.removeChild(blob_holder.childNodes[0]);
+						}
+						blob_holder.appendChild(image);
+						
+						// 移除多顯示的圖片
+						clearChildNodesExceptLast();
+					};
+				};
+				reader.readAsDataURL(file);
+				document.getElementById('submit').disabled = false;
+			} else {
+				console.log("你執行幾次?");
+				blob_holder.innerHTML = "<div  style='text-align: left;'>"
+						+ "● filename: "
+						+ file.name
+						+ "<br>"
+						+ "● ContentTyp: "
+						+ file.type
+						+ "<br>"
+						+ "● size: "
+						+ file.size
+						+ "bytes"
+						+ "<br>"
+						+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+				document.getElementById('submit').disabled = true;
+			}
+
+			//清除<div id="blob_holder">子元素多的顯示圖片
+			function clearChildNodesExceptLast() {
+				var blobHolder = document.getElementById("blob_holder");
+				var childNodes = blobHolder.children;
+				// 從第一個子元素開始到倒數第二個子元素移除
+				for (var i = childNodes.length - 2; i >= 0; i--) {
+					blobHolder.removeChild(childNodes[i]);
+				}
+			}
+		}
+	</script>
+ 
+  </body>
+</html>
