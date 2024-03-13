@@ -93,6 +93,12 @@ public class ProductService {
 			String priceTo, String keyword) {
 //		repository.findProductSortVOProductSortNameInAndTotalStarsInAndProductPriceGreaterThanAndProductPriceLessThanOrKeywordBy(productCategory, ratings, priceFrom, priceTo, keyword);
 	}
+	
+	
+	
+	
+	
+	//小吳老師
 
 	public List<ProductVO> compositeQuery(FormData formData) {
 		Specification<ProductVO> sp = new Specification<ProductVO>() {
@@ -107,7 +113,7 @@ public class ProductService {
 				if (typeList != null && typeList.size() > 0) {
 
 					predicateList.add(root.get("animalType").in(typeList));
-					System.out.println(predicateList);
+					
 //					for (String type : typeList) {				
 //						predicateList.add(criteriaBuilder.or(criteriaBuilder.equal(root.get("animalType"), type)));
 

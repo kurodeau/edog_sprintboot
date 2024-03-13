@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
@@ -188,7 +189,6 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductSortVO(ProductSortVO productSortVO) {
 		this.productSortVO = productSortVO;
 	}
-
     @Column(name = "isEnabled")
 	public Boolean getIsEnabled() {
 		return isEnabled;

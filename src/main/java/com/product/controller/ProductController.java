@@ -40,7 +40,7 @@ public class ProductController {
 	ProductService productSvc;
 
 	@Autowired
-	ProductImgService pdtImgSvc;
+	ProductImgService productImgSvc;
 
 	@Autowired
 	ProductSortService pdstSvc;
@@ -104,6 +104,8 @@ public class ProductController {
 		productVO.setProductCreationTime(timestamp);
 		productVO.setProductSoldQuantity(0);
 		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
+		productVO.setRatings(0);
+		productVO.setTotalReviews(0);
 		productVO.setIsEnabled(true);
 
 		productSvc.addProduct(productVO); // 新增一個product 產生PK
@@ -119,7 +121,7 @@ public class ProductController {
 			productImg.setProductImgTime(timestamp);
 			productImg.setIsCover(false);
 			productImg.setIsEnabled(true);
-			pdtImgSvc.addProductImg(productImg); 
+			productImgSvc.addProductImg(productImg); 
 
 		}
 
@@ -135,29 +137,67 @@ public class ProductController {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
 		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
+		
+		List<ProductImgVO>  productImgVOs= productImgSvc.getProductImgs(Integer.valueOf(productId));
+    	
+   	 		
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("productVO", productVO);
+		model.addAttribute("productImageList",productImgVOs);
 		return "front-end/seller/seller-product-update_product";
 	}
 
-	@PostMapping("update")
-	public String update(@Valid ProductVO productVO, BindingResult result, ModelMap model,
-			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
+	public String update(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
+	        @RequestParam("mainImage") MultipartFile parts, @RequestParam("subImages") MultipartFile[] partsSec,
+	        @RequestParam("productSortNo") String productSortNo) throws IOException {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		result = removeFieldError(productVO, result, "upFiles");
+		
+		System.out.println(parts.getSize());
+		
+		result = removeFieldError(productVO, result, "mainImage");
 
-		if (parts[0].isEmpty()) {
-			byte[] upFiles = productSvc.getOneProduct(productVO.getProductId()).getProductCoverImg();
-			productVO.setProductCoverImg(upFiles);
-		} else {
-			for (MultipartFile multipartFile : parts) {
-				byte[] upFiles = multipartFile.getBytes();
-				productVO.setProductCoverImg(upFiles);
-			}
-		}
-		if (result.hasErrors()) {
-			return null;
-		}
+	    if (parts.isEmpty()) {
+	        model.addAttribute("errorMessage", "商品照片:請上傳照片");
+	    } else {
+	        // 文件已上傳
+	        byte[] fileContent = parts.getBytes();
+	        productVO.setProductCoverImg(fileContent);
+	    }
+
+		/*************************** 2.開始新增資料 *****************************************/
+
+		SellerVO sellerVO = srSvc.getById(5);
+		productVO.setSellerVO(sellerVO);
+
+		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
+		productVO.setProductSortVO(productSortVO);
+
+		long currentTime = System.currentTimeMillis();
+		Timestamp timestamp = new Timestamp(currentTime);
+	
+		productVO.setProductSoldQuantity(0);
+		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
+		productVO.setIsEnabled(true);
+
+
+//		for (MultipartFile multipartFile : partsSec) {
+//
+//			ProductImgVO productImg = new ProductImgVO();
+//
+//			byte[] buf1 = multipartFile.getBytes();
+//
+//			productImg.setProductImg(buf1);
+//			productImg.setProductVO(productVO); // FK
+//			productImg.setProductImgTime(timestamp);
+//			productImg.setIsCover(false);
+//			productImg.setIsEnabled(true);
+//
+//			productImgSvc.updateProductImg(productImg);
+//
+//		}	
+//		
+		
+		
 		/*************************** 2.開始修改資料 *****************************************/
 		productSvc.updateProduct(productVO);
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
