@@ -1,14 +1,15 @@
 package com.collection.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.buyer.entity.BuyerVO;
 import com.cart.service.CartService;
 import com.collection.service.CollectionService;
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
+import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 
 @Controller
@@ -43,9 +46,25 @@ public class CollectionnoController extends HttpServlet {
 
 	// 用戶取出自己所有收藏清單資料 /front/buyer/collection/list
 	@GetMapping("list")
-	public String collectionlist(String memberId, Model model) {
+	public String collectionlist(Model model) {
 		// 先給定 memberId 以便測試
-		memberId = "9";
+		
+		String memberId = "9"; //測試有登入
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+
+         memberId = String.valueOf(buyerVO.getMemberId());
+        
+        System.out.println(memberId);
+ 
+		
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//
+//        Integer SellerId = sellerVO.getSellerId();
+		
 		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId));
 		return "front-end/buyer/buyer-collection-list";
 	}
