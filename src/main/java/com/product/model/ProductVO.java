@@ -2,6 +2,7 @@ package com.product.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
@@ -26,7 +28,7 @@ import com.seller.entity.SellerVO;
 
 @Entity
 @Table(name = "product")  // Replace "your_table_name" with the actual table name
-public class ProductVO implements Serializable , Comparable<ProductVO>{
+public class ProductVO implements Serializable{
 	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
 //	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
 
@@ -179,6 +181,7 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.totalReviews = totalReviews;
 	}
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")	
 	public ProductSortVO getProductSortVO() {
@@ -188,7 +191,6 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductSortVO(ProductSortVO productSortVO) {
 		this.productSortVO = productSortVO;
 	}
-
     @Column(name = "isEnabled")
 	public Boolean getIsEnabled() {
 		return isEnabled;
@@ -198,6 +200,7 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.isEnabled = isEnabled;
 	}
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	public SellerVO getSellerVO() {
@@ -222,22 +225,21 @@ public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
 this.orderDetailss = orderDetailss;
 }
 
-///////////////////////////////////////
-
-	@Override
-	public String toString() {
-		return "ProductVO [productId=" + productId + ", productName=" + productName + ", price=" + price + ", ratings="
-				+ ratings + "]";
-	}
-
-	@Override
-	public int compareTo(ProductVO o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
     // Add getters and setters
 
     // You can also add additional methods or annotations as needed
 
+	@Override
+	public String toString() {
+		return "ProductVO [productId=" + productId + ", productCoverImg=" + Arrays.toString(productCoverImg)
+				+ ", productName=" + productName + ", price=" + price + ", productStockQuantity=" + productStockQuantity
+				+ ", productSoldQuantity=" + productSoldQuantity + ", productDetails=" + productDetails
+				+ ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime + ", ratings="
+				+ ratings + ", totalReviews=" + totalReviews + ", productSortVO=" + productSortVO + ", isEnabled="
+				+ isEnabled + ", sellerVO=" + sellerVO + ", animalType=" + animalType + ", productImgVO=" + productImgVO
+				+ "]";
+	}
+    
+    
 }

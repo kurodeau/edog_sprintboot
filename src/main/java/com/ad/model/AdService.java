@@ -78,7 +78,7 @@ public class AdService {
 		return list;
 	}
 
-	public List<AdVO> getHomePageAd() {
+	public List<AdVO> getPremiumHomePageAd() {
 
 		List<AdVO> allAds = repository.findAll();
 
@@ -87,10 +87,46 @@ public class AdService {
 		java.sql.Date currentSqlDate = new java.sql.Date(long1);
 
 		List<AdVO> list = allAds.stream() // for each
-				.filter(ad -> "已上架".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled())
+				.filter(ad -> "已上架".equals(ad.getAdStatus()) 
+						&& Boolean.TRUE.equals(ad.getIsEnabled())
+						&& ad.getAdId()!=1
+						&& Integer.valueOf(1).equals(ad.getAdLv())
 						&& ad.getAdStartTime().compareTo(currentSqlDate) <= 0
 						&& ad.getAdEndTime().compareTo(currentSqlDate) >= 0)
 				.collect(Collectors.toList());
+		
+		if(list ==null || list.size() ==0) {
+			Optional<AdVO> noAd = repository.findById(1);
+			list.add(noAd.orElse(null));
+			return list;
+		}
+
+		return list;
+	}
+	
+	
+	public List<AdVO> getBaseHomePageAd() {
+
+		List<AdVO> allAds = repository.findAll();
+
+		java.util.Date du = new java.util.Date();
+		long long1 = du.getTime();
+		java.sql.Date currentSqlDate = new java.sql.Date(long1);
+
+		List<AdVO> list = allAds.stream() // for each
+				.filter(ad -> "已上架".equals(ad.getAdStatus()) 
+						&& Boolean.TRUE.equals(ad.getIsEnabled())
+						&& ad.getAdId()!=1
+						&& Integer.valueOf(2).equals(ad.getAdLv())
+						&& ad.getAdStartTime().compareTo(currentSqlDate) <= 0
+						&& ad.getAdEndTime().compareTo(currentSqlDate) >= 0)
+				.collect(Collectors.toList());
+		
+		if(list ==null || list.size() ==0) {
+			Optional<AdVO> noAd = repository.findById(1);
+			list.add(noAd.orElse(null));
+			return list;
+		}
 
 		return list;
 	}

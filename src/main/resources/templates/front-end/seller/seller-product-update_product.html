@@ -20,8 +20,7 @@
 							href="#">選單</a>
 						</li>
 						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a>
-						</li>
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="seller-login.html">賣家中心</a></li>
 						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
@@ -39,7 +38,7 @@
 		<!-- End NavBar  -->
 	</header>
 	<!-- ======= Sidebar ======= -->
-	  <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
@@ -52,18 +51,28 @@
 			</nav>
 
 			<!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
-			<form class="row g-3" id="imageForm" method="post" th:action="@{insert}"
+			<form class="row g-3" id="imageForm" method="post"
+				th:action="@{update}" th:object="${productVO}"
 				enctype="multipart/form-data">
 				<div class="upload__box">
+					<label>商品編號:</label> <input type="text" th:field="*{productId}"
+						style="border: 0px; font-weight: bold;" readonly /><br />
+
+
 					<div class="upload__btn-box">
 						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
-						<input type="file" data-max_length="1"
-							class="form-control upload__inputfile" id="mainImage"
-							name="mainImage" onclick="previewImage()" onchange="hideContent('upFiles.errors');" />
+						<input type="file" th:field="*{productCoverImg}"
+							data-max_length="1" class="form-control upload__inputfile"
+							id="mainImage" name="mainImage" onclick="previewImage()"
+							onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="mainImageFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-							<div id="mainImage_blob_holder"></div>
+						<div id="mainImage_blob_holder">
+							<img
+								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+								width="200px" height="150px" />
+						</div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -73,19 +82,26 @@
 						<label for="subImages" class="btn btn-sellerdark"> 請選擇其他圖片</label>
 						<input type="file" multiple="" data-max_length="5"
 							class="form-control upload__inputfile" id="subImages"
-							name="subImages" onclick="previewImage1()" onchange="hideContent('upFiles.errors');"/>
+							name="subImages" onclick="previewImage1()"
+							onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="subImagesFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-							<div id="subImages_blob_holder"></div>
+						<div id="subImages_blob_holder">
+							<div th:each="productImgVO, iterStat : ${productImageList}">
+								<img
+									th:src="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
+									width="200px" height="150px" />
+							</div>
+						</div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
-		
+
 				<div class="col-md-12">
 					<label for="productName" class="form-label">商品名稱</label> <input
-						type="text" class="form-control" id="productName"
-						name="productName" />
+						type="text" th:field="*{productName}" class="form-control"
+						id="productName" name="productName" />
 					<div id="productNameFeedback" class="invalid-feedback">
 						Please provide a valid city.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -93,16 +109,26 @@
 
 				<div class="col-md-12">
 					<label for="productSort" class="form-label">商品分類</label> <select
-						class="form-select" id="productSort" name="productSort">
+						class="form-select"
+						th:selected="${productVO.productSortVO.productSortNo}"
+						id="productSort" name="productSort">
 						<option value="-1" disabled selected>請選擇商品</option>
-						<option value="0">食品</option>
-						<option value="1">玩具</option>
-						<option value="2">寢具</option>
-						<option value="3">美容清潔</option>
-						<option value="4">攜帶袋</option>
-						<option value="5">服飾</option>
-						<option value="6">健康保健</option>
-						<option value="7">配件</option>
+						<option value="0"
+							th:selected="${productVO.productSortVO.productSortNo == 0} ">食品</option>
+						<option value="1"
+							th:selected="${productVO.productSortVO.productSortNo == 1}">玩具</option>
+						<option value="2"
+							th:selected="${productVO.productSortVO.productSortNo == 2}">寢具</option>
+						<option value="3"
+							th:selected="${productVO.productSortVO.productSortNo == 3}">美容清潔</option>
+						<option value="4"
+							th:selected="${productVO.productSortVO.productSortNo == 4}">攜帶袋</option>
+						<option value="5"
+							th:selected="${productVO.productSortVO.productSortNo == 5}">服飾</option>
+						<option value="6"
+							th:selected="${productVO.productSortVO.productSortNo == 6}">健康保健</option>
+						<option value="7"
+							th:selected="${productVO.productSortVO.productSortNo == 7}">配件</option>
 					</select>
 					<div id="productSortFeedback" class="invalid-feedback">
 						Please provide a valid city.</div>
@@ -111,16 +137,17 @@
 
 				<div class="col-md-12">
 					<label for="productPrice" class="form-label">商品價格</label> <input
-						type="text" class="form-control" id="productPrice"
-						name="productPrice" />
+						type="text" th:field="${productVO.price}" class="form-control"
+						id="productPrice" name="productPrice" />
 					<div id="productPriceFeedback" class="invalid-feedback">
 						Please provide a valid inputProductPrice.</div>
 					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productStockQuantity" class="form-label">商品庫存</label>
-					<input type="text" class="form-control" id="productStockQuantity"
+					<label for="productStockQuantity" class="form-label">商品庫存</label> <input
+						type="text" th:field="${productVO.productStockQuantity}"
+						class="form-control" id="productStockQuantity"
 						name="productStockQuantity" />
 					<div id="productStockQuantityFeedback" class="invalid-feedback">
 						Please provide a valid inputStockQuantity.</div>
@@ -129,8 +156,8 @@
 
 				<div class="col-md-12">
 					<label for="productDetails" class="form-label">商品描述</label> <input
-						type="text" class="form-control" id="productDetails"
-						name="productDetails" />
+						type="text" th:field="${productVO.productDetails}"
+						class="form-control" id="productDetails" name="productDetails" />
 					<div id="productDetailsFeedback" class="invalid-feedback">
 						Please provide a valid inputProductDetails.</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -195,75 +222,128 @@
 	<div th:replace="fragment-js"></div>
 
 	<!-- Local JS File -->
-<script type="text/javascript">
-//清除提示信息
-function hideContent(d) {
-     document.getElementById(d).style.display = "none";
-}
+	<script type="text/javascript">
+		//清除提示信息
+		function hideContent(d) {
+			document.getElementById(d).style.display = "none";
+		}
 
-//照片上傳-預覽用
-var filereader_support = typeof FileReader != 'undefined';
-if (!filereader_support) {
-	alert("No FileReader support");
-}
-acceptedTypes = {
-	'image/png' : true,
-	'image/jpeg' : true,
-	'image/gif' : true
-};
-function previewImage() {
-    var upfile1 = document.getElementById("mainImage");
-    upfile1.addEventListener("change", function(event) {
-        var files = event.target.files || event.dataTransfer.files;
-        for (var i = 0; i < files.length; i++) {
-            previewfile(files[i], "mainImage_blob_holder");
-        }
-    }, false);
-}
+		//照片上傳-預覽用
+		var filereader_support = typeof FileReader != 'undefined';
+		if (!filereader_support) {
+			alert("No FileReader support");
+		}
+		acceptedTypes = {
+			'image/png' : true,
+			'image/jpeg' : true,
+			'image/gif' : true
+		};
 
-function previewImage1() {
-	   var upfile2 = document.getElementById("subImages");
-	   upfile2.addEventListener("change", function (event) {
-	    var files = event.target.files || event.dataTransfer.files;
-	    var blob_holder = document.getElementById("subImages_blob_holder");
-	    
-	    while (blob_holder.firstChild) {
-	     blob_holder.removeChild(blob_holder.firstChild);
-	    }
-	   
-	    for (var i = 0; i < files.length; i++) {
-	     let previewDiv = document.createElement('div');
-	     let previewImg = document.createElement('img');
-	     previewImg.src = URL.createObjectURL(files[i]);
-	     previewImg.classList.add('preview-image');
-	     previewDiv.appendChild(previewImg);
-	     blob_holder.appendChild(previewDiv);
-	    }
-	   }, false);
-	  }
+		function previewImage() {
+			var upfile1 = document.getElementById("mainImage");
+			upfile1.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				var mainImage_blob_holder = document
+						.getElementById("mainImage_blob_holder");
 
-function previewfile(file, blobHolderId) {
-    var blob_holder = document.getElementById(blobHolderId);
-    if (filereader_support === true && acceptedTypes[file.type] === true) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            var image = new Image();
-            image.src = event.target.result;
-            image.width = 200;
-            image.height = 150;
-            image.border = 2;
-            blob_holder.appendChild(image);
-        };
-        reader.readAsDataURL(file);
-        document.getElementById('submit').disabled = false;
-    } else {
-        blob_holder.innerHTML = "<div  style='text-align: left;'>" + "● filename: " + file.name
-                + "<br>" + "● ContentTyp: " + file.type
-                + "<br>" + "● size: " + file.size + "bytes"
-                + "<br>" + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-        document.getElementById('submit').disabled = true;
-    }
-}
-</script>
+				mainImage_blob_holder
+						.removeChild(mainImage_blob_holder.firstChild);
+
+				if (mainImage_blob_holder.firstChild) {
+					mainImage_blob_holder.firstChild.src = URL
+							.createObjectURL(files[0]);
+				} else {
+					previewfile(files[0], "mainImage_blob_holder");
+				}
+			}, false);
+		}
+
+		//Tommy
+
+		// 		let i = 0;
+		// 		let preview = 0;
+		// 		function previewImage() {
+
+		// 		}
+
+		// 		var upfile1 = document.getElementById("mainImage");
+		// 		console.log("previewImage被觸發");
+		// 		preview = 1;
+		// 		upfile1.addEventListener("change", function(event) {
+		// 			if (preview == 1) {
+		// 				console.log("change被觸發");
+		// 				console.log("preview的值為:" + preview);
+		// 				var files = event.target.files || event.dataTransfer.files;
+		// 				var mainImage_blob_holder = document
+		// 						.getElementById("mainImage_blob_holder");
+
+		// 				// 清除舊圖片
+		// 				while (mainImage_blob_holder.firstChild) {
+		// 					mainImage_blob_holder
+		// 							.removeChild(mainImage_blob_holder.firstChild);
+		// 				}
+
+		// 				if (files.length > 0) {
+		// 					previewfile(files[0], "mainImage_blob_holder");
+		// 				}
+
+		// 			}
+		// 		}, false);
+
+		function previewImage1() {
+			var upfile2 = document.getElementById("subImages");
+			upfile2.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				var blob_holder = document
+						.getElementById("subImages_blob_holder");
+
+				while (blob_holder.firstChild) {
+					blob_holder.removeChild(blob_holder.firstChild);
+				}
+
+				for (var i = 0; i < files.length; i++) {
+					let previewDiv = document.createElement('div');
+					let previewImg = document.createElement('img');
+					previewImg.src = URL.createObjectURL(files[i]);
+					previewImg.classList.add('preview-image');
+					previewDiv.appendChild(previewImg);
+					blob_holder.appendChild(previewDiv);
+				}
+			}, false);
+		}
+
+		function previewfile(file, blobHolderId) {
+			var blob_holder = document.getElementById(blobHolderId);
+			if (filereader_support === true
+					&& acceptedTypes[file.type] === true) {
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					var image = new Image();
+					image.src = event.target.result;
+					image.width = 200;
+					image.height = 150;
+					image.border = 2;
+					blob_holder.appendChild(image);
+					// 					clearChildNodesExceptLast();
+				};
+				reader.readAsDataURL(file);
+				document.getElementById('submit').disabled = false;
+			} else {
+				blob_holder.innerHTML = "<div  style='text-align: left;'>"
+						+ "● filename: "
+						+ file.name
+						+ "<br>"
+						+ "● ContentTyp: "
+						+ file.type
+						+ "<br>"
+						+ "● size: "
+						+ file.size
+						+ "bytes"
+						+ "<br>"
+						+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+				document.getElementById('submit').disabled = true;
+			}
+		}
+	</script>
 </body>
 </html>
