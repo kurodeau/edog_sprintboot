@@ -34,7 +34,6 @@ import com.login.PasswordForm;
 
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
-
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
 import com.seller.entity.SellerVO;
@@ -58,6 +57,7 @@ import redis.clients.jedis.Jedis;
 public class IndexControllerMain {
 
 	@Autowired
+
 	UserService userSvc;
 
 	@Autowired
@@ -81,6 +81,7 @@ public class IndexControllerMain {
 		Authentication authentication = securityContext.getAuthentication();
 
 		boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
+
 		if (isAnonymous) {
 			// 用戶登入後，預設會使用anonymousUser
 			model.addAttribute("loggedIn", false);
@@ -118,12 +119,16 @@ public class IndexControllerMain {
 		return list;
 	}
 
-
 	@GetMapping("/product/{id}")
 	public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
 		Integer productId = null;
 		try {
 			productId = Integer.valueOf(id);
+
+			List<ProductImgVO> productImgVOs = productImgSvc.getProductImgs(productId);
+
+			model.addAttribute("productImageList", productImgVOs);
+
 		} catch (NumberFormatException e) {
 			return "/";
 		}
@@ -136,7 +141,6 @@ public class IndexControllerMain {
 
 		return "/front-end/buyer/buyer-commidity";
 	}
-	
 
 	@GetMapping("/test")
 	public String loginBuyer2(ModelMap model) throws IOException {
@@ -144,8 +148,9 @@ public class IndexControllerMain {
 		return "/front-end/buyer/buyer-commidityV2";
 	}
 
-	@PostMapping("/search")
+	@PostMapping(value = "/search", produces = "application/json")
 	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
+		System.out.println("+++++++++++++++++++++++++++++++");
 
 		System.out.println(formData);
 
@@ -153,14 +158,30 @@ public class IndexControllerMain {
 		System.out.println("Size = " + prodList.size());
 		prodList.forEach(System.out::println);
 
-		productSvc.getBy(formData.getAnimalType(),
-				formData.getProductCategory(),
-				formData.getRatings(),
-				formData.getPriceFrom(),
-				formData.getPriceTo(),
-				formData.getKeyword());
+		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
+				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
 
-		return ResponseEntity.ok(formData);
+		List<Integer> productListId = prodList.stream().map(productVO -> productVO.getProductId())
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(productListId);
+
+	}
+
+	@GetMapping("/searchresult")
+	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
+
+		String[] productIdArray = productListId.split(",");
+
+		List<ProductVO> productList = new ArrayList<>();
+		for (String productId : productIdArray) {
+			ProductVO product = productSvc.getOneProduct(Integer.valueOf(productId));
+			productList.add(product);
+		}
+
+		model.addAttribute("productIdList", productList);
+
+		return "/front-end/buyer/buyer-search";
 
 	}
 
@@ -234,9 +255,15 @@ public class IndexControllerMain {
 		return list;
 	}
 
-	@ModelAttribute("launchAdListData")
+	@ModelAttribute("launchPremiumAdListData")
 	protected List<AdVO> referenceListData2() {
-		List<AdVO> list = adSvc.getHomePageAd();
+		List<AdVO> list = adSvc.getPremiumHomePageAd();
+		return list;
+	}
+
+	@ModelAttribute("launchBaseAdListData")
+	protected List<AdVO> referenceListData3() {
+		List<AdVO> list = adSvc.getBaseHomePageAd();
 		return list;
 	}
 

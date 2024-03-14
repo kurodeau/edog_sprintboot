@@ -20,26 +20,23 @@ public class BuyerService {
 	@Autowired
 	BuyerRepository repository;
 
-	
-
-	public void addBuyer(BuyerVO buyerVO) {
+	public void addBuyer(@NonNull BuyerVO buyerVO) {
 		repository.save(buyerVO);
 	}
 
-	public void updateBuyer(BuyerVO buyerVO) {
+	public void updateBuyer(@NonNull BuyerVO buyerVO) {
 		repository.save(buyerVO);
 	}
 
-	public void deleteBuyer(Integer memberId) {
+	public void deleteBuyer(@NonNull Integer memberId) {
 		if (repository.existsById(memberId))
 			repository.deleteByMemberId(memberId);
 		// repository.deleteById(memberId);
 	}
-	
+
 	public BuyerVO findByOnlyOneEmail(String memberEmail) {
 		return repository.findByOnlyOneEmail(memberEmail);
 	}
-	
 
 	public BuyerVO getOneBuyer(Integer memberId) {
 		Optional<BuyerVO> optional = repository.findById(memberId);
@@ -51,16 +48,30 @@ public class BuyerService {
 		return repository.findAll();
 	}
 
-	
-	// 已經棄用，但因為有依賴無法山
-		private BuyerDetailsService buyerDetailsService;
+	// 已經棄用，但因為有依賴無法DEL
+	private BuyerDetailsService buyerDetailsService;
 
-		@Autowired
-		public void setbuyerDetailsService(BuyerDetailsService buyerDetailsService) {
-			this.buyerDetailsService = buyerDetailsService;
+	@Autowired
+	public void setbuyerDetailsService(BuyerDetailsService buyerDetailsService) {
+		this.buyerDetailsService = buyerDetailsService;
+	}
+
+	public void updateUserDetails(BuyerVO buyerVO) {
+
+		if (buyerVO == null) {
+			throw new UsernameNotFoundException("User not found with username ");
 		}
-		
-		
+
+		UserDetails userdetails = User.builder()
+				.username(buyerVO.getMemberEmail())
+				.password(buyerVO.getMemberPassword())
+				.authorities("ROLE_BUYER")
+				.build();
+
+		buyerDetailsService.changePassword(userdetails, buyerVO);
+
+	}
+
 	public void saveUserDetails(BuyerVO buyerVO) {
 
 		UserDetails userdetails = User.builder().username(buyerVO.getMemberEmail())
