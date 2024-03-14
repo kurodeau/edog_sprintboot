@@ -21,6 +21,9 @@ public interface ProductRepository extends JpaRepository<ProductVO, Integer>, Jp
 	
 	@Query("SELECT p FROM ProductVO p WHERE p.productName LIKE %:keyword%")
 	List<ProductVO> findByKeyword(@Param("keyword") String keyword);
+	
+
+	
 
 
 //	@FindWithOptionalParams

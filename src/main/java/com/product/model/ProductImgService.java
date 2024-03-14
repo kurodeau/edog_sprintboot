@@ -22,6 +22,8 @@ public class ProductImgService {
 		repository.save(productImgVO);
 	}
 	
+
+	
 	public void deleteProductImg(Integer productImgId) {
 		if(repository.existsById(productImgId))
 		   repository.deleteByProductId(productImgId);
@@ -33,20 +35,25 @@ public class ProductImgService {
 		
 	}
 	
-	public List<ProductImgVO> getAllProductImg(ProductVO productVO) {
-    List<ProductImgVO> prdoductImgs = repository.findProductImgsByProductId(productVO);
-	
-		return prdoductImgs;
-		
-	}
+//	public List<ProductImgVO> getAllProductImg(ProductVO productVO) {
+//    List<ProductImgVO> prdoductImgs = repository.findProductImgsByProductId(productVO);
+//	
+//		return prdoductImgs;
+//		
+//	}
 	
 	
 	public List<ProductImgVO> getProductImgs(Integer productId) {
 		List<ProductImgVO> productImgVOs = repository.findProductImgVOListByProductId(productId);
 		
-		
-		
 		return productImgVOs;
+	}
+	
+	
+	public void deleteProductImgs(Integer productId) {
+		
+		
+		repository.deleteProductImgVOListByProductId(productId);
 	}
 	
 	
