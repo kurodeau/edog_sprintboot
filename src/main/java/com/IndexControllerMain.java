@@ -63,23 +63,17 @@ public class IndexControllerMain {
 	@Autowired
 	SellerLvService sellerLvSvc;
 
-    
-    @Autowired
-    ProductService productSvc;
-    
-    
-    @Autowired
-	ProductImgService productImgSvc;
-    
-    @Autowired
-    AdService adSvc;
-	
+	@Autowired
+	ProductService productSvc;
 
+	@Autowired
+	ProductImgService productImgSvc;
+
+	@Autowired
+	AdService adSvc;
 
 	@Autowired
 	SellerService sellerSvc;
-
-
 
 	@GetMapping("/")
 	public String index(Model model) {
@@ -118,51 +112,12 @@ public class IndexControllerMain {
 	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
+		// System.out.println("==============================");
+		// list.forEach(data -> System.out.println(data));
+		// System.out.println("==============================");
 		return list;
 	}
 
-	
-
-	@GetMapping("/buyer/register")
-	public String registerBuyer(ModelMap model) throws IOException {
-		BuyerVO buyerVO = new BuyerVO();
-
-		// TEST
-		buyerVO.setMemberEmail("lulu.doe@example.com");
-		buyerVO.setThirdFrom(null);
-		buyerVO.setMemberName("Lulu");
-		buyerVO.setMemberPhone("03123321");
-		buyerVO.setMemberMobile("09777666");
-		buyerVO.setMemberBirthday(null);
-		buyerVO.setMemberAddress("地址");
-		buyerVO.setIsMemberEmail(false);
-
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		buyerVO.setMemberRegistrationTime(sqlDate);
-		buyerVO.setPetName("寵物啦");
-		buyerVO.setPetImg(null);
-		buyerVO.setPetImgUploadTime(null);
-		buyerVO.setPetVaccName1(null);
-		buyerVO.setPetVaccTime1(null);
-		buyerVO.setPetVaccName2(null);
-		buyerVO.setPetVaccTime2(null);
-
-		// 防止被修改
-		buyerVO.setMemberPassword(null);
-		buyerVO.setIsConfirm(true);
-
-		model.addAttribute("buyerVO", buyerVO);
-		return "/front-end/buyer/buyer-register";
-	}
-
-	@GetMapping("/buyer/login")
-	public String loginBuyer(ModelMap model) throws IOException {
-		return "/front-end/buyer/buyer-login";
-	}
 
 	@GetMapping("/product/{id}")
 	public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
@@ -181,13 +136,13 @@ public class IndexControllerMain {
 
 		return "/front-end/buyer/buyer-commidity";
 	}
+	
 
 	@GetMapping("/test")
 	public String loginBuyer2(ModelMap model) throws IOException {
 
 		return "/front-end/buyer/buyer-commidityV2";
 	}
-
 
 	@PostMapping("/search")
 	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
@@ -198,17 +153,15 @@ public class IndexControllerMain {
 		System.out.println("Size = " + prodList.size());
 		prodList.forEach(System.out::println);
 
-productSvc.getBy(formData.getAnimalType(),
+		productSvc.getBy(formData.getAnimalType(),
 				formData.getProductCategory(),
 				formData.getRatings(),
 				formData.getPriceFrom(),
 				formData.getPriceTo(),
-				formData.getKeyword()
-				);
+				formData.getKeyword());
 
 		return ResponseEntity.ok(formData);
-		
-		
+
 	}
 
 	public static class FormData {
@@ -275,20 +228,16 @@ productSvc.getBy(formData.getAnimalType(),
 
 	}
 
-	
-	
 	@ModelAttribute("allProductListData")
 	protected List<ProductVO> referenceListData1() {
 		List<ProductVO> list = productSvc.getProductLaunch();
 		return list;
 	}
-	
-	
+
 	@ModelAttribute("launchAdListData")
-	protected List<AdVO> referenceListData2(){
+	protected List<AdVO> referenceListData2() {
 		List<AdVO> list = adSvc.getHomePageAd();
 		return list;
 	}
-	
 
 }

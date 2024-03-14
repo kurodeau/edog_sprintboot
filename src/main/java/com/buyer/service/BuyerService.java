@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import com.buyer.entity.BuyerVO;
 import com.buyer.model.BuyerRepository;
 import com.config.BuyerDetailsService;
-import com.config.SellerDetailsService;
-import com.seller.entity.SellerVO;
 
 @Service("buyerService")
 @ComponentScan("com.config")
@@ -22,12 +20,7 @@ public class BuyerService {
 	@Autowired
 	BuyerRepository repository;
 
-	private BuyerDetailsService buyerDetailsService;
-
-	@Autowired
-	public void setbuyerDetailsService(BuyerDetailsService buyerDetailsService) {
-		this.buyerDetailsService = buyerDetailsService;
-	}
+	
 
 	public void addBuyer(BuyerVO buyerVO) {
 		repository.save(buyerVO);
@@ -42,6 +35,11 @@ public class BuyerService {
 			repository.deleteByMemberId(memberId);
 		// repository.deleteById(memberId);
 	}
+	
+	public BuyerVO findByOnlyOneEmail(String memberEmail) {
+		return repository.findByOnlyOneEmail(memberEmail);
+	}
+	
 
 	public BuyerVO getOneBuyer(Integer memberId) {
 		Optional<BuyerVO> optional = repository.findById(memberId);
@@ -53,6 +51,16 @@ public class BuyerService {
 		return repository.findAll();
 	}
 
+	
+	// 已經棄用，但因為有依賴無法山
+		private BuyerDetailsService buyerDetailsService;
+
+		@Autowired
+		public void setbuyerDetailsService(BuyerDetailsService buyerDetailsService) {
+			this.buyerDetailsService = buyerDetailsService;
+		}
+		
+		
 	public void saveUserDetails(BuyerVO buyerVO) {
 
 		UserDetails userdetails = User.builder().username(buyerVO.getMemberEmail())

@@ -156,10 +156,6 @@ public class IndexControllerSeller {
 		return "redirect:/seller/login";
 	}
 
-	@GetMapping("seller/error403")
-	public String error403(Model model) {
-		return "error/sellerError403";
-	}
 
 	@GetMapping({ "/seller/login", "/seller/login/errors" })
 	public String loginSeller(ModelMap model, HttpServletRequest req) throws IOException {
