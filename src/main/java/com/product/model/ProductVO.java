@@ -1,7 +1,9 @@
 package com.product.model;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,36 +25,30 @@ import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
 
-
-
 @Entity
-@Table(name = "product")  // Replace "your_table_name" with the actual table name
-public class ProductVO implements Serializable , Comparable<ProductVO>{
-	public static final Integer MAX_IMAGE_SIZE =  10 * 1024 * 1024;
-//	public static final Integer MAX_PRODUCT_SORT =  ProductSortEnum.values().length;
+@Table(name = "product") // Replace "your_table_name" with the actual table name
+public class ProductVO implements Serializable {
+	public static final Integer MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+	// public static final Integer MAX_PRODUCT_SORT =
+	// ProductSortEnum.values().length;
 
+	private Integer productId;
+	private byte[] productCoverImg;
+	private String productName;
+	private BigDecimal price;
+	private Integer productStockQuantity;
+	private Integer productSoldQuantity;
+	private String productDetails;
+	private String productStatus;
+	private Timestamp productCreationTime;
+	private Integer ratings;
+	private Integer totalReviews;
+	private ProductSortVO productSortVO;
+	private Boolean isEnabled;
+	private String animalType;
 
-	
-	private Integer productId;   
-    private byte[] productCoverImg;
-    private String productName;    
-    private BigDecimal price;
-    private Integer productStockQuantity;   
-    private Integer productSoldQuantity;
-	private String productDetails;    
-    private String productStatus;
-    private Timestamp productCreationTime; 
-    private Integer ratings;    
-    private Integer totalReviews;
-    private ProductSortVO productSortVO;
-    private Boolean isEnabled;   
-    private SellerVO sellerVO;
-    private String animalType;	
-    
-    
-    
-    @Column(name = "animalType")
-    public String getAnimalType() {
+	@Column(name = "animalType")
+	public String getAnimalType() {
 		return animalType;
 	}
 
@@ -60,36 +56,30 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.animalType = animalType;
 	}
 
-	//OnetoMany需要加上
-    private Set<ProductImgVO> productImgVO = new HashSet<ProductImgVO>();
-    
-	
+	// OnetoMany需要加上
+	private Set<ProductImgVO> productImgVO = new HashSet<ProductImgVO>();
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "productVO")
 	public Set<ProductImgVO> getProductImgVO() {
-	    return productImgVO;
+		return productImgVO;
 	}
-	
+
 	public void setProductImgVO(Set<ProductImgVO> productImgVO) {
 		this.productImgVO = productImgVO;
 	}
-   
-	   
-    
-	 @Column(name = "productSoldQuantity")
-    public Integer getProductSoldQuantity() {
+
+	@Column(name = "productSoldQuantity")
+	public Integer getProductSoldQuantity() {
 		return productSoldQuantity;
 	}
-    
 
 	public void setProductSoldQuantity(Integer productSoldQuantity) {
 		this.productSoldQuantity = productSoldQuantity;
 	}
-	
-	
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productId")
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "productId")
 	public Integer getProductId() {
 		return productId;
 	}
@@ -97,9 +87,8 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductId(Integer productId) {
 		this.productId = productId;
 	}
-	
 
-	@Column(name = "productCoverImg" ,columnDefinition = "longblob")
+	@Column(name = "productCoverImg", columnDefinition = "longblob")
 	public byte[] getProductCoverImg() {
 		return productCoverImg;
 	}
@@ -107,8 +96,8 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductCoverImg(byte[] productCoverImg) {
 		this.productCoverImg = productCoverImg;
 	}
-	
-    @Column(name = "productName")
+
+	@Column(name = "productName")
 	public String getProductName() {
 		return productName;
 	}
@@ -116,7 +105,7 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-	
+
 	@Column(name = "price")
 	public BigDecimal getPrice() {
 		return price;
@@ -153,7 +142,7 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.productStatus = productStatus;
 	}
 
-	@Column(name = "productCreationTime" , updatable = false)
+	@Column(name = "productCreationTime", updatable = false)
 	public Timestamp getProductCreationTime() {
 		return productCreationTime;
 	}
@@ -180,8 +169,9 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.totalReviews = totalReviews;
 	}
 
+	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")	
+	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")
 	public ProductSortVO getProductSortVO() {
 		return productSortVO;
 	}
@@ -189,7 +179,8 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 	public void setProductSortVO(ProductSortVO productSortVO) {
 		this.productSortVO = productSortVO;
 	}
-    @Column(name = "isEnabled")
+
+	@Column(name = "isEnabled")
 	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
@@ -198,46 +189,44 @@ public class ProductVO implements Serializable , Comparable<ProductVO>{
 		this.isEnabled = isEnabled;
 	}
 
+	////////////// 商品與賣家的關聯///////////////////////
+	private SellerVO sellerVO;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
 	public SellerVO getSellerVO() {
-	    return sellerVO;
+		return sellerVO;
 	}
 
 	public void setSellerVO(SellerVO sellerVO) {
-	    this.sellerVO = sellerVO;
+		this.sellerVO = sellerVO;
 	}
 
-	
-//////////////商品與訂單明細的關聯///////////////////////
-private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
+	///////////////////////////////////////
 
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productVO")
-@OrderBy("orderId asc")
-public Set<OrderDetailsVO> getOrderDetailss() {
-return this.orderDetailss;
-}
+	////////////// 商品與訂單明細的關聯///////////////////////
+	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
 
-public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
-this.orderDetailss = orderDetailss;
-}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "productVO")
+	@OrderBy("orderId asc")
+	public Set<OrderDetailsVO> getOrderDetailss() {
+		return this.orderDetailss;
+	}
 
-///////////////////////////////////////
+	public void setOrderDetailss(Set<OrderDetailsVO> orderDetailss) {
+		this.orderDetailss = orderDetailss;
+	}
+	///////////////////////////////////////
 
 	@Override
 	public String toString() {
-		return "ProductVO [productId=" + productId + ", productName=" + productName + ", price=" + price + ", ratings="
-				+ ratings + "]";
+		return "ProductVO [productId=" + productId + ", productCoverImg=" + Arrays.toString(productCoverImg)
+				+ ", productName=" + productName + ", price=" + price + ", productStockQuantity=" + productStockQuantity
+				+ ", productSoldQuantity=" + productSoldQuantity + ", productDetails=" + productDetails
+				+ ", productStatus=" + productStatus + ", productCreationTime=" + productCreationTime + ", ratings="
+				+ ratings + ", totalReviews=" + totalReviews + ", productSortVO=" + productSortVO + ", isEnabled="
+				+ isEnabled + ", sellerVO=" + sellerVO + ", animalType=" + animalType + ", productImgVO=" + productImgVO
+				+ "]";
 	}
-
-	@Override
-	public int compareTo(ProductVO o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-    // Add getters and setters
-
-    // You can also add additional methods or annotations as needed
 
 }

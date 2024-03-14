@@ -34,7 +34,6 @@ public class BuyerVO implements java.io.Serializable{
 	
 	
 	//訂單關聯//
-private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
 	
 
 	
@@ -290,6 +289,8 @@ private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
 	}
 		
 //////////訂單關聯/////////////////////////
+private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+
 @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="buyerVO")
 @OrderBy("memberId asc")
 public Set<ProductOrderVO> getProductOrders() {

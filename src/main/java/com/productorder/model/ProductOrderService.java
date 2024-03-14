@@ -42,6 +42,11 @@ public class ProductOrderService {
 	}
 	
 	
+	public List<ProductOrderVO> findAllBySellerIdOrderByTime(Integer sellerId) {
+		return repository.findBySellerIdOrderByTime(sellerId);
+	}
+	
+	
 
 	public List<ProductOrderVO> getAll() {
 		return repository.findAll();
@@ -179,4 +184,61 @@ public class ProductOrderService {
 		return list;
 	}
 
+/////買家查詢所有訂單 下面方法Sky新增//////////////////////////////////////////////////////	
+	public List<ProductOrderVO> findByBuyerId(Integer buyerId) {
+		return repository.findByMemberId(buyerId);
+	}
+	
+	
+	
+	//買家查詢待處理訂單
+	public List<ProductOrderVO> getBuyerProductOrderPendingConfirm(Integer buyerId) {
+		
+		List<ProductOrderVO> buyerProductOrders = repository.findByMemberId(buyerId);		
+		
+		 List<ProductOrderVO> list = buyerProductOrders.stream()
+                 .filter(productOrder -> "1".equals(productOrder.getOrderStatus().toString()))
+                 .collect(Collectors.toList());									 
+				return list;		
+	}
+	
+	
+	//買家查詢處理中訂單
+	public List<ProductOrderVO> getProductOrderBuyerProcessing(Integer buyerId) {
+
+		List<ProductOrderVO> buyerProductOrders = repository.findByMemberId(buyerId);
+
+		List<ProductOrderVO> list = buyerProductOrders.stream()
+				.filter(productOrder -> "5".equals(productOrder.getOrderStatus().toString())
+						|| "6".equals(productOrder.getOrderStatus().toString()))
+				.collect(Collectors.toList());
+		return list;
+	}
+	
+	//買家查詢完成訂單
+	public List<ProductOrderVO> getProductOrderBuyerCompleted(Integer buyerId) {
+
+		List<ProductOrderVO> buyerProductOrders = repository.findByMemberId(buyerId);
+
+		List<ProductOrderVO> list = buyerProductOrders.stream()
+				.filter(productOrder -> "7".equals(productOrder.getOrderStatus().toString()))
+				.collect(Collectors.toList());
+		return list;
+	}
+	
+	
+	//買家查詢取消訂單
+	public List<ProductOrderVO> getProductOrderBuyerCanceled(Integer buyerId) {
+
+		List<ProductOrderVO> buyerProductOrders = repository.findByMemberId(buyerId);
+
+		List<ProductOrderVO> list = buyerProductOrders.stream()
+				.filter(productOrder -> "2".equals(productOrder.getOrderStatus().toString())
+						|| "3".equals(productOrder.getOrderStatus().toString()))
+				.collect(Collectors.toList());
+		return list;
+	}
+
+	
+	
 }

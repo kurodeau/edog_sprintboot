@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
+	</header>
+
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
+
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+			<h1>我的購物車</h1>
+			<div class="container mt-3 container-list-custom">
+				<div class="row sec-row-custom">
+					<div class="col-1">
+						<input class="form-check-input cart-overall-click" type="checkbox" value=""
+							aria-label="Checkbox for following text input" />
+					</div>
+					<div class="col-3">商品圖片</div>
+					<div class="col-2">商品名稱</div>
+					<div class="col-2 d-flex justify-content-end">單個價格</div>
+					<div class="col-2 d-flex justify-content-end">購買數量</div>
+					<div class="col d-flex justify-content-center">操作</div>
+				</div>
+
+				<!-- 如果你購物車沒有東西, 顯示這裡 -->
+				<div class="col-12" th:if="${#maps.isEmpty(cartClassfi) }">
+					<a href="/">你的購物車是空的，馬上去逛逛吧~</a>
+				</div>
+
+				<!-- 先進行大迴圈, 從redis 取出資料 -->
+				<section class="cart-seller mt-3" th:each="sellerCompany : ${cartClassfi}">
+					<div class="row header-row-custom">
+						<div class="col-auto px-0">
+							<input class="form-check-input cart-header-click" type="checkbox" value=""
+								aria-label="Checkbox for following text input" />
+						</div>
+						<div class="col">
+							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b class="cart-sellerId"
+									th:text="${sellerCompany.key}"></b>
+							</span>
+						</div>
+					</div>
+
+					<!-- 後套入小迴圈的資料 -->
+					<div class="row item-row-custom" th:each="cartVO : ${cartClassfi[ sellerCompany.key ]}">
+						<div class="col-1 px-0">
+							<input class="form-check-input cart-item-click" type="checkbox" value=""
+								aria-label="Checkbox for following text input" />
+						</div>
+						<div class="col-3">
+							<img th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
+								width="100px" />
+						</div>
+						<div class="col-2" th:text="${cartVO.productVO.productName}">商品名稱</div>
+						<div class="col-2 d-flex justify-content-end cart-price" th:text="${cartVO.productVO.price}">
+							商品金額</div>
+						<div class="col-2 d-flex justify-content-end cart-qty" th:text="${cartVO.productNum}">商品數量</div>
+						<div class="justify-content-end cart-productId"
+							th:text="${cartVO.productVO.productId}" style="display:none">productId</div>
+						<div class="col d-flex flex-column align-items-center justify-content-center">
+							<button class="product btn-func">更改數量</button>
+							<button class="btn-func cart-item-delete" th:data-memberId="9"
+								th:data-productId="${cartVO.productVO.productId}"
+								th:productId="${cartVO.productVO.productId}"
+								onclick="removeOneFromCart(this)">移出購物車</button>
+							<script>
+								function removeOneFromCart(button) {
+									console.log("這是單商品移出cart按鈕");
+
+									//請求參數
+									var memberId = button
+										.getAttribute('data-memberId');
+									console.log("memberId:" + memberId);
+
+									var productId = button
+										.getAttribute('data-productId');
+									console.log("productId:" + productId);
+									var data = {
+										memberId: memberId,
+										productId: productId
+									}
+									const formData = new FormData();
+									for (const key in data) {
+										formData.append(key, data[key]);
+									}
+
+									// 使用 jQuery AJAX 送出 POST 請求
+									$
+										.ajax({
+											url: '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
+											type: 'POST',
+											contentType: 'application/json', // 设置请求头
+											data: JSON.stringify(data), // 将数据转换为 JSON 格式
+											success: function (responseData) {
+												console
+													.log(JSON
+														.parse(responseData));
+												console.log(responseData);
+
+												console.log('POST 请求成功');
+												
+								    		},
+											error: function (xhr, status,
+												error) {
+												// 请求失败处理
+												console.error('POST 请求失败:',
+													error);
+												console.log('狀態:', status);
+												console.log('回應內容:',
+													xhr.responseText);
+											}
+										});
+								}
+							</script>
+						</div>
+					</div>
+				</section>
+
+			</div>
+
+			<section class="cart-pay-sticky px-5 mt-5">
+				<div class="row d-flex justify-content-end align-items-center">
+					<div class="col-1-5">結帳 NT$</div>
+					<div class="col-2 cart-payment d-flex justify-content-end">
+						<span class="payment">600</span>元
+					</div>
+					<div class="col-auto">
+						<button class="btn btn-primary" id="checkout-btn">去買單</button>
+					</div>
+					<script>
+						$(document).ready(function () {
+							$('#checkout-btn').click(function () {
+								console.log("按鈕有綁到JS Event");
+
+								let selectedProductsMap = new Map();
+
+								// 將選取的商品編號封裝成資料
+								selectedProductsMap = collectSelectedProducts();
+								console.log(selectedProductsMap);
+								const obj = Object.fromEntries(selectedProductsMap);
+
+								// 将普通对象转换为JSON字符串
+								const selectedProductsJsonStr = JSON.stringify(obj);
+
+								// console.log(jsonString);
+
+							
+								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
+								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/';
+
+								fetch((url), {
+									method: "POST",
+									header: {
+										'Content-Type': 'application/json'
+										// 如果還有其他的 headers，請在這裡添加
+									},
+									body: selectedProductsJsonStr
+								}).then(response => {
+
+									return response.text();
+								}).then((dataBeforeParsed) => {
+									console.log(dataBeforeParsed);
+									console.log();
+									const dataAfterParsed = JSON.parse(dataBeforeParsed);
+									console.log(dataAfterParsed); // 此处是正确的写法
+									if (parseInt(dataAfterParsed.status) !== 200) {
+										alert(dataAfterParsed.msg);
+									} else {
+										console.log('成功:', dataAfterParsed.msg);
+										window.location.href = urlReturn;
+									}
+								}).catch(error => {
+									// 在這裡處理錯誤情況
+
+								});
+
+							});
+						});
+
+						function collectSelectedProducts() {
+
+							let selectedProductsMap = new Map();
+
+							// 遍歷每個選中的項目
+							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
+								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
+								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
+								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
+
+								if (selectedProductsMap.has(sellerName)) {
+									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+								} else {
+									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+								}
+							});
+							selectedProductsMap.forEach((value, key) => {
+								console.log(key);
+							});
+
+							return selectedProductsMap;
+
+						}
+					</script>
+				</div>
+			</section>
+
+			<!-- Content for All Orders Tab -->
+		</div>
+	</main>
+
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout"> </footer>
+	<!-- End Footer -->
+
+	<!-- Local JS File -->
+	<div th:replace="fragment-js"></div>
+
+	<script>
+		document
+			.addEventListener(
+				"DOMContentLoaded",
+				function () {
+					init();
+
+					function init() {
+						updateCheckoutAmount();
+					}
+
+					function handlesectionClick(event) {
+						const currentClicked = this.checked;
+						console.log(currentClicked);
+
+						const overallSection = this
+							.closest(".container-list-custom");
+						const headerClicks = overallSection
+							.querySelectorAll(".cart-header-click");
+
+						headerClicks
+							.forEach(
+								function (headerClick) {
+									if (currentClicked !== headerClick.checked) {
+										headerClick.click();
+									}
+								}, this);
+					}
+
+					function handleItemClick(event) {
+						event.stopPropagation();
+
+						const secCart = this.closest(".cart-seller");
+						const isAllItemClicked = secCart
+							.querySelectorAll(".item-row-custom input:checked").length === secCart
+								.querySelectorAll(".item-row-custom").length;
+
+						secCart.querySelector(".cart-header-click").checked = isAllItemClicked;
+						updateCheckoutAmount();
+					}
+
+					function handleHeaderClick(event) {
+						event.stopPropagation();
+
+						const secCart = this.closest(".cart-seller");
+						const subClicks = secCart
+							.querySelectorAll(".item-row-custom input");
+
+						subClicks.forEach(function (subClick) {
+							subClick.checked = this.checked;
+						}, this);
+
+						// Process overall click
+						const overallSection = this
+							.closest(".container-list-custom");
+						const isAllHeaderClicked = overallSection
+							.querySelectorAll(".header-row-custom input:checked").length === overallSection
+								.querySelectorAll(".header-row-custom").length;
+
+						overallSection
+							.querySelector(".cart-overall-click").checked = isAllHeaderClicked;
+						updateCheckoutAmount();
+					}
+
+					const itemClickEls = document
+						.querySelectorAll(".cart-item-click");
+					const headerClickEls = document
+						.querySelectorAll(".cart-header-click");
+					const sectionClickEl = document
+						.querySelector(".cart-overall-click");
+
+					itemClickEls.forEach(function (itemClickEl) {
+						itemClickEl.addEventListener("click",
+							handleItemClick);
+					});
+
+					headerClickEls.forEach(function (headerClickEl) {
+						headerClickEl.addEventListener("click",
+							handleHeaderClick);
+					});
+
+					sectionClickEl.addEventListener("click",
+						handlesectionClick);
+
+					function handleItemDelete(event) {
+						event.stopPropagation();
+
+						const rowItem = this
+							.closest(".item-row-custom");
+
+						if (!rowItem)
+							return;
+
+						const secCart = rowItem.parentElement;
+
+						rowItem.remove();
+
+						if (secCart
+							&& secCart
+								.querySelectorAll(".item-row-custom").length === 0) {
+							secCart.remove();
+						}
+
+						updateCheckoutAmount();
+					}
+
+					const itemDeleteEls = document
+						.querySelectorAll(".cart-item-delete");
+
+					itemDeleteEls.forEach(function (itemDeleteEl) {
+						itemDeleteEl.addEventListener("click",
+							handleItemDelete);
+					});
+
+					function updateCheckoutAmount() {
+						let totalAmount = 0;
+
+						// Iterate over all checked items
+						document
+							.querySelectorAll(
+								".cart-item-click:checked")
+							.forEach(
+								function (item) {
+									const rowItem = item
+										.closest(".item-row-custom");
+
+									console.log(rowItem);
+
+									if (rowItem) {
+
+										const priceElement = rowItem
+											.querySelector(".cart-price");
+										const price = parseFloat(priceElement.textContent);
+										console.log("price"
+											+ price);
+
+										const qtyElement = rowItem
+											.querySelector(".cart-qty");
+										const qty = parseFloat(qtyElement.textContent);
+										console
+											.log("qty"
+												+ qty);
+
+										totalAmount += (price * qty);
+									}
+								});
+
+						// Update the displayed total amount
+						const totalAmountElement = document
+							.querySelector(".cart-payment .payment");
+						totalAmountElement.textContent = totalAmount
+							.toFixed(2); // Assuming you want to display with 2 decimal places
+					}
+				});
+	</script>
+</body>
+
+</html>

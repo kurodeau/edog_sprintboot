@@ -18,11 +18,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
@@ -43,6 +45,16 @@ public class MultiSecurityConfiguration {
 			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html" };
 
 	@Autowired
+	@Qualifier("sellerAuthenticationSuccessHandler")
+	private AuthenticationSuccessHandler sellerAuthenticationSuccessHandler;
+
+	@Autowired
+	CustomAccessDeniedHandler customAccessDeniedHandler;
+
+	@Autowired
+	SellerService sellerSvc;
+
+	@Autowired
 	@Qualifier("sellerDetailsService") // Use the correct qualifier if needed
 	private UserDetailsService sellerDetailsService;
 
@@ -50,23 +62,10 @@ public class MultiSecurityConfiguration {
 	@Qualifier("sellerPasswordEncoder")
 	private SellerPasswordEncoder sellerPasswordEncoder;
 
-	@Autowired
-	@Qualifier("sellerAuthenticationSuccessHandler")
-	private AuthenticationSuccessHandler sellerAuthenticationSuccessHandler;
-
-	@Autowired
-	@Qualifier("buyerDetailsService") // Use the correct qualifier if needed
-	private BuyerDetailsService buyerDetailsService;
-
-	@Autowired
-	@Qualifier("buyerPasswordEncoder")
-	private BuyerPasswordEncoder buyerPasswordEncoder;
-
-	@Autowired
-	SellerService sellerSvc;
-
-	@Autowired
-	BuyerService buyerSvc;
+	@Bean
+	public GossipAuthenticationProvider gossipAuthenticationProvider() {
+		return new GossipAuthenticationProvider();
+	}
 
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider1() {
@@ -77,16 +76,89 @@ public class MultiSecurityConfiguration {
 	}
 
 	@Bean
-	public DaoAuthenticationProvider daoAuthenticationProvider2() {
-		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(buyerDetailsService);
-		authenticationProvider.setPasswordEncoder(buyerPasswordEncoder);
-		return authenticationProvider;
+	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+		// retrieve builder from httpSecurity
+		return new ProviderManager(gossipAuthenticationProvider());
+	}
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().antMatchers("/auth/phone", "/auth/phone/check", "/image/**", "/css/**",
+				"/vendors/**", "/mainjs/**", "/icons/**");
+	}
+
+	@Autowired
+	@Qualifier("buyerRequestMatcher")
+	RequestMatcher buyerRequestMatcher;
+
+	@Autowired
+	private BuyerService buyerSvc;
+
+	@Autowired
+	@Qualifier("buyerPasswordEncoder")
+	private BuyerPasswordEncoder buyerPasswordEncoder;
+
+	@Autowired
+	private BuyeAuthenticationFailureHandler buyeAuthenticationFailureHandler;
+
+	@Autowired
+	private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+		BuyerAuthenticationFilter buyerAuthenticationFilter = new BuyerAuthenticationFilter(authenticationManager(http),
+				buyerRequestMatcher, buyerSvc, buyerPasswordEncoder, buyeAuthenticationFailureHandler);
+
+		// http.authorizeRequests(authorize -> authorize
+		// .antMatchers("/**").permitAll()).csrf().disable();
+		http
+				.authorizeRequests(authorize -> authorize
+						.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+						.antMatchers("/front/seller/**").hasRole("SELLER")
+						.antMatchers("/front/buyer/**").hasRole("BUYER"))
+				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+		http.formLogin(form -> form.loginPage("/seller/login").permitAll().loginProcessingUrl("/seller/login")
+				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
+				.successHandler(sellerAuthenticationSuccessHandler))
+				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
+						.authenticationEntryPoint(customAuthenticationEntryPoint))
+				.csrf()
+				.disable().authenticationManager(authenticationManager(http)).logout(logout -> logout
+						.logoutUrl("/logout") // 配置登出 URL
+						.logoutSuccessHandler((request, response, authentication) -> {
+							Object targetVO = authentication.getPrincipal();
+							// System.out.println(targetVO);
+							// System.out.println(targetVO instanceof BuyerVO);
+
+							String finalPath = null;
+							if (targetVO != null && targetVO instanceof BuyerVO) {
+								SecurityContextHolder.clearContext();
+								finalPath = "/buyer/login";
+
+							} else if (targetVO != null && targetVO instanceof SellerVO) {
+								SecurityContextHolder.clearContext();
+								finalPath = "/seller/login";
+							}
+							// 這個處理器將應用於所有的登出請求
+							response.sendRedirect(request.getContextPath() + finalPath);
+
+						}));
+
+		return http.build();
 	}
 
 	private class GossipAuthenticationProvider implements AuthenticationProvider {
 
 		public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+			if (authentication != null && authentication.isAuthenticated()) {
+				// 如果已經驗證
+				System.out.println("GossipAuthenticationProvider-authenticate");
+				return authentication;
+			}
+
 			String name = authentication.getName();
 			String password = authentication.getCredentials().toString();
 
@@ -109,7 +181,7 @@ public class MultiSecurityConfiguration {
 			if (parts[1].contains("seller")) {
 				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
-				System.out.println("GossipAuthenticationProvider"+sellerVO);
+				System.out.println("GossipAuthenticationProvider" + sellerVO);
 				// Check if the sellerVO is not null and the password matches
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
@@ -124,22 +196,11 @@ public class MultiSecurityConfiguration {
 						throw new BadCredentialsException("密碼輸入有誤");
 					}
 				} else {
-					throw new UsernameNotFoundException("帳號輸入有誤 SB");
-				}
-			} else if (parts[0].contains("buyer")) {
-				// Fetch buyer details by email (assuming you have a buyer service)
-				// BuyerVO buyerVO = buyerSvc.findByOnlyOneEmail(trueName);
-				BuyerVO buyerVO = new BuyerVO();
-				// Check if the buyerVO is not null and the password matches
-				if (buyerVO != null && buyerPasswordEncoder.matches(password, buyerVO.getMemberPassword())) {
-					return new UsernamePasswordAuthenticationToken(trueName, password,
-							AuthorityUtils.createAuthorityList("ROLE_BUYER"));
-				} else {
-					throw new UsernameNotFoundException("Invalid credentials for buyer");
+					throw new UsernameNotFoundException("帳號輸入有誤");
 				}
 			} else {
 				// Handle other cases or throw an exception for unsupported users
-				throw new UsernameNotFoundException("Invalid user type");
+				throw new UsernameNotFoundException("沒有此帳戶");
 			}
 		}
 
@@ -147,53 +208,6 @@ public class MultiSecurityConfiguration {
 		public boolean supports(Class<?> authentication) {
 			return authentication.equals(UsernamePasswordAuthenticationToken.class);
 		}
-	}
-
-	@Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-		// retrieve builder from httpSecurity
-		return new ProviderManager(new GossipAuthenticationProvider());
-	}
-
-	@Autowired
-	CustomAccessDeniedHandler customAccessDeniedHandler;
-
-	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().antMatchers("/auth/phone", "/auth/phone/check", "/image/**", "/css/**",
-				"/vendors/**", "/mainjs/**", "/icons/**");
-	}
-
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-		// TESTING
-		http.authorizeRequests(authorize -> authorize
-				.antMatchers("/**").permitAll()
-				.anyRequest().authenticated());
-
-		// FORMAL
-//		 http.authorizeRequests(authorize -> authorize
-//		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()
-//		 .antMatchers("/seller/register", "/seller/register/**").permitAll()
-//		 .antMatchers("/buyer/register", "/buyer/register/**").permitAll()
-//		 .antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-//		 .antMatchers("/front/seller/**").hasRole("SELLER")
-//		 .antMatchers("/front/buyer/**").hasRole("BUYER")
-//		 .antMatchers("/auth/email/check", "/auth/email").permitAll()
-//		 .antMatchers("/activate/seller/**").permitAll()
-//		 .antMatchers("/").permitAll()
-//		 .anyRequest().authenticated());
-//
-//		http.formLogin(form -> form
-//				.loginPage("/seller/login").permitAll()
-//				.usernameParameter("usernameinhtml")
-//				.passwordParameter("passwordinhtml")
-//				.successHandler(sellerAuthenticationSuccessHandler))
-//				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
-//				.csrf().disable();
-
-		return http.build();
 	}
 
 }
