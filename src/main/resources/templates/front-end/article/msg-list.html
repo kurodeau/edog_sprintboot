@@ -127,7 +127,7 @@
 						</td>
 						<td th:if="${msgVO.msgTypeVO.msgTypeId == 6}">
 						<i style="color:#FF8000" class="bi bi-exclamation-circle-fill"></i>
-						    你的留言:「<strong th:text="${msgVO.replyVO.replyContent}"></strong>」已被檢舉下架
+						    你的留言:「<strong th:text="${msgVO.reportVO.replyVO.replyContent}"></strong>」已被檢舉下架
 						</td>
 						<td colspan="100%" style="display: flex; color: blue; margin-left: auto;">
 						    ●
@@ -261,32 +261,6 @@
     function redirectToUpdatePage(url) {
         window.location.href = url;
     }
-    $('.forum-msg').click(function() {
-        var msgId = $(this).find('td:first-child').text(); // 获取消息的ID
-        markAsUnread(msgId); // 调用标记为未读的函数
-    });
-
-    // 标记消息为未读状态的函数
-    function markAsUnread(msgId) {
-        // 向后端发送Ajax请求
-        $.ajax({
-            type: 'POST',
-            url: '/markAsUnread', // 标记为未读的后端接口URL
-            data: { msgId: msgId }, // 发送的数据，包含消息ID
-            success: function(response) {
-                if (response.success) {
-                    // 如果成功标记为未读，可以在前端做一些视觉上的反馈
-                    alert('消息标记为未读成功！');
-                } else {
-                    alert('消息标记为未读失败！');
-                }
-            },
-            error: function() {
-                alert('发生错误，无法标记消息为未读！');
-            }
-        });
-    }
 </script>
-
   </body>
 </html>

@@ -126,6 +126,8 @@ public class MsgController {
 		        model.addAttribute("articleVO", articleVO);
 		        List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		        model.addAttribute("replyVOList", replyVOList);
+		        ReportVO reportVO = new ReportVO();
+			    model.addAttribute("reportVO", reportVO);
 		        return "front-end/article/list-one-article"; // articleVO不为null，返回到对应的页面
 		        
 			 } else if (msgVO.getReplyVO() != null) {
@@ -135,6 +137,8 @@ public class MsgController {
 		        model.addAttribute("articleVO", articleVO);
 		        List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		        model.addAttribute("replyVOList", replyVOList);
+		        ReportVO reportVO = new ReportVO();
+			    model.addAttribute("reportVO", reportVO);
 		        model.addAttribute("msgVO", msgVO);
 		        return "front-end/article/list-one-article"; // replyVO不为null，返回到对应的页面
 		        
