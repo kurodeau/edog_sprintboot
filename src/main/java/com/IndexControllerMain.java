@@ -138,11 +138,6 @@ public class IndexControllerMain {
 		return "/front-end/buyer/buyer-register";
 	}
 
-	@GetMapping("/buyer/login")
-	public String loginBuyer(ModelMap model) throws IOException {
-		return "/front-end/buyer/buyer-login";
-	}
-
 	@GetMapping("/product/{id}")
 	public String loginBuyer(@PathVariable("id") String id, ModelMap model) throws IOException {
 		Integer productId = null;
