@@ -137,10 +137,29 @@
 						<button class="btn btn-primary" id="checkout-btn">去買單</button>
 					</div>
 					<script>
+// 						$(document).ready(function () {
+// 							$('#checkout-btn').click(function () {
+// 								console.log("按鈕有綁到JS Event_我自己的版本");
+// 								// 這要改成抓登入資訊
+// 								let memberId = "9";
+								
+// 								// 將選取的商品編號封裝成資料
+// 								selectedProductsMap = collectSelectedProducts();
+// 								console.log(selectedProductsMap);
+// 								const obj = Object.fromEntries(selectedProductsMap);
+
+// 								// 将普通对象转换为JSON字符串
+// 								const selectedProductsJsonStr = JSON.stringify(obj); 
+					</script>
+					<script>
+					// 凱哥寫的版本
 						$(document).ready(function () {
 							$('#checkout-btn').click(function () {
 								console.log("按鈕有綁到JS Event");
 
+								// 抓到買家登入的資訊
+								let memberId = "9";
+								
 								let selectedProductsMap = new Map();
 
 								// 將選取的商品編號封裝成資料
@@ -154,8 +173,8 @@
 								// console.log(jsonString);
 
 							
-								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
-								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/';
+								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/cart/cart_creat_order';
+								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/main';
 
 								fetch((url), {
 									method: "POST",
@@ -192,15 +211,25 @@
 
 							// 遍歷每個選中的項目
 							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
-								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
+                                let	memberId = "9";
+// 								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
 								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
 								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
 
-								if (selectedProductsMap.has(sellerName)) {
-									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+								// 要依照賣家名稱分類的邏輯
+// 								if (selectedProductsMap.has(sellerName)) {
+// 									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+// 								} else {
+// 									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+// 								}
+								
+								// 都裝入買家id 的邏輯
+								if (selectedProductsMap.has(memberId)) {
+									selectedProductsMap.get(memberId).push({ "productId": productId, "productQty": productQty });
 								} else {
-									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+									selectedProductsMap.set(memberId, [{ "productId": productId, "productQty": productQty }]);
 								}
+								
 							});
 							selectedProductsMap.forEach((value, key) => {
 								console.log(key);
