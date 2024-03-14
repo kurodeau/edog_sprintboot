@@ -17,25 +17,24 @@ public class PetDrawService {
 
 	@Autowired
 	PetDrawRepository petDrawRepository;
-	
+
 	@Autowired
 	BuyerRepository buyerRepository;
 
+	public Integer addPetDraw(PetDrawVO petDrawVO) {
+		PetDrawVO savedPetDraw = petDrawRepository.save(petDrawVO);
+		return savedPetDraw.getpetDrawId();
+	}
 
-	 public Integer addPetDraw(PetDrawVO petDrawVO) {
-	        PetDrawVO savedPetDraw = petDrawRepository.save(petDrawVO);
-	        return savedPetDraw.getpetDrawId();
-	 }
-    
 	public void updatePetDraw(PetDrawVO petDrawVO) {
 		petDrawRepository.save(petDrawVO);
 	}
 
-	 public void deletePetDraw(Integer petDrawId) {
-	        if (petDrawRepository.existsById(petDrawId)) {
-	            petDrawRepository.deleteById(petDrawId);
-	        }
-	    }
+	public void deletePetDraw(Integer petDrawId) {
+		if (petDrawRepository.existsById(petDrawId)) {
+			petDrawRepository.deleteById(petDrawId);
+		}
+	}
 
 	public PetDrawVO getOnePetDraw(Integer petDrawId) {
 		Optional<PetDrawVO> optional = petDrawRepository.findById(petDrawId);
@@ -46,29 +45,42 @@ public class PetDrawService {
 		return petDrawRepository.findAll();
 	}
 
-	public List<PetDrawVO> GetfindByMemberId(Integer memberId) {
-		// 使用注入的 petDrawRepository 獲取 BuyerVO
-		List<PetDrawVO> list = petDrawRepository.findByMemberId(memberId);
-		PetDrawVO petDraw = list.get(0);
-		Integer member = petDraw.getMemberId();
-		BuyerVO user = buyerRepository.findById(memberId).orElse(null);
-		user.getPetName();
-		user.getMemberName();
-		return list;
+	public InsertResponse GetfindByMemberId(Integer memberId) {
+		// 使用 buyerRepository 查找特定的會員
+		Optional<BuyerVO> buyerOptional = buyerRepository.findById(memberId);
+		// 檢查是否找到會員
+		if (buyerOptional.isPresent()) {
+			BuyerVO buyer = buyerOptional.get();
 
+			// 獲取會員相關資料，例如會員名稱和寵物名稱
+			Integer member = buyer.getMemberId();
+			String petName = buyer.getPetName();
+			String memberName = buyer.getMemberName();
+			 // 構造 PetDrawVO 對象
+	        InsertResponse insertResponse = new InsertResponse();
+	        insertResponse.setMemberPairId(buyer);
+
+	       // 返回抽卡結果
+	        return insertResponse;
+	    } else {
+	        // 如果找不到會員，返回錯誤或空的對象
+	        return new InsertResponse(); // 或其他表示錯誤的處理方式
+	    }
 	}
+			
+
 	@PostConstruct
 	public void init() {
-	    // 進行 petDrawRepository 和 buyerRepository 的初始化
+		// 進行 petDrawRepository 和 buyerRepository 的初始化
 	}
-	
-	 public int getRandomMemberIdNotEqualTo(int memberId) {
-	        List<BuyerVO> buyers = buyerRepository.findAll();
-	        Random random = new Random();
-	        int randomIndex;
-	        do {
-	            randomIndex = random.nextInt(buyers.size());
-	        } while (buyers.get(randomIndex).getMemberId() == memberId);
-	        return buyers.get(randomIndex).getMemberId();
-	    }
+
+	public int getRandomMemberIdNotEqualTo(int memberId) {
+		List<BuyerVO> buyers = buyerRepository.findAll();
+		Random random = new Random();
+		int randomIndex;
+		do {
+			randomIndex = random.nextInt(buyers.size());
+		} while (buyers.get(randomIndex).getMemberId() == memberId);
+		return buyers.get(randomIndex).getMemberId();
+	}
 }

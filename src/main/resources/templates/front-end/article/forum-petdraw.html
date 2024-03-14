@@ -4,7 +4,7 @@
 
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
-
+<meta property="og:description" content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -92,10 +92,12 @@
     <div class="seller-container">
 			<div class="pagetitle">
     <h1  style="margin-top: 30px;">寵物抽卡</h1>
+        <div id="countdown">午夜倒數計時: <span id="timer">Loading...</span></div>
     
       	<form method="post" th:action="@{/petdraw/insert}" style="margin-bottom: 0px;">
 	    <input type="submit" value="抽卡">
 		</form>
+		
 		</div>
 		</div>
 	</main>
@@ -181,8 +183,7 @@
             // 更新會員個人資料
             memberInfo.innerHTML = `<p>ID: ${memberData.memberId}</p>
                                 <p>Name: ${memberData.memberName}</p>
-                                <p>Email: ${memberData.memberEmail}</p>
-                                <p>Phone: ${memberData.memberPhone}</p>
+                                <p>Name: ${memberData.petName}</p>
                                 <!-- 其他資料可自行添加 -->
                                 <div style="height: 30px;"></div>
                                 <button onclick="showChatWindow()">聊天</button>`; // 添加一個聊天按鈕
@@ -203,10 +204,10 @@
             // 如果存在 petDraw 欄位，顯示相關信息
             if (memberData.petDraw) {
                 const mainInfo = document.createElement('p');
-                mainInfo.textContent = `Main: ${memberData.petDraw.memberMain.memberName}`;
+                mainInfo.textContent = `Main: ${memberData.petDraw.memberId.memberName}`;
 
                 const pairInfo = document.createElement('p');
-                pairInfo.textContent = `Pair: ${memberData.petDraw.memberPair.memberName}`;
+                pairInfo.textContent = `Pair: ${memberData.petDraw.memberPairId.memberName}`;
 
                 const isMemberLikeInfo = document.createElement('p');
                 isMemberLikeInfo.textContent = `Is Member Like: ${memberData.petDraw.isMemberLike}`;
@@ -230,19 +231,7 @@
             hasDrawnCard = true; // 更新抽卡狀態
         }
 
-        function showCountdown() {
-            const countdownElement = document.getElementById('countdown');
-            const drawButton = document.getElementById('drawButton');
-
-            // 重新啟用抽卡按鈕
-            drawButton.disabled = false;
-
-            // 顯示倒數計時
-            countdownElement.style.display = 'block';
-
-            // 啟動倒數計時器
-            startCountdown();
-        }
+     
 
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');

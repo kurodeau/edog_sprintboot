@@ -7,15 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.buyer.entity.BuyerVO;
 
 @Entity
 @Table(name = "petdraw") // 指定對應的資料庫表格名稱
@@ -24,7 +20,7 @@ public class PetDrawVO implements java.io.Serializable {
 
 	private Integer petDrawId;
 	private Integer memberId;
-    private BuyerVO memberPairId;
+    private Integer memberPairId;
 	private Boolean isMemberLike;
 	// 命名問題 除開發者外 其餘人不知此為何時間
 	private Date memberResTime;
@@ -58,13 +54,13 @@ public class PetDrawVO implements java.io.Serializable {
         this.memberId = memberId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "memberPairId", referencedColumnName = "memberId")
-    public BuyerVO getMemberPairId() {
+    
+
+    public Integer getMemberPairId() {
         return memberPairId;
     }
 
-    public void setMemberPairId(BuyerVO memberPairId) {
+    public void setMemberPairId(Integer memberPairId) {
         this.memberPairId = memberPairId;
     }
 

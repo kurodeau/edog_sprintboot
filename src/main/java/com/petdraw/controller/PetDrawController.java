@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
+import com.petdraw.model.InsertResponse;
 import com.petdraw.model.PetDrawService;
 import com.petdraw.model.PetDrawVO;
+import com.seller.entity.SellerVO;
 
 @Controller
 @Validated
@@ -40,31 +44,27 @@ public class PetDrawController {
 
 //    http://localhost:8080/servername/pairPets?=memberMainId=123456&memberPa
 	@PostMapping("insert")
-	public String insert(@Valid PetDrawVO petDrawVO, BindingResult result, ModelMap model) throws IOException {
-		//抽卡者 預設為1
-		BuyerVO memberId = new BuyerVO();
-		memberId.setMemberId(1);
-		petDrawVO.setMemberId(memberId.getMemberId());
-		
-		//抽到隨機數
-		 int randomBuyerId;
-	        do {
-	            randomBuyerId = petDrawSvc.getRandomMemberIdNotEqualTo(memberId.getMemberId());
-	        } while (randomBuyerId == memberId.getMemberId());
-        BuyerVO memberPairId = new BuyerVO();
-        memberPairId.setMemberId(randomBuyerId);
-		
-		petDrawVO.setMemberPairId(memberPairId);
-		
-		petDrawVO.setPetDrawTime(new Date());
-		Integer petDrawIdNew = petDrawSvc.addPetDraw(petDrawVO);
-		
+	   public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model) throws IOException {
+        if (result.hasErrors()) {
+            return "front-end/article/forum-petdraw"; // 返回錯誤視圖
+        }
+        
+        PetDrawVO petDrawVO = new PetDrawVO();
+        petDrawVO.setMemberId(buyerVO.getMemberId());
+        
+        
+        InsertResponse insertResponse = petDrawSvc.GetfindByMemberId(2);
+        // 檢查 insertResponse 是否為 null 或包含錯誤
 
-		// 添加成功的提示信息
-		model.addAttribute("successMessage", "寵物配對成功！");
-		// 重新導向到寵物配對列表頁面
-		return "redirect:/petdraw/getOne-petdraw?petDrawId=" + petDrawIdNew;
-//		return "redirect:/article/forum-petdraw";
+        int randomBuyerId = petDrawSvc.getRandomMemberIdNotEqualTo(2);
+        petDrawVO.setMemberPairId(randomBuyerId);
+
+        petDrawVO.setPetDrawTime(new Date());
+        Integer petDrawIdNew = petDrawSvc.addPetDraw(petDrawVO);
+
+        model.addAttribute("info", insertResponse);
+        model.addAttribute("successMessage", "寵物配對成功！");
+        return "redirect:/petdraw/getOne-petdraw?petDrawId=" + petDrawIdNew;
 	}
 	
 	@GetMapping("getOne-petdraw")

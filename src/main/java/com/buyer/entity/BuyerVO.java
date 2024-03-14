@@ -15,8 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.productorder.model.ProductOrderVO;
 
@@ -27,38 +27,88 @@ import com.productorder.model.ProductOrderVO;
 
 @Entity
 @Table(name = "buyer")
-public class BuyerVO implements java.io.Serializable {
+public class BuyerVO implements java.io.Serializable{
 	private static final long serialVersionUID = 1L;
+	
+	
+	
+	
+	//訂單關聯//
+private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
+	
+
+	
+	
+	private Integer memberId;
+	private String memberEmail; 
+	private String thirdFrom;
+	private String memberName;
+	private String memberPhone;
+	private String memberMobile;
+	private Date memberBirthday; 
+	private String memberPassword; 
+	private String memberAddress; 
+	private Boolean isMemberEmail; 
+	private Date memberRegistrationTime; 
+	private String petName; 
+	private byte[] petImg; 
+	private Date petImgUploadTime; 
+	private String petVaccName1; 
+	private Date petVaccTime1; 
+	private String petVaccName2; 
+	private Date petVaccTime2; 
+	private Boolean isConfirm;
+
+//	@OneToMany(mappedBy = "memberMain", cascade = CascadeType.ALL)
+//	@OrderBy("memberId asc") 
+//	private Set<PetDrawVO> PetDrawVOMemnerIds;
+
+//	@OneToMany (mappedBy = "memberPair" ,cascade = CascadeType.ALL)
+//	@OrderBy("memberId asc")
+//	private Set<PetDrawVO> PetDrawVOMemnerPairIds;
+	
+	
+	//這不知道幹嘛的
+//	public Set<BuyerVO> getMembers() {
+//		return members;
+//	}
+
+	//這不知道幹嘛的
+//	public void setMembers(Set<BuyerVO> members) {
+//		this.members = members;
+//	}
 
 	public BuyerVO() {
 		super();
 	};
 
-	// 訂單關聯//
-	private Set<ProductOrderVO> productOrders = new HashSet<ProductOrderVO>();
-
-	private Integer memberId;
-	private String memberEmail;
-	private String thirdFrom;
-	private String memberName;
-	private String memberPhone;
-	private String memberMobile;
-	private Date memberBirthday;
-	private String memberPassword;
-	private String memberAddress;
-	private Boolean isMemberEmail;
-	private Date memberRegistrationTime;
-	private String petName;
-	private byte[] petImg;
-	private Date petImgUploadTime;
-	private String petVaccName1;
-	private Date petVaccTime1;
-	private String petVaccName2;
-	private Date petVaccTime2;
-	private Boolean isConfirm;
+	public BuyerVO(String memberEmail, String thirdFrom, String memberName, String memberPhone, String memberMobile,
+			Date memberBirthday, String memberPassword, String memberAddress, Boolean isMemberEmail,
+			Date memberRegistrationTime, String petName, byte[] petImg, Date petImgUploadTime, String petVaccName1,
+			Date petVaccTime1, String petVaccName2, Date petVaccTime2, Boolean isConfirm) {
+		super();
+		this.memberEmail = memberEmail;
+		this.thirdFrom = thirdFrom;
+		this.memberName = memberName;
+		this.memberPhone = memberPhone;
+		this.memberMobile = memberMobile;
+		this.memberBirthday = memberBirthday;
+		this.memberPassword = memberPassword;
+		this.memberAddress = memberAddress;
+		this.isMemberEmail = isMemberEmail;
+		this.memberRegistrationTime = memberRegistrationTime;
+		this.petName = petName;
+		this.petImg = petImg;
+		this.petImgUploadTime = petImgUploadTime;
+		this.petVaccName1 = petVaccName1;
+		this.petVaccTime1 = petVaccTime1;
+		this.petVaccName2 = petVaccName2;
+		this.petVaccTime2 = petVaccTime2;
+		this.isConfirm = isConfirm;
+	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "memberId", updatable = false)
 	public Integer getMemberId() {
 		return memberId;
@@ -76,7 +126,7 @@ public class BuyerVO implements java.io.Serializable {
 	public void setMemberEmail(String memberEmail) {
 		this.memberEmail = memberEmail;
 	}
-
+	
 	@Column(name = "thirdFrom")
 	public String getThirdFrom() {
 		return thirdFrom;
@@ -114,7 +164,8 @@ public class BuyerVO implements java.io.Serializable {
 	}
 
 	@Column(name = "memberBirthday")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getMemberBirthday() {
 		return memberBirthday;
 	}
@@ -151,7 +202,8 @@ public class BuyerVO implements java.io.Serializable {
 	}
 
 	@Column(name = "memberRegistrationTime")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getMemberRegistrationTime() {
 		return memberRegistrationTime;
 	}
@@ -169,7 +221,7 @@ public class BuyerVO implements java.io.Serializable {
 		this.petName = petName;
 	}
 
-	@Column(name = "petImg", columnDefinition = "LONGBLOB")
+	@Column(name = "petImg", columnDefinition = "LONGBLOB" )
 	public byte[] getPetImg() {
 		return petImg;
 	}
@@ -179,7 +231,8 @@ public class BuyerVO implements java.io.Serializable {
 	}
 
 	@Column(name = "petImgUploadTime")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getPetImgUploadTime() {
 		return petImgUploadTime;
 	}
@@ -198,7 +251,8 @@ public class BuyerVO implements java.io.Serializable {
 	}
 
 	@Column(name = "petVaccTime1")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
+//	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getPetVaccTime1() {
 		return petVaccTime1;
 	}
@@ -217,7 +271,7 @@ public class BuyerVO implements java.io.Serializable {
 	}
 
 	@Column(name = "petVaccTime2")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP)
 	public Date getPetVaccTime2() {
 		return petVaccTime2;
 	}
@@ -234,19 +288,21 @@ public class BuyerVO implements java.io.Serializable {
 	public void setIsConfirm(Boolean isConfirm) {
 		this.isConfirm = isConfirm;
 	}
+		
+//////////訂單關聯/////////////////////////
+@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="buyerVO")
+@OrderBy("memberId asc")
+public Set<ProductOrderVO> getProductOrders() {
+return productOrders;
+}
 
-	////////// 訂單關聯/////////////////////////
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "buyerVO")
-	@OrderBy("memberId asc")
-	public Set<ProductOrderVO> getProductOrders() {
-		return productOrders;
-	}
+public void setProductOrders(Set<ProductOrderVO> productOrders) {
+this.productOrders = productOrders;
+}
+////////////////////////////////
 
-	public void setProductOrders(Set<ProductOrderVO> productOrders) {
-		this.productOrders = productOrders;
-	}
-	////////////////////////////////
-
+	
+	
 	@Override
 	public String toString() {
 		return "BuyerVO [memberId=" + memberId + ", memberEmail=" + memberEmail + ", thirdFrom=" + thirdFrom
@@ -259,5 +315,7 @@ public class BuyerVO implements java.io.Serializable {
 				+ isConfirm + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
 				+ super.toString() + "]";
 	}
+	
+	
 
 }
