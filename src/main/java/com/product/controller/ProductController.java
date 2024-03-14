@@ -195,15 +195,17 @@ public class ProductController {
 			List<ProductImgVO> originalImgs = productImgSvc.getProductImgs(Integer.valueOf(productId));
 
 			for(ProductImgVO previousImgs : originalImgs) {
-				
-				ProductImgVO productImg = new ProductImgVO();
+			
 				byte[] upFiles = productImgSvc.getOneProductImg(previousImgs.getProductImgId()).getProductImg();
-				productImgSvc.updateProductImg(productImg);	
+				productImgVO.setProductImg(upFiles);
+				productImgSvc.updateProductImg(previousImgs);	
 				
 			}
 			
 			
 		}else {
+			
+		
 			
 			productImgSvc.deleteProductImgs(Integer.valueOf(productId));
 

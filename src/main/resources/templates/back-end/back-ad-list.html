@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
 <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+
 </head>
 
 <body>
+	<!-- ======= Header ======= -->
 	<header class="fixed-top">
 		<th:block th:insert="~{/back-end/header-back}"></th:block>
 	</header>
 
+
+	<!-- ======= Sidebar ======= -->
 	<aside th:replace="back-end/aside-back.html"></aside>
+
+	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
 		<div class="seller-container">
@@ -57,11 +63,44 @@
 							<td th:text="${adVO.isEnabled}"></td>
 
 
-							<td><a class="btn"
-								th:href="@{getOne_For_Update(id=${adVO.adId})}">編輯</a>
-								<button type="button" class="btn btn-del"
-									th:attr="data-delete-id=${adVO.adId}" data-bs-toggle="modal"
-									data-bs-target="#deleteModal">刪除</button></td>
+							<td>
+
+
+								<form method="post" th:action="@{/back/ad/getOne_For_Update}">
+									<button type="submit" class="product align-self-start btn-func">編輯</button>
+									<input type="hidden" name="adId" th:value="${adVO.adId}">
+								</form>
+
+
+
+								<form id="deleteForm${adVO.adId}" method="post"
+									th:action="@{/back/ad/deleteStatus}"
+									onsubmit="return confirmDelete('${adVO.adId}');">
+									<button type="submit" class="product align-self-start btn-func">刪除</button>
+									<input type="hidden" name="adId" th:value="${adVO.adId}">
+								</form>
+
+								<div th:if="${adVO.adStatus == '審核中'}">
+									<form id="reviewConfirmForm${adVO.adId}" method="post"
+										th:action="@{/back/ad/reviewConfirm}"
+										onsubmit="return reviewConfirm('${adVO.adId}');">
+										<button type="submit"
+											class="product align-self-start btn-func">審核通過</button>
+										<input type="hidden" name="adId" th:value="${adVO.adId}">
+									</form>
+
+									<form id="reviewFailForm${adVO.adId}" method="post"
+										th:action="@{/back/ad/reviewFail}"
+										onsubmit="return reviewFail('${adVO.adId}');">
+										<button type="submit"
+											class="product align-self-start btn-func">審核失敗</button>
+										<input type="hidden" name="adId" th:value="${adVO.adId}">
+									</form>
+
+								</div>
+
+
+							</td>
 						</tr>
 					</th:block>
 				</tbody>
@@ -70,26 +109,6 @@
 	</main>
 
 	<!-- End Main -->
-
-	<div class="modal fade" id="deleteModal" tabindex="-1"
-		aria-labelledby="deleteModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">確定要刪除嗎？</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-						確定刪除</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- ======= Footer, 後臺應該不需要footer ======= -->
 
@@ -102,7 +121,44 @@
 
 	<!-- Your custom script to initialize the DataTable with fixed columns -->
 	<script>
+		function confirmDelete(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定要刪除嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("deleteForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function reviewConfirm(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定審核通過嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("reviewConfirmForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
+		function reviewFail(adId) {
+			// 使用JavaScript的confirm方法彈出確認框
+			var result = confirm("確定審核不通過嗎？");
+			if (result) {
+				// 如果使用者點擊了確認按鈕，將adId作為參數傳遞給表單，然後提交
+				document.getElementById("reviewFailForm" + adId).submit();
+			} else {
+				// 如果使用者點擊了取消按鈕，返回 false，防止表單提交
+				return false;
+			}
+		}
+
 		document.addEventListener("DOMContentLoaded", function() {
+
 			// 初始化 DataTables
 
 			let table = $("#example").DataTable(
@@ -172,7 +228,7 @@
 
 						// Your AJAX request for deletion
 						$.ajax({
-							url : currentLoc + "/delete?id=" + deleteId,
+							url : currentLoc + "/delete?adId=" + deleteId,
 							method : "DELETE",
 							success : function(response) {
 								if (response.success) {
@@ -195,6 +251,7 @@
 							},
 						});
 					});
+
 		});
 	</script>
 </body>
