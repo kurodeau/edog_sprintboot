@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+
+</head>
+  <body>
+    <!-- ======= Header ======= -->
+    	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+
+                        <!-- 測試進入後台入口 -->							
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+
+		<!-- Start SearchBar  -->
+		<div class="container-fluid bg-user search-container-custom">
+			<div class="row">
+				<!-- Start SearchBar-Logo  -->
+				<div
+					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
+						srcset="" />
+				</div>
+				<!-- End SearchBar-Logo  -->
+
+				<!-- Start SearchBar-Input  -->
+				<div
+					class="col d-flex searchItem flex-column search-item-container-custom">
+					<form class="form-inline w-100" method="post" th:action="@{getOne_For_Display}">
+					    <div class="row py-2 search-row-custom w-100 pe-2">
+					        <div class="col">
+					            <input class="form-control mr-sm-2 w-100 search-input-custom"
+					                type="search" placeholder="請在此進行文章搜索" aria-label="Search" name="searchText" />
+					        </div>
+					        <div class="col-auto">
+					            <button class="btn btn-user search-button-custom d-flex"
+					                type="submit">
+					                <i class="me-2 ri-search-line"></i>
+					                <div class="col-auto d-none d-md-block">Search</div>
+					            </button>
+					        </div>
+					    </div>
+					</form>
+
+					<div class="my-2 keyword-container-custom">
+						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
+							class="badge rounded-pill keyword-item-custom">玩具</span>
+					</div>
+				</div>
+				<!-- End SearchBar-Input  -->
+
+			</div>
+		</div>
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="front-end/article/aside-forum.html"></aside>
+    <!-- ======= Main ======= -->
+    <main class="main main-layout-seller">
+    <div class="seller-container">
+        <div class="pagetitle">
+            <h1 style="margin-top: 30px;">消息通知</h1>
+            <div class="tab_list_block">
+                <ul class="tab_list">
+                    <li><a href="#" data-target="tab1" class="tab -on">未讀</a></li>
+                    <li><a href="#" data-target="tab2" class="tab">已讀</a></li>
+                </ul>
+                <hr>
+            </div>
+        </div>
+        
+        <!-- 未读消息表格 -->
+        <table id="msgTableUnread" style="border-collapse:separate;width: 100%;">
+		    <tbody >
+		        <th:block th:each="msgVO : ${msgListData}">
+		            <!-- 添加间距 -->
+		            <tr th:unless="${msgVO.isRead}" class="forum-msg" th:onclick="'redirectToUpdatePage(\'' + @{/msg/getOne(id=${msgVO.msgId})} + '\')'">
+		                <td style="display: none;" th:text="${msgVO.msgId}"></td>
+				      	<td th:if="${msgVO.msgTypeVO.msgTypeId == 1}">
+                        	<i class="bi bi-hearts" style="color: #F00078;"></i>
+						    有人喜歡你在<strong th:text="${msgVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章
+						</td>
+		                <td th:if="${msgVO.msgTypeVO.msgTypeId == 2}">
+		                	<i style="color: #6A6AFF;" class="bi bi-chat-dots-fill"></i>
+						    有人回應了你在<strong th:text="${msgVO.replyVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 3}">
+							<i class="bi bi-hearts" style="color: #F00078;"></i>
+						    有人喜歡你的留言:「<strong th:text="${msgVO.replyVO.replyContent}"></strong>」
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 4}">
+						<i style="color:#FF0000" class="bi bi-arrow-through-heart-fill"></i>
+						    有人對你有興趣
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 5}">
+						<i style="color:#FF8000" class="bi bi-exclamation-circle-fill"></i>
+						    你在<strong th:text="${msgVO.reportVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章已被檢舉下架
+						<i class="bi bi-dot"></i>
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 6}">
+						<i style="color:#FF8000" class="bi bi-exclamation-circle-fill"></i>
+						    你的留言:「<strong th:text="${msgVO.replyVO.replyContent}"></strong>」已被檢舉下架
+						</td>
+						<td colspan="100%" style="display: flex; color: blue; margin-left: auto;">
+						    ●
+						</td>
+
+		            </tr>
+		             <tr th:unless="${msgVO.isRead}">
+		                <td class="msg-time" colspan="100%"><span th:text="${msgVO.msgTime}"></span>
+		                </td>
+		            </tr>
+		        </th:block>
+		    </tbody>
+		    
+		</table>
+
+
+        <!-- 已读消息表格 -->
+        <table id="msgTableRead" style="display: none;border-collapse:separate;">
+            <tbody>
+                <th:block th:each="msgVO : ${msgListData}">
+                    <tr th:if="${msgVO.isRead}" class="forum-msg" th:onclick="'redirectToUpdatePage(\'' + @{/msg/getOne(id=${msgVO.msgId})} + '\')'">
+                        <td style="display: none;" th:text="${msgVO.msgId}"></td>
+                        <td th:if="${msgVO.msgTypeVO.msgTypeId == 1}">
+                        	<i class="bi bi-hearts" style="color: #F00078;"></i>
+						    有人喜歡你在<strong th:text="${msgVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章
+						</td>
+		                <td th:if="${msgVO.msgTypeVO.msgTypeId == 2}">
+		                	<i style="color: #6A6AFF;" class="bi bi-chat-dots-fill"></i>
+						    有人回應了你在<strong th:text="${msgVO.replyVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 3}">
+							<i class="bi bi-hearts" style="color: #F00078;"></i>
+						    有人喜歡你的留言:「<strong th:text="${msgVO.replyVO.replyContent}"></strong>」
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 4}">
+						<i style="color:#FF0000" class="bi bi-arrow-through-heart-fill"></i>
+						    有人對你有興趣
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 5}">
+						<i style="color:#FF8000" class="bi bi-exclamation-circle-fill"></i>
+						    你在<strong th:text="${msgVO.reportVO.articleVO.articleTypeVO.articleTypeName}"></strong>發布的一篇文章已被檢舉下架
+						</td>
+						<td th:if="${msgVO.msgTypeVO.msgTypeId == 6}">
+						<i style="color:#FF8000" class="bi bi-exclamation-circle-fill"></i>
+						    你的留言:「<strong th:text="${msgVO.replyVO.replyContent}"></strong>」已被檢舉下架
+						</td>
+						
+                    </tr>
+                    <tr th:if="${msgVO.isRead}">
+		                <td class="msg-time" colspan="100%"><span th:text="${msgVO.msgTime}"></span></td>
+		            </tr>
+                </th:block>
+            </tbody>
+        </table>
+
+    </div>
+</main>
+
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+            <svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor JS Files -->
+		<div th:replace="~{/fragment-js}"></div>
+		<div th:replace="~{/fragment-datatableJs}"></div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+        // 为未读标签添加点击事件
+        $('a[data-target="tab1"]').click(function() {
+            $('#msgTableUnread').show();
+            $('#msgTableRead').hide();
+        });
+
+        // 为已读标签添加点击事件
+        $('a[data-target="tab2"]').click(function() {
+            $('#msgTableUnread').hide();
+            $('#msgTableRead').show();
+        });
+       
+    function redirectToUpdatePage(url) {
+        window.location.href = url;
+    }
+    $('.forum-msg').click(function() {
+        var msgId = $(this).find('td:first-child').text(); // 获取消息的ID
+        markAsUnread(msgId); // 调用标记为未读的函数
+    });
+
+    // 标记消息为未读状态的函数
+    function markAsUnread(msgId) {
+        // 向后端发送Ajax请求
+        $.ajax({
+            type: 'POST',
+            url: '/markAsUnread', // 标记为未读的后端接口URL
+            data: { msgId: msgId }, // 发送的数据，包含消息ID
+            success: function(response) {
+                if (response.success) {
+                    // 如果成功标记为未读，可以在前端做一些视觉上的反馈
+                    alert('消息标记为未读成功！');
+                } else {
+                    alert('消息标记为未读失败！');
+                }
+            },
+            error: function() {
+                alert('发生错误，无法标记消息为未读！');
+            }
+        });
+    }
+</script>
+
+  </body>
+</html>

@@ -1,4 +1,4 @@
-package com.article.controller;
+package com.msg.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,6 +27,8 @@ import com.articleType.entity.ArticleTypeVO;
 import com.articleType.service.ArticleTypeService;
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
+import com.msg.entity.MsgVO;
+import com.msg.service.MsgService;
 import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
 import com.seller.entity.SellerVO;
@@ -36,14 +38,11 @@ import com.report.entity.ReportVO;
 import com.report.service.ReportService;
 import com.reportType.entity.ReportTypeVO;
 import com.reportType.service.ReportTypeService;
-import com.msg.entity.MsgVO;
-import com.msg.service.MsgService;
-import com.msgType.entity.MsgTypeVO;
 
 @Controller
-@ComponentScan(basePackages = {"com.article", "com.articleType"})
-@RequestMapping("/article")
-public class ArticleController {
+@ComponentScan(basePackages = {"com.msg"})
+@RequestMapping("/msg")
+public class MsgController {
 
 	@Autowired
 	ArticleTypeService articleTypeSvc;
@@ -59,21 +58,21 @@ public class ArticleController {
 
 	@Autowired
 	ReportService reportSvc;
+	
+	@Autowired
+	MsgService msgSvc;
 
 
 	@Autowired
 	ReportTypeService reportTypeSvc;
-	
-	@Autowired
-	MsgService msgSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
 	
-	 @ModelAttribute("articleListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-		protected List<ArticleVO> referenceListData_Article(Model model) {
+	 @ModelAttribute("msgListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
+		protected List<MsgVO> referenceListData_Msg(Model model) {
 			
-	    	List<ArticleVO> list = articleSvc.getAll();
+	    	List<MsgVO> list = msgSvc.getAll();
 			return list;
 		}
 	 
@@ -104,11 +103,9 @@ public class ArticleController {
 			return list;
 		}
 	
-	// /front/article/listAll
 		@GetMapping("listAll")
 		public String listAllArticle(ModelMap model) {
-//			return "front-end/article/front-article-list";
-			return "front-end/article/forum-home";
+			return "front-end/article/msg-list";
 		}
 
 		@GetMapping("add")
@@ -117,15 +114,49 @@ public class ArticleController {
 			model.addAttribute("articleVO", articleVO);
 			return "front-end/article/post-article";
 		}
+		
 		@GetMapping("getOne")
-		public String getOneArticle(@RequestParam("id") Integer articleId, ModelMap model) {
-			ArticleVO articleVO = articleSvc.getOneArticle(articleId);
-			model.addAttribute("articleVO", articleVO);
-			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
-		    model.addAttribute("replyVOList", replyVOList);
-		    ReportVO reportVO = new ReportVO();
-		    model.addAttribute("reportVO", reportVO);
-			return "front-end/article/list-one-article";
+		public String getOneMsg(@RequestParam("id") Integer msgId, ModelMap model) {
+			
+			MsgVO msgVO = msgSvc.getOneMsg(msgId);
+			 // 检查msgVO中的articleVO、replyVO和reportVO是否为null
+			 if (msgVO.getArticleVO() != null) {
+		        model.addAttribute("msgVO", msgVO);
+		        ArticleVO articleVO = articleSvc.getOneArticle(msgVO.getArticleVO().getArticleId());
+		        model.addAttribute("articleVO", articleVO);
+		        List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
+		        model.addAttribute("replyVOList", replyVOList);
+		        return "front-end/article/list-one-article"; // articleVO不为null，返回到对应的页面
+		        
+			 } else if (msgVO.getReplyVO() != null) {
+		        ReplyVO replyVO = msgVO.getReplyVO();
+		        ArticleVO articleVO = replyVO.getArticleVO();
+		        // 获取对应留言的文章信息
+		        model.addAttribute("articleVO", articleVO);
+		        List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
+		        model.addAttribute("replyVOList", replyVOList);
+		        model.addAttribute("msgVO", msgVO);
+		        return "front-end/article/list-one-article"; // replyVO不为null，返回到对应的页面
+		        
+		    } else if (msgVO.getReportVO() != null) {
+		        ReportVO reportVO = msgVO.getReportVO();
+		        if (reportVO.getReportTargetType() == 0) {
+		        	
+		        	ArticleVO articleVO = articleSvc.getOneArticle(reportVO.getArticleVO().getArticleId());
+		    	    model.addAttribute("articleVO", articleVO);
+		    	    model.addAttribute("reportVO", reportVO);
+		            model.addAttribute("msgVO", msgVO);
+		            return "front-end/article/article-report"; // 返回到檢舉文章页面
+		        } else if (reportVO.getReportTargetType() == 1) {
+		        	
+		        	ReplyVO replyVO = replySvc.getOneReply(reportVO.getReplyVO().getReplyId());
+		        	model.addAttribute("replyVO", replyVO);
+		        	model.addAttribute("reportVO", reportVO);
+		            model.addAttribute("msgVO", msgVO);
+		            return "front-end/article/reply-report"; // 返回到檢舉留言页面
+		        }
+		    }
+			 return "error-page"; 
 		}
 		
 		 @GetMapping("/TypeList")
@@ -138,15 +169,15 @@ public class ArticleController {
 
 		        return "front-end/article/articletype-list";
 		    }
-		 @GetMapping("/MyArticle")
-		 public String getMyArticle(@RequestParam("id") Integer memberId, Model model) {
+		 @GetMapping("/MyMsg")
+		 public String getMyMsg(@RequestParam("id") Integer memberId, Model model) {
 			 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
 			 model.addAttribute("buyerVO", buyerVO);
-			 List<ArticleVO> myArticleList = articleSvc.getByMemberId(buyerVO);
+			 List<MsgVO> myMsgList = msgSvc.getByMemberId(buyerVO);
 			 
-			 model.addAttribute("myArticleList", myArticleList);
+			 model.addAttribute("myMsgList", myMsgList);
 			 
-			 return "front-end/article/myArticle-list";
+			 return "front-end/article/Msg-list";
 		 }
 		 
 		@GetMapping("getOne_For_Update")
@@ -185,6 +216,22 @@ public class ArticleController {
 				articleVO.setUpFiles(buf);
 			}
 		}
+//		if (result.hasErrors() || parts[0].isEmpty()) {
+//			System.out.println("Id: " + articleVO.getArticleId());
+//			System.out.println("Buyer: " + articleVO.getBuyerVO());
+//			System.out.println("ArticleType: " + articleVO.getArticleTypeVO());
+//			System.out.println("Title: " + articleVO.getArticleTitle());
+//			System.out.println("Content: " + articleVO.getArticleContent());
+//			System.out.println("Time: " + articleVO.getArtUpdateTime());
+//			System.out.println("Like: " + articleVO.getArticleLike());
+//			System.out.println("Comment: " + articleVO.getArticleComment());
+//			System.out.println("Share: " + articleVO.getArticleShare());
+//			System.out.println("IsEnabled: " + articleVO.getIsEnabled());
+//			System.out.println("UpFiles: " + articleVO.getUpFiles());
+////			return "front-end/article/addArticle";
+//			return "front-end/article/post-article";
+//		}
+//		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始新增資料 *****************************************/
 		// EmpService empSvc = new EmpService();
 		articleSvc.addArticle(articleVO);
@@ -298,24 +345,11 @@ public class ArticleController {
 	}
 
 	@PostMapping("/like")
-	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId, ModelMap model) {
+	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId) {
 	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
 	    if (articleVO != null) {
 	        articleVO.setArticleLike(articleVO.getArticleLike()+1); // 增加喜欢数
 	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
-	        MsgVO msgVO = new MsgVO();
-	        msgVO.setArticleVO(articleVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(articleVO.getBuyerVO());
-	        MsgTypeVO msgTypeVO =new MsgTypeVO();
-	        msgTypeVO.setMsgTypeId(1);
-	        msgVO.setMsgTypeVO(msgTypeVO);
-	        msgVO.setMsgTime(new Date());
-	        msgVO.setIsRead(false);
-	        msgVO.setIsEnabled(true);
-	        // 其他需要设置的属性
-	        msgSvc.addMsg(msgVO);
-	        // 保存msgVO到数据库
-	        model.addAttribute("msgVO", msgVO);
 	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
