@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.spi.FileSystemProvider;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -22,6 +25,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
 
@@ -48,7 +52,7 @@ public class FileService {
 
 //		ClassPathResource classPathResource = new ClassPathResource("spreadsheet/Test.xlsx");
 
-		System.out.println("File path: " + classPathResource.getPath());
+//		System.out.println("File path: " + classPathResource.getPath());
 
 		String startTimeStr = startTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
@@ -81,37 +85,92 @@ public class FileService {
 				FileOutputStream fos = new FileOutputStream(filePath.toFile())) {
 
 			Sheet sheet = wb.getSheetAt(0);
-			List<ProductOrderVO> productOrderVOs = productOrdSvc.getBySellerId(sellerId);
+			List<ProductOrderVO> productOrderVOs = productOrdSvc.findAllBySellerIdOrderByTime(sellerId);
 
-			for (int row = 0; row <= productOrderVOs.size(); row++) {
-				Row currentRow = sheet.getRow(row);
+//			System.out.println(productOrderVOs.get(0).getOrderId());
+			Integer a1 = productOrderVOs.get(0).getOrderId();
+
+			Row currentRow;
+//			currentRow = sheet.getRow(0);
+//			for (int col = 0; col < currentRow.getLastCellNum(); col++) {
+//				Cell cell = currentRow.getCell(col);
+//				if (cell != null) {
+//					System.out.print(cell.getStringCellValue() + "\t");
+//				}
+//			}
+
+			List<OrderReportDTO> combinedData = new ArrayList<>();
+			for (ProductOrderVO productOrderVO : productOrderVOs) {
+				Set<OrderDetailsVO> orderDetailss = productOrderVO.getOrderDetailss();
+				for (OrderDetailsVO orderDetail : orderDetailss) {
+					OrderReportDTO o = new OrderReportDTO();
+					o.setOrderId(orderDetail.getOrderDetailsId());
+					o.setStatus(productOrderVO.getOrderStatus());
+					o.setQuantity(orderDetail.getPurchaseQuantity());
+					o.setUnitPrice(orderDetail.getProductVO().getPrice());
+					o.setOrderDate(productOrderVO.getOrderTime().toLocalDateTime());
+					o.setProductName(orderDetail.getProductVO().getProductName());
+					combinedData.add(o);
+				}
+			}
+
+			for (int row = 1; row <= combinedData.size(); row++) {
+				currentRow = sheet.getRow(row);
 				if (currentRow != null) {
-					if (row == 0) {
-						// Print row title
-						for (int col = 0; col < currentRow.getLastCellNum(); col++) {
-							Cell cell = currentRow.getCell(col);
-							if (cell != null) {
-								System.out.print(cell.getStringCellValue() + "\t");
-							}
-						}
-						System.out.println(); // New line after printing row title
-					} else {
-						for (int col = 0; col < currentRow.getLastCellNum(); col++) {
-							Cell cell = currentRow.getCell(col);
-							System.out.println(row+"_"+col);
-							if (cell != null) {
-								if (cell.getCellType() == CellType.STRING) {
-									String stringValue = cell.getStringCellValue();
-									cell.setCellValue(stringValue + "XXX");
-								} else if (cell.getCellType() == CellType.NUMERIC) {
-									double numericValue = cell.getNumericCellValue();
-									cell.setCellValue(String.valueOf(numericValue) + "XXX");
+					for (int col = 0; col < currentRow.getLastCellNum(); col++) {
+						Cell cell = currentRow.getCell(col);
+
+						int currentIndex = row - 1;
+						if (cell != null) {
+							if (cell.getCellType() == CellType.STRING) {
+								String stringValue = cell.getStringCellValue();
+								cell.setCellValue(stringValue + "XXX");
+							} else if (cell.getCellType() == CellType.NUMERIC) {
+								Double numericValue = cell.getNumericCellValue();
+								cell.setCellValue(String.valueOf(numericValue) + "XXX");
+							} else if (cell.getCellType() == CellType.BLANK) {
+								switch (col) {
+								case 1:
+								    cell.setCellValue(combinedData.get(currentIndex).getOrderId());
+								    break;
+								case 2:
+									
+								    cell.setCellValue(combinedData.get(currentIndex).getOrderDate().toString());
+								    break;
+								case 3:
+								    cell.setCellValue(combinedData.get(currentIndex).getProductName());
+								    break;
+								case 4:
+								    cell.setCellValue(combinedData.get(currentIndex).getQuantity());
+								    break;
+								case 5:
+								    cell.setCellValue(combinedData.get(currentIndex).getUnitPrice().doubleValue());
+								    break;
+								case 6:
+								    cell.setCellValue(combinedData.get(currentIndex).getStatus());
+								    break;
+								case 7: // 金額列，动态计算
+									String rowInExcel = String.valueOf(row+1);
+									cell.setCellFormula("IFERROR(E$"+rowInExcel+" * F$"+rowInExcel+", \"\")");
+								    break;
+								case 8: // 狀態列，使用 VLOOKUP 函数
+								    String lookupValue = "G" + ( String.valueOf(row+1)); // 要查找的值所在单元格
+								    String tableArray = "代碼!$B:$C"; // 查找范围
+								    int colIndex = 2; // 返回值所在列的索引
+								    cell.setCellFormula("IFERROR(VLOOKUP(" + lookupValue + "," + tableArray + "," + colIndex + ",0), \"\")");
+								    break;
+								default:
+								    // 处理默认情况
+								    break;
 								}
 							}
 						}
 					}
+
 				}
+
 			}
+			wb.write(fos);
 		}
 
 		return "";

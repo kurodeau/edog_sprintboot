@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 
-public class OrderReport {
+public class OrderDiagramDTO {
 
-	public OrderReport(LocalDateTime timestamp) {
+	public OrderDiagramDTO(LocalDateTime timestamp) {
 		super();
 		this.timestamp = timestamp;
 	}
 
 	private LocalDateTime timestamp;
-	public OrderReport(LocalDateTime timestamp, int orderCount) {
+	public OrderDiagramDTO(LocalDateTime timestamp, int orderCount) {
 		super();
 		this.timestamp = timestamp;
 		this.orderCount = orderCount;
@@ -21,7 +21,7 @@ public class OrderReport {
 
 	private int orderCount;
 
-	public OrderReport() {
+	public OrderDiagramDTO() {
 	}
 
 	public LocalDateTime getTimestamp() {
