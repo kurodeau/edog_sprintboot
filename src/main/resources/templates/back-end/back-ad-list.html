@@ -1,229 +1,201 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
-  </head>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<th:block th:insert="~{/fragment-datatableCss}"></th:block>
+</head>
 
-  <body>
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+<body>
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
-    <aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="back-end/aside-back.html"></aside>
 
-    <main class="main main-layout-seller">
-      <div class="seller-container">
-        <div class="pagetitle">
-          <h1>賣家廣告清單</h1>
-        </div>
-        <table
-          id="example"
-          class="table table-striped table-bordered"
-          style="width: 100%"
-        >
-          <thead>
-            <tr>
-              <th>編號</th>
-              <th>賣家編號</th>
-              <th>廣告圖片</th>
-              <th>廣告圖片上傳時間</th>
-              <th>廣告名稱</th>
-              <th>廣告網址</th>
-              <th>廣告起始日</th>
-              <th>廣告結束日</th>
-              <th>廣告等級</th>
-              <th>廣告備註</th>
-              <th>廣告狀態</th>
-              <th>廣告創立時間</th>
-              <th>廣告啟用狀態</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <th:block th:each="adVO : ${adListData}">
-              <tr>
-                <td th:text="${adVO.adId}"></td>
-                <td th:text="${adVO.sellerVO.sellerId}"></td>
-                <td th:text="${adVO.adImg}"></td>
-                <td th:text="${adVO.adImgUploadTime}"></td>
-            	<td th:text="${adVO.adName}"></td>
-            	<td th:text="${adVO.adUrl}"></td>
-            	<td th:text="${adVO.adStartTime}"></td>
-            	<td th:text="${adVO.adEndTime}"></td>
-            	<td th:text="${adVO.adLv}"></td>
-            	<td th:text="${adVO.adMemo}"></td>
-            	<td th:text="${adVO.adStatus}"></td>
-            	<td th:text="${adVO.adCreateTime}"></td>
-            	<td th:text="${adVO.isEnabled}"></td>
-            	
-            	
-                <td>
-                  <a
-                    class="btn"
-                    th:href="@{getOne_For_Update(id=${adVO.adId})}"
-                    >編輯</a
-                  >
-                  <button
-                    type="button"
-                    class="btn btn-del"
-                    th:attr="data-delete-id=${adVO.adId}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteModal"
-                  >
-                    刪除
-                  </button>
-                </td>
-              </tr>
-            </th:block>
-          </tbody>
-        </table>
-      </div>
-    </main>
+	<main class="main main-layout-seller">
+		<div class="seller-container">
+			<div class="pagetitle">
+				<h1>賣家廣告清單</h1>
+			</div>
+			<table id="example" class="table table-striped table-bordered"
+				style="width: 100%">
+				<thead>
+					<tr>
+						<th>編號</th>
+						<th>賣家編號</th>
+						<th>廣告圖片</th>
+						<th>廣告圖片上傳時間</th>
+						<th>廣告名稱</th>
+						<th>廣告網址</th>
+						<th>廣告起始日</th>
+						<th>廣告結束日</th>
+						<th>廣告等級</th>
+						<th>廣告備註</th>
+						<th>廣告狀態</th>
+						<th>廣告創立時間</th>
+						<th>廣告啟用狀態</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="adVO : ${adListData}">
+						<tr>
+							<td th:text="${adVO.adId}"></td>
+							<td th:text="${adVO.sellerVO.sellerId}"></td>
+							<td><img
+								th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+								width="100px" /></td>
+							<td th:text="${adVO.adImgUploadTime}"></td>
+							<td th:text="${adVO.adName}"></td>
+							<td th:text="${adVO.adUrl}"></td>
+							<td th:text="${adVO.adStartTime}"></td>
+							<td th:text="${adVO.adEndTime}"></td>
+							<td th:text="${adVO.adLv}"></td>
+							<td th:text="${adVO.adMemo}"></td>
+							<td th:text="${adVO.adStatus}"></td>
+							<td th:text="${adVO.adCreateTime}"></td>
+							<td th:text="${adVO.isEnabled}"></td>
 
-    <!-- End Main -->
 
-    <div
-      class="modal fade"
-      id="deleteModal"
-      tabindex="-1"
-      aria-labelledby="deleteModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">確定要刪除嗎？</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              取消
-            </button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
-              確定刪除
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+							<td><a class="btn"
+								th:href="@{getOne_For_Update(id=${adVO.adId})}">編輯</a>
+								<button type="button" class="btn btn-del"
+									th:attr="data-delete-id=${adVO.adId}" data-bs-toggle="modal"
+									data-bs-target="#deleteModal">刪除</button></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+	</main>
 
-    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+	<!-- End Main -->
 
-    <!-- Vendor & Main JS Files -->
-    <div th:replace="~{/fragment-js}"></div>
-    <div th:replace="~{/fragment-datatableJs}"></div>
+	<div class="modal fade" id="deleteModal" tabindex="-1"
+		aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deleteModalLabel">確認刪除</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">確定要刪除嗎？</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+						確定刪除</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Include DataTables JavaScript library -->
-    <!-- Include FixedColumns JavaScript library -->
+	<!-- ======= Footer, 後臺應該不需要footer ======= -->
 
-    <!-- Your custom script to initialize the DataTable with fixed columns -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // 初始化 DataTables
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-datatableJs}"></div>
 
-        let table = $("#example").DataTable({
-          columnDefs: [
-            {
-              targets: -1,
-              width: 150,
-            }, // 調整最後一列寬度
-          ],
-          fixedColumns: true,
-          paging: true,
-          lengthMenu: [5, 50, 75, 100],
-          language: {
-            lengthMenu: "顯示 _MENU_ 筆資料",
-          },
-          pageLength: 5,
-          scrollCollapse: true,
-          scrollX: true,
-          scrollY: 600,
-          pagingType: "full_numbers",
-          drawCallback: function () {
-            var api = this.api();
-            var rowCount = api
-              .rows({
-                page: "current",
-              })
-              .count();
+	<!-- Include DataTables JavaScript library -->
+	<!-- Include FixedColumns JavaScript library -->
 
-            // Loop to add empty rows if needed
-            for (
-              var i = 0;
-              i < api.page.len() - (rowCount === 0 ? 1 : rowCount);
-              i++
-            ) {
-              var emptyRow = $("<tr><td>&nbsp;</td></tr>").addClass("empty"); // 添加 'white-bg' 類別
-              $("#example tbody").append(emptyRow);
-            }
-          },
-        });
+	<!-- Your custom script to initialize the DataTable with fixed columns -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			// 初始化 DataTables
 
-        // 設定 DataTables 寬度為 100%
-        window.onload = function () {
-          table.columns.adjust().draw();
-        };
+			let table = $("#example").DataTable(
+					{
+						columnDefs : [ {
+							targets : -1,
+							width : 150,
+						}, // 調整最後一列寬度
+						],
+						fixedColumns : true,
+						paging : true,
+						lengthMenu : [ 5, 50, 75, 100 ],
+						language : {
+							lengthMenu : "顯示 _MENU_ 筆資料",
+						},
+						pageLength : 5,
+						scrollCollapse : true,
+						scrollX : true,
+						scrollY : 600,
+						pagingType : "full_numbers",
+						drawCallback : function() {
+							var api = this.api();
+							var rowCount = api.rows({
+								page : "current",
+							}).count();
 
-        function resetTable() {
-          table.clear().draw();
-        }
+							// Loop to add empty rows if needed
+							for (var i = 0; i < api.page.len()
+									- (rowCount === 0 ? 1 : rowCount); i++) {
+								var emptyRow = $("<tr><td>&nbsp;</td></tr>")
+										.addClass("empty"); // 添加 'white-bg' 類別
+								$("#example tbody").append(emptyRow);
+							}
+						},
+					});
 
-        $(".btn-del").on("click", function () {
-          let deleteId = $(this).data("delete-id");
-          console.log("deleteId in Btn: " + deleteId);
-          $("#confirmDeleteBtn").attr("data-delete-id", deleteId);
-        });
+			// 設定 DataTables 寬度為 100%
+			window.onload = function() {
+				table.columns.adjust().draw();
+			};
 
-        // Listen to the confirmDeleteBtn click event
-        $("#confirmDeleteBtn").on("click", function () {
-          // Retrieve the deleteId from data-delete-id attribute
-          let deleteId = $(this).data("delete-id");
-          console.log("deleteId in Modal: " + deleteId);
+			function resetTable() {
+				table.clear().draw();
+			}
 
-          let myModalEl = document.getElementById("deleteModal");
-          let modal = bootstrap.Modal.getInstance(myModalEl);
+			$(".btn-del").on("click", function() {
+				let deleteId = $(this).data("delete-id");
+				console.log("deleteId in Btn: " + deleteId);
+				$("#confirmDeleteBtn").attr("data-delete-id", deleteId);
+			});
 
-          let currentLoc = window.location.href;
-          currentLoc = currentLoc.substring(0, currentLoc.lastIndexOf("/"));
-          console.log(currentLoc);
+			// Listen to the confirmDeleteBtn click event
+			$("#confirmDeleteBtn").on(
+					"click",
+					function() {
+						// Retrieve the deleteId from data-delete-id attribute
+						let deleteId = $(this).data("delete-id");
+						console.log("deleteId in Modal: " + deleteId);
 
-          // Your AJAX request for deletion
-          $.ajax({
-            url: currentLoc + "/delete?id=" + deleteId,
-            method: "DELETE",
-            success: function (response) {
-              if (response.success) {
-                alert(response.message);
-                // true 表示強制從伺服器重新加載頁面，忽略緩存
-                location.reload(true);
-              } else {
-                // 刪除失敗
-                alert(response.message);
-              }
-            },
-            error: function () {
-              alert(response.message);
-            },
-            complete: function () {
-              // This will be called regardless of success or error
-              // Close the modal after the AJAX request is completed
-              // Reload the DataTable
-              modal.hide();
-            },
-          });
-        });
-      });
-    </script>
-  </body>
+						let myModalEl = document.getElementById("deleteModal");
+						let modal = bootstrap.Modal.getInstance(myModalEl);
+
+						let currentLoc = window.location.href;
+						currentLoc = currentLoc.substring(0, currentLoc
+								.lastIndexOf("/"));
+						console.log(currentLoc);
+
+						// Your AJAX request for deletion
+						$.ajax({
+							url : currentLoc + "/delete?id=" + deleteId,
+							method : "DELETE",
+							success : function(response) {
+								if (response.success) {
+									alert(response.message);
+									// true 表示強制從伺服器重新加載頁面，忽略緩存
+									location.reload(true);
+								} else {
+									// 刪除失敗
+									alert(response.message);
+								}
+							},
+							error : function() {
+								alert(response.message);
+							},
+							complete : function() {
+								// This will be called regardless of success or error
+								// Close the modal after the AJAX request is completed
+								// Reload the DataTable
+								modal.hide();
+							},
+						});
+					});
+		});
+	</script>
+</body>
 </html>
