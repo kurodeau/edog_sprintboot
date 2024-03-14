@@ -3,6 +3,7 @@ package com.product.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productSort.model.ProductSortVO;
 import com.seller.entity.SellerVO;
@@ -188,6 +190,7 @@ public class ProductVO implements Serializable {
 	}
 
 	////////////// 商品與賣家的關聯///////////////////////
+	private SellerVO sellerVO;
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
