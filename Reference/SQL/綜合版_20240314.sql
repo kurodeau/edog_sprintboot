@@ -662,13 +662,13 @@ VALUES
     
     
 -- 商品  放入測試資料-- 
-INSERT INTO product (sellerId, productCoverImg, productName, price, productStockQuantity, productDetails, productStatus, productCreationTime, ratings, totalReviews, productSortNo, isEnabled)
+INSERT INTO product (sellerId, productCoverImg, productName, price, productStockQuantity, productDetails, productStatus, productCreationTime,animalType,ratings, totalReviews, productSortNo, isEnabled)
 VALUES
-    (1, NULL, '商品A', 100, 50, '這是商品A的描述', '已售完', '2023-01-01 10:00:00', 4, 2, 1, TRUE),
-    (1, NULL, '商品B', 150, 30, '這是商品B的描述', '未上架', '2023-02-15 14:30:00', 5, 3, 2, FALSE),
-    (2, NULL, '商品C', 80, 20, '這是商品C的描述', '未上架', '2023-03-20 18:45:00', 3, 1, 3, FALSE),
-    (2, NULL, '商品D', 120, 40, '這是商品D的描述', '已上架', '2023-04-10 08:00:00', 4, 2, 4, TRUE),
-    (3, NULL, '商品E', 200, 15, '這是商品E的描述', '已上架', '2023-05-25 12:00:00', 5, 3, 5, TRUE);
+    (1, NULL, '商品A', 100, 50, '這是商品A的描述', '已售完', '2023-01-01 10:00:00','dog', 4, 2, 1, TRUE),
+    (1, NULL, '商品B', 150, 30, '這是商品B的描述', '未上架', '2023-02-15 14:30:00','cat', 5, 3, 2, FALSE),
+    (2, NULL, '商品C', 80, 20, '這是商品C的描述', '未上架', '2023-03-20 18:45:00','bird',3, 1, 3, FALSE),
+    (2, NULL, '商品D', 120, 40, '這是商品D的描述', '已上架', '2023-04-10 08:00:00','cat', 4, 2, 4, TRUE),
+    (3, NULL, '商品E', 200, 15, '這是商品E的描述', '已上架', '2023-05-25 12:00:00','dog',5, 3, 5, TRUE);
 -- 優惠券使用  放入測試資料-- 
 INSERT INTO couponUsed (
     couponId, usedId, useTime
