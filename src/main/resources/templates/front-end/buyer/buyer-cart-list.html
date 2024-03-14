@@ -107,7 +107,8 @@
 												console.log(responseData);
 
 												console.log('POST 请求成功');
-											},
+												
+								    		},
 											error: function (xhr, status,
 												error) {
 												// 请求失败处理
@@ -152,7 +153,10 @@
 
 								// console.log(jsonString);
 
+							
 								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
+								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/';
+
 								fetch((url), {
 									method: "POST",
 									header: {
@@ -172,56 +176,12 @@
 										alert(dataAfterParsed.msg);
 									} else {
 										console.log('成功:', dataAfterParsed.msg);
+										window.location.href = urlReturn;
 									}
 								}).catch(error => {
 									// 在這裡處理錯誤情況
 
 								});
-
-
-								// $('.cart-item-click:checked').each(function () {
-								// 	var $itemRow = $(this).closest('.item-row-custom'); // 獲取當前商品行
-								// 	var productId = $itemRow.find('.cart-productId').text(); // 獲取商品ID
-								// 	console.log("productId=" + productId);
-								// 	var productNum = $itemRow.find('.cart-qty').text(); // 獲取商品數量
-								// 	console.log("productNum=" + productNum);
-								// 	var itemData = {}; // 構造商品ID和數量對象
-								// 	itemData[productId] = productNum; // 添加到對象中
-								// 	requestData.push(itemData); // 添加到數組中
-								// });
-
-								// 用振宇哥的寫法送出POST (2/2)
-								// 								$.post('http://localhost:8081/front/buyer/order_checkout', selectedProductsMap)
-								// 								        .done(function(response) {
-								// 											window.alert("結帳購");
-								// // 											var crId = response.crId;
-								// // 											sessionStorage.setItem('crId', crId);
-								// 											window.location.href = '/front/buyer/order_checkout'
-								// 								        }, 'json'
-								// 								        )
-								// 								        .fail(function(error) {
-								// 								            console.error('Error:', error);
-								// 								        });
-
-
-								// 使用 AJAX 送出 POST 請求 (1/2 取其一)
-								// 								$.ajax({
-								// 									url: '/front/buyer/order_checkout',
-								// 									type: 'POST',
-								// 									contentType: 'application/json',
-								// 									data: JSON.stringify(selectedProductsMap),
-								// 									success: function (response) {
-								// 										// 處理後端返回的成功響應
-								// 										console.log('結帳成功:', response);
-								// 										// 在這裡你可以處理後續的操作，例如跳轉到結帳頁面或顯示成功訊息
-								// 									},
-								// 									error: function (xhr, status, error) {
-								// 										// 處理錯誤情況
-								// 										console.error('結帳失敗:', error);
-								// 										// 在這裡你可以顯示錯誤訊息給使用者或進行其他處理
-								// 									}
-								// 								});
-
 
 							});
 						});
