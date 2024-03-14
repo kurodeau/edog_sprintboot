@@ -1,7 +1,6 @@
 package com.seller.entity;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -36,20 +35,6 @@ public class SellerVO implements java.io.Serializable {
 		super();
 	}
 
-/////打開訂單關聯/////////////////////////////////////////
-//	private Set<ProductOrderVO> productOrders ;
-//	
-//	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerTargetVO")
-////	@OrderBy("sellerId asc")
-//	public Set<ProductOrderVO> getProductOrders() {
-//		return productOrders;
-//	}
-//
-//	public void setProductOrders(Set<ProductOrderVO> productOrders) {
-//		this.productOrders = productOrders;
-//	}
-//	
-/////////////////////////////////////////////////////////
 
 	
 	
@@ -60,6 +45,11 @@ public class SellerVO implements java.io.Serializable {
 	private Integer sellerId;
 
 	
+/////訂單關聯/////////////////////////////////////////
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerVO")
+	@OrderBy("sellerId asc")
+	private Set<ProductOrderVO> productOrders ;
+/////////////////////////////////////////////////////////
 
 
 	@ManyToOne
@@ -306,8 +296,15 @@ public class SellerVO implements java.io.Serializable {
 		this.isConfirm = isConfirm;
 	}
 	
+/////////////訂單關聯///////////
+	public Set<ProductOrderVO> getProductOrders() {
+		return productOrders;
+	}
 
-
+	public void setProductOrders(Set<ProductOrderVO> productOrders) {
+		this.productOrders = productOrders;
+	}
+///////////////////////////////
 	@Override
 	public String toString() {
 		return "SellerVO [sellerId=" + sellerId + ", sellerLvId=" + sellerLvId + ", sellerEmail=" + sellerEmail

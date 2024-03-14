@@ -168,10 +168,10 @@ public class MultiSecurityConfiguration {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		// TESTING
-		http.authorizeRequests(authorize -> authorize
-				.antMatchers("/**").permitAll()
-				.anyRequest().authenticated());
-
+	       http.authorizeRequests(authorize -> authorize
+	                .antMatchers("/**").permitAll()
+	                .anyRequest().authenticated())
+	            .csrf().disable();
 		// FORMAL
 //		 http.authorizeRequests(authorize -> authorize
 //		 .antMatchers("/auth/phone/check", "/auth/phone").permitAll()

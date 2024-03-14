@@ -64,7 +64,7 @@ public class BackOrderDetailsController {
 		model.addAttribute("success", "- (修改成功)");
 		orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsVO.getOrderDetailsId()));
 		model.addAttribute("orderDetailsVO", orderDetailsVO);
-		System.out.println("run here!!");
+//		System.out.println("run here!!");
 		List<ProductOrderVO> list = productOrderSvc.getAll();
 		model.addAttribute("allProductOrder", list);
 		return "back-end/back-order-search-all"; 

@@ -22,74 +22,118 @@
 		<div class="container-fluid seller-container">
 		
 		
-			<h1>編輯買家資料</h1>
+			<h1>編輯訂單資料</h1>
 
-			 <form id="myForm" method="POST" th:object="${orderDetailsVO}" th:action="@{updateOrderdetailFrombackend}"
+			 <form id="myForm" method="POST" th:object="${productOrderVO}" th:action="@{update}"
 				enctype="multipart/form-data">
 
 				<div class="col-md-12">
-					<label for="orderDetailsId" class="form-label">訂單明細ID</label> <input
-						type="text" class="form-control" id="orderDetailsId"
-						name="orderDetailsId" th:field="*{orderDetailsId}"  readonly />
-				</div>
-				
-				<div class="col-md-12">
 					<label for="orderId" class="form-label">訂單ID</label> <input
 						type="text" class="form-control" id="orderId"
-						name="orderId" th:field="*{productOrderVO.orderId}"  readonly />
+						name="orderId" th:field="*{orderId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
-					<label for="productId" class="form-label">商品ID</label> <input
-						type="text" class="form-control" id="productId"
-						name="productId" th:field="*{productVO.productId}"  readonly />
+					<label for="sellerId" class="form-label">賣家ID</label> <input
+						type="text" class="form-control" id="sellerId"
+						name="sellerId" th:field="*{sellerVO.sellerId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
-					<label for="purchaseQuantity" class="form-label">商品購買數量</label> <input
-						type="text" class="form-control" id="purchaseQuantity"
-						name="purchaseQuantity"  th:field="*{purchaseQuantity}" readonly />
+					<label for="memberId" class="form-label">會員ID</label> <input
+						type="text" class="form-control" id="memberId"
+						name="memberId" th:field="*{buyerVO.memberId}"  readonly />
 				</div>
 				
 				<div class="col-md-12">
-					<label for="isCommented" class="form-label">是否評論</label> <input
-						type="text" class="form-control" id="isCommented"
-						name="isCommented" th:field="*{isCommented}"   />
+					<label for="couponId" class="form-label">優惠券ID</label> <input
+						type="text" class="form-control" id="couponId"
+						name="couponId"  th:field="*{couponId}" />
 				</div>
 				
 				<div class="col-md-12">
-					<label for="stars" class="form-label">評分星數</label> <input
-						type="text" class="form-control" id="stars"
-						name="stars" th:field="*{stars}"   />
+					<label for="memberPaysShipping" class="form-label">買家負擔運費</label> <input
+						type="text" class="form-control" id="memberPaysShipping"
+						name="memberPaysShipping" th:field="*{memberPaysShipping}" readonly  />
 				</div>
-				
-				<div class="col-md-12">
-					<label for="commentedTime" class="form-label">評論時間</label> <input
-						type="text" class="form-control" id="commentedTime"
-						name="commentedTime" th:field="*{commentedTime}"   readonly />
-				</div>
-				
-				
-				
-				
 				
 				
 				<div class="col-md-12">
-					<label for="comments" class="form-label">評論內容</label> <input
-						type="text" class="form-control" id="comments"
-						name="comments" th:field="*{comments}"  />
+					<label for="orderOrigPrice" class="form-label">訂單總金額</label> <input
+						type="text" class="form-control" id="orderOrigPrice"
+						name="orderOrigPrice" th:field="*{orderOrigPrice}"   readonly />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="actualPay" class="form-label">買家實付金額</label> <input
+						type="text" class="form-control" id="actualPay"
+						name="actualPay" th:field="*{actualPay}"   readonly />
 				</div>
 				
 				
-				<div class="col-md-3">
+				<div class="col-md-12">
+					<label for="orderTime" class="form-label">訂單成立時間</label> <input
+						type="text" class="form-control" id="orderTime"
+						name="orderTime" th:field="*{orderTime}" readonly />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="orderStatus" class="form-label">訂單狀態</label> <input
+						type="text" class="form-control" id="orderStatus"
+						name="orderStatus" th:field="*{orderStatus}" readonly />
+				</div>
+				
+				<!-- 優化訂單狀態用選單 -->
+				<!-- <div class="col-md-12">
 					<label for="isEnable" class="form-label">啟用狀態</label>
 					<select class="isEnable form-select" id="isEnable"
 						name="isEnable" th:field="*{isEnable}" >
 						<option value="1">已啟用</option>
 						<option value="0">未啟用</option>
 					</select>
+				</div> -->
+				
+				<div class="col-md-12">
+					<label for="invoiceNumber" class="form-label">發票號碼</label> <input
+						type="text" class="form-control" id="invoiceNumber"
+						name="invoiceNumber" th:field="*{invoiceNumber}" readonly />
 				</div>
-
+				
+				<div class="col-md-12">
+					<label for="receiver" class="form-label">收貨者姓名</label> <input
+						type="text" class="form-control" id="receiver"
+						name="receiver" th:field="*{receiver}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="receiveTime" class="form-label">收貨時間</label> <input
+						type="text" class="form-control" id="receiveTime"
+						name="receiveTime" th:field="*{receiveTime}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="mobile" class="form-label">收貨者手機</label> <input
+						type="text" class="form-control" id="mobile"
+						name="mobile" th:field="*{mobile}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="contactAddress" class="form-label">收貨地址</label> <input
+						type="text" class="form-control" id="contactAddress"
+						name="contactAddress" th:field="*{contactAddress}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="isDelivered" class="form-label">出貨狀態</label> <input
+						type="text" class="form-control" id="isDelivered"
+						name="isDelivered" th:field="*{isDelivered}"  />
+				</div>
+				
+				<div class="col-md-12">
+					<label for="shippingTime" class="form-label">出貨時間</label> <input
+						type="text" class="form-control" id="shippingTime"
+						name="shippingTime" th:field="*{shippingTime}"  />
+				</div>
 				
 
 				<div

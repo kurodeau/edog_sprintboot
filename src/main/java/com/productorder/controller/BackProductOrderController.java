@@ -74,19 +74,17 @@ public class BackProductOrderController {
 
 			}
 	
-	//訂單內容更新
+	//後台訂單內容更新（進去更新畫面）
 		
-		
-		@GetMapping("getOne_For_Update")
-		public String getOne_For_Uppdate(@RequestParam("orderId") String orderId, ModelMap model) {
+		@PostMapping("getOne_Order_For_Update")
+		public String getOne_Order_For_Update(@RequestParam("orderId") String orderId, ModelMap model) {
 			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 			/*************************** 2.開始查詢資料 *****************************************/
-			// EmpService productOrderSvc = new EmpService();
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			
 			/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 			model.addAttribute("productOrderVO", productOrderVO);
-			return "back-end/back-order-update"; // 查詢完成後轉交update_emp_input.html
+			return "back-end/back-order-update";
 		}
 	
 //////////////////////////////////////
@@ -121,7 +119,7 @@ public class BackProductOrderController {
 		
 		return ""; // 查詢完成後轉交select_page.html由其第128行insert listOneProductOrder.html內的th:fragment="listOneProductOrder-div
 	}
-
+//後台更新完訂單跳轉回管理訂單頁面
 	@PostMapping("update")
 	public String update(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model) throws IOException {
 
@@ -138,7 +136,11 @@ public class BackProductOrderController {
 		model.addAttribute("success", "- (修改成功)");
 		productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(productOrderVO.getOrderId()));
 		model.addAttribute("productOrderVO", productOrderVO);
-		return "back-end/productOrder/listOneProductOrder"; // 修改成功後轉交listOneEmp.html
+		
+		List<ProductOrderVO> list = productOrderSvc.getAll();
+		model.addAttribute("allProductOrder", list);
+		return "back-end/back-order-search-all"; //回到訂單管理
+		
 	}
 
 	/*
