@@ -36,13 +36,13 @@ public class BuyerAuthenticationSuccessHandler implements AuthenticationSuccessH
 		// 將 BuyerVO 存儲在安全上下文中
 		setBuyerVOToSecurityContext(buyerVO, authentication);
 
-		
 		// (2) HttpSession去取的用戶資訊
 		HttpSession session = request.getSession();
 		session.setAttribute("buyerVO", buyerVO);
-		
+
+		System.out.println("BuyerAuthenticationSuccessHandler" + "onAuthenticationSuccess");
 		// 這裡可以進行其他登入成功後的處理，例如重定向等
-		response.sendRedirect("/front/buyer/main");
+		response.sendRedirect(request.getContextPath() + "/front/buyer/main");
 	}
 
 	private String getLoggedInBuyerVO(Authentication authentication) {

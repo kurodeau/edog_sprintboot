@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ad.model.AdService;
 import com.ad.model.AdVO;
-import com.buyer.entity.BuyerVO;
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
 import com.product.model.ProductService;
@@ -45,6 +44,7 @@ import com.user.model.UserService;
 public class IndexControllerMain {
 
 	@Autowired
+
 	UserService userSvc;
 
 	@Autowired
@@ -68,6 +68,7 @@ public class IndexControllerMain {
 		Authentication authentication = securityContext.getAuthentication();
 
 		boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
+
 		if (isAnonymous) {
 			// 用戶登入後，預設會使用anonymousUser
 			model.addAttribute("loggedIn", false);
@@ -99,43 +100,10 @@ public class IndexControllerMain {
 	@ModelAttribute("sellerLvListData")
 	protected List<SellerLvVO> referenceListData() {
 		List<SellerLvVO> list = sellerLvSvc.getAll();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
+		// System.out.println("==============================");
+		// list.forEach(data -> System.out.println(data));
+		// System.out.println("==============================");
 		return list;
-	}
-
-	@GetMapping("/buyer/register")
-	public String registerBuyer(ModelMap model) throws IOException {
-		BuyerVO buyerVO = new BuyerVO();
-
-		// TEST
-		buyerVO.setMemberEmail("lulu.doe@example.com");
-		buyerVO.setThirdFrom(null);
-		buyerVO.setMemberName("Lulu");
-		buyerVO.setMemberPhone("03123321");
-		buyerVO.setMemberMobile("09777666");
-		buyerVO.setMemberBirthday(null);
-		buyerVO.setMemberAddress("地址");
-		buyerVO.setIsMemberEmail(false);
-
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		buyerVO.setMemberRegistrationTime(sqlDate);
-		buyerVO.setPetName("寵物啦");
-		buyerVO.setPetImg(null);
-		buyerVO.setPetImgUploadTime(null);
-		buyerVO.setPetVaccName1(null);
-		buyerVO.setPetVaccTime1(null);
-		buyerVO.setPetVaccName2(null);
-		buyerVO.setPetVaccTime2(null);
-
-		// 防止被修改
-		buyerVO.setMemberPassword(null);
-		buyerVO.setIsConfirm(true);
-
-		model.addAttribute("buyerVO", buyerVO);
-		return "/front-end/buyer/buyer-register";
 	}
 
 	@GetMapping("/product/{id}")
@@ -190,8 +158,6 @@ public class IndexControllerMain {
 	@GetMapping("/searchresult")
 	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
 
-		
-		
 		String[] productIdArray = productListId.split(",");
 
 		List<ProductVO> productList = new ArrayList<>();
@@ -203,6 +169,7 @@ public class IndexControllerMain {
 		model.addAttribute("productIdList", productList);
 
 		return "/front-end/buyer/buyer-search";
+
 	}
 
 	public static class FormData {

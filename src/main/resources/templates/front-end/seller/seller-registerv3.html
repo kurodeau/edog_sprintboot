@@ -15,7 +15,7 @@
 		<div class="container-fluid seller-container">
 			<h1>註冊賣家資料</h1>
 
-			<form class="row g-3" id="myForm" th:action="@{register/check}"
+			<form class="row g-3" id="myForm" th:action="@{/seller/register/check}"
 				th:object="${sellerVO}" method="post" enctype="multipart/form-data"
 				onsubmit="return updateHiddenFields();">
 				<div class="col-md-12">
@@ -72,15 +72,23 @@
 						onclick="sendVerificationCode()">發送驗證碼</button>
 				</div>
 
-				<div class="col-md-3">
+				<div class="col-md-5">
 					<label for="verificationCode" class="form-label">驗證碼</label> <input
 						type="text" class="form-control" id="verificationCode"
 						name="verificationCode"
-						aria-describedby="verificationCodeFeedback" />
-					<div id="verificationCodeFeedbackValid" class="valid-feedback">
+						th:value="${verificationCode}==null ? '' : ${verificationCode}"
+						aria-describedby="verificationCodeFeedback" 
+						    th:classappend="${verificationCodeError != null and verificationCodeError != ''} ? 'is-invalid' : ''"/>
+					<div id="verificationCodeFeedbackValid" class="valid-feedback"
+					>
 						驗證碼確認</div>
 					<div id="verificationCodeFeedback" class="invalid-feedback">
-						驗證碼輸入有誤</div>
+						驗證碼輸入有誤 <span
+							th:if="${verificationCodeError != null and verificationCodeError != ''}">
+							<!-- Display error message if verificationCodeError is present and not empty -->
+							<span th:text="${verificationCodeError}"></span>
+						</span> </span>
+					</div>
 				</div>
 
 				<div class="col-md-12">
@@ -377,7 +385,7 @@
         var verificationCode =
           document.getElementById("verificationCode").value;
         var email = document.getElementById("inputsellerEmail").value;
-
+        console.log("verificationCode" + verificationCode.length);
         // 示例：假设验证规则是验证码长度必须为6
         if (verificationCode.length === 6) {
           // 构建请求体数据
@@ -411,6 +419,7 @@
               let data = JSON.parse(dataBeforeParsed);
 
               if (parseInt(data.status) !== 200) {
+                console.log(data);
                 document
                   .querySelector("#verificationCode")
                   .classList.add("is-invalid");
@@ -441,14 +450,22 @@
               document
                 .getElementById("verificationCode")
                 .classList.add("is-invalid");
+              document.querySelector(
+                "#verificationCodeFeedbackValid"
+              ).textContent = error.msg;
             });
         } else {
+        	console.log("XXXXX");
           document
-            .getElementById("verificationCode")
+            .querySelector("#verificationCode")
             .classList.remove("is-valid");
+
           document
-            .getElementById("verificationCode")
+            .querySelector("#verificationCode")
             .classList.add("is-invalid");
+
+          document.querySelector("#verificationCodeFeedback").textContent =
+            "驗證碼為6字母";
         }
       }
     </script>

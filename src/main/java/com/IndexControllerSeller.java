@@ -65,6 +65,14 @@ public class IndexControllerSeller {
 	public String registerSellerv3(ModelMap model) {
 		SellerVO sellerVO = new SellerVO();
 
+		if (!model.containsAttribute("verificationCode")) {
+			model.addAttribute("verificationCode", "");
+		}
+		
+//		if (!model.containsAttribute("verificationCodeError")) {
+//			model.addAttribute("verificationCodeError", "");
+//		}
+		
 		// TEST
 		sellerVO.setSellerEmail("ncku4015@gmail.com");
 		sellerVO.setSellerCompany("ABC Company");
@@ -85,39 +93,75 @@ public class IndexControllerSeller {
 		// 防止被修改
 		sellerVO.setSellerPassword(null);
 		sellerVO.setIsConfirm(false);
-		
-		
+
 		model.addAttribute("sellerVO", sellerVO);
 		return "/front-end/seller/seller-registerv3";
 	}
 
 	@PostMapping("seller/register/check")
-	public String checkregisterSellerv3(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model)
+	public String checkregisterSellerv3(@Valid @NonNull SellerVO sellerVO, BindingResult result, ModelMap model,@RequestParam("verificationCode") String verificationCode)
 			throws IOException {
-//		System.out.println("seller/register/check"+sellerVO);
+		Jedis jedis =null;
+		String email  = null;
+		try  {
+			 jedis = JedisUtil.getJedisPool().getResource();
+			 email = sellerVO.getSellerEmail();
+			jedis.select(15);
+			String jedisCode = jedis.get("email:" + email);
 
-		if (result.hasErrors()) {
-			return "/front-end/seller/seller-registerv3";
+			
+			String errorCode ="";
+			if (model.containsAttribute("verificationCodeError")) {
+				 errorCode = 	(String) model.getAttribute("verificationCodeError");
+			} 
+			
+			
+			if (jedisCode == null) {
+				errorCode = "驗證碼已經逾期，請重新發送驗證碼(By Th)";
+				model.addAttribute("verificationCodeError",errorCode );
+			}
+			else if (verificationCode == null || verificationCode.equals("")) {
+				errorCode =  "請輸入驗證碼(By Th)";
+				model.addAttribute("verificationCodeError",errorCode);
+			} else if (!jedisCode.equals("ok") && !verificationCode.equals(jedisCode)) {
+				errorCode =  "驗證碼有誤(By Th)";
+				model.addAttribute("verificationCodeError",errorCode);
+			}
+		
+			if (sellerVO != null && !sellerSvc.isDuplcateEmail(sellerVO.getSellerEmail())) {
+				System.out.println("AAAAAAAAA");
+				result.rejectValue("sellerEmail", "duplicate.email", "信箱已經存在");
+			}
+			
+			if (result.hasErrors() || model.containsAttribute("verificationCodeError")) {
+				return "/front-end/seller/seller-registerv3";
+			}
+			
+			
+			model.remove("verificationCodeError");
+			jedis.del("email:" + email);
+			sellerSvc.saveUserDetails(sellerVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		    if (email != null && !email.isEmpty()) {
+		        jedis.del("email:" + email);
+		    }
+			if(jedis!=null) {jedis.close();}
 		}
-
 		
 		
-		sellerSvc.saveUserDetails(sellerVO);
-
+		
+		
 		return "redirect:/seller/login";
 	}
 
 
-	@GetMapping("seller/error403")
-	public String error403(Model model) {
-		return "error/sellerError403";
-	}
-
 	@GetMapping({ "/seller/login", "/seller/login/errors" })
 	public String loginSeller(ModelMap model, HttpServletRequest req) throws IOException {
 
-		System.out.println("=======XXXXXXXXXx");
 		String error = (String) req.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION.message");
+
 		if (error != null) {
 			model.addAttribute("error", error);
 		}
@@ -127,29 +171,32 @@ public class IndexControllerSeller {
 
 	@PostMapping("/seller/register/checkVerificationCode")
 	public ResponseEntity<?> checkVerificationCode(@RequestBody String json) {
-		
-		
+
+//		System.out.println(json);
+
 		JSONObject jsonObj = new JSONObject(json);
 		String email = (String) jsonObj.get("email");
 		String verifyCode = (String) jsonObj.get("code");
 
-		
-		
 		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
 			jedis.select(15);
 			String code = jedis.get("email:" + email);
 
-			
-			
-			
-			if (code != null && (verifyCode.equals(code) || "ok".equals(code))) {
+			if (code == null) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(400, null, "驗證碼已經逾期，請重新發送驗證碼"));
+			}
+			if ((verifyCode.equals(code) || "ok".equals(code))) {
 				jedis.set("email:" + email, "ok");
-				return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(HttpStatus.OK.value(), null, "驗證成功"));
+				return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(200, null, "驗證成功"));
+			} else if (!verifyCode.equals(code)) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(400, null, "驗證碼輸入有誤"));
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.badRequest().body("輸入有誤");
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HttpResult<>(500, null, "系統異常，請稍後再試"));
 	}
 
 	@PostMapping("/seller/register/sendVerificationCode")
@@ -167,24 +214,24 @@ public class IndexControllerSeller {
 			JSONObject jsonObj = new JSONObject(emailJson);
 			String email = jsonObj.getString("email");
 
-			
 			if (jedis.exists("email:" + email)) {
-				
-				return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "稍後再試"));
+				return ResponseEntity.status(HttpStatus.CONFLICT)
+						.body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "稍後再試"));
 			}
 
 			jedis.setex("email:" + email, 300, String.valueOf(random6));
 
-		
 			MailService mailSvc = new MailService();
 			mailSvc.sendMail(email, "驗證信件", "您的驗證碼是" + String.valueOf(random6));
 			mailSvc = null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "信箱格式錯誤"));
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "信箱格式錯誤"));
 		}
 		// 返回成功或其他適當的回應
-		return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "請於300秒輸入驗證碼"));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "請於300秒輸入驗證碼"));
 	}
 
 	@GetMapping({ "/auth/phone" })
@@ -333,5 +380,7 @@ public class IndexControllerSeller {
 
 		return "redirect:/seller/login";
 	}
+	
+	
 
 }
