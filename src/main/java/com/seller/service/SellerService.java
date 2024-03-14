@@ -29,4 +29,6 @@ public interface SellerService {
     void updateUserDetails(SellerVO sellerVO);
 
      void saveUserDetails(SellerVO sellerVO);
+     
+     Boolean isDuplcateEmail(String email);
 }

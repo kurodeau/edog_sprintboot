@@ -58,14 +58,14 @@
 				<div class="col d-flex searchItem flex-column search-item-container-custom">
 					<form class="form-inline w-100">
 						<div class="row py-2 search-row-custom w-100 pe-2">
-							<div class="col"> 
-								<input class="form-control mr-sm-2 w-100 search-input-custom "  type="search"
+							<div class="col">
+								<input class="form-control mr-sm-2 w-100 search-input-custom " type="search"
 									placeholder="請在此進行商品檢索" aria-label="Search" />
 							</div>
 							<div class="col-auto">
 								<button class="btn btn-user search-button-custom d-flex" type="submit">
 									<i class="me-2 ri-search-line"></i>
-									<div class="col-auto d-none d-md-block " >Search</div>
+									<div class="col-auto d-none d-md-block ">Search</div>
 								</button>
 							</div>
 						</div>
@@ -426,31 +426,31 @@
 					.then(function (data) {
 
 
-			
-							// 成功的情況下導向下一個頁面
-							let a ='?productListId=" + data.productListId.join(",")';
-						      var redirectUrl = "/searchresult"
-						        let url = window.location.href;
-						      if(url.endsWith("?") || url.endsWith("/")){
-						    	  url.replace("?","");
-						    	  url.replace("/","");
-						      }
-						      
-						      console.log(data.join(","));
-						      
-						      var redirectUrl = "searchresult?productListId=" + data.join(",");
-						        // 重定向到新的URL
-						       window.location = url + redirectUrl;
 
-						
-					})
+						// 成功的情況下導向下一個頁面
+						let a = '?productListId=" + data.productListId.join(",")';
+						var redirectUrl = "/searchresult"
+						let url = window.location.href;
+						if (url.endsWith("?") || url.endsWith("/")) {
+							url.replace("?", "");
+							url.replace("/", "");
+						}
+
+						console.log(data.join(","));
+
+						var redirectUrl = "searchresult?productListId=" + data.join(",");
+						// 重定向到新的URL
+						window.location = url + redirectUrl;
+
+
+					}).catch(function (error) {
+						console.error("錯誤：", error);
+					}); g
 
 
 
 			})
-				.catch(function (error) {
-					console.error("錯誤：", error);
-				});
+
 		});
 	</script>
 </body>
