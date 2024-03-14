@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.buyer.entity.BuyerVO;
@@ -29,15 +31,15 @@ public class BuyerService {
 		this.buyerDetailsService = buyerDetailsService;
 	}
 
-	public void addBuyer(BuyerVO buyerVO) {
+	public void addBuyer(@NonNull BuyerVO buyerVO) {
 		repository.save(buyerVO);
 	}
 
-	public void updateBuyer(BuyerVO buyerVO) {
+	public void updateBuyer(@NonNull BuyerVO buyerVO) {
 		repository.save(buyerVO);
 	}
 
-	public void deleteBuyer(Integer memberId) {
+	public void deleteBuyer(@NonNull Integer memberId) {
 		if (repository.existsById(memberId))
 			repository.deleteByMemberId(memberId);
 		// repository.deleteById(memberId);
@@ -53,6 +55,24 @@ public class BuyerService {
 		return repository.findAll();
 	}
 
+	public void updateUserDetails(BuyerVO buyerVO) {
+		
+		if (buyerVO == null) {
+			throw new UsernameNotFoundException("User not found with username ");
+		}
+		
+
+		UserDetails userdetails = User.builder()
+				.username(buyerVO.getMemberEmail())
+				.password(buyerVO.getMemberPassword())
+			    .authorities("ROLE_BUYER")  
+				.build();
+
+		buyerDetailsService.changePassword(userdetails, buyerVO);
+
+	}
+	
+	
 	public void saveUserDetails(BuyerVO buyerVO) {
 
 		UserDetails userdetails = User.builder().username(buyerVO.getMemberEmail())
@@ -62,5 +82,10 @@ public class BuyerService {
 		buyerDetailsService.createUser(userdetails, buyerVO);
 
 	}
+	
+	public BuyerVO findByOnlyOneEmail(String memberEmail) {
+		return repository.findByOnlyOneEmail(memberEmail);
+	}
+	
 
 }

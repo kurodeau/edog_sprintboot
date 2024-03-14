@@ -46,9 +46,11 @@ public class NewsTickerController {
 	@ModelAttribute("newsTickerListData") 
 	protected List<NewsTickerVO> referenceListData(Model model) {
 		List<NewsTickerVO> list = newsTickerSvc.getAll();
-		System.out.println("==============================");
-	    list.forEach(data -> System.out.println(data));
-		System.out.println("==============================");
+		
+		//測試有撈出資料
+//		System.out.println("==============================");
+//	    list.forEach(data -> System.out.println(data)); 
+//		System.out.println("==============================");
 		return list;
 	}
 	
