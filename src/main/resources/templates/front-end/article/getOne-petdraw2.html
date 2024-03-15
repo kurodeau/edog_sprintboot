@@ -119,14 +119,10 @@
 							style="border: 0px; font-weight: bold;" readonly /><br />
 					</div>
 
-					<div>
-						<label>我的會員編號:</label> <input type="text"
-							th:field="*{memberPairId}"
-							style="border: 0px; font-weight: bold;" readonly /><br />
-					</div>
+					
 
 					<div>
-						<label>他的會員編號:</label> <input type="text" th:field="*{memberId}"
+						<label>他的會員編號:</label> <input type="text" th:field="*{memberPairVO.memberId}"
 							style="border: 0px; font-weight: bold;" readonly /><br />
 					</div>
 
@@ -159,7 +155,7 @@
 				</form>
 
 				<div th:if="${petDrawVO.isMemberLike == false}">
-					<h1 style="margin-top: 30px;">沒人喜歡你ㄏㄏ</h1>
+					<h1 style="margin-top: 30px;">非常可惜，今天配對失敗明天再來!</h1>
 				</div>
 
 			</div>
