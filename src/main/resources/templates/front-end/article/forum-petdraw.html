@@ -4,7 +4,21 @@
 
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
-<meta property="og:description" content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
+ <style>
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation-name: fadeIn;
+            animation-duration: 2s;
+        }
+    </style>
+<meta property="og:description"
+	content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -89,20 +103,43 @@
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
-    <div class="seller-container">
-			<div class="pagetitle">
-    <h1  style="margin-top: 30px;">寵物抽卡</h1>
-        <div id="countdown">午夜倒數計時: <span id="timer">Loading...</span></div>
-    
-      	<form method="post" th:action="@{/petdraw/insert}" style="margin-bottom: 0px;">
-	    <input type="submit" value="抽卡">
-		</form>
-		
-		</div>
+		<div class="seller-container mt-5">
+			<div class="pagetitle ">
+				<div id="countdown">
+					午夜倒數計時: <span id="timer">Loading...</span>
+				</div>
+
+
+				<form method="get" th:action="@{/front/forum/petdraw/checkpairing}"
+					style="margin-bottom: 0px;"
+					class="mt-5">
+					<input type="hidden" name="memberId" value="2"> <input
+						type="submit" class="modern-button" value="配對結果" >
+				</form>
+
+
+				
+				<form method="post" th:action="@{/front/forum/petdraw/startpairing}"
+					style="margin-bottom: 0px;"
+					class="mt-5">
+					<input type="hidden" name="memberId" value="2"> <input
+						type="submit" class="modern-button" value="開始抽卡" >
+				</form>
+
+				
+				<form method="post" th:action="@{/front/forum/petdraw/othersparing}"
+					style="margin-bottom: 0px;"
+					class="mt-5">
+					<input type="hidden" name="memberId" value="2"> <input
+						type="submit" class="modern-button" value="有人想跟你配對" >
+				</form>
+
+			</div>
+			
 		</div>
 	</main>
-    <!-- End Main -->
-    
+	<!-- End Main -->
+
 	<!-- ======= Footer ======= -->
 	<footer class="footer footer-layout">
 		<div
@@ -144,9 +181,9 @@
 			</div>
 		</div>
 	</footer>
-    <!-- End Footer -->
-    
-     <!-- Vendor JS Files -->
+	<!-- End Footer -->
+
+	<!-- Vendor JS Files -->
 	<div th:replace="~{/fragment-js}"></div>
 	<div th:replace="~{/fragment-datatableJs}"></div>
 

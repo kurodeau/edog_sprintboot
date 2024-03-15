@@ -1,5 +1,7 @@
 package com.petdraw.model;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -33,7 +35,18 @@ public class PetDrawService {
 	public void deletePetDraw(Integer petDrawId) {
 		if (petDrawRepository.existsById(petDrawId)) {
 			petDrawRepository.deleteById(petDrawId);
+		
+		
+		
 		}
+	}
+	
+	
+	public List<PetDrawVO>  getByMemberIdAndAfterPetDrawTime(Integer buyerId,LocalDateTime  afterDate) {
+		List<PetDrawVO> buyerList = new ArrayList<>();
+	 
+		 buyerList = petDrawRepository.findByMemberIdAndAfterPetDrawTime(buyerId , afterDate);
+		return buyerList;
 	}
 
 	public PetDrawVO getOnePetDraw(Integer petDrawId) {
@@ -45,42 +58,53 @@ public class PetDrawService {
 		return petDrawRepository.findAll();
 	}
 
-	public InsertResponse GetfindByMemberId(Integer memberId) {
+	public BuyerVO getBuyerVoByMemberId(Integer memberId) throws Exception {
 		// 使用 buyerRepository 查找特定的會員
 		Optional<BuyerVO> buyerOptional = buyerRepository.findById(memberId);
+
 		// 檢查是否找到會員
 		if (buyerOptional.isPresent()) {
 			BuyerVO buyer = buyerOptional.get();
 
-			// 獲取會員相關資料，例如會員名稱和寵物名稱
-			Integer member = buyer.getMemberId();
-			String petName = buyer.getPetName();
-			String memberName = buyer.getMemberName();
-			 // 構造 PetDrawVO 對象
-	        InsertResponse insertResponse = new InsertResponse();
-	        insertResponse.setMemberPairId(buyer);
-
-	       // 返回抽卡結果
-	        return insertResponse;
-	    } else {
-	        // 如果找不到會員，返回錯誤或空的對象
-	        return new InsertResponse(); // 或其他表示錯誤的處理方式
-	    }
-	}
 			
+			return buyer;
+		} else {
+			// 如果找不到會員，返回錯誤或空的對象
+			return null;
+		}
+	}
+
+//	public PairResponse getPairResponse(BuyerVO currentBuyerVO) {
+//		PairResponse pairResponse = new PairResponse();
+//		try {
+//			BuyerVO pairBuyerVO= getRandomBuyerVOIdNotEqualTo(currentBuyerVO.getMemberId());
+//			pairResponse.setMemberPairVO(buyer);
+//			pairResponse.setMemberPairVO(pairId);
+//		} catch (Exception e) {
+//			return new PairResponse();
+//		}
+//
+//			return pairResponse;
+//		
+//	}
 
 	@PostConstruct
 	public void init() {
 		// 進行 petDrawRepository 和 buyerRepository 的初始化
 	}
 
-	public int getRandomMemberIdNotEqualTo(int memberId) {
+	public BuyerVO getRandomBuyerVONotEqualTo(BuyerVO currentBuyerVO) {
+		int memberId = currentBuyerVO.getMemberId();
 		List<BuyerVO> buyers = buyerRepository.findAll();
 		Random random = new Random();
 		int randomIndex;
 		do {
 			randomIndex = random.nextInt(buyers.size());
 		} while (buyers.get(randomIndex).getMemberId() == memberId);
-		return buyers.get(randomIndex).getMemberId();
+		return buyers.get(randomIndex);
 	}
+	
+	
+	
+	
 }

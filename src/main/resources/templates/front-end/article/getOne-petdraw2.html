@@ -5,10 +5,11 @@
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
 <style type="text/css">
- .hide {
-		display: none;
-	}
-	</style>
+.hide {
+	display: none;
+}
+</style>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -93,61 +94,79 @@
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
-    <div class="seller-container">
+		<div class="seller-container">
 			<div class="pagetitle">
-			
-      	<form th:action="@{update2}" method="post" th:object="${petDrawVO}" enctype="multipart/form-data" th:if="${petDrawVO.isMemberLike}">
-					   
-					<h1  style="margin-top: 30px;">有人喜歡你，你喜歡他嗎</h1>	
-					
-					<div >
-					<label>抽卡編號:</label>
-					<input type="text" th:field="*{petDrawId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+
+				<form th:action="@{/front/forum/petdraw/othersparing}" method="post" th:object="${petDrawVO}"
+					enctype="multipart/form-data" th:if="${petDrawVO.isMemberLike}">
+
+					<div
+						class="atm_mk_stnw88 atm_tk_1u1b7xl atm_fq_1ssbidh atm_tr_zr6sja atm_3f_1n6thub atm_5j_1fwxnve atm_ks_15vqwwr a1af3bqe">
+						<div
+							class="atm_e2_uuw12j atm_vy_uuw12j atm_ks_15vqwwr atm_mk_h2mmj6 atm_2d_16vjel sofhfzb">
+							<div
+								class="atm_9s_1bgihbq atm_p5gc90_1wugsn5 atm_17vq4o2_1wugsn5 atm_1188u0s_1iio4e3 atm_2pzl0u_1be5f4n atm_wnvm1g_1q5117e atm_12681ec_1ulexfb atm_1wb4qx2_1b29qit atm_16kx3jw_1wugsn5 atm_18hzl3q_h2mmj6 atm_ry921k_zt8pdg atm_sjz5bo_1ulexfb i1c7ubre"
+								style="--5qsozf: 60vh; --aspect-ratio: 0.75/1; --max-width: 500px; --max-height: 600px;">
+								<img class="atm_jp_1dfr4pj atm_1we33yh_1osqo2v a1kf6kxe" alt=""
+									src="https://photos.dcard.tw/memberPhotos/96f51f97-0d8e-41fd-b965-0c34e07908f0"
+									width="500" height="600" loading="lazy">
+							</div>
+						</div>
 					</div>
-					
-					<div >
-					<label>他的會員編號:</label>
-					<input type="text" th:field="*{memberId.memberId}" style="border:0px ; font-weight: bold;" readonly /><br/>
-					</div>
-					
+
 					<div>
-					<label>我的會員編號:</label>
-					<input type="text" th:field="*{memberPairId.memberId}" style="border:0px ; font-weight: bold;" readonly /><br/>
+						<label>抽卡編號:</label> <input type="text" th:field="*{petDrawId}"
+							style="border: 0px; font-weight: bold;" readonly /><br />
+					</div>
+
+					<div>
+						<label>我的會員編號:</label> <input type="text"
+							th:field="*{memberPairId}"
+							style="border: 0px; font-weight: bold;" readonly /><br />
+					</div>
+
+					<div>
+						<label>他的會員編號:</label> <input type="text" th:field="*{memberId}"
+							style="border: 0px; font-weight: bold;" readonly /><br />
 					</div>
 
 					<div class="hide">
-						<label>抽卡時間:</label> 
-						<input type="date" th:field="*{petDrawTime}" readonly /><br/>
+						<label>抽卡時間:</label> <input type="date" th:field="*{petDrawTime}"
+							readonly /><br />
 					</div>
 					<div class="hide">
-						<label>他喜歡你的時間:</label> 
-						<input type="date" th:field="*{memberResTime}" readonly /><br/>
+						<label>他喜歡你的時間:</label> <input type="date"
+							th:field="*{memberResTime}" readonly /><br />
 					</div>
 					<div class="hide">
-						<label>他喜歡你嗎:</label> 
-						<input type="text" th:field="*{isMemberLike}" readonly /><br/>
-					</div>
-					
-					<div>
-<!-- 					喜歡=1不喜歡=0 -->
-					<div>
-					<button type="submit" name="isMemberPairLike" th:value="${petDrawVO.isMemberPairLike == null ? 1 : petDrawVO.isMemberPairLike}">喜欢</button>
-    				<button type="submit" name="isMemberPairLike" th:value="${petDrawVO.isMemberPairLike == null ? 0 : petDrawVO.isMemberPairLike}">不喜欢</button>
+						<label>他喜歡你嗎:</label> <input type="text"
+							th:field="*{isMemberLike}" readonly /><br />
 					</div>
 
+					<div>
+						<!-- 					喜歡=1不喜歡=0 -->
+						<div>
+							<button type="submit" name="isMemberPairLike"
+								th:value="${petDrawVO.isMemberPairLike == null ? 0 : petDrawVO.isMemberPairLike}"
+								class="modern-button">我不要</button>
+							<button type="submit" name="isMemberPairLike"
+								th:value="${petDrawVO.isMemberPairLike == null ? 1 : petDrawVO.isMemberPairLike}"
+								class="modern-button">我接受</button>
+						</div>
+
 					</div>
-					
+
 				</form>
-				
+
 				<div th:if="${petDrawVO.isMemberLike == false}">
-				<h1  style="margin-top: 30px;">沒人喜歡你ㄏㄏ</h1>
+					<h1 style="margin-top: 30px;">沒人喜歡你ㄏㄏ</h1>
 				</div>
-				
-				</div>
+
+			</div>
 		</div>
 	</main>
-    <!-- End Main -->
-    
+	<!-- End Main -->
+
 	<!-- ======= Footer ======= -->
 	<footer class="footer footer-layout">
 		<div
@@ -189,9 +208,9 @@
 			</div>
 		</div>
 	</footer>
-    <!-- End Footer -->
-    
-     <!-- Vendor JS Files -->
+	<!-- End Footer -->
+
+	<!-- Vendor JS Files -->
 	<div th:replace="~{/fragment-js}"></div>
 	<div th:replace="~{/fragment-datatableJs}"></div>
 
@@ -214,6 +233,12 @@
             }
         }
 
+        
+        
+        
+        
+        
+        
         function handleMemberDraw(memberData) {
         	// 在這裡處理從後端獲取的會員抽卡數據
             const cardContainer = document.getElementById('cardContainer');
@@ -355,4 +380,7 @@
 
 </body>
 
+
 </html>
+
+
