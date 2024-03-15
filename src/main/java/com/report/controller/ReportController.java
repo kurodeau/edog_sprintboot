@@ -28,6 +28,9 @@ import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
+import com.msg.entity.MsgVO;
+import com.msg.service.MsgService;
+import com.msgType.entity.MsgTypeVO;
 import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
 
@@ -50,7 +53,8 @@ public class ReportController {
 	@Autowired
 	BuyerService buyerSvc;
 	
-	
+	@Autowired
+	MsgService msgSvc;
 	
 	@ModelAttribute("reportListData")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
     protected List<ReportVO> referenceListData_Report(Model model) {
@@ -265,6 +269,19 @@ public class ReportController {
 			
 		reportVO.setReportState(1);
 		reportVO.setReportDealTime(new Date());
+		if(articleVO.getIsEnabled()==false) {
+	    	MsgVO msgVO = new MsgVO();
+	        msgVO.setReportVO(reportVO); // 设置关联的文章 ID
+	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        MsgTypeVO msgTypeVO =new MsgTypeVO();
+	        msgTypeVO.setMsgTypeId(5);
+	        msgVO.setMsgTypeVO(msgTypeVO);
+	        msgVO.setMsgTime(new Date());
+	        msgVO.setIsRead(false);
+	        msgVO.setIsEnabled(true);
+	        // 其他需要设置的属性
+	        msgSvc.addMsg(msgVO);
+	    }
 		/*************************** 2.開始修改資料 *****************************************/
 		// EmpService empSvc = new EmpService();
 		reportSvc.updateReport(reportVO);
@@ -294,6 +311,19 @@ public class ReportController {
 		// EmpService empSvc = new EmpService();
 		reportSvc.updateReport(reportVO);
 		replySvc.updateReply(replyVO);
+		if(replyVO.getIsEnabled()==false) {
+			MsgVO msgVO = new MsgVO();
+	        msgVO.setReportVO(reportVO); // 设置关联的文章 ID
+	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        MsgTypeVO msgTypeVO =new MsgTypeVO();
+	        msgTypeVO.setMsgTypeId(6);
+	        msgVO.setMsgTypeVO(msgTypeVO);
+	        msgVO.setMsgTime(new Date());
+	        msgVO.setIsRead(false);
+	        msgVO.setIsEnabled(true);
+	        // 其他需要设置的属性
+	        msgSvc.addMsg(msgVO);
+			}
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("success", "- (修改成功)");
 		replyVO = replySvc.getOneReply(Integer.valueOf(replyVO.getReplyId()));
