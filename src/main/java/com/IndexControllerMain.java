@@ -1,12 +1,11 @@
 package com;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,8 +17,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ad.model.AdService;
@@ -135,41 +132,105 @@ public class IndexControllerMain {
 		return "/front-end/buyer/buyer-commidityV2";
 	}
 
-	@PostMapping(value = "/search", produces = "application/json")
-	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
-		System.out.println("+++++++++++++++++++++++++++++++");
-
-		System.out.println(formData);
-
-		List<ProductVO> prodList = productSvc.compositeQuery(formData);
-		System.out.println("Size = " + prodList.size());
-		prodList.forEach(System.out::println);
-
-		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
-				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
-
-		List<Integer> productListId = prodList.stream().map(productVO -> productVO.getProductId())
-				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(productListId);
-
-	}
+//	@PostMapping(value = "/search", produces = "application/json")
+//	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
+//		System.out.println("+++++++++++++++++++++++++++++++");
+//
+//		System.out.println(formData);
+//
+//		List<ProductVO> prodList = productSvc.compositeQuery(formData);
+//		System.out.println("Size = " + prodList.size());
+//		prodList.forEach(System.out::println);
+//
+//		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
+//				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
+//
+//		List<Integer> productListId = prodList.stream().map(productVO -> productVO.getProductId())
+//				.collect(Collectors.toList());
+//
+//		return ResponseEntity.ok(productListId);
+//
+//	}
+//
+//	@GetMapping("/searchresult")
+//	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
+//
+//		String[] productIdArray = productListId.split(",");
+//
+//		List<ProductVO> productList = new ArrayList<>();
+//		for (String productId : productIdArray) {
+//			ProductVO product = productSvc.getOneProduct(Integer.valueOf(productId));
+//			productList.add(product);
+//		}
+//
+//		model.addAttribute("productIdList", productList);
+//
+//		return "/front-end/buyer/buyer-search";
+//
+//	}
 
 	@GetMapping("/searchresult")
-	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
+	public String searchResult(@RequestParam(value = "animalType", required = false) String animalType,
+			@RequestParam(value = "productCategory", required = false) String productCategory,
+			@RequestParam(value = "ratings", required = false) String ratings,
+			@RequestParam(value = "priceFrom", required = false) String priceFrom,
+			@RequestParam(value = "priceTo", required = false) String priceTo,
+			@RequestParam(value = "keyword", required = false) String keyword, ModelMap model) {
 
-		String[] productIdArray = productListId.split(",");
+		FormData formData = new FormData(); // 創建 FormData 對象
 
-		List<ProductVO> productList = new ArrayList<>();
-		for (String productId : productIdArray) {
-			ProductVO product = productSvc.getOneProduct(Integer.valueOf(productId));
-			productList.add(product);
+		// 填充 FormData 對象的屬性
+		if (animalType != null && !animalType.isEmpty()) {
+			List<String> animalTypeList = Arrays.asList(animalType.split(","));
+			formData.setAnimalType(animalTypeList);
 		}
 
+		if (productCategory != null && !productCategory.isEmpty()) {
+			List<String> productCategoryList = Arrays.asList(productCategory.split(","));
+			formData.setProductCategory(productCategoryList);
+		}
+
+		if (ratings != null && !ratings.isEmpty()) {
+			List<Integer> ratingsList = Arrays.stream(ratings.split(",")).map(Integer::parseInt)
+					.collect(Collectors.toList());
+			formData.setRatings(ratingsList);
+		}
+
+		if (priceFrom != null && !priceFrom.isEmpty()) {
+			formData.setPriceFrom(priceFrom);
+		}
+
+		if (priceTo != null && !priceTo.isEmpty()) {
+			formData.setPriceTo(priceTo);
+		}
+
+		if (keyword != null && !keyword.isEmpty()) {
+			formData.setKeyword(keyword);
+		}
+
+		// 調用 ProductService 執行複合查詢
+		List<ProductVO> productResult = productSvc.compositeQuery(formData);
+		
+		
+		
+			System.out.println("+++++++++++++++++++++++++++++++");
+	
+			System.out.println(formData);
+	
+		
+			System.out.println("Size = " + productResult.size());
+			productResult.forEach(System.out::println);
+	
+			productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
+					formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
+
+		
+		List<ProductVO> productList = productResult.stream()
+				.filter(pt -> "已上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
+						.collect(Collectors.toList());
 		model.addAttribute("productIdList", productList);
 
-		return "/front-end/buyer/buyer-search";
-
+		return "/front-end/buyer/buyer-search"; // 返回結果
 	}
 
 	public static class FormData {

@@ -1,44 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-</head>
-<body>
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
-					</ul>
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
 
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">註冊</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-	</header>
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 
 	<!-- ======= Main ======= -->
 
@@ -69,7 +42,7 @@
 							provide a valid Picture.</div>
 						<div id="blob_holder">
 							<img
-								th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+								th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
 								width="200px" height="150px" />
 						</div>
 						<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
