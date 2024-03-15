@@ -48,7 +48,7 @@
             <th:block th:each="productOrderVO : ${allProductOrder}">
               <tr>
                 <td class="text-center" th:text="${productOrderVO.orderId}"></td>
-                <td class="text-center" th:text="${productOrderVO.sellerId}"></td>
+                <td class="text-center" th:text="${productOrderVO.sellerVO.sellerId}"></td>
                 
                 <td class="text-center" th:text="${productOrderVO.buyerVO.memberId}"></td>
                 
@@ -81,6 +81,11 @@
                     th:href="@{getOrderdetails(orderId=${productOrderVO.orderId})}"
                     >查看明細</a
                   >
+                  
+                   <form method="post" th:action="@{getOne_Order_For_Update}" style="margin-bottom: 0px;">
+					     <input type="submit" value="修改">
+					     <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}"></form> 
+		              
                   
                 </td>
               </tr>
