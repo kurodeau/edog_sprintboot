@@ -6,7 +6,12 @@
   text-decoration: none; /* 移除連結的下劃線 */
   color: inherit; /* 保持連結的文字顏色與父元素一致 */
 }
-
+.bi-dot{
+/* 	display: flex; */
+/* 	float: right; */
+	color:blue;
+	font-size: 2em;
+}
 .forum-article {
   border: 2px solid var(--sec-section-outline);
   border-radius: 8px;
@@ -53,6 +58,7 @@ display:flex;
   font-weight: bold;
   margin: 10px 0;
 }
+
 .title-category .article-title{
 	font-size: 24px;
   font-weight: bold;
@@ -107,6 +113,14 @@ display:flex;
   font-size: 12px; /* 調整時間字體大小 */
   color: var(--text-placeholder);
   margin-left: auto;
+}
+.msg-time {
+  font-size: 12px; /* 調整時間字體大小 */
+  color: var(--text-placeholder);
+}
+.forum-msg{
+	margin-top: 20px;
+	display:flex;
 }
 .reply-time {
   font-size: 12px; /* 調整時間字體大小 */

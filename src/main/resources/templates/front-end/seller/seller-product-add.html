@@ -1,45 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-</head>
-<body>
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a>
-						</li>
-						<li class="nav-item"><a class="nav-link"
-							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
-					</ul>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
 
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">註冊</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-	</header>
-	<!-- ======= Sidebar ======= -->
-	  <aside th:replace="@{front-end/seller/aside-seller}"></aside>
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
@@ -52,18 +24,19 @@
 			</nav>
 
 			<!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
-			<form class="row g-3" id="imageForm" method="post" th:action="@{insert}"
-				enctype="multipart/form-data">
+			<form class="row g-3" id="imageForm" method="post"
+				th:action="@{insert}" enctype="multipart/form-data">
 				<div class="upload__box">
 					<div class="upload__btn-box">
 						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
 						<input type="file" data-max_length="1"
 							class="form-control upload__inputfile" id="mainImage"
-							name="mainImage" onclick="previewImage()" onchange="hideContent('upFiles.errors');" />
+							name="mainImage" onclick="previewImage()"
+							onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="mainImageFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-							<div id="mainImage_blob_holder"></div>
+						<div id="mainImage_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -73,15 +46,16 @@
 						<label for="subImages" class="btn btn-sellerdark"> 請選擇其他圖片</label>
 						<input type="file" multiple="" data-max_length="5"
 							class="form-control upload__inputfile" id="subImages"
-							name="subImages" onclick="previewImage1()" onchange="hideContent('upFiles.errors');"/>
+							name="subImages" onclick="previewImage1()"
+							onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="subImagesFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
-							<div id="subImages_blob_holder"></div>
+						<div id="subImages_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
-		
+
 				<div class="col-md-12">
 					<label for="productName" class="form-label">商品名稱</label> <input
 						type="text" class="form-control" id="productName"
@@ -110,17 +84,31 @@
 				</div>
 
 				<div class="col-md-12">
+					<label for="productSort" class="form-label">寵物分類</label> <select
+						class="form-select" id="animalType" name="animalType">
+						<option value="-1" disabled selected>請選擇寵物分類</option>
+						<option value="dog">犬</option>
+						<option value="cat">貓</option>
+						<option value="bird">鳥</option>
+					</select>
+					<div id="productSortFeedback" class="invalid-feedback">
+						Please provide a valid city.</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+
+
+				<div class="col-md-12">
 					<label for="productPrice" class="form-label">商品價格</label> <input
-						type="text" class="form-control" id="productPrice"
-						name="Price" />
+						type="text" class="form-control" id="productPrice" name="Price" />
 					<div id="productPriceFeedback" class="invalid-feedback">
 						Please provide a valid inputProductPrice.</div>
 					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productStockQuantity" class="form-label">商品庫存</label>
-					<input type="text" class="form-control" id="productStockQuantity"
+					<label for="productStockQuantity" class="form-label">商品庫存</label> <input
+						type="text" class="form-control" id="productStockQuantity"
 						name="productStockQuantity" />
 					<div id="productStockQuantityFeedback" class="invalid-feedback">
 						Please provide a valid inputStockQuantity.</div>
@@ -195,128 +183,126 @@
 	<div th:replace="fragment-js"></div>
 
 	<!-- Local JS File -->
-<script type="text/javascript">
-//清除提示信息
-function hideContent(d) {
-     document.getElementById(d).style.display = "none";
-}
+	<script type="text/javascript">
+		//清除提示信息
+		function hideContent(d) {
+			document.getElementById(d).style.display = "none";
+		}
 
-//照片上傳-預覽用
-var filereader_support = typeof FileReader != 'undefined';
-if (!filereader_support) {
-	alert("No FileReader support");
-}
-acceptedTypes = {
-	'image/png' : true,
-	'image/jpeg' : true,
-	'image/gif' : true
-};
+		//照片上傳-預覽用
+		var filereader_support = typeof FileReader != 'undefined';
+		if (!filereader_support) {
+			alert("No FileReader support");
+		}
+		acceptedTypes = {
+			'image/png' : true,
+			'image/jpeg' : true,
+			'image/gif' : true
+		};
 
+		// function previewImage() {
+		//     var upfile1 = document.getElementById("mainImage");
+		//     upfile1.addEventListener("change", function(event) {
+		//         var files = event.target.files || event.dataTransfer.files;
+		// //         for (var i = 0; i < files.length; i++) {
+		// //             previewfile(files[i], "mainImage_blob_holder");
+		// //             console.log("生徒");
+		// //         }
 
-// function previewImage() {
-//     var upfile1 = document.getElementById("mainImage");
-//     upfile1.addEventListener("change", function(event) {
-//         var files = event.target.files || event.dataTransfer.files;
-// //         for (var i = 0; i < files.length; i++) {
-// //             previewfile(files[i], "mainImage_blob_holder");
-// //             console.log("生徒");
-// //         }
-        
-//             previewfile(files[0], "mainImage_blob_holder");
-        
-//         clearChildNodesExceptLast();
-//     }, false);
-// }
+		//             previewfile(files[0], "mainImage_blob_holder");
 
-// 上傳主圖片
-  function previewImage() {
-   var upfile1 = document.getElementById("mainImage");
-   upfile1.addEventListener("change", function (event) {
-    var files = event.target.files || event.dataTransfer.files;
-    var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
+		//         clearChildNodesExceptLast();
+		//     }, false);
+		// }
 
-    if (mainImage_blob_holder.firstChild) {
-     mainImage_blob_holder.firstChild.src = URL.createObjectURL(files[0]);
-    } else {
-     previewfile(files[0], "mainImage_blob_holder");
-    }
-   }, false);
-  }
+		// 上傳主圖片
+		function previewImage() {
+			var upfile1 = document.getElementById("mainImage");
+			upfile1.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				var mainImage_blob_holder = document
+						.getElementById("mainImage_blob_holder");
 
+				if (mainImage_blob_holder.firstChild) {
+					mainImage_blob_holder.firstChild.src = URL
+							.createObjectURL(files[0]);
+				} else {
+					previewfile(files[0], "mainImage_blob_holder");
+				}
+			}, false);
+		}
 
+		function previewImage1() {
+			var upfile2 = document.getElementById("subImages");
+			upfile2.addEventListener("change", function(event) {
+				var files = event.target.files || event.dataTransfer.files;
+				var blob_holder = document
+						.getElementById("subImages_blob_holder");
 
+				while (blob_holder.firstChild) {
+					blob_holder.removeChild(blob_holder.firstChild);
+				}
 
+				for (var i = 0; i < files.length; i++) {
+					let previewDiv = document.createElement('div');
+					let previewImg = document.createElement('img');
+					previewImg.src = URL.createObjectURL(files[i]);
+					previewImg.classList.add('preview-image');
+					previewDiv.appendChild(previewImg);
+					blob_holder.appendChild(previewDiv);
+				}
+			}, false);
+		}
 
+		function previewfile(file, blobHolderId) {
+			var blob_holder = document.getElementById(blobHolderId);
+			if (filereader_support === true
+					&& acceptedTypes[file.type] === true) {
+				var reader = new FileReader();
+				reader.onload = function(event) {
+					var image = new Image();
+					image.src = event.target.result;
+					image.width = 200;
+					image.height = 150;
+					image.border = 2;
+					blob_holder.appendChild(image);
 
-function previewImage1() {
-	   var upfile2 = document.getElementById("subImages");
-	   upfile2.addEventListener("change", function (event) {
-	    var files = event.target.files || event.dataTransfer.files;
-	    var blob_holder = document.getElementById("subImages_blob_holder");
-	    
-	    while (blob_holder.firstChild) {
-	     blob_holder.removeChild(blob_holder.firstChild);
-	    }
-	   
-	    for (var i = 0; i < files.length; i++) {
-	     let previewDiv = document.createElement('div');
-	     let previewImg = document.createElement('img');
-	     previewImg.src = URL.createObjectURL(files[i]);
-	     previewImg.classList.add('preview-image');
-	     previewDiv.appendChild(previewImg);
-	     blob_holder.appendChild(previewDiv);
-	    }
-	   }, false);
-	  }
-	  
-	  
-	  
-	  
+				};
+				reader.readAsDataURL(file);
+				//         document.getElementById('submit').disabled = false;
+			} else {
+				blob_holder.innerHTML = "<div  style='text-align: left;'>"
+						+ "● filename: "
+						+ file.name
+						+ "<br>"
+						+ "● ContentTyp: "
+						+ file.type
+						+ "<br>"
+						+ "● size: "
+						+ file.size
+						+ "bytes"
+						+ "<br>"
+						+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+				document.getElementById('submit').disabled = true;
+				console.log("出徒的來源?");
+			}
+		}
 
-function previewfile(file, blobHolderId) {
-    var blob_holder = document.getElementById(blobHolderId);
-    if (filereader_support === true && acceptedTypes[file.type] === true) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            var image = new Image();
-            image.src = event.target.result;
-            image.width = 200;
-            image.height = 150;
-            image.border = 2;
-            blob_holder.appendChild(image);
-          
-        };
-        reader.readAsDataURL(file);
-//         document.getElementById('submit').disabled = false;
-    } else {
-        blob_holder.innerHTML = "<div  style='text-align: left;'>" + "● filename: " + file.name
-                + "<br>" + "● ContentTyp: " + file.type
-                + "<br>" + "● size: " + file.size + "bytes"
-                + "<br>" + "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
-        document.getElementById('submit').disabled = true;
-        console.log("出徒的來源?");
-    }
-}
-
-
-
-
-// function clearChildNodesExceptLast() {
-//     var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
-//     var childNodes = mainImage_blob_holder.children;
-//     // 從第一個子元素開始到倒數第二個子元素移除
-//     for (var nnn = childNodes.length - 2; nnn >= 0; nnn--) {
-//     	mainImage_blob_holder.removeChild(childNodes[nnn]);
-//         console.log("有進f的迴圈");
-//     }
-//     for (var xx = 0 ; xx <= 5 ; xx++){
-//     	mainImage_blob_holder.removeChild(childNodes[0]);
-//     	console.log("測試迴圈");
-//     }
-//     console.log(childNodes.length);
-//     console.log("有進f");
-// }
-
-</script>
+		// function clearChildNodesExceptLast() {
+		//     var mainImage_blob_holder = document.getElementById("mainImage_blob_holder");
+		//     var childNodes = mainImage_blob_holder.children;
+		//     // 從第一個子元素開始到倒數第二個子元素移除
+		//     for (var nnn = childNodes.length - 2; nnn >= 0; nnn--) {
+		//     	mainImage_blob_holder.removeChild(childNodes[nnn]);
+		//         console.log("有進f的迴圈");
+		//     }
+		//     for (var xx = 0 ; xx <= 5 ; xx++){
+		//     	mainImage_blob_holder.removeChild(childNodes[0]);
+		//     	console.log("測試迴圈");
+		//     }
+		//     console.log(childNodes.length);
+		//     console.log("有進f");
+		// }
+	</script>
 </body>
 </html>

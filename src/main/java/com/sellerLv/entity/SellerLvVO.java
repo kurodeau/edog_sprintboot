@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,9 +29,12 @@ public class SellerLvVO implements java.io.Serializable {
     @Column(name = "sellerLvId", updatable = false)
     private Integer sellerLvId;
     
-	@OneToMany(mappedBy = "sellerLvId", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+//////////////賣家等級與買家的關聯///////////////////////
+
+	@OneToMany(mappedBy = "sellerLvId", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
 	@OrderBy("sellerId asc")
-	 @JsonIgnore
+	@JsonIgnore
 	private Set<SellerVO> sellers;
 
     public Set<SellerVO> getSellers() {
@@ -40,6 +44,7 @@ public class SellerLvVO implements java.io.Serializable {
 	public void setSellers(Set<SellerVO> sellers) {
 		this.sellers = sellers;
 	}
+/////////////////////////////////////////////////////////
 
 	@Column(name = "lvName", length = 255)
     private String lvName;

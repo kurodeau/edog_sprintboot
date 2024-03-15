@@ -27,10 +27,40 @@ public class ProductOrderVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
 
+
+
+	
+	
+/////////////////打開賣家關聯///////////////////
+	
+//	private SellerVO sellerTargetVO;//FK:sellerId
+//	@ManyToOne
+//	@JoinColumn(name = "sellerId" ,referencedColumnName="sellerId")
+//	public SellerVO getSellerVO() {
+//		return sellerTargetVO;
+//	}
+//
+//	public void setSellerVO(SellerVO sellerVO) {
+//		this.sellerTargetVO = sellerVO;
+//	}
+////////////////////拿掉賣家關聯///////////////////
+//	
+//	private Integer sellerId;//FK1
+//	public Integer getSellerId() {
+//		return sellerId;
+//	}
+//
+//	public void setSellerId(Integer sellerId) {
+//		this.sellerId = sellerId;
+//	}
+//
+
 	
 	private Integer orderId;//PK
+
 	private SellerVO sellerVO;//FK:sellerId
 	private BuyerVO buyerVO;//FK:memberId
+
 	private Integer couponId;//FK3
 	private Integer memberPaysShipping;
 	private Integer sellerPaysShipping;
@@ -201,7 +231,9 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderDetailss = orderDetailss;
 	}
 	
+
 ////////買家（會員）關聯/////////////////////////////////
+
 	@ManyToOne
 	@JoinColumn(name = "memberId")   // 指定用來join table的column
 	public BuyerVO getBuyerVO() {

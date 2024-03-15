@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/front/seller/product")
+@RequestMapping("/seller/product")
 public class ProductImgDBGifReaderController {
 
 	@Autowired
