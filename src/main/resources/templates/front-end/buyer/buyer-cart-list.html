@@ -137,21 +137,6 @@
 						<button class="btn btn-primary" id="checkout-btn">去買單</button>
 					</div>
 					<script>
-// 						$(document).ready(function () {
-// 							$('#checkout-btn').click(function () {
-// 								console.log("按鈕有綁到JS Event_我自己的版本");
-// 								// 這要改成抓登入資訊
-// 								let memberId = "9";
-								
-// 								// 將選取的商品編號封裝成資料
-// 								selectedProductsMap = collectSelectedProducts();
-// 								console.log(selectedProductsMap);
-// 								const obj = Object.fromEntries(selectedProductsMap);
-
-// 								// 将普通对象转换为JSON字符串
-// 								const selectedProductsJsonStr = JSON.stringify(obj); 
-					</script>
-					<script>
 					// 凱哥寫的版本
 						$(document).ready(function () {
 							$('#checkout-btn').click(function () {
@@ -174,7 +159,7 @@
 
 							
 								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/cart/cart_creat_order';
-								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/main';
+								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
 
 								fetch((url), {
 									method: "POST",
