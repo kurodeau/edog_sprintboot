@@ -134,7 +134,7 @@
 							<div class="badge card-badge-custom">廣告</div>
 							<div class="card-status-custom">已售完</div>
 							<img
-								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+								th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 								class="card-img-top" alt="Product 1" />
 							<div class="card-body d-flex flex-column justify-content-between">
 								<h3 class="card-text" th:text="${productVO.productName}"></h3>
@@ -154,6 +154,99 @@
 	<div th:replace="@{fragment-js}"></div>
 
 	<!-- Vendor & Main JS Files -->
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// 取得提交按鈕
+			var formSubmitBtn = document.querySelector(".btn-search");
+			let searchBtn = document.querySelector(".search-button-custom");
+
+			searchBtn.addEventListener("click", handleSearchEvent)
+			formSubmitBtn.addEventListener("click", handleSearchEvent)
+
+			function handleSearchEvent(e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				// 防止表單預設提交行為
+				event.preventDefault();
+				e.stopPropagation();
+
+
+				console.log(document.querySelector(".search-input-custom"));
+				// 收集表單資料
+				var formData = {
+					animalType: [],
+					productCategory: [],
+					ratings: [],
+					priceFrom: document.getElementById("priceFrom").value,
+					priceTo: document.getElementById("priceTo").value,
+					keyword: document.querySelector(".search-input-custom").value,
+				};
+
+				console.log(formData.keyword);
+
+				// 收集動物種類
+				var animalCheckboxes = document.querySelector(".animalCheckboxes");
+				var checkboxes = animalCheckboxes.querySelectorAll(
+					"input[type='checkbox']"
+				);
+
+				checkboxes.forEach(function (checkbox) {
+					if (checkbox.checked) {
+						formData.animalType.push(checkbox.value);
+					}
+				});
+
+
+				// 收集商品分類
+				// 取得商品分類的 ul 元素
+				var categoryList = document.querySelector(".categoryList");
+				// 取得所有的 checkbox
+				var checkboxes = categoryList.querySelectorAll(
+					"input[type='checkbox']"
+				);
+
+				// 建立一個空陣列來存儲選中的值
+				checkboxes.forEach((checkbox) => {
+					if (checkbox.checked) {
+						formData.productCategory.push(checkbox.value);
+					}
+				});
+
+				// 收集商品評價
+				var ratingCheckbox = document.querySelector(".ratingCheckbox");
+
+				var checkboxes = ratingCheckbox.querySelectorAll(
+					"input[type='checkbox']"
+				);
+				checkboxes.forEach((checkbox) => {
+					if (checkbox.checked) {
+						formData.ratings.push(checkbox.value);
+					}
+				});
+
+				const queryString = Object.keys(formData)
+					.map(key => `${encodeURIComponent(key)}=${encodeURIComponent(formData[key])}`)
+					.join('&');
+
+
+				alert(queryString);
+
+				let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+
+				console.log(window.location.protocol);
+				console.log(window.location.hostname);
+				url += `/searchresult?${queryString}`;
+
+
+				window.location.href = url;
+			}
+
+
+
+		});
+	</script>
 
 </body>
 </html>
