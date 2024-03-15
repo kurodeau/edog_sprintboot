@@ -1,11 +1,18 @@
 package com.seller.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -61,62 +68,81 @@ public class SellerServiceImpl implements SellerService {
 	public SellerVO findUserEmail(String email) {
 		return repo.findByEmail(email);
 	}
-	
-	
 
 	public SellerVO findByOnlyOneEmail(String email) {
 		return repo.findByOnlyOneEmail(email);
 	}
-	
 
 	@Override
 	public SellerVO findByOnlyPhone(String phone) {
-		 
+
 		return repo.findByOnlyPhone(phone);
 	}
-	
-	
+
 	public Boolean isDuplcateEmail(String email) {
 		SellerVO sellerVO = repo.findByOnlyOneEmail(email);
-		
-		return sellerVO==null || !sellerVO.getSellerEmail().equals(email);
-	}
 
+		return sellerVO == null || !sellerVO.getSellerEmail().equals(email);
+	}
 
 	public void saveUserDetails(SellerVO sellerVO) {
 
 		if (sellerVO == null) {
 			throw new UsernameNotFoundException("User not found with username ");
 		}
-		
-		System.out.println("saveUserDetails" +sellerVO);
-		
-		UserDetails userdetails = User.builder()
-				.username(sellerVO.getSellerEmail())
-				.password(sellerVO.getSellerPassword())
-			    .authorities("ROLE_SELLER")  
-				.build();
+
+		System.out.println("saveUserDetails" + sellerVO);
+
+		UserDetails userdetails = User.builder().username(sellerVO.getSellerEmail())
+				.password(sellerVO.getSellerPassword()).authorities("ROLE_SELLER").build();
 
 		sellerDetailsService.createUser(userdetails, sellerVO);
 
 	}
-	
+
 	public void updateUserDetails(SellerVO sellerVO) {
 
 		if (sellerVO == null) {
 			throw new UsernameNotFoundException("User not found with username ");
 		}
-		
 
-		UserDetails userdetails = User.builder()
-				.username(sellerVO.getSellerEmail())
-				.password(sellerVO.getSellerPassword())
-			    .authorities("ROLE_SELLER")  
-				.build();
+		UserDetails userdetails = User.builder().username(sellerVO.getSellerEmail())
+				.password(sellerVO.getSellerPassword()).authorities("ROLE_SELLER").build();
 
 		sellerDetailsService.changePassword(userdetails, sellerVO);
 
 	}
 
+	public void updateSecureContext(SellerVO sellerVO) {
+
+		if (sellerVO == null) {
+			return;
+		}
+
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+
+		Authentication authentication = secCtx.getAuthentication();
+		Integer sellerLvId = sellerVO.getSellerLvId().getSellerLvId();
+		List<GrantedAuthority> authorities = new ArrayList<>();
+
+		switch (sellerLvId) {
+		case 1:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
+			break;
+		case 2:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV2"));
+			break;
+		case 3:
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
+			break;
+
+		}
+		
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(sellerVO, null, authorities));
+
+	}
 
 }

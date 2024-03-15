@@ -62,11 +62,11 @@
             <div class="col-12 d-flex gap-3">
               <div class="col-3">
                 匯出起始時間&nbsp;&nbsp;
-                <input type="date" class="startExportDate" value="2022-05-03" />
+                <input type="date" class="startExportDate" value="2022-01-05" />
               </div>
               <div class="col-3">
                 匯出結束時間&nbsp;&nbsp;
-                <input type="date" class="endExportDate" value="2023-06-03" />
+                <input type="date" class="endExportDate" value="2023-02-01" />
               </div>
               <div class="col-3">
                 <select class="form-select" aria-label="Default select example">
@@ -94,6 +94,85 @@
     <div th:replace="@{/fragment-for-sellerReport}"></div>
 
     <!-- Local JS File -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .querySelector("#exportData")
+          .addEventListener("click", function () {
+            let startTime = document.querySelector(".startExportDate").value;
+            let endTime = document.querySelector(".endExportDate").value;
+
+            let url =
+              window.location.protocol +
+              "//" +
+              window.location.hostname +
+              ":" +
+              window.location.port +
+              "/front/seller/report/download";
+
+            alert(url);
+
+            let filename = "ExportDetails.xlsx";
+            let requestData = { startTime: startTime, endTime: endTime };
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "file",
+              },
+              body: JSON.stringify(requestData),
+            })
+              .then((response) => {
+                const contentType = response.headers.get("Content-Type");
+	console.log(contentType &&
+                  contentType.includes(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+                if (
+                  contentType &&
+                  contentType.includes(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  )
+                ) {
+                  const disposition = response.headers.get(
+                    "Content-Disposition"
+                  );
+                  const parts = disposition.split(";");
+                  console.log(parts[1]);
+                  filename = parts[1].split("=")[1];
+                  console.log(filename);
+
+                  return response.blob();
+                } else if (
+                  contentType &&
+                  contentType.includes("application/json")
+                ) {
+                  return response.text().then((errorMessage) => {
+                    throw new Error(errorMessage);
+                  });
+                } else {
+                  throw new Error("Unexpected response from server");
+                }
+              })
+              .then((blobData) => {
+                // 处理文件数据
+                // 这里您可以根据需要进行处理，例如下载文件
+                const blobUrl = URL.createObjectURL(blobData);
+                const downloadLink = document.createElement("a");
+                downloadLink.href = blobUrl;
+                downloadLink.download = filename;
+
+                downloadLink.click();
+                URL.revokeObjectURL(blobUrl);
+              })
+              .catch((error) => {
+                console.error(
+                  "There was a problem with the fetch operation:",
+                  error
+                );
+              });
+          });
+      });
+    </script>
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         init();
@@ -174,6 +253,7 @@
             }
           });
       });
+
       function init() {
         localStorage.removeItem("filteredData");
 
@@ -271,8 +351,7 @@
           if (!url.endsWith("/")) {
             url += "/";
           }
-          url += "api/orders/1";
-          alert(url);
+          url += "api/orders";
 
           let datetimeResult = await fetch(url);
           if (datetimeResult.ok) {

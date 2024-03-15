@@ -19,6 +19,5 @@ import com.redis.JedisUtil;
 		// 啟動Spring Application
 		SpringApplication.run(Application.class, args);
 	}
-	
 
 }

@@ -1,5 +1,8 @@
 package com.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,20 +48,24 @@ public class MultiSecurityConfiguration {
 			"/v3/api-docs/**", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 			"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html" };
 
+	// 處理驗證後成功
 	@Autowired
 	@Qualifier("sellerAuthenticationSuccessHandler")
 	private AuthenticationSuccessHandler sellerAuthenticationSuccessHandler;
 
+	// 處理403權限錯誤
 	@Autowired
 	CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Autowired
 	SellerService sellerSvc;
 
+	// 
 	@Autowired
 	@Qualifier("sellerDetailsService") // Use the correct qualifier if needed
 	private UserDetailsService sellerDetailsService;
 
+	
 	@Autowired
 	@Qualifier("sellerPasswordEncoder")
 	private SellerPasswordEncoder sellerPasswordEncoder;
@@ -119,7 +127,8 @@ public class MultiSecurityConfiguration {
 						.antMatchers("/front/buyer/**").hasRole("BUYER"))
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-		http.formLogin(form -> form.loginPage("/seller/login").permitAll().loginProcessingUrl("/seller/login")
+		http.formLogin(form -> form.loginPage("/seller/login")
+				.loginProcessingUrl("/seller/login")
 				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
 				.successHandler(sellerAuthenticationSuccessHandler))
 				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
@@ -164,12 +173,12 @@ public class MultiSecurityConfiguration {
 
 			// Split the name using "-http"
 			String[] parts = name.split("-http");
-			System.out.println(parts[0]);
+//			System.out.println(parts[0]);
 			// john.doe@example.com
-			System.out.println(parts[1]);
+			
+//			System.out.println(parts[1]);
 			// ://localhost:8081/seller/login?error
 
-			// Check if there is a second part
 			// Check if there is a second part
 			if (parts.length < 2) {
 				throw new UsernameNotFoundException("Invalid Input");
@@ -178,6 +187,11 @@ public class MultiSecurityConfiguration {
 			// The second part is the true name
 			String trueName = parts[0];
 
+//			System.out.println(trueName);
+//			System.out.println(password);
+
+			
+			
 			if (parts[1].contains("seller")) {
 				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
@@ -189,9 +203,24 @@ public class MultiSecurityConfiguration {
 					}
 
 					if (sellerPasswordEncoder.matches(password, sellerVO.getSellerPassword())) {
-
-						return new UsernamePasswordAuthenticationToken(trueName, password,
-								AuthorityUtils.createAuthorityList("ROLE_SELLER"));
+						List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+						switch (sellerVO.getSellerLvId().getSellerLvId()) {
+						case 1:
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
+							break;
+						case 2:
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV2"));
+							break;
+						case 3:
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
+							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
+							break;
+						}
+						
+						return new UsernamePasswordAuthenticationToken(sellerVO, password,
+								authorities);
 					} else {
 						throw new BadCredentialsException("密碼輸入有誤");
 					}

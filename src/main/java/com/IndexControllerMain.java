@@ -137,9 +137,8 @@ public class IndexControllerMain {
 
 	@PostMapping(value = "/search", produces = "application/json")
 	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
-		System.out.println("+++++++++++++++++++++++++++++++");
 
-		System.out.println(formData);
+		System.out.println("formData"+formData);
 
 		List<ProductVO> prodList = productSvc.compositeQuery(formData);
 		System.out.println("Size = " + prodList.size());
@@ -151,13 +150,14 @@ public class IndexControllerMain {
 		List<Integer> productListId = prodList.stream().map(productVO -> productVO.getProductId())
 				.collect(Collectors.toList());
 
+		
 		return ResponseEntity.ok(productListId);
 
 	}
 
 	@GetMapping("/searchresult")
 	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
-
+		
 		String[] productIdArray = productListId.split(",");
 
 		List<ProductVO> productList = new ArrayList<>();
