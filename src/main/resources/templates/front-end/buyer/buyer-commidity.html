@@ -34,15 +34,15 @@
 							<div class="card commidity-card-custom">
 								<ul id="lightSlider">
 									<li
-										th:data-thumb="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
+										th:data-thumb="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
 										<img class="img-fluid"
-										th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+										th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 										style="width: 1000px; height: 580px;"/>
 									</li>
 									<li th:each="productImgVO, iterStat : ${productImageList}"
-										th:data-thumb="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
+										th:data-thumb="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
 										<img class="img-fluid"
-										th:src="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
+										th:src="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
 										style="width: 1000px; height: 580px;" />
 									</li>
 								</ul>

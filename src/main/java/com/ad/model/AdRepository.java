@@ -17,6 +17,10 @@ public interface AdRepository extends JpaRepository<AdVO, Integer> {
 	void deleteByAdId(int adid);
 	
 	
+	@Query(value="select * from ad where sellerId = ?1" , nativeQuery=true)
+	List<AdVO> findSellerAdAll(Integer sellerId);
+	
+	
 
 
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ad.model.AdService;
 
 @Controller
-@RequestMapping("/front/seller/ad")
+@RequestMapping("/seller/ad")
 public class AdDBGifReaderController {
 	
 	@Autowired

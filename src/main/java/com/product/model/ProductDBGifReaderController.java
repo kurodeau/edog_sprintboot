@@ -16,7 +16,7 @@ import com.ad.model.AdService;
 import com.product.model.ProductService;
 
 @Controller
-@RequestMapping("/front/seller/product")
+@RequestMapping("/seller/product")
 public class ProductDBGifReaderController {
 	
 	@Autowired

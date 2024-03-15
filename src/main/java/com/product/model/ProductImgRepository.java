@@ -21,8 +21,13 @@ public interface ProductImgRepository extends JpaRepository<ProductImgVO, Intege
 	@Query(value = "SELECT * FROM productImage WHERE productId = ?1", nativeQuery = true)
 	List<ProductImgVO> findProductImgVOListByProductId(Integer productId);
 	
-	@Query(value = "SELECT productImgId FROM productImage WHERE productId = ?1", nativeQuery = true)
-	List<ProductImgVO> findProductImgsByProductId(ProductVO productVO);
+	@Transactional
+	@Modifying
+	@Query(value = "delete FROM productImage WHERE productId = ?1", nativeQuery = true)
+	void deleteProductImgVOListByProductId(Integer productId);
+	
+//	@Query(value = "SELECT productImgId FROM productImage WHERE productId = ?1", nativeQuery = true)
+//	List<ProductImgVO> findProductImgsByProductId(ProductVO productVO);
 
 
 }
