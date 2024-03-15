@@ -28,6 +28,9 @@ import com.reply.service.ReplyService;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
 import com.buyer.entity.BuyerVO;
+import com.msg.entity.MsgVO;
+import com.msg.service.MsgService;
+import com.msgType.entity.MsgTypeVO;
 
 @Controller
 @RequestMapping("/reply")
@@ -38,7 +41,9 @@ public class ReplyController {
 
 	@Autowired
 	ReplyService replySvc;
-
+	
+	@Autowired
+	MsgService msgSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -96,6 +101,17 @@ public class ReplyController {
             articleVO.setArticleId(Integer.valueOf(articleId));
             // 保存回复到数据库
             replySvc.addReply(replyVO);
+            MsgVO msgVO = new MsgVO();
+	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
+	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        MsgTypeVO msgTypeVO =new MsgTypeVO();
+	        msgTypeVO.setMsgTypeId(2);
+	        msgVO.setMsgTypeVO(msgTypeVO);
+	        msgVO.setMsgTime(new Date());
+	        msgVO.setIsRead(false);
+	        msgVO.setIsEnabled(true);
+	        // 其他需要设置的属性
+	        msgSvc.addMsg(msgVO);
             // 返回成功响应
             return ResponseEntity.ok("评论已成功保存！");
         } catch (Exception e) {
@@ -162,6 +178,17 @@ public class ReplyController {
 	    if (replyVO != null) {
 	    	replyVO.setReplyLike(replyVO.getReplyLike()+1); // 增加喜欢数
 	    	replySvc.updateReply(replyVO); // 更新文章信息到数据库
+	    	MsgVO msgVO = new MsgVO();
+	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
+	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        MsgTypeVO msgTypeVO =new MsgTypeVO();
+	        msgTypeVO.setMsgTypeId(3);
+	        msgVO.setMsgTypeVO(msgTypeVO);
+	        msgVO.setMsgTime(new Date());
+	        msgVO.setIsRead(false);
+	        msgVO.setIsEnabled(true);
+	        // 其他需要设置的属性
+	        msgSvc.addMsg(msgVO);
 	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);
