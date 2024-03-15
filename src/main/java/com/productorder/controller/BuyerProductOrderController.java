@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -50,8 +51,8 @@ public class BuyerProductOrderController {
 		SellerService sellerSvc;
 		@Autowired
 		BuyerService buyerSvc;
-
-		
+		@Autowired
+		ProductOrderService ProductOrderSvc;
 		
 		@PostMapping("order_checkout") 
 		public String orderCheckout(Model model){
@@ -65,17 +66,24 @@ public class BuyerProductOrderController {
 		
 		
 	//臨時入口：跳轉訂單結帳畫面
-		@GetMapping("order_checkout111") 
-		public String orderCheckout111(Model model){
-	        return "front-end/buyer/buyer-order-checkout";
-	    }
+//		@GetMapping("order_checkout111") 
+//		public String orderCheckout111(Model model){
+//	        return "front-end/buyer/buyer-order-checkout";
+//	    }
+		
+	// 用戶取出自己所有購物車資料 /front/buyer/cart/list
+		@GetMapping("order_checkout111")
+		public String cartlist(String memberId, Model model) {
+			// 先給定 memberId 以便測試
+			memberId = "8";
+			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
+			return "front-end/buyer/buyer-order-checkout";
+		}
 		
 		
 		
 		
-		
-		
-		@PostMapping("/create_orders")
+		@PostMapping("create_orders")
 		public ResponseEntity<?> createOrders(@RequestBody ShoppingCartDTO shoppingCartDTO ) {
 //			public ResponseEntity<?> createOrders(@RequestBody ShoppingCartDTO shoppingCartDTO, HttpSession session) {
 //		    Integer memberId = (Integer) session.getAttribute("memberId");
@@ -141,8 +149,9 @@ public class BuyerProductOrderController {
 		        // 保存訂單及訂單明細
 		        productOrderSvc.addProductOrder(productOrder);
 		    });
+		    return ResponseEntity.ok().body(Map.of("message", "Orders created successfully."));
 
-		    return ResponseEntity.ok("Orders created successfully.");
+//		    return ResponseEntity.ok("Orders created successfully.");
 		}
 
 
