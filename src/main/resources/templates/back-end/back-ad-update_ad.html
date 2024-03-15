@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
-
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
+	
+	
+	
+	
+	<!-- ======= Sidebar ======= -->
+	<!-- start帳戶管理 -->
+	<aside th:replace="back-end/aside-back.html"></aside>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
 
 	<!-- ======= Main ======= -->
 

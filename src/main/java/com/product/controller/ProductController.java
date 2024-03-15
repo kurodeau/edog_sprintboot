@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -50,7 +53,7 @@ public class ProductController {
 
 	@GetMapping("add")
 	public String sellerProductAdd(Model model) {
-		
+
 		ProductVO productVO = new ProductVO();
 		productVO.setProductName("假商品名稱");
 		productVO.setPrice(BigDecimal.valueOf(99.99));
@@ -64,18 +67,17 @@ public class ProductController {
 
 		model.addAttribute("product", productVO);
 
-		
 		return "front-end/seller/seller-product-add";
 	}
 
 	@PostMapping("insert")
-
 	public String insert(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
 			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
 			@RequestParam("productSortNo") String productSortNo) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		result = removeFieldError(productVO, result, "mainImage");
+		result = removeFieldError1(productImgVO, result, "subImages");
 
 		if (parts[0].isEmpty()) {
 			model.addAttribute("errorMessage", "商品照片:請上傳照片");
@@ -93,7 +95,10 @@ public class ProductController {
 
 		/*************************** 2.開始新增資料 *****************************************/
 
-		SellerVO sellerVO = srSvc.getById(5);
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();		
+		
 		productVO.setSellerVO(sellerVO);
 
 		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
@@ -121,7 +126,7 @@ public class ProductController {
 			productImg.setProductImgTime(timestamp);
 			productImg.setIsCover(false);
 			productImg.setIsEnabled(true);
-			productImgSvc.addProductImg(productImg); 
+			productImgSvc.addProductImg(productImg);
 
 		}
 
@@ -137,32 +142,36 @@ public class ProductController {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
 		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
-		
-		List<ProductImgVO>  productImgVOs= productImgSvc.getProductImgs(Integer.valueOf(productId));
-    	
-   	 		
+
+		List<ProductImgVO> productImgVOs = productImgSvc.getProductImgs(Integer.valueOf(productId));
+
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("productVO", productVO);
-		model.addAttribute("productImageList",productImgVOs);
+		model.addAttribute("productImageList", productImgVOs);
 		return "front-end/seller/seller-product-update_product";
 	}
 
+	@PostMapping("update")
 	public String update(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
-	        @RequestParam("mainImage") MultipartFile parts, @RequestParam("subImages") MultipartFile[] partsSec,
-	        @RequestParam("productSortNo") String productSortNo) throws IOException {
+			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
+			@RequestParam("productSortNo") String productSortNo, @RequestParam("productId") String productId)
+			throws IOException {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		
-		System.out.println(parts.getSize());
-		
-		result = removeFieldError(productVO, result, "mainImage");
 
-	    if (parts.isEmpty()) {
-	        model.addAttribute("errorMessage", "商品照片:請上傳照片");
-	    } else {
-	        // 文件已上傳
-	        byte[] fileContent = parts.getBytes();
-	        productVO.setProductCoverImg(fileContent);
-	    }
+		if (parts[0].isEmpty()) {
+
+			byte[] upFiles = productSvc.getOneProduct(productVO.getProductId()).getProductCoverImg();
+
+			productVO.setProductCoverImg(upFiles);
+
+		} else {
+			for (MultipartFile multipartFile : parts) {
+
+				byte[] upFiles = multipartFile.getBytes();
+
+				productVO.setProductCoverImg(upFiles);
+			}
+		}
 
 		/*************************** 2.開始新增資料 *****************************************/
 
@@ -174,37 +183,60 @@ public class ProductController {
 
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
-	
-		productVO.setProductSoldQuantity(0);
+
+		// 取出原本的售出數量，在更新時存入數字
+		ProductVO productInfo = productSvc.getOneProduct(Integer.valueOf(productId));
+		productVO.setProductSoldQuantity(productInfo.getProductSoldQuantity());
+		productVO.setRatings(productInfo.getRatings());
+		productVO.setTotalReviews(productInfo.getTotalReviews());
+		
+
 		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
 		productVO.setIsEnabled(true);
 
-
-//		for (MultipartFile multipartFile : partsSec) {
-//
-//			ProductImgVO productImg = new ProductImgVO();
-//
-//			byte[] buf1 = multipartFile.getBytes();
-//
-//			productImg.setProductImg(buf1);
-//			productImg.setProductVO(productVO); // FK
-//			productImg.setProductImgTime(timestamp);
-//			productImg.setIsCover(false);
-//			productImg.setIsEnabled(true);
-//
-//			productImgSvc.updateProductImg(productImg);
-//
-//		}	
-//		
-		
-		
-		/*************************** 2.開始修改資料 *****************************************/
 		productSvc.updateProduct(productVO);
-		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+
+		if(partsSec.length ==1 && partsSec[0].getBytes().length==0) {
+			
+			List<ProductImgVO> originalImgs = productImgSvc.getProductImgs(Integer.valueOf(productId));
+
+			for(ProductImgVO previousImgs : originalImgs) {
+			
+				byte[] upFiles = productImgSvc.getOneProductImg(previousImgs.getProductImgId()).getProductImg();
+				productImgVO.setProductImg(upFiles);
+				productImgSvc.updateProductImg(previousImgs);	
+				
+			}
+			
+			
+		}else {
+			
+		
+			
+			productImgSvc.deleteProductImgs(Integer.valueOf(productId));
+
+			for (MultipartFile multipartFile : partsSec) {
+				
+				ProductImgVO productImg = new ProductImgVO();
+				byte[] buf1 = multipartFile.getBytes();
+
+				productImg.setProductImg(buf1);
+				productImg.setProductVO(productVO); // FK
+				productImg.setProductImgTime(timestamp);
+				productImg.setIsCover(false);
+				productImg.setIsEnabled(true);
+
+				productImgSvc.updateProductImg(productImg);
+
+			}
+		}
+		
+
+		// 3.修改完成,準備轉交(Send the Success view)
 		model.addAttribute("success", "-(修改成功");
 		productVO = productSvc.getOneProduct(Integer.valueOf(productVO.getProductId()));
 		model.addAttribute("productVO", productVO);
-		return null;
+		return "redirect:/front/seller/product/productlist";
 	}
 
 	@PostMapping("delete")
@@ -247,7 +279,7 @@ public class ProductController {
 		return "redirect:/front/seller/product/productlist";
 	}
 
-	// 去除BindingResult中某個欄位的FieldError紀錄
+//	 去除BindingResult中某個欄位的FieldError紀錄
 	public BindingResult removeFieldError(ProductVO productVO, BindingResult result, String removedFieldname) {
 		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
 				.filter(fieldname -> !fieldname.getField().equals(removedFieldname)).collect(Collectors.toList());

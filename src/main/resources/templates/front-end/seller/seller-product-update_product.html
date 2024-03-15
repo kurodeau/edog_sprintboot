@@ -1,44 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-</head>
-<body>
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">論壇</a></li>
-					</ul>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+  </head>
+  <body>
+    <!-- ======= Header ======= -->
 
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">註冊</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-	</header>
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
@@ -55,22 +28,21 @@
 				th:action="@{update}" th:object="${productVO}"
 				enctype="multipart/form-data">
 				<div class="upload__box">
-					<label>商品編號:</label> <input type="text" th:field="*{productId}"
+					<label>商品編號:</label> <input type="text" th:field="*{productId}" name = "productId"
 						style="border: 0px; font-weight: bold;" readonly /><br />
 
 
 					<div class="upload__btn-box">
 						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
-						<input type="file" th:field="*{productCoverImg}"
-							data-max_length="1" class="form-control upload__inputfile"
-							id="mainImage" name="mainImage" onclick="previewImage()"
-							onchange="hideContent('upFiles.errors');" />
+						<input type="file" data-max_length="1" 
+							class="form-control upload__inputfile" id="mainImage"
+							name="mainImage" onclick="previewImage()" onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
 						<div id="mainImageFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
 						<div id="mainImage_blob_holder">
 							<img
-								th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+								th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 								width="200px" height="150px" />
 						</div>
 					</div>
@@ -90,7 +62,7 @@
 						<div id="subImages_blob_holder">
 							<div th:each="productImgVO, iterStat : ${productImageList}">
 								<img
-									th:src="@{/front/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
+									th:src="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
 									width="200px" height="150px" />
 							</div>
 						</div>
@@ -111,7 +83,7 @@
 					<label for="productSort" class="form-label">商品分類</label> <select
 						class="form-select"
 						th:selected="${productVO.productSortVO.productSortNo}"
-						id="productSort" name="productSort">
+						id="productSort" name="productSortNo">
 						<option value="-1" disabled selected>請選擇商品</option>
 						<option value="0"
 							th:selected="${productVO.productSortVO.productSortNo == 0} ">食品</option>
@@ -344,6 +316,27 @@
 				document.getElementById('submit').disabled = true;
 			}
 		}
+		
+		
+		document.getElementById('submitButton').addEventListener('click', function(event) {
+		    // 防止表單直接提交
+		    event.preventDefault();
+		    
+		    // 收集表單中的資料
+		    var formData = new FormData(document.getElementById('imageForm'));
+		    
+		    // 顯示收集到的資料
+		    var dataPreview = "";
+		    for (var [key, value] of formData.entries()) {
+		        dataPreview += key + ': ' + value + '\n';
+		    }
+		    
+// 		    alert("即將送出的資料：\n\n" + dataPreview);
+		    
+		    // 在此處繼續表單的提交，如果需要
+		    document.getElementById('imageForm').submit();
+		});
+
 	</script>
 </body>
 </html>
