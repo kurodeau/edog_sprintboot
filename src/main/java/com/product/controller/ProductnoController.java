@@ -8,6 +8,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.product.model.ProductService;
 import com.product.model.ProductVO;
+import com.seller.entity.SellerVO;
 
 @Controller
 @RequestMapping("/front/seller/product")
@@ -33,10 +37,6 @@ public class ProductnoController {
 	public String sellerproductlist(Model model) {
 		return "front-end/seller/seller-product-all";
 	}
-	
-	
-
-	
 
 	@PostMapping("getOne_For_Display")
 	public String getOne_For_Display(/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 *************************/
@@ -66,35 +66,53 @@ public class ProductnoController {
 	@ModelAttribute("productListData")
 	protected List<ProductVO> referenceListData(Model model) {
 
-		List<ProductVO> list = productSvc.getAll();
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		Integer sellerId = sellerVO.getSellerId();
+		
+		List<ProductVO> list = productSvc.getSellerProductAll(sellerId);
 		return list;
 	}
 
 	@ModelAttribute("productSellOut")
 	protected List<ProductVO> referenceListData1(Model model) {
 
-		List<ProductVO> list = productSvc.getSellOutProduct();
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		Integer sellerId = sellerVO.getSellerId();				
+		
+		List<ProductVO> list = productSvc.getSellOutProduct(sellerId);
 		return list;
 	}
 
 	@ModelAttribute("productLaunch")
 	protected List<ProductVO> referenceListData3(Model model) {
 
-		List<ProductVO> list = productSvc.getProductLaunch();
+		
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		Integer sellerId = sellerVO.getSellerId();		
+		
+		List<ProductVO> list = productSvc.getSellerProductLaunch(sellerId);
 		return list;
 	}
 
 	@ModelAttribute("productUnLaunch")
 	protected List<ProductVO> referenceListData2(Model model) {
+		
+		
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		Integer sellerId = sellerVO.getSellerId();	
+		
 
-		List<ProductVO> list = productSvc.getProductUnLaunch();
+		List<ProductVO> list = productSvc.getProductUnLaunch(sellerId);
 		return list;
 	}
-	
-	
-
-	
-	
 
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	// @ResponseStatus(value = HttpStatus.BAD_REQUEST)

@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -92,7 +95,10 @@ public class ProductController {
 
 		/*************************** 2.開始新增資料 *****************************************/
 
-		SellerVO sellerVO = srSvc.getById(5);
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();		
+		
 		productVO.setSellerVO(sellerVO);
 
 		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));

@@ -1,12 +1,12 @@
 package com.seller.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,8 +23,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.product.model.ProductVO;
-import com.productorder.model.ProductOrderVO;
+import com.ad.model.AdVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.validator.MyZeroValidator;
 
@@ -138,6 +137,20 @@ public class SellerVO implements java.io.Serializable {
 
 	@Column(name = "isConfirm")
 	private Boolean isConfirm = false;
+	
+	@OneToMany(cascade = CascadeType.ALL , mappedBy = "sellerVO")
+	private Set<AdVO> adVO = new HashSet<AdVO>();
+	
+	
+	
+	
+	public Set<AdVO> getAdVO() {
+		return adVO;
+	}
+
+	public void setAdVO(Set<AdVO> adVO) {
+		this.adVO = adVO;
+	}
 
 	public Integer getSellerId() {
 		return sellerId;

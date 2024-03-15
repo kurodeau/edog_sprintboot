@@ -48,7 +48,7 @@
 							provide a valid Picture.</div>
 						<div id="blob_holder">
 							<img
-								th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+								th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
 								width="200px" height="150px" />
 						</div>
 						<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>

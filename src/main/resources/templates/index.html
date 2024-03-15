@@ -117,7 +117,7 @@
 						<div class="carousel-inner">
 
 							<div class="carousel-item active" th:each="adVO : ${launchPremiumAdListData}">
-								<img th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}" width="830px"
+								<img th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}" width="830px"
 									height="260px" class="d-block w-100 img-md-main" alt="Main Picture" />
 							</div>
 
@@ -170,7 +170,7 @@
 							<div class="carousel-item active" th:each="adVO :${launchBaseAdListData}">
 								<div class="subimage-custom w-100">
 									<img class="img-fluid max-width-md img-md-sub"
-										th:src="@{/front/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}" alt=""
+										th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}" alt=""
 										style="width: 330px; height: 95px;" />
 								</div>
 							</div>
@@ -237,7 +237,7 @@
 						<div class="card product-card">
 							<div class="badge card-badge-custom">廣告</div>
 							<div class="card-status-custom">已售完</div>
-							<img th:src="@{/front/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+							<img th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 								class="card-img-top" alt="Product 1" />
 							<div class="card-body d-flex flex-column justify-content-between">
 								<h3 class="card-text" th:text="${productVO.productName}"></h3>
