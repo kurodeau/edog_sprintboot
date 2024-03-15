@@ -1,13 +1,13 @@
 package com.productorder.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,107 +51,38 @@ public class BuyerProductOrderController {
 		SellerService sellerSvc;
 		@Autowired
 		BuyerService buyerSvc;
-		@Autowired
-		ProductOrderService ProductOrderSvc;
 		
-		@PostMapping("order_checkout") 
-		public String orderCheckout(Model model){
-			
-			//接過購物車的DTO顯示在結帳畫面
-			
-			
+		
+	//訂單結帳正式入口
+		@GetMapping("order_checkout") 
+		public String orderCheckout(Integer memberIdd, Model model, HttpSession session){
+			//暫時給定
+//			session.getAttribute(memberId);
+//			
+			Integer memberId = 8; 
+			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
 			return "front-end/buyer/buyer-order-checkout";
+			
+			
 		}
 		
-		
-		
-	//臨時入口：跳轉訂單結帳畫面
-//		@GetMapping("order_checkout111") 
-//		public String orderCheckout111(Model model){
-//	        return "front-end/buyer/buyer-order-checkout";
-//	    }
-		
-	// 用戶取出自己所有購物車資料 /front/buyer/cart/list
-		@GetMapping("order_checkout111")
-		public String cartlist(String memberId, Model model) {
-			// 先給定 memberId 以便測試
-			memberId = "8";
+	//訂單結帳測試用臨時入口
+		@GetMapping("order_checkout111") //GoToCheckoutPage
+		public String cartlist(Model model,HttpSession session) {
+//			Integer memberId = session.getAttribute(memberId);
+			Integer memberId = 8;
 			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
 			return "front-end/buyer/buyer-order-checkout";
 		}
 		
 		
 		
-		
+	//訂單結帳按鈕  	
 		@PostMapping("create_orders")
-		public ResponseEntity<?> createOrders(@RequestBody ShoppingCartDTO shoppingCartDTO ) {
-//			public ResponseEntity<?> createOrders(@RequestBody ShoppingCartDTO shoppingCartDTO, HttpSession session) {
-//		    Integer memberId = (Integer) session.getAttribute("memberId");
+		public ResponseEntity<?> orderCheckout(@RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
+//		    Integer memberId =  session.getAttribute(memberId);
 			Integer memberId = 1;
-		    shoppingCartDTO.getCarts().forEach(cart -> {
-		        ProductOrderVO productOrder = new ProductOrderVO();
-		        BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
-		        SellerVO sellerVO = sellerSvc.getById(cart.getSellerId());
-		        ReceiverInfoDTO receiverInfo = cart.getReceiverInfo();
-
-		        productOrder.setBuyerVO(buyerVO);
-		        productOrder.setSellerVO(sellerVO);
-		        productOrder.setReceiver(receiverInfo.getReceiver());
-		        productOrder.setMobile(receiverInfo.getMobile());
-		        productOrder.setContactAddress(receiverInfo.getContactAddress());
-		        
-		      //用來累加訂單明細裡商品的價格
-				int actualPayment = 0;
-				int detailsTotal = 0;
-				
-			  //int orderOrigPrice = actualPay + discount; //新增優惠券功能用 (//訂單總金額 = 買家實付金額 + 平台優惠折抵)
-		      //新增訂單內容
-				long currentTimeMillis = System.currentTimeMillis();
-				Timestamp currentTimestamp = new Timestamp(currentTimeMillis);
-				Timestamp crCreateDate = currentTimestamp;
-				productOrder.setOrderTime(crCreateDate);
-				productOrder.setOrderStatus(1);
-				int invoiceNumber = GenerateInvoiceNumber.generateInvoiceNumber();
-				productOrder.setInvoiceNumber(invoiceNumber);
-				productOrder.setIsDelivered(0);
-
-		        Set<OrderDetailsVO> orderDetailsSet = new HashSet<>(); //建立訂單裡的訂單明細Set
-		        for (ProductInfoDTO productInfo : cart.getProducts()) {
-		            ProductVO productVO = productSvc.getOneProduct(productInfo.getProductId());
-		            OrderDetailsVO orderDetails = new OrderDetailsVO(); //依據每個訂單Id新增每筆訂單明細
-		            
-		          //設定訂單明細的內容
-		            orderDetails.setProductOrderVO(productOrder); // 關聯訂單
-		            orderDetails.setProductVO(productVO); //關聯商品
-		            orderDetails.setPurchaseQuantity(productInfo.getQuantity()); //設定購買數量
-		            orderDetails.setIsCommented(false);
-		            orderDetails.setIsEnable(true);
-		            detailsTotal += productVO.getPrice().intValue() * orderDetails.getPurchaseQuantity(); //訂單明細金額加總
-		            orderDetailsSet.add(orderDetails);
-		        }
-		        
-		     // 檢查是否需要增加運費
-			    int shippingFee = 0;
-			    if (detailsTotal < 999) {
-			        shippingFee = 70;
-			    }
-			    actualPayment += shippingFee;
-			    int orderOrigPrice = actualPayment + detailsTotal;
-			    productOrder.setSellerPaysShipping(0);//設定賣家負擔運費
-			    productOrder.setMemberPaysShipping(shippingFee);//設置買家負擔運費
-		        productOrder.setOrderDetailss(orderDetailsSet); // 關聯訂單明細
-		        productOrder.setActualPay(actualPayment); //設置買家實付金額
-		        productOrder.setOrderOrigPrice(orderOrigPrice); //設置訂單的總金額(訂單總金額 = 買家實付金額 + 平台優惠折抵)
-		        productOrder.setOrderDetailss(orderDetailsSet); // 訂單關聯訂單明細
-
-		        
-		        
-		        // 保存訂單及訂單明細
-		        productOrderSvc.addProductOrder(productOrder);
-		    });
-		    return ResponseEntity.ok().body(Map.of("message", "Orders created successfully."));
-
-//		    return ResponseEntity.ok("Orders created successfully.");
+			return productOrderSvc.createOrders(shoppingCartDTO, memberId);
 		}
 
 
