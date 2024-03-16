@@ -40,26 +40,28 @@ CREATE TABLE IF NOT EXISTS seller (
 	CONSTRAINT sellerLvId FOREIGN KEY (sellerLvId) REFERENCES sellerLv(sellerLvId)
 );
 -- 會員資料  創建table-- 
-create table IF NOT EXISTS buyer(
-	memberId int AUTO_INCREMENT primary key,
-	memberEmail VARCHAR(200),
+CREATE TABLE IF NOT EXISTS buyer(
+    memberId INT AUTO_INCREMENT PRIMARY KEY,
+    memberEmail VARCHAR(200),
     thirdFrom VARCHAR(100),
     memberName VARCHAR(100),
     memberPhone VARCHAR(10),
-    memberMobile varchar(20),
+    memberMobile VARCHAR(20),
     memberBirthday DATE,
-    memberPassword varchar(100),
+    memberPassword VARCHAR(100),
     memberAddress VARCHAR(100),
-    isMemberEmail boolean,
+    isMemberEmail BOOLEAN,
     memberRegistrationTime DATETIME DEFAULT CURRENT_TIMESTAMP,
     petName VARCHAR(100),
     petImg LONGBLOB,
-    petImgUploadTime datetime,
+    petImgUploadTime DATETIME,
     petVaccName1 VARCHAR(100),
     petVaccTime1 DATETIME,
     petVaccName2 VARCHAR(100),
     petVaccTime2 DATETIME,
-    isConfirm boolean DEFAULT TRUE
+    isConfirm BOOLEAN DEFAULT TRUE,
+    logitude DOUBLE,
+    latitude DOUBLE
 );
 -- 檢舉類型  創建table-- 
 create table IF NOT EXISTS reportType(

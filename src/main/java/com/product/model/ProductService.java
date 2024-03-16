@@ -186,6 +186,18 @@ public class ProductService {
 					predicateList
 							.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceTo)));
 				}
+				
+				
+				
+				String keyword = formData.getKeyword();
+				if (keyword !=null && keyword.trim().length() > 0 ) {
+					
+					predicateList.add(criteriaBuilder.like(root.get("productName"),"%" + keyword + "%" ));
+					
+					
+				}
+			
+				
 
 				Join<ProductVO, ProductSortVO> productSortJoin = root.join("productSortVO");
 				List<String> categoryList = formData.getProductCategory();

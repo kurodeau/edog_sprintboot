@@ -58,6 +58,18 @@ public class BuyerVO implements java.io.Serializable{
 	private Date petVaccTime2; 
 	private Boolean isConfirm;
 
+	private Double logitude;
+	public Double getLogitude() {
+		return logitude;
+	}
+
+	public void setLogitude(Double logitude) {
+		this.logitude = logitude;
+	}
+
+	private Double latitude;
+	
+
 //	@OneToMany(mappedBy = "memberMain", cascade = CascadeType.ALL)
 //	@OrderBy("memberId asc") 
 //	private Set<PetDrawVO> PetDrawVOMemnerIds;
@@ -77,15 +89,27 @@ public class BuyerVO implements java.io.Serializable{
 //		this.members = members;
 //	}
 
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
 	public BuyerVO() {
 		super();
 	};
 
-	public BuyerVO(String memberEmail, String thirdFrom, String memberName, String memberPhone, String memberMobile,
-			Date memberBirthday, String memberPassword, String memberAddress, Boolean isMemberEmail,
-			Date memberRegistrationTime, String petName, byte[] petImg, Date petImgUploadTime, String petVaccName1,
-			Date petVaccTime1, String petVaccName2, Date petVaccTime2, Boolean isConfirm) {
+
+
+	public BuyerVO(Integer memberId, String memberEmail, String thirdFrom, String memberName, String memberPhone,
+			String memberMobile, Date memberBirthday, String memberPassword, String memberAddress,
+			Boolean isMemberEmail, Date memberRegistrationTime, String petName, byte[] petImg, Date petImgUploadTime,
+			String petVaccName1, Date petVaccTime1, String petVaccName2, Date petVaccTime2, Boolean isConfirm,
+			Double logitude, Double latitude, Set<ProductOrderVO> productOrders) {
 		super();
+		this.memberId = memberId;
 		this.memberEmail = memberEmail;
 		this.thirdFrom = thirdFrom;
 		this.memberName = memberName;
@@ -104,6 +128,9 @@ public class BuyerVO implements java.io.Serializable{
 		this.petVaccName2 = petVaccName2;
 		this.petVaccTime2 = petVaccTime2;
 		this.isConfirm = isConfirm;
+		this.logitude = logitude;
+		this.latitude = latitude;
+		this.productOrders = productOrders;
 	}
 
 	@Id
