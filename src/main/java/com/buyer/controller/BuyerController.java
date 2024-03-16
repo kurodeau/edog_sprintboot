@@ -149,10 +149,8 @@ public class BuyerController {
 		return "back-end/back-buyer-edit"; // 查詢完成後轉交update_emp_input.html
 	}
 
-	/*
-	 * This method will be called on update_emp_input.html form submission, handling
-	 * POST request It also validates the user input
-	 */
+	
+	
 	@PostMapping("updateBuyer")
 	public String update(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
@@ -187,10 +185,8 @@ public class BuyerController {
 		return "back-end/back-buyer-list"; // 修改成功後轉交listOneEmp.html
 	}
 
-	/*
-	 * This method will be called on listAllEmp.html form submission, handling POST
-	 * request
-	 */
+	
+	
 	// 理應不會有移除資料的操作
 	@PostMapping("delete")
 	public String delete(@RequestParam("memberId") String memberId, ModelMap model) {
