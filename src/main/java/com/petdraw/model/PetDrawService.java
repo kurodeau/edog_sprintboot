@@ -35,18 +35,37 @@ public class PetDrawService {
 	public void deletePetDraw(Integer petDrawId) {
 		if (petDrawRepository.existsById(petDrawId)) {
 			petDrawRepository.deleteById(petDrawId);
-		
-		
-		
+
 		}
 	}
-	
-	
-	public List<PetDrawVO>  getByMemberIdAndAfterPetDrawTime(Integer buyerId,LocalDateTime  afterDate) {
+
+	public List<PetDrawVO> getByMemberIdAndAfterPetDrawTime(Integer buyerId, LocalDateTime afterDate) {
 		List<PetDrawVO> buyerList = new ArrayList<>();
-	 
-		 buyerList = petDrawRepository.findByMemberIdAndAfterPetDrawTime(buyerId , afterDate);
+
+		buyerList = petDrawRepository.findByMemberIdAndAfterPetDrawTime(buyerId, afterDate);
 		return buyerList;
+	}
+
+	public List<PairResponse> getPairInvitationsForBuyer(Integer memberId, LocalDateTime afterDate) {
+		// 此方法應該從數據庫中獲取所有針對該 memberId 的被動抽卡邀請
+		List<PetDrawVO> petDrawInvitations = petDrawRepository.findByMemberPairIdAndMemberPairResTime(memberId,
+				afterDate);
+
+		List<PairResponse> pairInvitations = new ArrayList<>();
+
+		for (PetDrawVO petDraw : petDrawInvitations) {
+			PairResponse pairInvitation = new PairResponse();
+			pairInvitation.setPetDraw(petDraw);
+			// 假设 petDraw 中存有发起邀请者的 memberId
+			BuyerVO inviter = buyerRepository.findById(petDraw.getMemberId()).orElse(null);
+			BuyerVO invitee = buyerRepository.findById(memberId).orElse(null);
+			
+			pairInvitation.setMemberVO(inviter); // 邀請者
+			pairInvitation.setMemberPairVO(invitee); // 被邀請者
+			pairInvitations.add(pairInvitation);
+		}
+
+		return pairInvitations;
 	}
 
 	public PetDrawVO getOnePetDraw(Integer petDrawId) {
@@ -66,7 +85,6 @@ public class PetDrawService {
 		if (buyerOptional.isPresent()) {
 			BuyerVO buyer = buyerOptional.get();
 
-			
 			return buyer;
 		} else {
 			// 如果找不到會員，返回錯誤或空的對象
@@ -103,8 +121,5 @@ public class PetDrawService {
 		} while (buyers.get(randomIndex).getMemberId() == memberId);
 		return buyers.get(randomIndex);
 	}
-	
-	
-	
-	
+
 }

@@ -1,4 +1,4 @@
-package com.petdraw.model;
+																														package com.petdraw.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,11 +18,12 @@ public interface PetDrawRepository extends JpaRepository<PetDrawVO, Integer> {
 	void deleteByPetDrawId(int PetDrawId);
 
 	//	 根據 memberMain 和 petDrawTime 查詢
-	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND petDrawTime >= :petDrawTime", nativeQuery = true)
+	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND petdrawtime >= :petDrawTime", nativeQuery = true)
 	List<PetDrawVO> findByMemberIdAndAfterPetDrawTime(@Param("memberId") Integer buyerId, @Param("petDrawTime") LocalDateTime afterDate);
 
-//	// 根據 memberPair 和 memberPairResTime 查詢
-	//List<PetDrawVO> findByMemberPairAndMemberPairIdResTime(BuyerVO memberPairId, LocalDate memberPairResTime);
+	// 根據 memberPair 和 memberPairResTime 查詢
+	@Query(value = "SELECT * FROM petdraw WHERE memberpairId = :memberpairId AND memberrestime >= :memberrestime", nativeQuery = true)
+	List<PetDrawVO> findByMemberPairIdAndMemberPairResTime(@Param("memberpairId") Integer buyerId,@Param("memberrestime") LocalDateTime afterDate);
 	
 	@Query(value = "SELECT COUNT(*) FROM PetDrawVO", nativeQuery = true)
 	Integer findMemberCount();

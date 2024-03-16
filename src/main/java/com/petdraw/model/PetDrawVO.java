@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "petdraw") // 指定對應的資料庫表格名稱
 public class PetDrawVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
 	private Integer petDrawId;
 	private Integer memberId;
     private Integer memberPairId;
