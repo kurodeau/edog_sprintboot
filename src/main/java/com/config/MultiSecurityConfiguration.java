@@ -110,41 +110,41 @@ public class MultiSecurityConfiguration {
 		BuyerAuthenticationFilter buyerAuthenticationFilter = new BuyerAuthenticationFilter(authenticationManager(http),
 				buyerRequestMatcher, buyerSvc, buyerPasswordEncoder, buyeAuthenticationFailureHandler);
 
-		 http.authorizeRequests(authorize -> authorize
-		 .antMatchers("/**").permitAll()).csrf().disable();
-//		http
-//				.authorizeRequests(authorize -> authorize
-//						.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-//						.antMatchers("/front/seller/**").hasRole("SELLER")
-//						.antMatchers("/front/buyer/**").hasRole("BUYER"))
-//				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//		http.formLogin(form -> form.loginPage("/seller/login").permitAll().loginProcessingUrl("/seller/login")
-//				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
-//				.successHandler(sellerAuthenticationSuccessHandler))
-//				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
-//						.authenticationEntryPoint(customAuthenticationEntryPoint))
-//				.csrf()
-//				.disable().authenticationManager(authenticationManager(http)).logout(logout -> logout
-//						.logoutUrl("/logout") // 配置登出 URL
-//						.logoutSuccessHandler((request, response, authentication) -> {
-//							Object targetVO = authentication.getPrincipal();
-//							// System.out.println(targetVO);
-//							// System.out.println(targetVO instanceof BuyerVO);
-//
-//							String finalPath = null;
-//							if (targetVO != null && targetVO instanceof BuyerVO) {
-//								SecurityContextHolder.clearContext();
-//								finalPath = "/buyer/login";
-//
-//							} else if (targetVO != null && targetVO instanceof SellerVO) {
-//								SecurityContextHolder.clearContext();
-//								finalPath = "/seller/login";
-//							}
-//							// 這個處理器將應用於所有的登出請求
-//							response.sendRedirect(request.getContextPath() + finalPath);
-//
-//						}));
+//		 http.authorizeRequests(authorize -> authorize
+//		 .antMatchers("/**").permitAll()).csrf().disable();
+		http
+				.authorizeRequests(authorize -> authorize
+						.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+						.antMatchers("/front/seller/**").hasRole("SELLER")
+						.antMatchers("/front/buyer/**").hasRole("BUYER"))
+				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+		http.formLogin(form -> form.loginPage("/seller/login").permitAll().loginProcessingUrl("/seller/login")
+				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
+				.successHandler(sellerAuthenticationSuccessHandler))
+				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
+						.authenticationEntryPoint(customAuthenticationEntryPoint))
+				.csrf()
+				.disable().authenticationManager(authenticationManager(http)).logout(logout -> logout
+						.logoutUrl("/logout") // 配置登出 URL
+						.logoutSuccessHandler((request, response, authentication) -> {
+							Object targetVO = authentication.getPrincipal();
+							// System.out.println(targetVO);
+							// System.out.println(targetVO instanceof BuyerVO);
+
+							String finalPath = null;
+							if (targetVO != null && targetVO instanceof BuyerVO) {
+								SecurityContextHolder.clearContext();
+								finalPath = "/buyer/login";
+
+							} else if (targetVO != null && targetVO instanceof SellerVO) {
+								SecurityContextHolder.clearContext();
+								finalPath = "/seller/login";
+							}
+							// 這個處理器將應用於所有的登出請求
+							response.sendRedirect(request.getContextPath() + finalPath);
+
+						}));
 
 		return http.build();
 	}

@@ -85,7 +85,7 @@
 					<section class="commidity-details-custom d-flex justify-content-start gap-3">
 						<div class="col-auto d-flex">
 							<button class="btn btn-shopcart-custom" onclick="switchFavoritesStatus()">
-								<i class="ri-heart-line"></i><i class="ri-heart-fill"></i>&nbsp;&nbsp;加入收藏
+								<i class="ri-heart-line"></i><i class="ri-heart-fill" style="display:none;"></i>&nbsp;&nbsp;加入收藏
 							</button>
 							<script>
 								// 定義一個函數, 每次操作加入收藏按鈕都切換收藏狀態
@@ -135,8 +135,8 @@
 								function checkFavoritesStatus() {
 									// 找到加入收藏按钮
 									const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
-									// 如果按鈕存在
-									if (addToFavoritesBtn) {
+									// 如果按鈕存在, 而且買家有登入
+									if (addToFavoritesBtn && true) {
 										// 獲取商品ID或其他需要的資訊
 										const currentUrl = window.location.href;
 										const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID

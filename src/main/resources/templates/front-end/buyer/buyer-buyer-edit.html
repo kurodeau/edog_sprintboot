@@ -22,20 +22,13 @@
 			<form id="myForm" method="POST" th:action="@{submitUpdateBuyer}"
 				enctype="multipart/form-data">
 
-				<div class="col-md-12">
+				<div class="col-md-12" style="display:none;">
 					<label for="inputMemberId" class="form-label">買家編號</label> <input
 						type="text" class="form-control" id="inputMemberId"
 						name="memberId" th:value="${buyerVO.memberId}" readonly />
 				</div>
 
-<!-- 				<div class="col-md-12"> -->
-<!-- 					<label for="inputThirdFrom" class="form-label">第三方登入</label> <input -->
-<!-- 						type="text" class="form-control" id="inputThirdFrom" -->
-<!-- 						name="thirdFrom" th:value="${buyerVO.thirdFrom}" -->
-<!-- 						placeholder="還不知道要不要做第三方登入,先放著" readonly /> -->
-<!-- 				</div> -->
-
-				<div class="col-md-12">
+				<div class="col-md-12" style="display:none;">
 					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input
 						type="text" class="form-control" id="inputMemberEmail"
 						name="memberEmail" th:value="${buyerVO.memberEmail}" readonly />
@@ -133,15 +126,6 @@
 						<input type="date" class="form-control" name="petVaccTime2"
 							th:value="${buyerVO.petVaccTime2}">
 					</div>
-				</div>
-
-				<!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
-				<div class="col-md-3">
-					<label for="inputIsConfirm" class="form-label">是否顯示</label> <select
-						class="form-select" name="isConfirm" id="inputIsConfirm">
-						<option value="true" th:selected="${buyerVO.isConfirm}">Yes</option>
-						<option value="false" th:selected="${!buyerVO.isConfirm}">No</option>
-					</select>
 				</div>
 
 				<div
