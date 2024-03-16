@@ -96,9 +96,9 @@
 <!-- 显示评论时间的文本框 -->
 <div class="col-md-12">
     <label for="commentedTime" class="form-label">評論時間</label> 
-    <input type="text" class="form-control" id="commentedTime" name="commentedTime"
+    <input type="text" class="form-control" id="commentedTime"
            th:value="${orderDetailsVO.commentedTime != null ? #dates.format(orderDetailsVO.commentedTime, 'yyyy-MM-dd HH:mm:ss') : ''}"
-           readonly />
+           disabled />
 </div>
 				
 				
