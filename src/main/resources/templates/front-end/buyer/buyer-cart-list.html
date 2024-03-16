@@ -64,8 +64,8 @@
 						<div class="col-2 d-flex justify-content-end cart-price" th:text="${cartVO.productVO.price}">
 							商品金額</div>
 						<div class="col-2 d-flex justify-content-end cart-qty" th:text="${cartVO.productNum}">商品數量</div>
-						<div class="justify-content-end cart-productId"
-							th:text="${cartVO.productVO.productId}" style="display:none">productId</div>
+						<div class="justify-content-end cart-productId" th:text="${cartVO.productVO.productId}"
+							style="display:none">productId</div>
 						<div class="col d-flex flex-column align-items-center justify-content-center">
 							<button class="product btn-func">更改數量</button>
 							<button class="btn-func cart-item-delete" th:data-memberId="9"
@@ -76,7 +76,7 @@
 								function removeOneFromCart(button) {
 									console.log("這是單商品移出cart按鈕");
 
-									//請求參數
+									//請求參數, memberId 用不到
 									var memberId = button
 										.getAttribute('data-memberId');
 									console.log("memberId:" + memberId);
@@ -84,8 +84,10 @@
 									var productId = button
 										.getAttribute('data-productId');
 									console.log("productId:" + productId);
+
+									// 將要傳遞的資料包裝, 採用String 包裝productId
+									var dataString = 'productId=' + encodeURIComponent(productId);
 									var data = {
-										memberId: memberId,
 										productId: productId
 									}
 									const formData = new FormData();
@@ -96,19 +98,15 @@
 									// 使用 jQuery AJAX 送出 POST 請求
 									$
 										.ajax({
-											url: '/front/buyer/collection/switchState', // 替換成你的 POST 請求 URL
+											url: '/front/buyer/cart/removeProductFromList', // 替換成你的 POST 請求 URL
 											type: 'POST',
 											contentType: 'application/json', // 设置请求头
-											data: JSON.stringify(data), // 将数据转换为 JSON 格式
+											data: dataString, // 将数据转换为 JSON 格式, 改用String
 											success: function (responseData) {
-												console
-													.log(JSON
-														.parse(responseData));
+												console.log(JSON.parse(responseData));
 												console.log(responseData);
-
 												console.log('POST 请求成功');
-												
-								    		},
+											},
 											error: function (xhr, status,
 												error) {
 												// 请求失败处理
@@ -137,9 +135,13 @@
 						<button class="btn btn-primary" id="checkout-btn">去買單</button>
 					</div>
 					<script>
+						// 凱哥寫的版本
 						$(document).ready(function () {
 							$('#checkout-btn').click(function () {
 								console.log("按鈕有綁到JS Event");
+
+								// 抓到買家登入的資訊
+								let memberId = "9";
 
 								let selectedProductsMap = new Map();
 
@@ -153,9 +155,9 @@
 
 								// console.log(jsonString);
 
-							
-								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
-								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/';
+
+								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/cart/cart_creat_order';
+								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
 
 								fetch((url), {
 									method: "POST",
@@ -192,15 +194,24 @@
 
 							// 遍歷每個選中的項目
 							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
-								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
+								let memberId = "9";
 								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
 								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
 
-								if (selectedProductsMap.has(sellerName)) {
-									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+								// 要依照賣家名稱分類的邏輯
+								// 								if (selectedProductsMap.has(sellerName)) {
+								// 									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
+								// 								} else {
+								// 									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+								// 								}
+
+								// 都裝入買家id 的邏輯
+								if (selectedProductsMap.has(memberId)) {
+									selectedProductsMap.get(memberId).push({ "productId": productId, "productQty": productQty });
 								} else {
-									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
+									selectedProductsMap.set(memberId, [{ "productId": productId, "productQty": productQty }]);
 								}
+
 							});
 							selectedProductsMap.forEach((value, key) => {
 								console.log(key);
