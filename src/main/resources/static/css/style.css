@@ -817,3 +817,31 @@ mark.green {
     left: -300px;
   }
 }
+
+.modern-button {
+	background: linear-gradient(to right, #6DD5FA, #FF758C); /* 藍色到粉紅色的漸變 */
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 30px; /* 圓角邊框 */
+	font-size: 16px;
+	cursor: pointer;
+	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+	transition: transform 0.2s, box-shadow 0.2s; /* 過渡效果 */
+}
+
+.modern-button:hover {
+	transform: translateY(-2px); /* 懸停時向上移動 */
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 懸停時增加陰影 */
+}
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation-name: fadeIn;
+            animation-duration: 2s;
+        }
