@@ -23,10 +23,9 @@ import com.buyer.entity.BuyerVO;
 import com.orderdetails.model.OrderDetailsVO;
 import com.seller.entity.SellerVO;
 
-@Entity  //要加上@Entity才能成為JPA的一個Entity類別
-@Table(name = "productOrder") //代表這個class是對應到資料庫的實體table，目前對應的table是EMP2 
-public class ProductOrderVO implements java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+
+public class ProductOrderDTO  {
+
 	
 
 	
@@ -44,19 +43,16 @@ public class ProductOrderVO implements java.io.Serializable {
 	private Integer orderStatus;
 	private Integer invoiceNumber;
 	private String receiver;
-	private Timestamp receiveTime;
+	private String receiveTime;
 	private String mobile;
 	private String contactAddress;
 	private Integer isDelivered;
-	private Timestamp shippingTime;
+	private String shippingTime;
 
-	public ProductOrderVO() { //必需有一個不傳參數建構子(JavaBean基本知識)
+	public ProductOrderDTO() { 
 	}
 	
 	
-	@Id //@Id代表這個屬性是這個Entity的唯一識別屬性，並且對映到Table的主鍵 
-	@Column(name = "orderId")  //@Column指這個屬性是對應到資料庫Table的哪一個欄位   //【非必要，但當欄位名稱與屬性名稱不同時則一定要用】
-	@GeneratedValue(strategy = GenerationType.IDENTITY) //@GeneratedValue的generator屬性指定要用哪個generator //【strategy的GenerationType, 有四種值: AUTO, IDENTITY, SEQUENCE, TABLE】
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -69,7 +65,6 @@ public class ProductOrderVO implements java.io.Serializable {
 
 	
 
-	@Column(name = "couponId")	
 	public Integer getCouponId() {
 		return couponId;
 	}
@@ -81,7 +76,6 @@ public class ProductOrderVO implements java.io.Serializable {
 
 
 	
-	@Column(name = "memberPaysShipping")
 	public Integer getMemberPaysShipping() {
 		return memberPaysShipping;
 	}
@@ -90,7 +84,6 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.memberPaysShipping = memberPaysShipping;
 	}
 
-	@Column(name = "sellerPaysShipping")
 	public Integer getSellerPaysShipping() {
 		return sellerPaysShipping;
 	}
@@ -99,7 +92,6 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.sellerPaysShipping = sellerPaysShipping;
 	}
 
-	@Column(name = "orderOrigPrice")
 	public Integer getOrderOrigPrice() {
 		return orderOrigPrice;
 	}
@@ -108,7 +100,6 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.orderOrigPrice = orderOrigPrice;
 	}
 
-	@Column(name = "actualPay")
 	
 	public Integer getActualPay() {
 		return actualPay;
@@ -118,7 +109,6 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.actualPay = actualPay;
 	}
 
-	@Column(name = "orderTime")
 	public Timestamp getOrderTime() {
 		return orderTime;
 	}
@@ -126,7 +116,6 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setOrderTime(Timestamp orderTime) {
 		this.orderTime = orderTime;
 	}
-	@Column(name = "orderStatus")
 	public Integer getOrderStatus() {
 		return orderStatus;
 	}
@@ -134,7 +123,6 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setOrderStatus(Integer orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	@Column(name = "invoiceNumber")
 	public Integer getInvoiceNumber() {
 		return invoiceNumber;
 	}
@@ -142,7 +130,6 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setInvoiceNumber(Integer invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
-	@Column(name = "receiver")
 	public String getReceiver() {
 		return receiver;
 	}
@@ -150,16 +137,14 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
-	@Column(name = "receiveTime")
 //	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getReceiveTime() {
+	public String getReceiveTime() {
 		return receiveTime;
 	}
 
-	public void setReceiveTime(Timestamp receiveTime) {
+	public void setReceiveTime(String receiveTime) {
 		this.receiveTime = receiveTime;
 	}
-	@Column(name = "mobile")
 	public String getMobile() {
 		return mobile;
 	}
@@ -168,7 +153,6 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.mobile = mobile;
 	}
 	
-	@Column(name = "contactAddress")
 	public String getContactAddress() {
 		return contactAddress;
 	}
@@ -176,7 +160,6 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setContactAddress(String contactAddress) {
 		this.contactAddress = contactAddress;
 	}
-	@Column(name = "isDelivered")
 	public Integer getIsDelivered() {
 		return isDelivered;
 	}
@@ -184,21 +167,18 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setIsDelivered(Integer isDelivered) {
 		this.isDelivered = isDelivered;
 	}
-	@Column(name = "shippingTime")
 //	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getShippingTime() {
+	public String getShippingTime() {
 		return shippingTime;
 	}
 
-	public void setShippingTime(Timestamp shippingTime) {
+	public void setShippingTime(String shippingTime) {
 		this.shippingTime = shippingTime;
 	}
 	
 /////訂單明細關聯/////////////////////////////////////////
 	private Set<OrderDetailsVO> orderDetailss = new HashSet<OrderDetailsVO>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="productOrderVO")
-	@OrderBy("orderId asc")
 	public Set<OrderDetailsVO> getOrderDetailss() {
 		return this.orderDetailss;
 	}
@@ -210,8 +190,6 @@ public class ProductOrderVO implements java.io.Serializable {
 
 ////////買家（會員）關聯/////////////////////////////////
 
-	@ManyToOne
-	@JoinColumn(name = "memberId")   // 指定用來join table的column
 	public BuyerVO getBuyerVO() {
 		return buyerVO;
 	}
@@ -221,8 +199,6 @@ public class ProductOrderVO implements java.io.Serializable {
 	}
 	
 ////////賣家關聯/////////////////////////////////
-	@ManyToOne
-	@JoinColumn(name = "sellerId") 
 	public SellerVO getSellerVO() {
 		return sellerVO;
 	}
@@ -230,19 +206,5 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setSellerVO(SellerVO sellerVO) {
 		this.sellerVO = sellerVO;
 	}
-
-
-	@Override
-	public String toString() {
-		return "ProductOrderVO [orderId=" + orderId + ", sellerVO=" + sellerVO + ", buyerVO=" + buyerVO + ", couponId="
-				+ couponId + ", memberPaysShipping=" + memberPaysShipping + ", sellerPaysShipping=" + sellerPaysShipping
-				+ ", orderOrigPrice=" + orderOrigPrice + ", actualPay=" + actualPay + ", orderTime=" + orderTime
-				+ ", orderStatus=" + orderStatus + ", invoiceNumber=" + invoiceNumber + ", receiver=" + receiver
-				+ ", receiveTime=" + receiveTime + ", mobile=" + mobile + ", contactAddress=" + contactAddress
-				+ ", isDelivered=" + isDelivered + ", shippingTime=" + shippingTime + ", orderDetailss=" + orderDetailss
-				+ "]";
-	}
-	
-	
 	
 }

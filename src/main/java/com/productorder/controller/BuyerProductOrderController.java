@@ -1,17 +1,16 @@
 package com.productorder.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,21 +21,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 import com.orderdetails.model.OrderDetailsService;
-import com.orderdetails.model.OrderDetailsVO;
 import com.product.model.ProductService;
-import com.product.model.ProductVO;
-import com.productorder.model.ProductInfoDTO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
-import com.productorder.model.ReceiverInfoDTO;
 import com.productorder.model.ShoppingCartDTO;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
-import com.util.GenerateInvoiceNumber;
-
+import com.buyer.entity.BuyerVO;
 @Controller
 @RequestMapping("/front/buyer")
 public class BuyerProductOrderController {
@@ -56,11 +49,20 @@ public class BuyerProductOrderController {
 	//訂單結帳正式入口
 		@GetMapping("order_checkout") 
 		public String orderCheckout(Integer memberIdd, Model model, HttpSession session){
-			//暫時給定
-//			session.getAttribute(memberId);
-//			
-			Integer memberId = 8; 
-			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
+
+			
+			
+			
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+
+			
+			
+			
+			
+			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(buyerVO.getMemberId())); 
 			return "front-end/buyer/buyer-order-checkout";
 			
 			
@@ -81,8 +83,22 @@ public class BuyerProductOrderController {
 		@PostMapping("create_orders")
 		public ResponseEntity<?> orderCheckout(@RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
 //		    Integer memberId =  session.getAttribute(memberId);
-			Integer memberId = 1;
-			return productOrderSvc.createOrders(shoppingCartDTO, memberId);
+//			Integer memberId = 1;
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			
+			
+			
+	        productOrderSvc.deletCartOnRedis(buyerVO.getMemberId());
+	        productOrderSvc.deletOrderOnRedis(buyerVO.getMemberId());
+	        
+	        
+	        
+			return productOrderSvc.createOrders(shoppingCartDTO, buyerVO.getMemberId());
+			
+			
 		}
 
 

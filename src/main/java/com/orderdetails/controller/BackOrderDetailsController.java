@@ -37,7 +37,7 @@ public class BackOrderDetailsController {
 	//跳轉至修改內容畫面
 	@PostMapping("getOne_OrderDetail_For_Update")
 	public String getOneOrderDetailForUpdate(@RequestParam("orderDetailsId") String orderDetailsId, ModelMap model) {
-		System.out.println(orderDetailsId);
+//		System.out.println(orderDetailsId);
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
 		OrderDetailsVO orderDetailsVO = orderDetailsSvc.getOneOrderDetails(Integer.valueOf(orderDetailsId));
