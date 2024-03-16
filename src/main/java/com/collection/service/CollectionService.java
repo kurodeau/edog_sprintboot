@@ -73,7 +73,7 @@ public class CollectionService {
 	// 不確定是不是這樣寫, 抓取買家登入資訊的 memberId, 還有操作對象的 productId
 	public Map<String, List<ProductVO>> switchStateByProductIdInList(String memberId, String prouductId) {
 
-		System.out.println("進入switchStateByProductId service");
+		System.out.println("測試訊息:進入switchStateByProductId service");
 		// 取得連線
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
@@ -83,11 +83,10 @@ public class CollectionService {
 		ProductVO product = new ProductVO();
 		String redisKey = "collection:" + memberId;
 		// 測試Key用的參數
-		System.out.println("redisKey=" + redisKey);
+		System.out.println("測試訊息:switchStateByProductIdInList, redisKey=" + redisKey);
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-
 			// 從 Redis 中讀取資料 並且指定為db10 試圖分流分類資料		
 			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);

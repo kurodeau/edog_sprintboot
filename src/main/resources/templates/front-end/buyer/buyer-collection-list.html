@@ -56,21 +56,16 @@
 							th:text="${productVO.price}"></div>
 						<div
 							class="col d-flex flex-column align-items-center justify-content-center">
-							<button class="btn-func add-cart" th:data-memberId="9"
+							<button class="btn-func add-cart"
 								th:data-productId="${productVO.productId}"
 								onclick="addProductToCart(this)">加入購物車</button>
 							<script>
 								function addProductToCart(button) {
-									var memberId = button
-											.getAttribute('data-memberId');
-									console.log("memberId:" + memberId);
-
 									var productId = button
 											.getAttribute('data-productId');
 									console.log("productId:" + productId);
 
 									var data = {
-										memberId : memberId,
 										productId : productId
 									}
 
@@ -86,7 +81,7 @@
 												contentType : false,
 												processData : false,
 												success : function(responseData) {
-													alert('成功加入購物車');
+													alert('商品已加至購物車');
 												},
 												error : function(xhr, status,
 														error) {
@@ -194,20 +189,16 @@
 
 							<button class="btn-func cart-item-delete"
 								th:id="'switchCollectionBTN_'+${productVO.productId}"
-								th:data-memberId="9" th:data-productId="${productVO.productId}"
+								th:data-productId="${productVO.productId}"
 								onclick="cancelCollection(this)">取消收藏</button>
 							<!-- 用 Ajex 讓 BTN POST 送出請求 -->
 							<script>
 								function cancelCollection(button) {
-									var memberId = button
-											.getAttribute('data-memberId');
-									console.log("memberId:" + memberId);
 									var productId = button
 											.getAttribute('data-productId');
 									console.log("productId:" + productId);
 
 									var data = {
-										memberId : memberId,
 										productId : productId
 									}
 

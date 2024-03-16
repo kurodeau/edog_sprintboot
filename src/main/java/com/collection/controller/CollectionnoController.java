@@ -50,23 +50,14 @@ public class CollectionnoController extends HttpServlet {
 	@GetMapping("list")
 	public String collectionlist(Model model) {
 		// 先給定 memberId 以便測試
-		
 		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
         Authentication authentication = secCtx.getAuthentication();
         BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
-
-        memberId = String.valueOf(buyerVO.getMemberId());
+        memberId = String.valueOf(buyerVO.getMemberId());        
         
-        System.out.println(memberId);
- 
-		
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
-//
-//        Integer SellerId = sellerVO.getSellerId();
-		
+        System.out.println("測試訊息:陳列出"+memberId+"的收藏清單	");
+
 		model.addAttribute("collectionClassfi", collectionService.getAllByMemberId(memberId));
 		return "front-end/buyer/buyer-collection-list";
 	}
@@ -76,16 +67,17 @@ public class CollectionnoController extends HttpServlet {
 	// 更新特定一個商品編號的收藏狀態, 並回到我的收藏清單
 	// /front/buyer/collection/switchState
 	@PostMapping("switchState") // 改用POST
-	public String switchOneToCollection(@RequestParam("memberId") String memberId,
-			@RequestParam("productId") String productId, Model model) {
+	public String switchOneCollection(@RequestParam("productId") String productId, Model model) {
 		// 先給定 memberId , productId 以便測試
 		System.out.println("到switchState controller");
 		
-		memberId = "9"; //測試有登入, 預設值
+		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
         Authentication authentication = secCtx.getAuthentication();
         BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
-		System.out.println("測試訊息:memberId="+ memberId +"productId=" + productId);
+        memberId = String.valueOf(buyerVO.getMemberId());        
+        
+        System.out.println("測試訊息:變更memberId="+ memberId +"productId=" + productId + ",的收藏狀態");
 		
 		model.addAttribute("collectionClassfi", collectionService.switchStateByProductIdInList(memberId, productId));
 		return "front-end/buyer/buyer-collection-list";
@@ -138,13 +130,25 @@ public class CollectionnoController extends HttpServlet {
 
 	// 將指定商品加到購物車, 並回到我的收藏 /front/buyer/collection/addToCart
 	@PostMapping("addToCart")
-	public String addToCart(@RequestParam("memberId") String memberId, @RequestParam("productId") String productId,
+	public String addToCart(@RequestParam("productId") String productId,
 			Model model) {
-		System.out.println("有到加入購物車 controller");
-//		model.addAttribute("collectionClassfi", cartService.memberAddOneByProductId(memberId, productId));
-		cartService.memberAddOneByProductId(memberId, productId);
-		return "front-end/buyer/buyer-collection-list";
+//		System.out.println("有到加入購物車 controller");
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal(); 
+
+        memberId = String.valueOf(buyerVO.getMemberId());
+        
+//        System.out.println("測試訊息:買家收藏清單加入購物車訊息, memberId= "+ memberId + ", productId= " + productId );
+//        System.out.println("測試訊息:接下來代入cartservic_memberAddOneByProductId");
+        String method = cartService.addOneProductToCart(memberId, productId);
+        System.out.println(method);
+        
+        return "front-end/buyer/buyer-collection-list";
 	}
+	
+	
 	
 	// 每次刷新商品頁面觸發, 檢查這個商品有沒有被收藏?
 	// /front/buyer/collection/product/{id}

@@ -7,6 +7,9 @@ import org.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class CartService {
 	@Autowired
 	ProductService productSvc;
 
+	// 這個目前應該是沒有用了, 之後驗證完後移除
 	// List + DTO作法, 獲取mamber所有購物車資訊
 //	public Map<String, Set<CartVO>> getAllByMemberId(String memberId) {
 //
@@ -97,8 +101,6 @@ public class CartService {
 	// Redis 存Key List+ DTO 作法, 獲取member 所有購物車資訊
 	public Map<String, Set<CartVO>> getAllByMemberId(String memberId) {
 
-		memberId = "8";
-
 		// 設定redisKey, 取得連線
 		String redisKey = "cart:" + memberId;
 		System.out.println("redisKey= " + redisKey); // 測試訊息
@@ -159,8 +161,6 @@ public class CartService {
 
 	// Redis 存的格式等同Cart:[memberId]
 	public void creatOrderByMemberId(JSONObject jsonData) {
-//        System.out.println("有進入creatOrderByMemberId方法");
-//		JSONObject jsonObject = new JSONObject(jsonData);
 		if (jsonData == null || jsonData.equals("{}")) {
 			HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
 			System.out.println("controller 來的 JSON 的資料是空的???");
@@ -169,11 +169,19 @@ public class CartService {
 		// =================整理 JSON 資料, 拿出memberId start
 		List<String> members = new ArrayList();
 		Map<String, String> orderData = new HashMap<>();
-		String memberId = "1";
+		String memberId = "9";
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());        
+        
+        System.out.println("測試訊息:透過購物車新建memberId="+memberId+"的訂單");
+
+		
+		
 		System.out.println("---");
 		for (String member : jsonData.keySet()) {
 			members.add(member);
-			memberId = member;
 			System.out.println("member: " + member);
 			JSONArray memberList = jsonData.getJSONArray(member);
 			for (int i = 0; i < memberList.length(); i++) {
@@ -215,57 +223,59 @@ public class CartService {
 	}
 
 	// 這個還沒完成
-	public void memberAddOneByProductId(String memberId, String prouductId) {
+	public String addOneProductToCart(String memberId, String productId) {
 
 		// 取得連線
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
 		// 本方法會用到的變數
-//		Map<String, List<ProductVO>> collectionClassfi = new HashMap<>();
 		List<ProductVO> productList = new ArrayList();
 		ProductVO product = new ProductVO();
-//		String collectionMember = "collection" + memberId;
-//		System.out.println("collectionMember=" + collectionMember);
-		String key = "cart" + memberId;
-		System.out.println("Key= " + key + " , prouductId= " + prouductId);
+		String redisKey = "cart:" + memberId;
+//		System.out.println("redisKey= " + redisKey + " , productId= " + productId);
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-				// 從 Redis 中讀取資料
-				Jedis jedis = jedisPool.getResource()) {
+			// 從 Redis 中讀取資料
+			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
-
-			List<String> memberCart = jedis.lrange(key, 0, -1);
-			// 判斷 Jedis 該用戶是否已經有登錄該商品收藏
-			if (!key.contains(prouductId)) {
-				memberCart.add(prouductId); // 如果他不存在購物車清單, 就新增他
+			
+			// 檢查 redisKey 對應的 Redis 資料是正確的型別
+			if ( jedis.exists(redisKey) ) {
+//				System.out.println("測試訊息:redisKey=" + redisKey + "存在");
+				String redisKeyType = jedis.type(redisKey);
+				if( !(redisKeyType.equals("hash")) ) {
+//					System.out.println("異常已經存在,且不是Hash型別");
+					return "異常已經存在,且不是Hash型別";
+				}
+			}			
+//			System.out.println("測試訊息:" + redisKey + "型別檢查OK");
+			
+			// 確認指定的 ProductId 是否存在於 redisKey 內, 並將之加一
+			String productNum = "1";
+			if( (jedis.hget(redisKey, productId)) != null ) {
+				productNum = String.valueOf(Integer.parseInt(jedis.hget(redisKey, productId)) + 1)  ;
+//				System.out.println("測試訊息productId=" + productId + ", productNum=" + productNum);
 			}
-
-			// 如果已經存在該用戶的收藏清單, 則清除並加入修改過的清單
-			if (jedis.exists(key)) {
-				jedis.del(key); // 刪除已存在的 key
-			}
-
-			for (String s : memberCart) {
-				jedis.lpush(key, s);
-			}
+			
+			// 將 productId 跟 數量, 塞回對應的redisKey
+			jedis.hset(redisKey, productId, productNum);
 
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
 		}
-		System.out.println("key:" + key + "資料更新");
-//		System.out.println( collectionClassfi.toString() ); //測試到底cart有沒有被改
-		System.out.println("方法結束, 沒有return");
+		System.out.println("redisKey:" + redisKey + "資料更新");
+		return "addOneProductToCart,圓滿完成";
 	}
 
+	
+	
 	// List + DTO作法
-	public Map<String, Set<CartVO>> removeOneFromCart(String memberId, String prouductId) {
-
-		memberId = "9";
+	public Map<String, Set<CartVO>> removeOneFromCart(String memberId, String productId) {
 
 		// 設定redisKey, 取得連線
-		String redisKey = "cart" + memberId;
+		String redisKey = "cart:" + memberId;
 		System.out.println("redisKey= " + redisKey); // 測試訊息
 		JedisPool jedisPool = JedisUtil.getJedisPool();
 
@@ -276,50 +286,40 @@ public class CartService {
 
 		// 索取redis連線, 用try 整個包起來
 		try (
-				// 從 Redis 中讀取資料 並且指定為db10
-				Jedis jedis = jedisPool.getResource()) {
+			// 從 Redis 中讀取資料 並且指定為db10
+			Jedis jedis = jedisPool.getResource()) {
 			jedis.select(10);
-
-			redisData = jedis.lrange(redisKey, 0, -1);
-			System.out.println("redisData= " + redisData);
+			
+			// 自該購物車中移除指定商品
+			if (jedis.hexists(redisKey, productId)) {
+			    jedis.hdel(redisKey, productId);
+			    System.out.println("測試訊息:已將productId"+productId+"自購物車移除");
+			    }
+			else {System.out.println("測試訊息:productId"+productId+"本就不在");}
+			
+			// 獲得該筆Redis 內容Keys
+			Set<String> allProductId = jedis.hkeys(redisKey);
+			System.out.println("測試訊息:這個Redis的所有Key_allProuductId= " + allProductId);
 
 			// 宣告要裝入回傳List<CartVO> 的參數
 			String sellerCompany;
-
 			SellerVO sellerVO;
 			String productNum;
-
-			// ===== 先計算List中每個商品編號有幾個
-			Map<String, Integer> productAndNum = new HashMap<>();
-			for (String p : redisData) {
-				productAndNum.put(p, productAndNum.getOrDefault(p, 0) + 1);
-			}
-
-//			//===== 移除指定的Key 與對應的內容
-//			String keyToRemove = prouductId;			
-//			if (productAndNum.containsKey(keyToRemove)) {
-//			    // 如果存在，則移除
-//			    productAndNum.remove(keyToRemove);
-//			    System.out.println("已移除 key: " + keyToRemove);
-//			} else {
-//			    // 如果不存在，印出訊息
-//			    System.out.println("Key: " + keyToRemove + " 不存在於 Map 中");
-//			}
-
+			
+			
 			// ===== 把Mep中的資 實體化為要回傳的CartVO
-			for (Map.Entry<String, Integer> p : productAndNum.entrySet()) {
-				System.out.println("測試訊息,Element: " + p.getKey() + ", Count: " + p.getValue());
+			for (String Id : allProductId) {
+				System.out.println("測試訊息:迴圈中的,productId: " + Id);
+				System.out.println("測試訊息:迴圈中的,productId="+Id+" ,數量value=" + jedis.hget(redisKey, Id));
 				CartVO cartVO = new CartVO();
-				ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(p.getKey()));
+				ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(Id));
 				cartVO.setProductVO(productVO);
 				sellerCompany = productVO.getSellerVO().getSellerCompany();
 				cartVO.setSellerCompany(sellerCompany);
 				cartVO.setSellerVO(productVO.getSellerVO());
-				cartVO.setProductNum(p.getValue().toString());
-//	            System.out.println( "測試cartVO=" + cartVO.toString() );
+				cartVO.setProductNum(jedis.hget(redisKey, Id).toString());
 
 				// 將每個 CartVO 透過 "sellerCompany" 鍵關聯起来
-//	            System.out.println("將每個 CartVO 透過 \"sellerCompany\" 鍵關聯起来");
 				cartSet = cartClassfi.getOrDefault(cartVO.getSellerCompany(), new HashSet<CartVO>());
 				cartSet.add(cartVO);
 				cartClassfi.put(sellerCompany, cartSet);
@@ -329,7 +329,7 @@ public class CartService {
 			System.out.println("從redis讀出資料有問題");
 			e.printStackTrace();
 		}
-//		System.out.println("回傳 cartClassfi"); // 測試資料
+		System.out.println("測試訊息:已將productId="+productId+" ,移出memberId="+memberId+"的購物車, 並回傳classfi給前端炫染"); // 測試資料
 		return cartClassfi;
 	}
 
