@@ -28,10 +28,13 @@ public interface PetDrawRepository extends JpaRepository<PetDrawVO, Integer> {
 	@Query(value = "SELECT COUNT(*) FROM PetDrawVO", nativeQuery = true)
 	Integer findMemberCount();
 	
-	@Query(value = "SELECT * FROM PetDrawVO WHERE memberId =: memberId", nativeQuery = true)
-	List<BuyerVO> findByMemberId(Integer memberId);
+	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND memberPairId = :memberPairId ORDER BY memberrestime DESC LIMIT 1", nativeQuery = true)
+	PetDrawVO findByMemberIdAndMemberPairId(Integer memberId, Integer memberPairId);
 	
-	@Query(value = "SELECT * FROM PetDrawVO WHERE memberPairId =: memberPairId", nativeQuery = true)
+	@Query(value = "SELECT memberrestime FROM petdraw WHERE memberId = :memberId ORDER BY memberrestime DESC LIMIT 1", nativeQuery = true)
+	PetDrawVO findByMemberIdAndAfterMemberResTime(Integer memberId);
+	
+	@Query(value = "SELECT * FROM petdraw WHERE memberPairId = :memberPairId", nativeQuery = true)
 	List<BuyerVO> findByMemberPairId(Integer memberPairId);
 
 	

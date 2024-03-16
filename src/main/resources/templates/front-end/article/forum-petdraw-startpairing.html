@@ -116,6 +116,10 @@
 					<div>
 						<label>配對的會員編號:</label> 
 							<input type="text"th:field="*{memberPairVO.memberId}" style="border: 0px; font-weight: bold;" readonly /><br />
+							<!-- <input type="hidden" th:field="*{memberVO.memberId}"/> -->
+							<input type="hidden" th:field="*{memberVO}"/>
+							<input type="hidden" th:field="*{petDrawVO}"/>
+							<input type="hidden" th:field="*{memberPairVO}"/>
 					</div>
 
 							<input type="hidden" name="isMemberLike" th:value="true" id="likeHiddenInput" />

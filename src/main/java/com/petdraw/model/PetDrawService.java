@@ -53,13 +53,13 @@ public class PetDrawService {
 
 		List<PairResponse> pairInvitations = new ArrayList<>();
 
-		for (PetDrawVO petDraw : petDrawInvitations) {
+		for (PetDrawVO petDrawVO : petDrawInvitations) {
 			PairResponse pairInvitation = new PairResponse();
-			pairInvitation.setPetDraw(petDraw);
+			pairInvitation.setPetDrawVO(petDrawVO);
 			// 假设 petDraw 中存有发起邀请者的 memberId
-			BuyerVO inviter = buyerRepository.findById(petDraw.getMemberId()).orElse(null);
+			BuyerVO inviter = buyerRepository.findById(petDrawVO.getMemberId()).orElse(null);
 			BuyerVO invitee = buyerRepository.findById(memberId).orElse(null);
-			
+
 			pairInvitation.setMemberVO(inviter); // 邀請者
 			pairInvitation.setMemberPairVO(invitee); // 被邀請者
 			pairInvitations.add(pairInvitation);
@@ -75,6 +75,19 @@ public class PetDrawService {
 
 	public List<PetDrawVO> getAll() {
 		return petDrawRepository.findAll();
+	}
+
+	public PetDrawVO getPetDrawVoByMemberIdAndMemberPairId(Integer memberId, Integer memberPairId) {
+		Optional<PetDrawVO> petDrawOpt = Optional.ofNullable(petDrawRepository.findByMemberIdAndMemberPairId(memberId, memberPairId));
+		// 檢查是否找到會員
+		if (petDrawOpt.isPresent()) {
+			PetDrawVO petDrawVO = petDrawOpt.get();
+
+			return petDrawVO;
+		} else {
+			// 如果找不到會員，返回錯誤或空的對象
+			return null;
+		}
 	}
 
 	public BuyerVO getBuyerVoByMemberId(Integer memberId) throws Exception {

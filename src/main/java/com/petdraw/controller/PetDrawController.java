@@ -10,7 +10,6 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 import com.petdraw.enums.PetDrawStatusEnum;
-import com.petdraw.model.PairPassiveResponse;
 import com.petdraw.model.PairResponse;
 import com.petdraw.model.PetDrawService;
 import com.petdraw.model.PetDrawVO;
@@ -35,7 +33,6 @@ import com.petdraw.model.PetDrawVO;
 @RequestMapping("/front/forum/petdraw")
 public class PetDrawController {
 
-	private PairResponse pairResponse = new PairResponse();
 	private List<PairResponse> pairResponses = new ArrayList<>();
 
 	@Autowired
@@ -71,7 +68,7 @@ public class PetDrawController {
 //    http://localhost:8080/servername/pairPets?=memberMainId=123456&memberPa
 	@PostMapping("/startpairing")
 	public String startpairing(ModelMap model) throws IOException {
-		pairResponse = new PairResponse();
+		PairResponse pairResponse = new PairResponse();
 
 		// Test
 		BuyerVO buyerCurrentVO = buyerSvc.getOneBuyer(1);
@@ -82,10 +79,10 @@ public class PetDrawController {
 		petDrawVO.setMemberId(buyerCurrentVO.getMemberId());
 		petDrawVO.setPetDrawTime(new Date());
 
-		pairResponse.setPetDraw(petDrawVO);
+		pairResponse.setPetDrawVO(petDrawVO);
 		pairResponse.setMemberVO(buyerCurrentVO);
 
-		pairResponse.setPetDraw(petDrawVO);
+		pairResponse.setPetDrawVO(petDrawVO);
 
 		BuyerVO buyerPairVO = petDrawSvc.getRandomBuyerVONotEqualTo(buyerCurrentVO);
 		pairResponse.setMemberPairVO(buyerPairVO);
@@ -96,7 +93,7 @@ public class PetDrawController {
 	}
 
 	@PostMapping("/startpairing/update")
-	public String startpairingUpdate(PairResponse pairesponse, @RequestParam("isMemberLike") boolean isMemberLike,
+	public String startpairingUpdate(PairResponse pairResponse, @RequestParam("isMemberLike") boolean isMemberLike,
 			BindingResult result, ModelMap model) throws IOException {
 
 		// "this.pairResponse" is null
@@ -104,20 +101,17 @@ public class PetDrawController {
 //		System.out.println(pairesponse);
 //		System.out.println(isMemberLike);
 		// com.petdraw.model.PairResponse@57f2784a
+		
+		PetDrawVO petDrawVO = new PetDrawVO();
+		petDrawVO.setMemberPairId(pairResponse.getMemberPairVO().getMemberId());
+		petDrawVO.setMemberId(pairResponse.getMemberVO().getMemberId());
+		// 設定抽卡人回覆時間
+		petDrawVO.setMemberResTime(new Date());
+		petDrawVO.setIsMemberLike(isMemberLike);
+		petDrawSvc.addPetDraw(petDrawVO);
 		if (isMemberLike) {
-			PetDrawVO petDrawVO = pairResponse.getPetDraw();
-//			System.out.println(pairResponse.getMemberVO().getMemberId());
-			// 設定抽卡人回覆時間
-			petDrawVO.setMemberResTime(new Date());
-			petDrawVO.setIsMemberLike(true);
-			Integer petDrawId = petDrawSvc.addPetDraw(petDrawVO);
-
 			return "redirect:/front/forum/petdraw/checkpairing";
 		} else {
-			PetDrawVO petDrawVO = pairResponse.getPetDraw();
-			petDrawVO.setMemberResTime(new Date());
-			petDrawVO.setIsMemberLike(false);
-			Integer petDrawId = petDrawSvc.addPetDraw(petDrawVO);
 			return "redirect:/front/forum/petdraw";
 		}
 
@@ -176,16 +170,36 @@ public class PetDrawController {
 //	    }
 
 		model.addAttribute("pairResponses", pairResponses);
-		System.out.println(pairResponses.get(0).getPetDraw().getpetDrawId());
+//		System.out.println(pairResponses.get(0).getPetDraw().getpetDrawId());
 		// 23
 
-		System.out.println(pairResponses.get(0).getPetDraw().getIsMemberLike());
+//		System.out.println(pairResponses.get(0).getPetDraw().getIsMemberLike());
 
 		return "front-end/article/forum-petdraw-otherpairing";
 
 //	    return "front-end/article/forum-petdraw-otherpairingTest";
 	}
+	@PostMapping("/othersparing/update-like")
+	public String updatelike(@RequestParam("memberId") Integer memberId, @RequestParam("isLike") boolean isLike, ModelMap model) {
+	    // 從資料庫中獲取當前 PetDrawVO 實例
+	    PetDrawVO petDrawVO = petDrawSvc.getOnePetDraw(memberId);
+	    
+	    if (petDrawVO != null) {
+	        // 設置用戶的喜好
+	        petDrawVO.setIsMemberLike(isLike);
 
+	        // 更新資料庫中的資訊
+	        petDrawSvc.updatePetDraw(petDrawVO);
+
+	        // 將更新後的狀態添加到 ModelMap 中，以便在前端顯示
+	        model.addAttribute("updateStatus", "Success");
+	    } else {
+	        model.addAttribute("updateStatus", "Failed");
+	    }
+
+	    // 重定向到適當的視圖
+	    return "front-end/article/forum-petdraw-otherpairing";
+	}
 	@PostMapping("/othersparing/update")
 	public String othersparingC(ModelMap model, @RequestParam("memberpairId") String memberpairIdStr) {
 		// 假設有一個方法可以獲取當前用戶
@@ -205,10 +219,10 @@ public class PetDrawController {
 //	    }
 
 		model.addAttribute("pairResponses", pairResponses);
-		System.out.println(pairResponses.get(0).getPetDraw().getpetDrawId());
+		System.out.println(pairResponses.get(0).getPetDrawVO().getpetDrawId());
 		// 23
 
-		System.out.println(pairResponses.get(0).getPetDraw().getIsMemberLike());
+		System.out.println(pairResponses.get(0).getPetDrawVO().getIsMemberLike());
 
 		return "front-end/article/forum-petdraw-otherpairing";
 
