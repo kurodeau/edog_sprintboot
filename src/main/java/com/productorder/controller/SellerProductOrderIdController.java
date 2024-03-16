@@ -9,6 +9,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,6 +27,7 @@ import com.orderdetails.model.OrderDetailsService;
 import com.orderdetails.model.OrderDetailsVO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
+import com.seller.entity.SellerVO;
 
 @Controller
 @Validated
@@ -92,114 +96,82 @@ public class SellerProductOrderIdController {
 	
 	//顯示所有訂單
 	@ModelAttribute("sellerProductOrderList") 
-	protected List<ProductOrderVO> sellerProductOrderList(HttpSession session, Model model) {
-//		sellerId = session.getAttribute(sellerId);
+	protected List<ProductOrderVO> sellerProductOrderList(Model model) {
+		
 		Integer sellerId =1;
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//        Integer sellerId = sellerVO.getSellerId();
+
 		List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerId);
 		return list;
 	}
 	
 	//顯示未處理訂單
 	@ModelAttribute("sellerProductOrderPendingConfirm") 
-	protected List<ProductOrderVO> sellerProductOrderPendingConfirm(HttpSession session, Model model) {
-//		sellerId = session.getAttribute(sellerId);
+	protected List<ProductOrderVO> sellerProductOrderPendingConfirm( Model model) {
+		
 		Integer sellerId =1;
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//        Integer sellerId = sellerVO.getSellerId();
+		
+		
 		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderPendingConfirm(sellerId);
 		return list;
 	}
 	
 	//顯示處理中訂單
 	@ModelAttribute("sellerProductOrderSellerProcessing")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-	protected List<ProductOrderVO> sellerProductOrderSellerProcessing(HttpSession session, Model model) {
-//		sellerId = session.getAttribute(sellerId);
+	protected List<ProductOrderVO> sellerProductOrderSellerProcessing( Model model) {
+//		
+		
 		Integer sellerId =1;
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//        Integer sellerId = sellerVO.getSellerId();
+		
 		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
 		return list;
 	}
 	
 	//顯示已完成訂單
 	@ModelAttribute("sellerProductOrderCompleted") 
-	protected List<ProductOrderVO> getSellerProductOrderCompleted(HttpSession session, Model model) {
-//		sellerId = session.getAttribute(sellerId);
+	protected List<ProductOrderVO> getSellerProductOrderCompleted( Model model) {
+		
+		
 		Integer sellerId =1;
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//        Integer sellerId = sellerVO.getSellerId();
+		
+		
+		
+		
 		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCompleted(sellerId);
 		return list;
 	}
 	
 	//顯示已取消訂單
 	@ModelAttribute("sellerProductOrderCanceled") 
-	protected List<ProductOrderVO> getSellerProductOrderCanceled(HttpSession session, Model model) {
-//		sellerId = session.getAttribute(sellerId);
+	protected List<ProductOrderVO> getSellerProductOrderCanceled(Model model) {
+		
+		
 		Integer sellerId =1;
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//        Integer sellerId = sellerVO.getSellerId();
+
 		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCanceled(sellerId);
 		return list;
 	}
 	
-	
-	
-	
-/////平台管理//////////////////////////////////////////////////////
-//	@ModelAttribute("productOrderPendingConfirm")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderPendingConfirm(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderPendingConfirm();
-//		return list;
-//	}
-//	
-//	
-//	
-//	
-//	@ModelAttribute("productOrderNotAcceptedByBuyer")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderNotAcceptedByBuyer(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderNotAcceptedByBuyer();
-//		return list;
-//	}
-//	
-//	
-//	@ModelAttribute("productOrderNotAcceptedBySeller")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderNotAcceptedBySeller(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderNotAcceptedBySeller();
-//		return list;
-//	}
-//	
-//	
-//	@ModelAttribute("productOrderAccepted")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderAccepted(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderAccepted();
-//		return list;
-//	}
-//	
-//	@ModelAttribute("productOrderSellerProcessing")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderSellerProcessing(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderSellerProcessing();
-//		return list;
-//	}
-//	
-//	@ModelAttribute("productOrderItemShipped")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderItemShipped(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderItemShipped();
-//		return list;
-//	}
-//	
-//	@ModelAttribute("productOrderCompleted")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderCompleted(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderCompleted();
-//		return list;
-//	}
-//	
-//	@ModelAttribute("productOrderCanceled")  // for select_page.html 第97 109行用 // for listAllEmp.html 第85行用
-//	protected List<ProductOrderVO> productOrderCanceled(Model model) {
-//		
-//		List<ProductOrderVO> list = productOrderSvc.getProductOrderCanceled();
-//		return list;
-//	}
-	
+
 	
 	
 	@ExceptionHandler(value = { ConstraintViolationException.class })

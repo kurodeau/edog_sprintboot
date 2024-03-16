@@ -22,7 +22,7 @@
 		<div class="container-fluid seller-container">
 		
 		
-			<h1>編輯買家資料</h1>
+			<h1>編輯訂單明細</h1>
 
 			 <form id="myForm" method="POST" th:object="${orderDetailsVO}" th:action="@{updateOrderdetailFrombackend}"
 				enctype="multipart/form-data">
@@ -51,10 +51,19 @@
 						name="purchaseQuantity"  th:field="*{purchaseQuantity}" readonly />
 				</div>
 				
+				
+				
+				
+				
+				
 				<div class="col-md-12">
+				
+				<input type="hidden" class="form-control" id="isCommented"
+					name="isCommented" th:field="*{isCommented}" readonly />
+				
 					<label for="isCommented" class="form-label">是否評論</label> <input
 						type="text" class="form-control" id="isCommented"
-						name="isCommented" th:field="*{isCommented}"   />
+						name="isCommented" th:value="${isCommented}? '已評論' : '尚無評論'" readonly  />
 				</div>
 				
 				<div class="col-md-12">
@@ -63,12 +72,34 @@
 						name="stars" th:field="*{stars}"   />
 				</div>
 				
+				
+				
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定，disabled是為了不讓thymeleaf將null轉成空字串填回後端造成報錯-->
+			<!-- 	<input type="hidden" class="form-control" id="commentedTime"
+					name="commentedTime" th:field="*{commentedTime}" readonly /> -->
+				
+				<!-- <input type="hidden" th:field="*{commentedTime}"
+					th:disabled="${orderDetailsVO.commentedTime == null}" />
+				
+				
+				
+					
 				<div class="col-md-12">
 					<label for="commentedTime" class="form-label">評論時間</label> <input
 						type="text" class="form-control" id="commentedTime"
-						name="commentedTime" th:field="*{commentedTime}"   readonly />
-				</div>
+						name="commentedTime" th:value="${#dates.format(orderDetailsVO.commentedTime, 'yyyy-MM-dd HH:mm:ss')}"   readonly />
+				</div> -->
 				
+				<!-- 隐藏 commentedTime 字段，当 orderDetailsVO.commentedTime 为空时 -->
+<input type="hidden" th:field="*{commentedTime}" th:disabled="${orderDetailsVO.commentedTime == null}" />
+
+<!-- 显示评论时间的文本框 -->
+<div class="col-md-12">
+    <label for="commentedTime" class="form-label">評論時間</label> 
+    <input type="text" class="form-control" id="commentedTime"
+           th:value="${orderDetailsVO.commentedTime != null ? #dates.format(orderDetailsVO.commentedTime, 'yyyy-MM-dd HH:mm:ss') : ''}"
+           disabled />
+</div>
 				
 				
 				
@@ -81,14 +112,14 @@
 				</div>
 				
 				
-				<div class="col-md-3">
+				<!-- <div class="col-md-3">
 					<label for="isEnable" class="form-label">啟用狀態</label>
 					<select class="isEnable form-select" id="isEnable"
 						name="isEnable" th:field="*{isEnable}" >
 						<option value="1">已啟用</option>
 						<option value="0">未啟用</option>
 					</select>
-				</div>
+				</div> -->
 
 				
 

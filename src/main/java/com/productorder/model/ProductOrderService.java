@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -384,14 +385,15 @@ public class ProductOrderService {
 		            detailsTotal += productVO.getPrice().intValue() * orderDetails.getPurchaseQuantity(); //訂單明細金額加總
 		            orderDetailsSet.add(orderDetails);
 		        }
-		        
+		        actualPayment = detailsTotal;
 		     // 檢查是否需要增加運費
 			    int shippingFee = 0;
 			    if (detailsTotal < 999) {
 			        shippingFee = 70;
 			    }
+			    
 			    actualPayment += shippingFee;
-			    int orderOrigPrice = actualPayment + detailsTotal;
+			    int orderOrigPrice = actualPayment ;
 			    productOrder.setSellerPaysShipping(0);//設定賣家負擔運費
 			    productOrder.setMemberPaysShipping(shippingFee);//設置買家負擔運費
 		        productOrder.setOrderDetailss(orderDetailsSet); // 關聯訂單明細
@@ -405,5 +407,60 @@ public class ProductOrderService {
 		    });
 		    return ResponseEntity.ok().body(Map.of("message", "Orders created successfully."));
 		}
+		
+		
+		
+		
+		//結帳砍掉Redis
+		// 設定redisKey, 取得連線
+		
+		public void deletCartOnRedis(Integer memberId) {
+				String redisKey = "cart:" + memberId;
+//				System.out.println("redisKey= " + redisKey); // 測試訊息
+				JedisPool jedisPool = JedisUtil.getJedisPool();
+
+				// 索取redis連線, 用try 整個包起來
+				try (
+					// 從 Redis 中讀取資料 並且指定為db10
+					Jedis jedis = jedisPool.getResource()) {
+					jedis.select(10);
+
+					// 檢查該會員是否已經有訂單, 如果有就移除, 然後塞入新的值
+					if (jedis.exists(redisKey)) {
+						jedis.del(redisKey);
+					}
+					
+					// =================創建Redis 資料 end
+
+				} catch (Exception e) {
+					System.out.println("service對Redis的操作有問題");
+					e.printStackTrace();
+				}
+			}
+
+		public void deletOrderOnRedis(Integer memberId) {
+			String redisKey = "order:" + memberId;
+//			System.out.println("redisKey= " + redisKey); // 測試訊息
+			JedisPool jedisPool = JedisUtil.getJedisPool();
+
+			// 索取redis連線, 用try 整個包起來
+			try (
+				// 從 Redis 中讀取資料 並且指定為db10
+				Jedis jedis = jedisPool.getResource()) {
+				jedis.select(10);
+
+				// 檢查該會員是否已經有訂單, 如果有就移除, 然後塞入新的值
+				if (jedis.exists(redisKey)) {
+					jedis.del(redisKey);
+				}
+				
+				// =================創建Redis 資料 end
+
+			} catch (Exception e) {
+				System.out.println("service對Redis的操作有問題");
+				e.printStackTrace();
+			}
+		}
+		
 		
 }
