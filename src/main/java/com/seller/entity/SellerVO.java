@@ -7,12 +7,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,6 +26,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.ad.model.AdVO;
+import com.productorder.model.ProductOrderVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.validator.MyZeroValidator;
 
@@ -41,50 +44,6 @@ public class SellerVO implements java.io.Serializable {
 	@Column(name = "sellerId", updatable = false)
 	private Integer sellerId;
 
-
-/////打開訂單關聯/////////////////////////////////////////
-//	private Set<ProductOrderVO> productOrders;
-//
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "sellerTargetVO", fetch = FetchType.LAZY)
-//	public Set<ProductOrderVO> getProductOrders() {
-//		return productOrders;
-//	}
-//
-//	public void setProductOrders(Set<ProductOrderVO> productOrders) {
-//		this.productOrders = productOrders;
-//	}
-
-/////////////////////////////////////////////////////////
-
-//////////////商品與賣家的關聯///////////////////////
-//	private Set<ProductVO> productVOs;
-//
-//	@OneToMany(mappedBy = "sellerTargetVO", cascade = CascadeType.ALL)
-//	@JoinColumn
-//	public Set<ProductVO> getProductVO() {
-//	    return productVOs;
-//	}
-//
-//	public void setProductVO(Set<ProductVO> productVOs) {
-//		this.productVOs = productVOs;
-//	}
-
-///////////////////////////////////////
-
-
-//////////////等級與賣家的關聯///////////////////////
-
-	public void setSellerLvId(SellerLvVO sellerLvId) {
-		this.sellerLvId = sellerLvId;
-	}
-	@ManyToOne
-	@JoinColumn(name = "sellerLvId", referencedColumnName = "sellerLvId")
-	private SellerLvVO sellerLvId;
-
-	public SellerLvVO getSellerLvId() {
-		return sellerLvId;
-	}
-///////////////////////////////////////
 
 	@Column(name = "sellerEmail")
 	private String sellerEmail;
@@ -141,7 +100,14 @@ public class SellerVO implements java.io.Serializable {
 	@OneToMany(cascade = CascadeType.ALL , mappedBy = "sellerVO")
 	private Set<AdVO> adVO = new HashSet<AdVO>();
 	
+	@ManyToOne
+	@JoinColumn(name = "sellerLvId", referencedColumnName = "sellerLvId")
+	private SellerLvVO sellerLvId;
 	
+/////訂單關聯/////////////////////////////////////////
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerVO")
+	@OrderBy("sellerId asc")
+	private Set<ProductOrderVO> productOrders ;
 	
 	
 	public Set<AdVO> getAdVO() {
@@ -330,6 +296,27 @@ public class SellerVO implements java.io.Serializable {
 	public void setIsConfirm(Boolean isConfirm) {
 		this.isConfirm = isConfirm;
 	}
+	
+/////////////訂單關聯///////////
+	public Set<ProductOrderVO> getProductOrders() {
+		return productOrders;
+	}
+
+	public void setProductOrders(Set<ProductOrderVO> productOrders) {
+		this.productOrders = productOrders;
+	}
+	
+
+//////////////等級與賣家的關聯///////////////////////
+
+public void setSellerLvId(SellerLvVO sellerLvId) {
+this.sellerLvId = sellerLvId;
+}
+
+public SellerLvVO getSellerLvId() {
+return sellerLvId;
+}
+///////////////////////////////////////
 
 	@Override
 	public String toString() {

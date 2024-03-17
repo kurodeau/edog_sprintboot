@@ -80,10 +80,12 @@
 				<!-- Start SearchBar-Function  -->
 				<div
 					class="col-2 d-block col-sm-2 d-flex align-items-start justify-content-start cart-container-custom">
-					<div class="baritem d-flex align-items-center justify-content-start cart-item-custom">
-						<i class="ri-shopping-cart-2-line"></i>
-						<div class="cart d-none d-lg-block ml-1">購物車</div>
-					</div>
+					<a th:href="@{/front/buyer/cart/list}" style="text-decoration: none; color: inherit;">
+						<div class="baritem d-flex align-items-center justify-content-start cart-item-custom">
+							<i class="ri-shopping-cart-2-line"></i>
+							<div class="cart d-none d-lg-block ml-1">購物車</div>
+						</div>
+					</a>
 				</div>
 				<!-- End SearchBar-Function  -->
 			</div>

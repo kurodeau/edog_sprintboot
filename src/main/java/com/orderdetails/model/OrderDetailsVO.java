@@ -1,6 +1,7 @@
 package com.orderdetails.model;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -137,9 +138,20 @@ public class OrderDetailsVO implements java.io.Serializable {
 		this.isEnable = isEnable;
 	}
 	
+	@Override
+	public String toString() {
+		return "OrderDetailsVO [orderDetailsId=" + orderDetailsId + ", productOrderVO=" + productOrderVO
+				+ ", productVO=" + productVO + ", purchaseQuantity=" + purchaseQuantity + ", isCommented=" + isCommented
+				+ ", stars=" + stars + ", commentedTime=" + commentedTime + ", comments=" + comments + ", attachments="
+				+ Arrays.toString(attachments) + ", isEnable=" + isEnable + "]";
+	}
+	
+	
+	
 /////訂單與訂單明細的關聯/////////////////////////////////////////
 	
 	
+
 	@ManyToOne
 	@JoinColumn(name = "orderId")   // 指定用來join table的column
 	public ProductOrderVO getProductOrderVO() {//FK1

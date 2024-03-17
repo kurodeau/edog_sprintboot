@@ -34,7 +34,7 @@
               <th class="text-center">評論時間</th>
               <th class="text-center">評論內容</th>
              <!--  <th class="text-center">附件</th> -->
-              <th class="text-center">啟用狀態</th>
+             <!--  <th class="text-center">啟用狀態</th> -->
               <th class="text-center">操作</th> 
             </tr>
           </thead>
@@ -48,25 +48,23 @@
                 <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.productVO.productName}"></td> 
                 <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.isCommented}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.isCommented}? '已評論' : '尚無評論'"></td>
                 <td class="text-center" th:text="${orderDetailsVO.stars}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.commentedTime}"></td>
+               <!--  <td class="text-center" th:text="${orderDetailsVO.commentedTime}"></td> -->
+                <td class="text-center" th:text="${#dates.format(orderDetailsVO.commentedTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.comments}"></td>
                <!--  <td class="text-center" th:text="${orderDetailsVO.attachments}"></td> -->
-                <td class="text-center" th:text="${orderDetailsVO.isEnable}"></td>
+                <!-- <td class="text-center" th:text="${orderDetailsVO.isEnable}"></td> -->
+               <!--  <td class="text-center" th:text="${orderDetailsVO.isEnable} ? '啟用' : '不啟用'"></td> -->
+                
                 <td class="text-center" >
                  
-                 
-                  
-                  
-                  
-                 	 <a
-                    class="btn"
-                    th:href="@{getOne_OrderDetail_For_Update(orderDetailsId=${orderDetailsVO.orderDetailsId})}"
-                    >修改明細</a
-                  > 
-                  
-            
+		                
+		                
+		                  <form method="post" th:action="@{getOne_OrderDetail_For_Update}" style="margin-bottom: 0px;">
+					     <input type="submit" value="修改">
+					     <input type="hidden" name="orderDetailsId" th:value="${orderDetailsVO.orderDetailsId}"></form> 
+		              
                   
                 </td>
               </tr>

@@ -1,154 +1,216 @@
-
 <!DOCTYPE html>
-<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
+<th:block th:insert="~{/fragment-datatableCss}"></th:block>
+
+
+
+
 </head>
+
 <body>
-	<!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="@{back-end/aside-back}"></aside>
 
-	<!-- ======= Main ======= -->
+	<!-- Main -->
+
 	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
-			<h1>編輯買家資料</h1>
 
-			<form id="myForm" method="POST" th:action="@{updateBuyer}"
-				enctype="multipart/form-data">
+
+			<h1>編輯訂單資料</h1>
+
+			<form id="myForm" method="POST" th:object="${productOrderVO}"
+				th:action="@{update}" enctype="multipart/form-data">
 
 				<div class="col-md-12">
-					<label for="inputMemberId" class="form-label">買家編號</label> 
+					<label for="orderId" class="form-label">訂單ID</label> <input
+						type="text" class="form-control" id="orderId" name="orderId"
+						th:field="*{orderId}" readonly />
+				</div>
+
+				<div class="col-md-12">
+					<label for="sellerId" class="form-label">賣家ID</label> <input
+						type="text" class="form-control" id="sellerId" name="sellerId"
+						th:field="*{sellerVO.sellerId}" readonly />
+				</div>
+
+				<div class="col-md-12">
+					<label for="memberId" class="form-label">會員ID</label> <input
+						type="text" class="form-control" id="memberId" name="memberId"
+						th:field="*{buyerVO.memberId}" readonly />
+				</div>
+
+				<!-- <div class="col-md-12">
+					<label for="couponId" class="form-label">優惠券ID</label> <input
+						type="text" class="form-control" id="couponId" name="couponId"
+						th:field="*{couponId}" />
+				</div> -->
+
+				<div class="col-md-12">
+					<label for="memberPaysShipping" class="form-label">買家負擔運費</label> <input
+						type="text" class="form-control" id="memberPaysShipping"
+						name="memberPaysShipping" th:field="*{memberPaysShipping}"
+						readonly />
+				</div>
+
+
+				<div class="col-md-12">
+					<label for="orderOrigPrice" class="form-label">訂單總金額</label> <input
+						type="text" class="form-control" id="orderOrigPrice"
+						name="orderOrigPrice" th:field="*{orderOrigPrice}" readonly />
+				</div>
+
+				<div class="col-md-12">
+					<label for="actualPay" class="form-label">買家實付金額</label> <input
+						type="text" class="form-control" id="actualPay" name="actualPay"
+						th:field="*{actualPay}" readonly />
+				</div>
+
+
+
+
+
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定，disabled是為了不讓thymeleaf將null轉成空字串填回後端造成報錯-->
+				<input type="hidden" class="form-control" id="orderTime"
+					name="orderTime" th:field="*{orderTime}" readonly />
+
+
+
+				<div class="col-md-12">
+					<label for="formattedOrderTime" class="form-label">訂單成立時間</label> <input
+						type="text" class="form-control" id="formattedOrderTime"
+						th:value="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"
+						readonly />
+				</div>
+
+
+
+
+
+
+				<div class="col-md-12">
+					<label for="orderStatus" class="form-label">訂單狀態</label> <input
+						type="text" class="form-control" id="orderStatus"
+						name="orderStatus" th:field="*{orderStatus}" readonly />
+				</div>
+
+				<!-- 優化訂單狀態用選單 -->
+				<!-- <div class="col-md-12">
+					<label for="isEnable" class="form-label">啟用狀態</label>
+					<select class="isEnable form-select" id="isEnable"
+						name="isEnable" th:field="*{isEnable}" >
+						<option value="1">已啟用</option>
+						<option value="0">未啟用</option>
+					</select>
+				</div> -->
+
+				<div class="col-md-12">
+					<label for="invoiceNumber" class="form-label">發票號碼</label> <input
+						type="text" class="form-control" id="invoiceNumber"
+						name="invoiceNumber" th:field="*{invoiceNumber}" readonly />
+				</div>
+
+				<div class="col-md-12">
+					<label for="receiver" class="form-label">收貨者姓名</label> <input
+						type="text" class="form-control" id="receiver" name="receiver"
+						th:field="*{receiver}" />
+				</div>
+
+
+				<!-- 沒有格式化的收貨時間 -->
+				<!--  <div class="col-md-12">
+					<label for="receiveTime" class="form-label">收貨時間</label> <input
+						type="text" class="form-control" id="receiveTime"
+						name="receiveTime" th:field="*{receiveTime}" disabled />
+				</div>  -->
+
+
+
+
+
+				<!-- 格式化的收貨時間 -->
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定 -->
+				<!-- <input type="hidden" th:field="*{receiveTime}" /> -->
+
+				<!-- 用於顯示的格式化日期 -->
+				<!-- 	<div class="col-md-12">
+					<label for="formattedReceiveTime" class="form-label">收貨時間</label> <input
+						type="text" class="form-control" id="formattedReceiveTime"
+						th:field="*{receiveTime}"
+						readonly />
+				</div> -->
+				<!-- #dates.format(productOrderVO.receiveTime, 'yyyy-MM-dd HH:mm:ss') -->
+
+
+
+
+
+
+				<div class="col-md-12">
+					<label for="mobile" class="form-label">收貨者手機</label> <input
+						type="text" class="form-control" id="mobile" name="mobile"
+						th:field="*{mobile}" />
+				</div>
+
+				<div class="col-md-12">
+					<label for="contactAddress" class="form-label">收貨地址</label> <input
+						type="text" class="form-control" id="contactAddress"
+						name="contactAddress" th:field="*{contactAddress}" />
+				</div>
+
+
 					<input
-						type="text" class="form-control" id="inputMemberId"
-						name="memberId" th:value="${buyerVO.memberId}" readonly />
-				</div>
+						type="text" class="form-control" id="isDelivered"
+						name="isDelivered" th:field="*{isDelivered}" />
 
 				<div class="col-md-12">
-					<label for="inputThirdFrom" class="form-label">第三方登入</label> <input
-						type="text" class="form-control" id="inputThirdFrom"
-						name="thirdFrom" th:value="${buyerVO.thirdFrom}"
-						placeholder="還不知道要不要做第三方登入,先放著" readonly />
+					<label for="isDelivered" class="form-label">出貨狀態</label> <input
+						type="text" class="form-control" id="isDelivered"
+						name="isDelivered" th:value="${isDelivered}? '已出貨' : '未出貨'" readonly/>
 				</div>
+				
+				
+				
+				
+				
 
+				<!-- <div class="col-md-12">
+					<label for="shippingTime" class="form-label">出貨時間</label> <input
+						type="text" class="form-control" id="shippingTime"
+						name="shippingTime" th:field="*{shippingTime}" />
+				</div> -->
+
+
+
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定，disabled是為了不讓thymeleaf將null轉成空字串填回後端造成報錯-->
+				<input type="hidden" th:field="*{shippingTime}"
+					th:disabled="${productOrderVO.shippingTime == null}" />
+
+
+				<!-- 用於顯示的格式化日期 -->
 				<div class="col-md-12">
-					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input
-						type="text" class="form-control" id="inputMemberEmail"
-						name="memberEmail" th:value="${buyerVO.memberEmail}" readonly />
+					<label for="formattedReceiveTime" class="form-label">出貨時間</label> <input
+						type="text" class="form-control" id="formattedReceiveTime"
+						th:value="${#dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd HH:mm:ss')}"
+						readonly />
 				</div>
 
-				<div class="col-md-12">
-					<label for="inputMemberPassword" class="form-label">密碼</label> <input
-						type="text" class="form-control" id="inputMemberPassword"
-						name="memberPassword" th:value="${buyerVO.memberPassword}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberName" class="form-label">用戶名稱</label> <input
-						type="text" class="form-control" id="inputMemberName"
-						name="memberName" th:value="${buyerVO.memberName}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberPhone" class="form-label">會員電話</label> <input
-						type="text" class="form-control" id="inputMemberPhone"
-						name="memberPhone" th:value="${buyerVO.memberPhone}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberMobile" class="form-label">手機號碼</label> <input
-						type="text" class="form-control" id="inputMemberMobile"
-						name="memberMobile" th:value="${buyerVO.memberMobile}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberAddress" class="form-label">地址</label> <input
-						type="text" class="form-control mt-2" id="inputMemberAddress"
-						name="memberAddress" th:value="${buyerVO.memberAddress}"
-						placeholder="請輸入地址" />
-				</div>
-
-				<div class="col-md-3">
-					<label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
-					<select class="isMemberEmail form-select" id="inputIsMemberEmail"
-						name="isMemberEmail" th:value="${buyerVO.isMemberEmail}">
-						<option value="true">已審核</option>
-						<option value="false">未審核</option>
-					</select>
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputPetName" class="form-label">寵物名稱</label> <input
-						type="text" class="form-control" id="inputPetName" name="petName"
-						th:value="${buyerVO.petName}" />
-				</div>
-
-				<div class="upload__box">
-					<label for="inputPetImg" class="btn btn-sellerdark">請選擇寵物圖片</label>
-					<input type="file" data-max_length="1"
-						class="form-control upload__inputfile" id="inputPetImg"
-						name="petImg" onclick="previewImage()"
-						onchange="hideContent('upFiles.errors');" />
-					<div class="valid-feedback">Looks Good!</div>
-					<div id="adImgFeedback" class="invalid-feedback">Please
-						provide a valid Picture.</div>
-					<div id="blob_holder">
-						<img
-							th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}"
-							width="200px" height="auto" />
-					</div>
 
 
-					<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
-					<div class="upload__img--wrap"></div>
-				</div>
 
-				<div class="col-md-12">
-					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input
-						type="text" class="form-control" id="inputPetVaccName1"
-						name="petVaccName1" th:value="${buyerVO.petVaccName1}" />
-				</div>
 
-				<div class="col-mb-3">
-					<label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime1"
-							th:value="${buyerVO.petVaccTime1}">
-					</div>
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputPetVaccName2" class="form-label">施打疫苗2</label> <input
-						type="text" class="form-control" id="inputPetVaccName2"
-						name="petVaccName2" th:value="${buyerVO.petVaccName2}" />
-				</div>
-
-				<div class="col-mb-3">
-					<label for="inputPetVaccTime2" class="col-sm-2 col-form-label">施打時間2</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime2"
-							th:value="${buyerVO.petVaccTime2}">
-					</div>
-				</div>
-
-				<!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
-				<div class="col-md-3">
-					<label for="inputIsConfirm" class="form-label">是否顯示</label> <select
-						class="form-select" name="isConfirm" id="inputIsConfirm">
-						<option value="true" th:selected="${buyerVO.isConfirm}">Yes</option>
-						<option value="false" th:selected="${!buyerVO.isConfirm}">No</option>
-					</select>
-				</div>
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
+
 			</form>
 		</div>
 	</main>
@@ -164,10 +226,13 @@
 		type="text/javascript"></script>
 	<script>
 		//============ 取消按鈕的跳轉事件設定 start =============
-		document.getElementById("cancel-btn").addEventListener("click",
-				function() {
-					window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
-				});
+		document
+				.getElementById("cancel-btn")
+				.addEventListener(
+						"click",
+						function() {
+							window.location.href = "/back/productorder/productordersearch"; // 將網頁重定向到指定的 URL
+						});
 
 		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
 		var loadjsCompletedEvent = new Event("loadjsCompleted");
@@ -242,7 +307,7 @@
 							blob_holder.removeChild(blob_holder.childNodes[0]);
 						}
 						blob_holder.appendChild(image);
-						
+
 						// 移除多顯示的圖片
 						clearChildNodesExceptLast();
 					};
@@ -277,7 +342,8 @@
 			}
 		}
 	</script>
-	<!-- simpletable -->
-</body>
 
+
+
+</body>
 </html>

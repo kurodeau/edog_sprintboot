@@ -1,0 +1,38 @@
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
+
+public class CountdownTimer {
+
+    private static final String TIMEZONE = "Asia/Taipei";
+    private static final String FILE_PATH = "countdown_timer.txt";
+
+    public static void main(String[] args) {
+        try {
+            ZonedDateTime endTime = readEndTimeFromFile();
+
+            if (ZonedDateTime.now(ZoneId.of(TIMEZONE)).isAfter(endTime)) {
+                endTime = ZonedDateTime.now(ZoneId.of(TIMEZONE)).withHour(23).withMinute(59).withSecond(59);
+                writeEndTimeToFile(endTime);
+            }
+
+            long secondsRemaining = java.time.Duration.between(ZonedDateTime.now(ZoneId.of(TIMEZONE)), endTime).getSeconds();
+            System.out.println("Seconds remaining: " + secondsRemaining);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static ZonedDateTime readEndTimeFromFile() throws IOException {
+        String timeStr = new String(Files.readAllBytes(Paths.get(FILE_PATH)));
+        return ZonedDateTime.parse(timeStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z").withZone(ZoneId.of(TIMEZONE)));
+    }
+
+    private static void writeEndTimeToFile(ZonedDateTime endTime) throws IOException {
+        String timeStr = endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
+        Files.write(Paths.get(FILE_PATH), timeStr.getBytes());
+    }
+}

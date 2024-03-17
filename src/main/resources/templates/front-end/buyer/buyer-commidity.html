@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
+	<th:block th:insert="~{/fragment-head}"></th:block>
 </head>
+
 <body>
 
 	<!-- ======= Header ======= -->
@@ -36,14 +38,14 @@
 									<li
 										th:data-thumb="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
 										<img class="img-fluid"
-										th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
-										style="width: 1000px; height: 580px;"/>
+											th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
+											style="width: 1000px; height: 580px;" />
 									</li>
 									<li th:each="productImgVO, iterStat : ${productImageList}"
 										th:data-thumb="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
 										<img class="img-fluid"
-										th:src="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
-										style="width: 1000px; height: 580px;" />
+											th:src="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
+											style="width: 1000px; height: 580px;" />
 									</li>
 								</ul>
 							</div>
@@ -54,21 +56,19 @@
 					<h1 class="fw-bold" th:text=${productVO.productName}></h1>
 					<section class="commidity-details-custom d-flex">
 						<h2 class="fw-bold col-5">商品售價</h2>
-						<h2 class="fw-bold col-7 text-userdark" id="price"
-							th:text="'NT$'+${productVO.Price}"></h2>
+						<h2 class="fw-bold col-7 text-userdark" id="price" th:text="'NT$'+${productVO.Price}"></h2>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">庫存</h5>
-						<h5 class="fw-bold col-7" id="stock"
-							th:text=${productVO.productStockQuantity}>50件</h5>
+						<h5 class="fw-bold col-7" id="stock" th:text=${productVO.productStockQuantity}>50件</h5>
 					</section>
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">數量</h5>
 						<h5 class="fw-bold col-7" id="orderNum">
-							<input type="number" class="form-control mx-2" id="quantityInput"
-								value="1" min="1" style="width: 150px;">
+							<input type="number" class="form-control mx-2" id="quantityInput" value="1" min="1"
+								style="width: 150px;">
 						</h5>
 					</section>
 
@@ -82,22 +82,161 @@
 						<h5 class="fw-bold col-7" id="orderNum">NT$ 60</h5>
 					</section>
 
-					<section
-						class="commidity-details-custom d-flex justify-content-start gap-3">
+					<section class="commidity-details-custom d-flex justify-content-start gap-3">
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom">
-								<i class="ri-heart-line"></i>&nbsp;&nbsp;加入收藏
+							<button class="btn btn-collection-custom" onclick="switchFavoritesStatus()">
+								<i class="ri-heart-line"></i><i class="ri-heart-fill"
+									style="display:none;"></i>&nbsp;&nbsp;加入收藏
 							</button>
+							<script>
+								// 定義一個函數, 每次操作加入收藏按鈕都切換收藏狀態
+								function switchFavoritesStatus() {
+									const addToFavoritesBtn = document.querySelector('.btn-collection-custom');
+									// 如果按鈕存在
+									if (addToFavoritesBtn) {
+										// 獲取商品ID或其他需要的資訊
+										const currentUrl = window.location.href;
+										const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID
+										console.log("我要更新收藏狀態的productId" + productId);
 
-							<button class="btn btn-like-custom" style="display: none">
+										// 建立 XMLHttpRequest 物件
+										const xhr = new XMLHttpRequest();
+
+										// 設定要發送的請求，包含商品ID參數
+										xhr.open('GET', `/front/buyer/collection/switchState/${productId}`, true);
+
+										// 設定請求成功後的回調函數
+										xhr.onload = function () {
+											if (xhr.status >= 200 && xhr.status < 300) {
+												// 後端回傳該商品是否已經加入收藏
+												// const responseData = JSON.parse(xhr.responseText);
+												const responseData = xhr.responseText;
+												console.log("!!這個現在很怪喔!responseData=" + responseData);
+
+												// 顯示跳窗提示回傳訊息
+												alert("這個應該怪怪的responseData");
+											} else {
+												console.error('Request failed with status:', xhr.status);
+											}
+										};
+
+										// 設定請求失敗時的回調函數
+										xhr.onerror = function () {
+											console.error('Request failed');
+										};
+
+										// 發送請求
+										xhr.send();
+									};
+
+								};
+
+
+								// 定义一个函数，用于绑定事件和发送请求
+								function checkFavoritesStatus() {
+									// 找到加入收藏按钮
+									const addToFavoritesBtn = document.querySelector('.btn-collection-custom');
+									// 如果按鈕存在, 而且買家有登入
+									if (addToFavoritesBtn && true) {
+										// 獲取商品ID或其他需要的資訊
+										const currentUrl = window.location.href;
+										const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID
+										console.log(productId);
+
+										// 建立 XMLHttpRequest 物件
+										const xhr = new XMLHttpRequest();
+
+										// 設定要發送的請求，包含商品ID參數
+										xhr.open('GET', `/front/buyer/collection/product/${productId}`, true);
+										console.log("有走道發送請求這步");
+
+										// 設定請求成功後的回調函數
+										xhr.onload = function () {
+											if (xhr.status >= 200 && xhr.status < 300) {
+												// 後端回傳該商品是否已經加入收藏
+												// const responseData = JSON.parse(xhr.responseText);
+												const responseData = xhr.responseText;
+												console.log("??還是你壞掉??responseData=" + responseData);
+												// 根據回傳的狀態進行相應的處理
+												if (responseData.trim() === "true") {
+													// 商品已經加入收藏，顯示相應的提示或處理邏輯
+													console.log('該商品已經在您的收藏清單中！');
+													addToFavoritesBtn.innerHTML = '<i class="ri-heart-fill"></i>&nbsp;&nbsp;收藏中';
+												} else {
+													// 商品尚未加入收藏，可以執行加入收藏的動作
+													// 這裡可以觸發加入收藏的相關邏輯
+													console.log('商品不是你的收藏');
+													addToFavoritesBtn.innerHTML = '<i class="ri-heart-line"></i>&nbsp;&nbsp;加入收藏';
+												}
+											} else {
+												console.error('Request failed with status:', xhr.status);
+											}
+										};
+
+										// 設定請求失敗時的回調函數
+										xhr.onerror = function () {
+											console.error('Request failed');
+										};
+
+										// 發送請求
+										xhr.send();
+									}
+								}
+
+								// 在頁面載入完成後自動執行一次
+								document.addEventListener('DOMContentLoaded', checkFavoritesStatus);
+							</script>
+
+							<!-- <button class="btn btn-like-custom" style="display: none">
 								<i class="ri-heart-fill"></i>&nbsp;&nbsp;取消收藏
-							</button>
+							</button> -->
 						</div>
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom">
+							<button class="btn btn-shopcart-custom" onclick="switchFavoritesStatus()">
 								<i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
 							</button>
 						</div>
+						<script>
+							// 定義一個函數, 每次操作加入購物車按鈕都依照所指定數量, 將該商品加入購物車(已有則疊加)
+							function switchFavoritesStatus() {
+								// 抓到按鈕, 還有數量設定的欄位
+								const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
+								const quantityInput = document.getElementById('quantityInput');
+								// 如果按鈕存在且設定數量欄位存在
+								if (addToFavoritesBtn && quantityInput) {
+									// 獲取商品ID或其他需要的資訊
+									const currentUrl = window.location.href;
+									const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID
+									const productNum = quantityInput.value;
+									console.log("我要加入購物車的是productId=" + productId + " ,productNum=" + productNum);
+
+									// 構建要傳遞的資料
+									const data = {
+										productId: productId,
+										productNum: productNum
+									};
+
+									// 發送 POST 請求
+									fetch('/front/buyer/cart/addToCartFromProduct', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify(data)
+									})
+										.then(response => response.json())
+										.then(data => {
+											console.log('加入購物車成功:', data);
+											alert('已經加入購物車');
+										})
+										.catch(error => {
+											console.error('加入購物車失敗:', error);
+											alert('加入購物車失敗');
+										});
+								};
+							};
+						</script>
+
 						<div class="col-auto d-flex">
 							<button class="btn btn-userdark text-white">
 								&nbsp;&nbsp;直接購買</button>
@@ -134,16 +273,14 @@
 
 			<div class="row py-3">
 				<div class="col-12 d-flex commidity-rate-custom" id="description">
-					<div
-						class="d-flex align-items-center justify-content-end user-icon">
+					<div class="d-flex align-items-center justify-content-end user-icon">
 						<i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
 					</div>
 					<div class="d-flex flex-column user-comment">
 						<h5 class="comment-account fw-bold mb-0">account1</h5>
 						<div class="comment-star d-flex">
-							<i class="bi bi-star-fill text-userdark"></i> <i
-								class="bi bi-star"></i> <i class="bi bi-star"></i> <i
-								class="bi bi-star"></i> <i class="bi bi-star"></i>
+							<i class="bi bi-star-fill text-userdark"></i> <i class="bi bi-star"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i> <i class="bi bi-star"></i>
 						</div>
 						<div class="comment-time">2023-01-1</div>
 					</div>
@@ -151,16 +288,14 @@
 						SSSSSSSSSSSS SSSSSSSSS</div>
 				</div>
 				<div class="col-12 d-flex commidity-rate-custom" id="description">
-					<div
-						class="d-flex align-items-center justify-content-end user-icon">
+					<div class="d-flex align-items-center justify-content-end user-icon">
 						<i class="ri-user-fill" style="font-size: 30px">&nbsp;&nbsp;</i>
 					</div>
 					<div class="d-flex flex-column user-comment">
 						<h5 class="comment-account fw-bold mb-0">account1</h5>
 						<div class="comment-star d-flex">
-							<i class="bi bi-star-fill text-userdark"></i> <i
-								class="bi bi-star"></i> <i class="bi bi-star"></i> <i
-								class="bi bi-star"></i> <i class="bi bi-star"></i>
+							<i class="bi bi-star-fill text-userdark"></i> <i class="bi bi-star"></i> <i
+								class="bi bi-star"></i> <i class="bi bi-star"></i> <i class="bi bi-star"></i>
 						</div>
 						<div class="comment-time">2023-01-1</div>
 					</div>
@@ -175,13 +310,13 @@
 	<div th:replace="@{fragment-footer}"></div>
 	<div th:replace="@{fragment-js}"></div>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
+		document.addEventListener('DOMContentLoaded', function () {
 			$("#lightSlider").lightSlider({
-				gallery : true,
-				item : 1,
-				loop : true,
-				slideMargin : 50,
-				thumbItem : 6
+				gallery: true,
+				item: 1,
+				loop: true,
+				slideMargin: 50,
+				thumbItem: 6
 			});
 		});
 
@@ -198,4 +333,5 @@
 		}
 	</script>
 </body>
+
 </html>
