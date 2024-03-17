@@ -176,6 +176,10 @@ public class IndexControllerMain {
 			@RequestParam(value = "priceFrom", required = false) String priceFrom,
 			@RequestParam(value = "priceTo", required = false) String priceTo,
 			@RequestParam(value = "keyword", required = false) String keyword, ModelMap model) {
+		
+		
+		
+		
 
 		FormData formData = new FormData(); // 創建 FormData 對象
 
@@ -210,21 +214,7 @@ public class IndexControllerMain {
 
 		// 調用 ProductService 執行複合查詢
 		List<ProductVO> productResult = productSvc.compositeQuery(formData);
-		
-		
-		
-			System.out.println("+++++++++++++++++++++++++++++++");
-	
-			System.out.println(formData);
-	
-		
-			System.out.println("Size = " + productResult.size());
-			productResult.forEach(System.out::println);
-	
-			productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
-					formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
-
-		
+			
 		List<ProductVO> productList = productResult.stream()
 				.filter(pt -> "已上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
 						.collect(Collectors.toList());

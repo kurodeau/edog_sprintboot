@@ -47,7 +47,6 @@ public class ChangeHeaderInfoInterceptor implements HandlerInterceptor {
                     // 添加賣家特定的邏輯
                 } else if (principal instanceof BuyerVO) {
                     BuyerVO buyerVO = (BuyerVO) principal;
-                    System.out.println("AAA");
                     modelAndView.addObject("sellerLoggedIn", false);
                     modelAndView.addObject("buyerLoggedIn", true);
                     modelAndView.addObject("theName", buyerVO.getMemberName());
