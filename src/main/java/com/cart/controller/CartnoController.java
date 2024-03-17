@@ -90,22 +90,82 @@ public class CartnoController extends HttpServlet {
 
 	// 移除特定一個商品編號的購物車狀態(所有數量清空), 並回到我的購物車 /front/buyer/cart/removeProductFromList
 	@PostMapping("removeProductFromList") //改用POST
-	public String removeProductFromList(@RequestParam("productId") String productId, Model model) {
-		// 先給定 memberId , productId 以便測試
+	public ResponseEntity<?> removeProductFromList(@RequestBody String jsonData, Model model) {
+		// 從 JSON 取出資料
+		JSONObject jsonObject = new JSONObject(jsonData);
+//      System.out.println("測試訊息:有收到jsonData="+jsonData);
+		if(jsonData==null || jsonData.equals("{}")){
+          HttpResult<String> result = new HttpResult<>(400, "", "請正確選擇要加入購物車的數量");
+          return ResponseEntity.badRequest().body(result);
+		}
+		String productId = jsonObject.getString("productId");
+		
 		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
         Authentication authentication = secCtx.getAuthentication();
         BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
         memberId = String.valueOf(buyerVO.getMemberId());        
         
-        System.out.println("測試訊息:將memberId="+memberId+"的購物車移除productId="+"productId");
+        System.out.println("測試訊息:將memberId="+memberId+"的購物車移除productId="+productId);
 		
 		
 		model.addAttribute("collectionClassfi", cartService.removeOneFromCart(memberId, productId)); 
-		return "front-end/buyer/buyer-cart-list";
+		return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
 	}
 	
 	
+
+	// 增加特定一個商品編號的購物車數量, 並回到我的購物車 /front/buyer/cart/removeProductFromList
+	@PostMapping("addOneNum")
+	public ResponseEntity<?> addOneNum(@RequestBody String jsonData, Model model) {
+		// 從 JSON 取出資料
+		JSONObject jsonObject = new JSONObject(jsonData);
+//      System.out.println("測試訊息:有收到jsonData="+jsonData);
+		if(jsonData==null || jsonData.equals("{}")){
+          HttpResult<String> result = new HttpResult<>(400, "", "數量異常,請再試一次");
+          return ResponseEntity.badRequest().body(result);
+		}
+		String productId = jsonObject.getString("productId");
+		
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());        
+        
+        System.out.println("測試訊息:將memberId="+memberId+"的購物車增加productId="+productId+"一個");
+		
+		
+		model.addAttribute("collectionClassfi", cartService.addOneNum(memberId, productId)); 
+		return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
+	}	
+	
+	
+
+	// 減少或移除特定一個商品編號的購物車數量, 並回到我的購物車 /front/buyer/cart/removeProductFromList
+	@PostMapping("subOneNum")
+	public ResponseEntity<?> subOneNum(@RequestBody String jsonData, Model model) {
+		// 從 JSON 取出資料
+		JSONObject jsonObject = new JSONObject(jsonData);
+//      System.out.println("測試訊息:有收到jsonData="+jsonData);
+		if(jsonData==null || jsonData.equals("{}")){
+          HttpResult<String> result = new HttpResult<>(400, "", "數量異常,請再試一次");
+          return ResponseEntity.badRequest().body(result);
+		}
+		String productId = jsonObject.getString("productId");
+		
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());        
+        
+        System.out.println("測試訊息:將memberId="+memberId+"的購物車增加productId="+productId+"一個");
+		
+		
+		model.addAttribute("collectionClassfi", cartService.subOneNum(memberId, productId)); 
+		return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
+	}	
 	
 	//	收到商品詳細加入購物車的請求, 把資料整理後上Redis /front/buyer/cart/addToCartFromProduct
 	@RequestMapping(value = "addToCartFromProduct", method = RequestMethod.POST)	
