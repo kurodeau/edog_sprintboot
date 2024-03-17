@@ -129,11 +129,8 @@
 					</div>
 					
 					<div class="hide">
-						<label>更新時間:</label> <input type="date"
-							th:field="*{artUpdateTime}"
-							onclick="hideContent('artUpdateTime.errors');" /><br />
+					    <input type="text" name="artUpdateTime" th:value="${articleVO.artUpdateTime}" style="border:0px ; font-weight: bold;" readonly />
 					</div>
-
 
 					<div class="hide">
 						<label>喜歡數:</label> <input type="text"
@@ -183,8 +180,8 @@
 						<div style="display: flex; align-items: center;">
 							<select class="form-select" th:field="*{isEnabled}"
 								onchange="hideContent('isEnabled.errors');">
-								<option th:value="true" th:text="顯示文章"></option>
-								<option th:value="false" th:text="隱藏文章"></option>
+								<option th:value="true" th:text="保留文章"></option>
+								<option th:value="false" th:text="刪除文章"></option>
 							</select><br /> <span th:if="${#fields.hasErrors('isEnabled')}"
 								th:errors="*{isEnabled}" class="error" id="isEnabled.errors"></span>
 						</div>

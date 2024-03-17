@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -32,6 +35,8 @@ import com.reply.service.ReplyService;
 import com.seller.entity.SellerVO;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
+import com.articleLike.entity.ArticleLikeVO;
+import com.articleLike.service.ArticleLikeService;
 import com.report.entity.ReportVO;
 import com.report.service.ReportService;
 import com.reportType.entity.ReportTypeVO;
@@ -66,6 +71,9 @@ public class ArticleController {
 	
 	@Autowired
 	MsgService msgSvc;
+
+	@Autowired
+	ArticleLikeService articleLikeSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -113,16 +121,32 @@ public class ArticleController {
 
 		@GetMapping("add")
 		public String addArticle(ModelMap model) {
+			SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 Integer memberId = buyerVO.getMemberId();
+			 System.out.println(memberId);
 			ArticleVO articleVO = new ArticleVO();
+			articleVO.setBuyerVO(buyerVO);
+			model.addAttribute("buyerVO", buyerVO);
 			model.addAttribute("articleVO", articleVO);
 			return "front-end/article/post-article";
 		}
 		@GetMapping("getOne")
 		public String getOneArticle(@RequestParam("id") Integer articleId, ModelMap model) {
+			SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 Integer memberId = buyerVO.getMemberId();
+			 System.out.println(memberId);
+			 model.addAttribute("buyerVO", buyerVO);
+			 
 			ArticleVO articleVO = articleSvc.getOneArticle(articleId);
 			model.addAttribute("articleVO", articleVO);
+			
 			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		    model.addAttribute("replyVOList", replyVOList);
+		    
 		    ReportVO reportVO = new ReportVO();
 		    model.addAttribute("reportVO", reportVO);
 			return "front-end/article/list-one-article";
@@ -140,7 +164,11 @@ public class ArticleController {
 		    }
 		 @GetMapping("/MyArticle")
 		 public String getMyArticle(@RequestParam("id") Integer memberId, Model model) {
-			 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
+			 SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 memberId = buyerVO.getMemberId();
+//			 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
 			 model.addAttribute("buyerVO", buyerVO);
 			 List<ArticleVO> myArticleList = articleSvc.getByMemberId(buyerVO);
 			 
@@ -148,6 +176,7 @@ public class ArticleController {
 			 
 			 return "front-end/article/myArticle-list";
 		 }
+
 		 
 		@GetMapping("getOne_For_Update")
 		public String getOneArticleUpdate(@RequestParam("id") Integer articleId, ModelMap model) {
@@ -170,13 +199,21 @@ public class ArticleController {
 			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		SecurityContext secCtx = SecurityContextHolder.getContext() ;
+		 Authentication authentication = secCtx.getAuthentication();
+		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+		 Integer memberId = buyerVO.getMemberId();
+		 System.out.println(memberId);
+//		 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
+		 model.addAttribute("buyerVO", buyerVO);
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(articleVO, result, "upFiles");
-		articleVO.setArtUpdateTime(new Date());
-		articleVO.setArtCreateTime(null);
+		articleVO.setArtCreateTime(new Date());
+		articleVO.setArtUpdateTime(null);
 		articleVO.setArticleLike(0);
 		articleVO.setArticleComment(0);
 		articleVO.setIsEnabled(true);
+		articleVO.setBuyerVO(buyerVO);
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
 			model.addAttribute("errorMessage", "員工照片: 請上傳照片");
 		} else {
@@ -190,6 +227,7 @@ public class ArticleController {
 		articleSvc.addArticle(articleVO);
 		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
 		List<ArticleVO> list = articleSvc.getAll();
+		model.addAttribute("buyerVO", buyerVO);
 		model.addAttribute("articleListData", list);
 		model.addAttribute("success", "- (新增成功)");
 		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
@@ -198,6 +236,13 @@ public class ArticleController {
 	public String insertReplyReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
 		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		SecurityContext secCtx = SecurityContextHolder.getContext() ;
+		 Authentication authentication = secCtx.getAuthentication();
+		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+		 Integer memberId = buyerVO.getMemberId();
+		 System.out.println(memberId);
+		 reportVO.setBuyerVO(buyerVO);
+		 model.addAttribute("buyerVO", buyerVO);
 		reportVO.setReportTargetType(1);
 		reportVO.setArticleVO(null);
 		reportVO.setReportState(0);
@@ -215,6 +260,13 @@ public class ArticleController {
 	public String insertArticleReport(@Valid ReportVO reportVO, BindingResult result, ModelMap model) throws IOException {
 		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		SecurityContext secCtx = SecurityContextHolder.getContext() ;
+		 Authentication authentication = secCtx.getAuthentication();
+		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+		 Integer memberId = buyerVO.getMemberId();
+		 System.out.println(memberId);
+		 reportVO.setBuyerVO(buyerVO);
+		 model.addAttribute("buyerVO", buyerVO);
 		reportVO.setReportTargetType(0);
 		reportVO.setReplyVO(null);
 		reportVO.setReportState(0);
@@ -227,21 +279,6 @@ public class ArticleController {
 		model.addAttribute("reportListData", list);
 		
 		return "redirect:/article/listAll"; // 新增成功後重導至IndexController_inSpringBoot.java的第58行@GetMapping("/emp/listAllEmp")
-	}
-	/*
-	 * This method will be called on listAllEmp.html form submission, handling POST request
-	 */
-	@PostMapping("getOne_For_Update")
-	public String updateArticle(@RequestParam("articleId") String articleId, ModelMap model) {
-		
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		/*************************** 2.開始查詢資料 *****************************************/
-		// EmpService empSvc = new EmpService();
-		ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
-
-		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
-		model.addAttribute("articleVO", articleVO);
-		return "front-end/article/update_article_input"; // 查詢完成後轉交update_emp_input.html
 	}
 
 	/*
@@ -268,8 +305,9 @@ public class ArticleController {
 		if (result.hasErrors()) {
 			return "front-end/article/article-edit";
 		}
-		
+		ArticleVO originalArticleVO = articleSvc.getOneArticle(Integer.valueOf(articleVO.getArticleId()));
 		articleVO.setArtUpdateTime(new Date());
+		articleVO.setArtCreateTime(originalArticleVO.getArtCreateTime());
 		/*************************** 2.開始修改資料 *****************************************/
 		// EmpService empSvc = new EmpService();
 		articleSvc.updateArticle(articleVO);
@@ -301,11 +339,22 @@ public class ArticleController {
 	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId, ModelMap model) {
 	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
 	    if (articleVO != null) {
+	    	SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 Integer memberId = buyerVO.getMemberId();
+			 System.out.println(memberId);
+			 model.addAttribute("buyerVO", buyerVO);
+	    	ArticleLikeVO articleLikeVO = new ArticleLikeVO();
+	    	articleLikeVO.setBuyerVO(buyerVO);
+	    	articleLikeVO.setArticleVO(articleVO);
+	    	articleLikeVO.setArticleLikeListTime(new Date());
+	    	articleLikeSvc.addArticleLike(articleLikeVO);
 	        articleVO.setArticleLike(articleVO.getArticleLike()+1); // 增加喜欢数
 	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
 	        MsgVO msgVO = new MsgVO();
 	        msgVO.setArticleVO(articleVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        msgVO.setBuyerVO(buyerVO);
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(1);
 	        msgVO.setMsgTypeVO(msgTypeVO);
@@ -322,11 +371,25 @@ public class ArticleController {
 	    }
 	}
 	@PostMapping("/unlike")
-	public ResponseEntity<String> decreaseLikes(@RequestParam("articleId") String articleId) {
+	public ResponseEntity<String> decreaseLikes(@RequestParam("articleId") String articleId, ModelMap model) {
 	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
 	    if (articleVO != null) {
 	        int currentLikes = articleVO.getArticleLike();
 	        if (currentLikes > 0) { // 只有喜欢数大于 0 时才能执行减少操作
+	        	SecurityContext secCtx = SecurityContextHolder.getContext() ;
+				Authentication authentication = secCtx.getAuthentication();
+				BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+				Integer memberId = buyerVO.getMemberId();
+				System.out.println(memberId);
+				model.addAttribute("buyerVO", buyerVO);
+				System.out.println(Integer.valueOf(articleId));
+				Integer articleLikeId = articleLikeSvc.findArticleLikeIdByMemberIdAndArticleId(buyerVO, articleVO);
+		    	articleLikeSvc.deleteArticleLike(articleLikeId);
+		    	MsgTypeVO msgTypeVO = new MsgTypeVO();
+		    	msgTypeVO.setMsgTypeId(1);
+		    	Integer msgId = msgSvc.findArticleLikeIdByMemberIdAndArticleIdAndMsgTypeId(buyerVO, articleVO,msgTypeVO);
+		    	msgSvc.deleteMsg(msgId);
+		    	
 	            articleVO.setArticleLike(currentLikes - 1); // 减少喜欢数
 	            articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
 	            return new ResponseEntity<>("Likes decreased successfully", HttpStatus.OK);

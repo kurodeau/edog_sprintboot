@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+
+</head>
+  <body>
+    <!-- ======= Header ======= -->
+    	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+
+                        <!-- 測試進入後台入口 -->							
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+
+		<!-- Start SearchBar  -->
+		<div class="container-fluid bg-user search-container-custom">
+			<div class="row">
+				<!-- Start SearchBar-Logo  -->
+				<div
+					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
+						srcset="" />
+				</div>
+				<!-- End SearchBar-Logo  -->
+
+				<!-- Start SearchBar-Input  -->
+				<div
+					class="col d-flex searchItem flex-column search-item-container-custom">
+					<form class="form-inline w-100">
+						<div class="row py-2 search-row-custom w-100 pe-2">
+							<div class="col">
+								<input class="form-control mr-sm-2 w-100 search-input-custom"
+									type="search" placeholder="請在此進行商品檢索" aria-label="Search" />
+							</div>
+							<div class="col-auto">
+								<button class="btn btn-user search-button-custom d-flex"
+									type="submit">
+									<i class="me-2 ri-search-line"></i>
+									<div class="col-auto d-none d-md-block">Search</div>
+								</button>
+							</div>
+						</div>
+					</form>
+					<div class="my-2 keyword-container-custom">
+						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
+							class="badge rounded-pill keyword-item-custom">玩具</span>
+					</div>
+				</div>
+				<!-- End SearchBar-Input  -->
+
+			</div>
+		</div>
+    </header>
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="front-end/article/aside-forum.html"></aside>
+    <!-- ======= Main ======= -->
+    <main class="main main-layout-seller">
+    <div class="seller-container">
+			<div class="pagetitle">
+			<h1  style="margin-top: 30px;">我的文章</h1>
+    <h1  style="margin-top: 30px;">
+    </h1>
+	      <div class="tab_list_block">
+	        <ul class="tab_list">
+	          <li><a href="#" data-target="tab1" class="tab -on">熱門</a></li>
+	          <li><a href="#" data-target="tab2" class="tab">最新</a></li>
+	        </ul>
+	        <hr> 
+	        </div> 
+	        </div> 
+	        
+			<table id="articleLikeTable" 
+				style="width: 100%">
+				<tbody>
+					<th:block th:each="articleLikeVO : ${myArticleLikeList}">
+						<tr th:if="${articleLikeVO.articleVO.isEnabled}" class="forum-article" th:onclick="'redirectToUpdatePage(\'' + @{/article/getOne_For_Update(id=${articleLikeVO.articleVO.articleId})} + '\')'">
+						<td style="display: none;" th:text="${articleLikeVO.articleVO.articleId}"></td>
+							<td class="avatar-category">
+						        <span class="avatar-name" th:text="${articleLikeVO.articleVO.buyerVO.memberName}"></span>
+						        <span class="category-name" th:text="${articleLikeVO.articleVO.articleTypeVO.articleTypeName}"></span>
+						    </td>
+							<td class="article-title" th:text="${articleLikeVO.articleVO.articleTitle}"></td>
+							<td class="interaction-section">
+						        <i class="bi bi-suit-heart"></i>
+						        <span class="article-like" th:text="${articleLikeVO.articleVO.articleLike}"></span>
+						        <i class="bi bi-chat-dots"></i>
+						        <span class="article-comment" th:text="${articleLikeVO.articleVO.articleComment}"></span>
+						    
+							<span class="post-time time" th:if="${articleLikeVO.articleVO.artUpdateTime != null}" th:text="${#dates.format(articleLikeVO.articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')} + ' 更新'"></span>
+							<span class="post-time time" th:unless="${articleLikeVO.articleVO.artUpdateTime != null}" th:text="${#dates.format(articleLikeVO.articleVO.artCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							</td>
+						</tr>
+					</th:block>
+
+				</tbody>
+			</table>
+		</div>
+	</main>
+    <!-- End Main -->
+
+    <!-- ======= Footer ======= -->
+    <footer class="footer footer-layout">
+      <div
+        class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white"
+      >
+        <div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">關於我們</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">E狗簡介</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+          <h5 class="mb-3">常見問題</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">聯絡E狗</a>
+            </li>
+            <li class="nav-item mb-2">
+              <a href="#" class="nav-link p-0 text-body-secondary">Q&A</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row footer-container-custom">
+        <div class="col-3"></div>
+
+        <div class="col-auto">
+          <a
+            href="/"
+            class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none"
+          >
+            <svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+          </a>
+          <p class="text-body-secondary">
+            新加坡商CatTom有限公司台灣分公司 統一編號：00000000 © 2023
+            CatTom.版權所有。
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor JS Files -->
+		<div th:replace="~{/fragment-js}"></div>
+		<div th:replace="~{/fragment-datatableJs}"></div>
+    <script>
+    $("a.tab").on("click", function (e) {
+        e.preventDefault();
+        console.log("aaa");
+        /* 將頁籤列表移除所有 -on，再將指定的加上 -on */
+        $(this).closest("ul").find("a.tab").removeClass("-on");
+        $(this).addClass("-on");
+
+        /* 找到對應的頁籤內容，加上 -on 來顯示 */
+        $("div.tab").removeClass("-on");
+        $("div.tab." + $(this).attr("data-target")).addClass("-on");
+      });
+		function redirectToUpdatePage(url) {
+	        window.location.href = url;
+	    }
+	</script>
+  </body>
+</html>

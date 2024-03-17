@@ -98,14 +98,6 @@
 				<form th:action="@{insert}" method="post" th:object="${articleVO}"
 					enctype="multipart/form-data">
 
-					<div>
-						<select class="form-select" th:field="*{buyerVO.memberId}">
-							<option th:each="buyerVO : ${buyerListData}"
-								th:value="${buyerVO.memberId}" th:text="${buyerVO.memberName}" />
-						</select> <span th:if="${#fields.hasErrors('buyerVO.memberId')}"
-							th:errors="*{buyerVO.memberId}" class="error"
-							id="buyerVO.memberId.errors"></span>
-					</div>
 
 					<div>
 						<input id="title" type="text" th:field="*{articleTitle}"
