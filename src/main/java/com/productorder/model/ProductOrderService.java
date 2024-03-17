@@ -12,9 +12,13 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.buyer.entity.BuyerVO;
@@ -27,6 +31,7 @@ import com.redis.JedisUtil;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 import com.util.GenerateInvoiceNumber;
+import com.util.HttpResult;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -473,5 +478,68 @@ public class ProductOrderService {
 			}
 		}
 		
+		
+		
+		// 從商品詳細直接購買, 生成Order Redis
+		public void buyProductWithoutCart(JSONObject jsonData) {
+			System.out.println("測試訊息:有進入buyProductWithoutCart 的service");
+			if (jsonData == null || jsonData.equals("{}")) {
+				HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
+				System.out.println("controller 來的 JSON 的資料是空的???");
+			}
+
+			// =================整理 JSON 資料, 拿出memberId start
+			List<String> members = new ArrayList();
+			Map<String, String> orderData = new HashMap<>();
+			String memberId = "9";
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+			Authentication authentication = secCtx.getAuthentication();
+			BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			memberId = String.valueOf(buyerVO.getMemberId());
+
+			System.out.println("測試訊息:透過購物車新建memberId=" + memberId + "的訂單");
+
+			System.out.println("---");
+			for (String str : jsonData.keySet()) {
+				members.add(str);
+				System.out.println("member: " + str);
+				JSONArray memberList = jsonData.getJSONArray(str);
+				for (int i = 0; i < memberList.length(); i++) {
+//	        	CartVO cartVO  = new ProductVO();
+					JSONObject product = memberList.getJSONObject(i);
+					String productId = String.valueOf(product.getInt("productId"));
+					String productQty = String.valueOf(product.getInt("productQty"));
+					orderData.put(productId, productQty);
+					System.out.println("productId: " + productId + ", productQty: " + productQty);
+				}
+			}
+			// =================整理 JSON 資料 end
+			// =================創建Redis 資料 start
+			// 設定redisKey, 取得連線
+			String redisKey = "order:" + memberId;
+			System.out.println("redisKey= " + redisKey); // 測試訊息
+			JedisPool jedisPool = JedisUtil.getJedisPool();
+
+			// 索取redis連線, 用try 整個包起來
+			try (
+					// 從 Redis 中讀取資料 並且指定為db10
+					Jedis jedis = jedisPool.getResource()) {
+				jedis.select(10);
+
+				// 檢查該會員是否已經有訂單, 如果有就移除, 然後塞入新的值
+				if (jedis.exists(redisKey)) {
+					jedis.del(redisKey);
+				}
+				System.out.println("打資料上Redis前最後確認:" + redisKey + orderData);
+				jedis.hmset(redisKey, orderData);
+				// =================創建Redis 資料 end
+
+			} catch (Exception e) {
+				System.out.println("service對Redis的操作有問題");
+				e.printStackTrace();
+			}
+//			System.out.println("回傳 cartClassfi"); // 測試資料
+			System.out.println("這個沒有return 到這裡order redis資料 已經成立");
+		}
 		
 }
