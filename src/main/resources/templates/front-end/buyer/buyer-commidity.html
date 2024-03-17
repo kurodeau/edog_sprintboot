@@ -112,11 +112,18 @@
 												// const responseData = JSON.parse(xhr.responseText);
 												const responseData = xhr.responseText;
 												console.log("!!這個現在很怪喔!responseData=" + responseData);
+												if (responseData === "已將商品移出收藏" || responseData === "已將商品加入收藏") {
+													alert(responseData);
+												}
+												else {
+													alert("請登入會員以使用收藏與其他便利功能");
+												}
 
 												// 顯示跳窗提示回傳訊息
-												alert("這個應該怪怪的responseData");
+												// alert(responseData);
 											} else {
 												console.error('Request failed with status:', xhr.status);
+												alert("收藏功能錯誤");
 											}
 										};
 
@@ -192,13 +199,13 @@
 							</button> -->
 						</div>
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom" onclick="switchFavoritesStatus()">
+							<button class="btn btn-shopcart-custom" onclick="addIntoCart()">
 								<i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
 							</button>
 						</div>
 						<script>
 							// 定義一個函數, 每次操作加入購物車按鈕都依照所指定數量, 將該商品加入購物車(已有則疊加)
-							function switchFavoritesStatus() {
+							function addIntoCart() {
 								// 抓到按鈕, 還有數量設定的欄位
 								const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
 								const quantityInput = document.getElementById('quantityInput');
@@ -231,7 +238,7 @@
 										})
 										.catch(error => {
 											console.error('加入購物車失敗:', error);
-											alert('加入購物車失敗');
+											alert('請登入會員以使用購物車與其他便利功能!');
 										});
 								};
 							};
