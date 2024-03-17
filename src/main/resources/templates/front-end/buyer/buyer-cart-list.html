@@ -245,32 +245,26 @@
 									// 在這裡處理錯誤情況
 
 								});
-
 							});
 						});
 
+						let keyName = "keyName";
 						function collectSelectedProducts() {
-
 							let selectedProductsMap = new Map();
-
 							// 遍歷每個選中的項目
 							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
-
 								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
 								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
-								if (selectedProductsMap.has(memberId)) {
-									selectedProductsMap.get(memberId).push({ "productId": productId, "productQty": productQty });
+								if (selectedProductsMap.has(keyName)) {
+									selectedProductsMap.get(keyName).push({ "productId": productId, "productQty": productQty });
 								} else {
-									selectedProductsMap.set(memberId, [{ "productId": productId, "productQty": productQty }]);
+									selectedProductsMap.set(keyName, [{ "productId": productId, "productQty": productQty }]);
 								}
-
 							});
 							selectedProductsMap.forEach((value, key) => {
 								console.log(key);
 							});
-
 							return selectedProductsMap;
-
 						}
 					</script>
 				</div>

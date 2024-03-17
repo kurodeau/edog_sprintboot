@@ -167,6 +167,8 @@ public class CartnoController extends HttpServlet {
 		return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
 	}	
 	
+	
+	
 	//	收到商品詳細加入購物車的請求, 把資料整理後上Redis /front/buyer/cart/addToCartFromProduct
 	@RequestMapping(value = "addToCartFromProduct", method = RequestMethod.POST)	
 	public ResponseEntity<?> addToCartFromProduct(@RequestBody String jsonData) {
@@ -198,8 +200,5 @@ public class CartnoController extends HttpServlet {
 	}
 
 	
-	
-	
 
-	
 }
