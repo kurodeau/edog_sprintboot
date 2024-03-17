@@ -57,13 +57,36 @@
                 <td class="text-center" th:text="${productOrderVO.invoiceNumber}"></td>
                <!--  <td class="text-center" th:text="${productOrderVO.couponId}"></td> -->
                 
-                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
+                <td class="text-center" th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+               <!--  <td class="text-center" th:text="${productOrderVO.orderStatus}"></td> -->
+               <td>
+                 <div>
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立<br>(買家取消)</span>
+								            <span th:case="3">訂單不成立<br>(賣家取消)</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+               </td>
+               
+               
+               
+               
+               
                 <td class="text-center" th:text="${productOrderVO.receiver}"></td>
                 <td class="text-center" th:text="${productOrderVO.mobile}"></td>
                 <td class="text-center" th:text="${productOrderVO.contactAddress}"></td>
-                <td class="text-center" th:text="${productOrderVO.isDelivered}"></td>
-                <td class="text-center" th:text="${productOrderVO.shippingTime}"></td>
+                <td class="text-center" th:text="${productOrderVO.isDelivered}? '已出貨' : '未出貨'"></td>
+                <td class="text-center" th:text="${#dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
                 <td class="text-center" >
                  
                  

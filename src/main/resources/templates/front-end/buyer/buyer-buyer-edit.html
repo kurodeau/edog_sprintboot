@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<th:block th:insert="~{/fragment-head}"></th:block>
@@ -8,35 +8,29 @@
 <body>
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
-		<th:block th:insert="~{/back-end/header-back}"></th:block>
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
 	</header>
 
 	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
 
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
-			<h1>編輯買家資料</h1>
+			<h1>修改個人資料</h1>
 
-			<form id="myForm" method="POST" th:action="@{updateBuyer}" enctype="multipart/form-data">
+			<form id="myForm" method="POST" th:action="@{submitUpdateBuyer}" enctype="multipart/form-data">
 
-				<div class="col-md-12">
+				<div class="col-md-12" style="display:none;">
 					<label for="inputMemberId" class="form-label">買家編號</label> <input type="text" class="form-control"
 						id="inputMemberId" name="memberId" th:value="${buyerVO.memberId}" readonly />
 				</div>
 
-				<!-- 				<div class="col-md-12"> -->
-				<!-- 					<label for="inputThirdFrom" class="form-label">第三方登入</label> <input -->
-				<!-- 						type="text" class="form-control" id="inputThirdFrom" -->
-				<!-- 						name="thirdFrom" th:value="${buyerVO.thirdFrom}" -->
-				<!-- 						placeholder="還不知道要不要做第三方登入,先放著" readonly /> -->
-				<!-- 				</div> -->
-
 				<div class="col-md-12">
-					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input type="text"
-						class="form-control" id="inputMemberEmail" name="memberEmail" th:value="${buyerVO.memberEmail}"
-						readonly />
+					<label for="inputMemberEmail" class="form-label">電子信箱<span
+							style="color: red; font-size: small;">*不可修改</span></label>
+					<input type="text" class="form-control" id="inputMemberEmail" name="memberEmail"
+						th:value="${buyerVO.memberEmail}" readonly />
 				</div>
 
 				<div class="col-md-12">
@@ -125,15 +119,6 @@
 					</div>
 				</div>
 
-				<!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
-				<div class="col-md-3">
-					<label for="inputIsConfirm" class="form-label">是否是有效用戶</label> <select class="form-select"
-						name="isConfirm" id="inputIsConfirm">
-						<option value="true" th:selected="${buyerVO.isConfirm}">有效用戶</option>
-						<option value="false" th:selected="${!buyerVO.isConfirm}">停權用戶</option>
-					</select>
-				</div>
-
 				<div class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
@@ -142,38 +127,32 @@
 		</div>
 	</main>
 	<!-- End Main -->
-
-	<!-- ======= Footer, 後臺應該不需要footer ======= -->
-
-	<!-- Vendor & Main JS Files -->
 	<div th:replace="fragment-js"></div>
 
-	<!-- Local JS File -->
-	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
 	<script>
 		//============ 取消按鈕的跳轉事件設定 start =============
 		document.getElementById("cancel-btn").addEventListener("click",
 			function () {
-				window.location.href = "/back/buyer/listAllGet"; // 將網頁重定向到指定的 URL
+				window.location.href = "/front/buyer/main"; // 將網頁重定向到指定的 URL
 			});
 
 		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
-		var loadjsCompletedEvent = new Event("loadjsCompleted");
+		// var loadjsCompletedEvent = new Event("loadjsCompleted");
 
-		window.onload = function () {
-			// 監聽自定義事件，當 loadjs 完成時觸發
-			document.addEventListener("loadjsCompleted", function () {
-				new TwCitySelector({
-					el: ".city-selector-set",
-					elCounty: ".county",
-					elDistrict: ".district",
-					elZipcode: ".zipcode",
-				});
-			});
+		// window.onload = function () {
+		// 	// 監聽自定義事件，當 loadjs 完成時觸發
+		// 	document.addEventListener("loadjsCompleted", function () {
+		// 		new TwCitySelector({
+		// 			el: ".city-selector-set",
+		// 			elCounty: ".county",
+		// 			elDistrict: ".district",
+		// 			elZipcode: ".zipcode",
+		// 		});
+		// 	});
 
-			// 手動觸發事件，告知 TwCitySelector 可以初始化了
-			document.dispatchEvent(loadjsCompletedEvent);
-		};
+		// 	// 手動觸發事件，告知 TwCitySelector 可以初始化了
+		// 	document.dispatchEvent(loadjsCompletedEvent);
+		// };
 
 		//============ 照片上傳-預覽用 start =============
 		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能

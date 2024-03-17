@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServlet;
 import javax.validation.Valid;
 
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -15,6 +16,9 @@ import org.springframework.validation.FieldError;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,52 +34,23 @@ import com.buyer.model.*;
 import com.buyer.service.*;
 
 @Controller
-@RequestMapping("/back/buyer")
-public class BuyerController {
+@RequestMapping("/front/buyer")
+public class FrontBuyerController extends HttpServlet{
 
 	@Autowired
 	BuyerService buyerSvc;
 
-	// /back/buyer/listAllGet
-	@GetMapping("listAllGet")
-	public String listAllBuyerGet(ModelMap model) {
-		return "back-end/back-buyer-list";
-	}
+    // 買家註冊可以考慮移到這裡
+//	@GetMapping("addBuyer")
+//	public String addBuyer(ModelMap model) {
+//		BuyerVO buyerVO = new BuyerVO();
+//		model.addAttribute("BuyerVO", buyerVO);
+//		return "back-end/back-buyer-add"; // 應該改成創帳號PAGE
+//	}
 
-	// /back/buyer/listAllPost
-	@PostMapping("listAllPost")
-	public String listAllBuyerPost(ModelMap model) {
-		return "back-end/back-buyer-list";
-	}
 
-	/*
-	 * 第一種作法 Method used to populate the List Data in view. 如 : <form:select
-	 * path="deptno" id="deptno" items="${deptListData}" itemValue="deptno"
-	 * itemLabel="dname" />
-	 */
-	@ModelAttribute("buyerListData")
-	protected List<BuyerVO> referenceListData(Model model) {
-		List<BuyerVO> list = buyerSvc.getAll();
-//		System.out.println("==============================");
-//		list.forEach(data -> System.out.println(data));
-//		System.out.println("==============================");
-		return list;
-	}
-
-	/*
-	 * This method will serve as addEmp.html handler.
-	 */
-	@GetMapping("addBuyer")
-	public String addBuyer(ModelMap model) {
-		BuyerVO buyerVO = new BuyerVO();
-		model.addAttribute("BuyerVO", buyerVO);
-		return "back-end/back-buyer-add"; // 應該改成創帳號PAGE
-	}
-
-	/*
-	 * This method will be called on addEmp.html form submission, handling POST
-	 * request It also validates the user input
-	 */
+	// 前台新增買家帳號, 應該跟買家註冊重複, 待確認現在註冊是不是用這個?
+    // /front/buyer/insertBuyer
 	@PostMapping("insertBuyer")
 	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
@@ -131,31 +106,41 @@ public class BuyerController {
 		return "back-end/back-buyer-list"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}               
 
-	/*
-	 * This method will be called on listAllEmp.html form submission, handling POST
-	 * request
-	 */
-	// /back/buyer/getOne_For_Update
-	@GetMapping("getOne_For_Update")
-	public String getOne_For_Update(@RequestParam("memberId") String memberId, ModelMap model) {
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		/*************************** 2.開始查詢資料 *****************************************/
-		// EmpService empSvc = new EmpService();
-		BuyerVO buyerVO = buyerSvc.getOneBuyer(Integer.valueOf(memberId));
 
-		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+	//從sidebar進入修改會員資料  /buyer/buyer/updateBuyer
+	@GetMapping("updateBuyer")
+	public String updateBuyer(ModelMap model) {
+		
+		// 從登入狀態抓取用戶ID
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+
+        memberId = String.valueOf(buyerVO.getMemberId());
+        
+        System.out.println("進入修改的會員資料是memberId=" + memberId);
+        
+        // 獲得buyerVO, 渲染到前端讓用戶修改		
 		model.addAttribute("buyerVO", buyerVO);
-		// 我看範例沒有這個html檔案? 有問題
-		return "back-end/back-buyer-edit"; // 查詢完成後轉交update_emp_input.html
+		return "front-end/buyer/buyer-buyer-edit"; // 查詢完成後轉交update_emp_input.html
 	}
-
 	
 	
-	@PostMapping("updateBuyer")
-	public String update(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
-			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
+	@PostMapping("submitUpdateBuyer")
+	public String submitUpdateBuyer(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
+			@RequestParam("petImg") MultipartFile[] parts) throws IOException{
+		
+		// 從登入狀態抓取用戶ID對應的資料
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());
+        
+        System.out.println("送交修改的會員資料是memberId=" + memberId);
 
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(buyerVO, result, "petImg");
 
@@ -171,64 +156,28 @@ public class BuyerController {
 		}
 		if (result.hasErrors()) {
 			// 修改成進行修改資料的PAGE
-			return "back-end/back-buyer-edit";
+			System.out.println("測試訊息:圖片的判斷有問題, 提早返回edit");
+//			System.out.println("測試訊息:" + result.);
+			return "front-end/buyer/buyer-buyer-edit";
 		}
+		
 		/*************************** 2.開始修改資料 *****************************************/
 		// BuyerService buyerSvc = new BuyerService();
 		buyerSvc.updateBuyer(buyerVO);
-
+		System.out.println("有走道updateBuyer方法");
+		
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("success", "- (修改成功)");
 		buyerVO = buyerSvc.getOneBuyer(Integer.valueOf(buyerVO.getMemberId()));
 		model.addAttribute("buyerVO", buyerVO);
-		// 這要轉到進行改資料的頁面, 有問題
-		return "back-end/back-buyer-list"; // 修改成功後轉交listOneEmp.html
+		System.out.println("有走道return之前");
+        
+		return "front-end/buyer/buyer-main"; // 
 	}
-
 	
-	
-	// 理應不會有移除資料的操作
-	@PostMapping("delete")
-	public String delete(@RequestParam("memberId") String memberId, ModelMap model) {
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		/*************************** 2.開始刪除資料 *****************************************/
-		// EmpService empSvc = new EmpService();
-		buyerSvc.deleteBuyer(Integer.valueOf(memberId));
-		/*************************** 3.刪除完成,準備轉交(Send the Success view) **************/
-		List<BuyerVO> list = buyerSvc.getAll();
-		model.addAttribute("buyerListData", list);
-		model.addAttribute("success", "- (刪除成功)");
-		return "back-end/back-buyer"; // 刪除完成後轉交listAllEmp.html
-	}
-
-	/*
-	 * 第一種作法 Method used to populate the List Data in view. 如 : <form:select
-	 * path="deptno" id="deptno" items="${deptListData}" itemValue="deptno"
-	 * itemLabel="dname" />
-	 */
-//	@ModelAttribute("deptListData")
-//	protected List<DeptVO> referenceListData() {
-//		// DeptService deptSvc = new DeptService();
-//		List<DeptVO> list = deptSvc.getAll();
-//		return list;
-//	}
-
-	/*
-	 * 【 第二種作法 】 Method used to populate the Map Data in view. 如 : <form:select
-	 * path="deptno" id="deptno" items="${depMapData}" />
-	 */
-	// 配合前端設定再開來套用
-//	@ModelAttribute("deptMapData") //
-//	protected Map<Integer, String> referenceMapData() {
-//		Map<Integer, String> map = new LinkedHashMap<Integer, String>();
-//		map.put(10, "財務部");
-//		map.put(20, "研發部");
-//		map.put(30, "業務部");
-//		map.put(40, "生管部");
-//		return map;
-//	}
 
 	// 去除BindingResult中某個欄位的FieldError紀錄
+	// 目前不知道用途是甚麼, 應該是資料驗證用的
 	public BindingResult removeFieldError(BuyerVO buyerVO, BindingResult result, String removedFieldname) {
 		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
 				.filter(fieldname -> !fieldname.getField().equals(removedFieldname)).collect(Collectors.toList());
@@ -238,5 +187,9 @@ public class BuyerController {
 		}
 		return result;
 	}
+	
+	
+	
+	
 
 }

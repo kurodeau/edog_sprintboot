@@ -21,16 +21,41 @@
         
               
         
-       	 <div>
+       	  <div>
   			  <div th:text=" '訂單編號：' + ${Orderdetails[0].productOrderVO.orderId}"></div>
   			  <div th:text=" '訂單金額：' + ${Orderdetails[0].productOrderVO.actualPay}"></div>
   			  <div th:text=" '成立時間：' + ${Orderdetails[0].productOrderVO.orderTime}"></div>
-  			  <div th:text=" '訂單狀態：' + ${Orderdetails[0].productOrderVO.orderStatus}"></div>
+<!--   			  <div th:text=" '訂單狀態：' + ${Orderdetails[0].productOrderVO.orderStatus}"></div>-->
+<div th:switch="${Orderdetails[0].productOrderVO.orderStatus}">
+    <span th:case="1">訂單狀態：賣家待確認</span>
+    <span th:case="2">訂單狀態：訂單不成立（買家取消）</span>
+    <span th:case="3">訂單狀態：訂單不成立（賣家取消）</span>
+    <span th:case="4">訂單狀態：訂單成立</span>
+    <span th:case="5">訂單狀態：賣家理貨中</span>
+    <span th:case="6">訂單狀態：商品已出貨</span>
+    <span th:case="7">訂單狀態：訂單完成</span>
+    <span th:case="8">訂單狀態：付款成功</span>
+    <span th:case="9">訂單狀態：付款失敗</span>
+    <span th:case="10">訂單狀態：退貨</span>
+    <!-- You can add more cases here for other statuses -->
+    <span th:case="*">訂單狀態：未知</span> <!-- Default case if none of the above match -->
+</div>
+
   			  <div th:text=" '收貨人姓名：' + ${Orderdetails[0].productOrderVO.receiver}"></div>
   			  <div th:text=" '聯絡電話：' + ${Orderdetails[0].productOrderVO.mobile}"></div>
   			  <div th:text=" '收貨地址：' + ${Orderdetails[0].productOrderVO.contactAddress}"></div>
   			  <div th:text=" '發票號碼：' + ${Orderdetails[0].productOrderVO.invoiceNumber}"></div>
-		</div>
+		</div> 
+		
+		 
+		
+		
+		
+		
+		
+		
+		
+		
 		<br>
 		<br>
 		<br>

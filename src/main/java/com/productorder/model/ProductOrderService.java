@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -384,14 +385,15 @@ public class ProductOrderService {
 		            detailsTotal += productVO.getPrice().intValue() * orderDetails.getPurchaseQuantity(); //訂單明細金額加總
 		            orderDetailsSet.add(orderDetails);
 		        }
-		        
+		        actualPayment = detailsTotal;
 		     // 檢查是否需要增加運費
 			    int shippingFee = 0;
 			    if (detailsTotal < 999) {
 			        shippingFee = 70;
 			    }
+			    
 			    actualPayment += shippingFee;
-			    int orderOrigPrice = actualPayment + detailsTotal;
+			    int orderOrigPrice = actualPayment ;
 			    productOrder.setSellerPaysShipping(0);//設定賣家負擔運費
 			    productOrder.setMemberPaysShipping(shippingFee);//設置買家負擔運費
 		        productOrder.setOrderDetailss(orderDetailsSet); // 關聯訂單明細
@@ -405,5 +407,71 @@ public class ProductOrderService {
 		    });
 		    return ResponseEntity.ok().body(Map.of("message", "Orders created successfully."));
 		}
+		
+		
+		
+		
+		//結帳砍掉Redis
+		// 設定redisKey, 取得連線
+		
+		public void deletCartOnRedis(Integer memberId) {
+			String redisKeyOrder = "order:" + memberId;
+			String redisKeyCart = "cart:" + memberId;
+//				System.out.println("redisKey= " + redisKey); // 測試訊息
+				JedisPool jedisPool = JedisUtil.getJedisPool();
+
+				// 索取redis連線, 用try 整個包起來
+				try (
+					// 從 Redis 中讀取資料 並且指定為db10
+					Jedis jedis = jedisPool.getResource()) {
+					jedis.select(10);
+
+//					System.out.println("測試訊息:完成連線要取資料前");
+					// 抓取 Redis 中 order, cart 的項目, 將之加入 set 用以迴圈比較
+					Set<String> orderKeys = jedis.hkeys(redisKeyOrder);
+					Set<String> cartKeys = jedis.hkeys(redisKeyCart);
+//					System.out.println("測試訊息:取出兩邊資料,找交集前");
+					
+					// 以求交集方式, 找出兩 set 交集元素後存回 cartKeys
+					cartKeys.retainAll(orderKeys);
+//					System.out.println("測試訊息:取出交集存回cartSet,移除Key前, 交集為="+cartKeys);
+					// each 迴圈檢查 cartKeys(存著兩方交集的Key), 並用來移除 redis 中對應的key
+					for (String removeKey : cartKeys) {
+			            jedis.hdel(redisKeyCart, removeKey);
+			        }
+//					System.out.println("測試訊息:移除迴圈完成,到這裡圓滿完成");
+
+					// =================創建Redis 資料 end
+
+				} catch (Exception e) {
+					System.out.println("service對Redis的操作有問題");
+					e.printStackTrace();
+				}
+			}
+
+		public void deletOrderOnRedis(Integer memberId) {
+			String redisKey = "order:" + memberId;
+//			System.out.println("redisKey= " + redisKey); // 測試訊息
+			JedisPool jedisPool = JedisUtil.getJedisPool();
+
+			// 索取redis連線, 用try 整個包起來
+			try (
+				// 從 Redis 中讀取資料 並且指定為db10
+				Jedis jedis = jedisPool.getResource()) {
+				jedis.select(10);
+
+				// 檢查該會員是否已經有訂單, 如果有就移除, 然後塞入新的值
+				if (jedis.exists(redisKey)) {
+					jedis.del(redisKey);
+				}
+				
+				// =================創建Redis 資料 end
+
+			} catch (Exception e) {
+				System.out.println("service對Redis的操作有問題");
+				e.printStackTrace();
+			}
+		}
+		
 		
 }

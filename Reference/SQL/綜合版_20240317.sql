@@ -418,8 +418,8 @@ VALUES
     (2, 'seller2@example.com', '未審核通過id2', 'B2345678', 700000, 'Jane Smith', '0223456789', '456', '0923456789', '台北市', '大安區', 'XX巷 YY路 2號', 'Password2', '234-567-890', '345', '87654321', false),
     (3, 'seller3@example.com', '未審核通過id3', 'C3456789', 900000, 'Bob Johnson', '0223456789', '789', '0934567890', '台北市', '中正區', 'XX巷 YY路 3號', 'Password3', '345-678-901', '456', '76543210', false),
     (1, 'seller4@example.com', 'PQR Industries', 'D4567890', 1200000, 'Alice Lee', '0223456789', '012', '0945678901', '桃園市', '中壢區', 'XX巷 YY路 4號', 'Password4', '456-789-012', '567', '65432109', true),
-    (2, 'seller5@example.com', 'JKL Enterprises', 'E5678901', 1500000, 'Charlie Chan', '0223456789', '345', '0956789012', '新竹市', '東區', 'XX巷 YY路 5號', 'Password5', '567-890-123', '678', '54321098', true);
-
+    (2, 'seller5@example.com', 'JKL Enterprises', 'E5678901', 1500000, 'Charlie Chan', '0223456789', '345', '0956789012', '新竹市', '東區', 'XX巷 YY路 5號', 'Password5', '567-890-123', '678', '54321098', true),
+    (2, 'TestSeller@gmail.com', 'JKL Enterprises', 'E5678901', 1500000, 'Charlie Chan', '0223456789', '345', '0956789012', '新竹市', '東區', 'XX巷 YY路 5號', '$2a$10$lZ/wmFXgzSJECGth9qaQ6OZXlofbd/GGRSGS0BRU/ifk282RKmcRS', '567-890-123', '678', '54321098', true);
 -- 插入修改過的假資料到 seller 表(沒有時間戳記)
 INSERT INTO seller (sellerLvId, sellerEmail, sellerCompany, sellerTaxId, sellerCapital, sellerContact, sellerCompanyPhone, sellerCompanyExtension, sellerMobile, sellerCounty, sellerDistrict, sellerAddress, sellerPassword, sellerBankAccount, sellerBankCode, sellerBankAccountNumber, isConfirm)
 VALUES 
@@ -445,7 +445,8 @@ INSERT INTO buyer (
     ('buyer7@example.com', NULL, 'Buyer7', '0956789012', '0978901234', '1998-09-05', 'password7', 'Address7', true, '2023-07-01 18:45:00', 'Pet7', NULL, NULL, 'Vaccine13', '2024-07-20 11:00:00', 'Vaccine14', '2024-09-05 15:30:00', 120.6582, 24.1632), -- 假设台中
     ('buyer8@example.com', NULL, 'Buyer8', '0967890123', '0989012345', '1983-12-15', 'password8', 'Address8', true, '2023-08-01 21:00:00', 'Pet8', NULL, NULL, 'Vaccine15', '2024-10-01 14:45:00', 'Vaccine16', '2024-12-15 18:00:00', 120.3417, 22.6300), -- 假设高雄
     ('buyer9@example.com', NULL, 'Buyer9', '0978901234', '0990123456', '1991-02-20', 'password9', 'Address9', true, '2023-09-01 09:30:00', 'Pet9', NULL, NULL, 'Vaccine17', '2025-01-15 17:15:00', 'Vaccine18', '2025-03-30 20:30:00', 121.5402, 25.0478), -- 假设台北
-    ('buyer10@example.com', NULL, 'Buyer10', '0989012345', '0910234567', '1987-05-10', 'password10', 'Address10', true, '2023-10-01 12:45:00', 'Pet10', NULL, NULL, 'Vaccine19', '2025-04-20 10:00:00', 'Vaccine20', '2025-06-05 13:15:00', 121.5402, 25.0478); -- 假设台北
+    ('buyer10@example.com', NULL, 'Buyer10', '0989012345', '0910234567', '1987-05-10', 'password10', 'Address10', true, '2023-10-01 12:45:00', 'Pet10', NULL, NULL, 'Vaccine19', '2025-04-20 10:00:00', 'Vaccine20', '2025-06-05 13:15:00', 121.5402, 25.0478), -- 假设台北
+	('TestBuyer@example.com', NULL, 'Buyer10', '0989012345', '0910234567', '1987-05-10', '$2a$10$XfhKuTNknEELCPZuildBneQ65VeXiFD8SK1NHsPFxm52MaOo5XcQm', 'Address10', true, '2023-10-01 12:45:00', 'Pet10', NULL, NULL, 'Vaccine19', '2025-04-20 10:00:00', 'Vaccine20', '2025-06-05 13:15:00', 121.5402, 25.0478);
 
 -- 檢舉類型  放入測試資料-- (檢舉資料的測試資料只能新增一次, 有需要自己開起來新增)
 -- INSERT INTO reportType (reportTypeId, reportTypeSort)
@@ -661,11 +662,11 @@ VALUES
 -- 商品  放入測試資料-- 
 INSERT INTO product (sellerId, productCoverImg, productName, price, productStockQuantity, productDetails, productStatus, productCreationTime, ratings, totalReviews, productSortNo, isEnabled)
 VALUES
-    (1, NULL, '商品A', 100, 50, '這是商品A的描述', '已售完', '2023-01-01 10:00:00', 4, 2, 1, TRUE),
-    (1, NULL, '商品B', 150, 30, '這是商品B的描述', '未上架', '2023-02-15 14:30:00', 5, 3, 2, FALSE),
-    (2, NULL, '商品C', 80, 20, '這是商品C的描述', '未上架', '2023-03-20 18:45:00', 3, 1, 3, FALSE),
-    (2, NULL, '商品D', 120, 40, '這是商品D的描述', '已上架', '2023-04-10 08:00:00', 4, 2, 4, TRUE),
-    (3, NULL, '商品E', 200, 15, '這是商品E的描述', '已上架', '2023-05-25 12:00:00', 5, 3, 5, TRUE);
+    (1, NULL, '狗都不吃剩乾糧', 100, 50, '這款乾乾讓你的狗愛吃到不行, 絕對不吃剩任何一粒', '已售完', '2023-01-01 10:00:00', 4, 2, 1, TRUE),
+    (1, NULL, '你可能會想偷吃的罐罐', 150, 30, '只能說超好吃, 你要克制住!', '未上架', '2023-02-15 14:30:00', 5, 3, 2, FALSE),
+    (2, NULL, '超純貓草', 80, 20, 'weeeeeeeeeeeeed', '未上架', '2023-03-20 18:45:00', 3, 1, 3, FALSE),
+    (2, NULL, '高露潔牙骨', 120, 40, '也有人稱為薄荷巧克力潔牙骨', '已上架', '2023-04-10 08:00:00', 4, 2, 4, TRUE),
+    (3, NULL, 'AI鳥籠', 200, 15, '收錄100種鳥語, 會在你家鳥餓的時候投放飼料', '已上架', '2023-05-25 12:00:00', 5, 3, 5, TRUE);
 -- 優惠券使用  放入測試資料-- 
 INSERT INTO couponUsed (
     couponId, usedId, useTime

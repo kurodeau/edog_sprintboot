@@ -1,88 +1,104 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-    <th:block th:insert="~{/fragment-datatableCss}"></th:block>
- 
- 
- 
- 
-  </head>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<th:block th:insert="~{/fragment-datatableCss}"></th:block>
 
-  <body>
-    <header class="fixed-top">
-    <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
 
-   <aside th:replace="@{back-end/aside-back}"></aside>
 
-  <!-- Main -->
-  
-  <main class="main main-layout-seller">
+
+</head>
+
+<body>
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
+
+	<aside th:replace="@{back-end/aside-back}"></aside>
+
+	<!-- Main -->
+
+	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
-		
-		
+
+
 			<h1>編輯訂單資料</h1>
 
-			 <form id="myForm" method="POST" th:object="${productOrderVO}" th:action="@{update}"
-				enctype="multipart/form-data">
+			<form id="myForm" method="POST" th:object="${productOrderVO}"
+				th:action="@{update}" enctype="multipart/form-data">
 
 				<div class="col-md-12">
 					<label for="orderId" class="form-label">訂單ID</label> <input
-						type="text" class="form-control" id="orderId"
-						name="orderId" th:field="*{orderId}"  readonly />
+						type="text" class="form-control" id="orderId" name="orderId"
+						th:field="*{orderId}" readonly />
 				</div>
-				
+
 				<div class="col-md-12">
 					<label for="sellerId" class="form-label">賣家ID</label> <input
-						type="text" class="form-control" id="sellerId"
-						name="sellerId" th:field="*{sellerVO.sellerId}"  readonly />
+						type="text" class="form-control" id="sellerId" name="sellerId"
+						th:field="*{sellerVO.sellerId}" readonly />
 				</div>
-				
+
 				<div class="col-md-12">
 					<label for="memberId" class="form-label">會員ID</label> <input
-						type="text" class="form-control" id="memberId"
-						name="memberId" th:field="*{buyerVO.memberId}"  readonly />
+						type="text" class="form-control" id="memberId" name="memberId"
+						th:field="*{buyerVO.memberId}" readonly />
 				</div>
-				
-				<div class="col-md-12">
+
+				<!-- <div class="col-md-12">
 					<label for="couponId" class="form-label">優惠券ID</label> <input
-						type="text" class="form-control" id="couponId"
-						name="couponId"  th:field="*{couponId}" />
-				</div>
-				
+						type="text" class="form-control" id="couponId" name="couponId"
+						th:field="*{couponId}" />
+				</div> -->
+
 				<div class="col-md-12">
 					<label for="memberPaysShipping" class="form-label">買家負擔運費</label> <input
 						type="text" class="form-control" id="memberPaysShipping"
-						name="memberPaysShipping" th:field="*{memberPaysShipping}" readonly  />
+						name="memberPaysShipping" th:field="*{memberPaysShipping}"
+						readonly />
 				</div>
-				
-				
+
+
 				<div class="col-md-12">
 					<label for="orderOrigPrice" class="form-label">訂單總金額</label> <input
 						type="text" class="form-control" id="orderOrigPrice"
-						name="orderOrigPrice" th:field="*{orderOrigPrice}"   readonly />
+						name="orderOrigPrice" th:field="*{orderOrigPrice}" readonly />
 				</div>
-				
+
 				<div class="col-md-12">
 					<label for="actualPay" class="form-label">買家實付金額</label> <input
-						type="text" class="form-control" id="actualPay"
-						name="actualPay" th:field="*{actualPay}"   readonly />
+						type="text" class="form-control" id="actualPay" name="actualPay"
+						th:field="*{actualPay}" readonly />
 				</div>
-				
-				
+
+
+
+
+
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定，disabled是為了不讓thymeleaf將null轉成空字串填回後端造成報錯-->
+				<input type="hidden" class="form-control" id="orderTime"
+					name="orderTime" th:field="*{orderTime}" readonly />
+
+
+
 				<div class="col-md-12">
-					<label for="orderTime" class="form-label">訂單成立時間</label> <input
-						type="text" class="form-control" id="orderTime"
-						name="orderTime" th:field="*{orderTime}" readonly />
+					<label for="formattedOrderTime" class="form-label">訂單成立時間</label> <input
+						type="text" class="form-control" id="formattedOrderTime"
+						th:value="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"
+						readonly />
 				</div>
-				
+
+
+
+
+
+
 				<div class="col-md-12">
 					<label for="orderStatus" class="form-label">訂單狀態</label> <input
 						type="text" class="form-control" id="orderStatus"
 						name="orderStatus" th:field="*{orderStatus}" readonly />
 				</div>
-				
+
 				<!-- 優化訂單狀態用選單 -->
 				<!-- <div class="col-md-12">
 					<label for="isEnable" class="form-label">啟用狀態</label>
@@ -92,57 +108,110 @@
 						<option value="0">未啟用</option>
 					</select>
 				</div> -->
-				
+
 				<div class="col-md-12">
 					<label for="invoiceNumber" class="form-label">發票號碼</label> <input
 						type="text" class="form-control" id="invoiceNumber"
 						name="invoiceNumber" th:field="*{invoiceNumber}" readonly />
 				</div>
-				
+
 				<div class="col-md-12">
 					<label for="receiver" class="form-label">收貨者姓名</label> <input
-						type="text" class="form-control" id="receiver"
-						name="receiver" th:field="*{receiver}"  />
+						type="text" class="form-control" id="receiver" name="receiver"
+						th:field="*{receiver}" />
 				</div>
-				
-				<div class="col-md-12">
+
+
+				<!-- 沒有格式化的收貨時間 -->
+				<!--  <div class="col-md-12">
 					<label for="receiveTime" class="form-label">收貨時間</label> <input
 						type="text" class="form-control" id="receiveTime"
-						name="receiveTime" th:field="*{receiveTime}"  />
-				</div>
-				
+						name="receiveTime" th:field="*{receiveTime}" disabled />
+				</div>  -->
+
+
+
+
+
+				<!-- 格式化的收貨時間 -->
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定 -->
+				<!-- <input type="hidden" th:field="*{receiveTime}" /> -->
+
+				<!-- 用於顯示的格式化日期 -->
+				<!-- 	<div class="col-md-12">
+					<label for="formattedReceiveTime" class="form-label">收貨時間</label> <input
+						type="text" class="form-control" id="formattedReceiveTime"
+						th:field="*{receiveTime}"
+						readonly />
+				</div> -->
+				<!-- #dates.format(productOrderVO.receiveTime, 'yyyy-MM-dd HH:mm:ss') -->
+
+
+
+
+
+
 				<div class="col-md-12">
 					<label for="mobile" class="form-label">收貨者手機</label> <input
-						type="text" class="form-control" id="mobile"
-						name="mobile" th:field="*{mobile}"  />
+						type="text" class="form-control" id="mobile" name="mobile"
+						th:field="*{mobile}" />
 				</div>
-				
+
 				<div class="col-md-12">
 					<label for="contactAddress" class="form-label">收貨地址</label> <input
 						type="text" class="form-control" id="contactAddress"
-						name="contactAddress" th:field="*{contactAddress}"  />
+						name="contactAddress" th:field="*{contactAddress}" />
 				</div>
-				
+
+
+					<input
+						type="text" class="form-control" id="isDelivered"
+						name="isDelivered" th:field="*{isDelivered}" />
+
 				<div class="col-md-12">
 					<label for="isDelivered" class="form-label">出貨狀態</label> <input
 						type="text" class="form-control" id="isDelivered"
-						name="isDelivered" th:field="*{isDelivered}"  />
+						name="isDelivered" th:value="${isDelivered}? '已出貨' : '未出貨'" readonly/>
 				</div>
 				
-				<div class="col-md-12">
+				
+				
+				
+				
+
+				<!-- <div class="col-md-12">
 					<label for="shippingTime" class="form-label">出貨時間</label> <input
 						type="text" class="form-control" id="shippingTime"
-						name="shippingTime" th:field="*{shippingTime}"  />
+						name="shippingTime" th:field="*{shippingTime}" />
+				</div> -->
+
+
+
+				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定，disabled是為了不讓thymeleaf將null轉成空字串填回後端造成報錯-->
+				<input type="hidden" th:field="*{shippingTime}"
+					th:disabled="${productOrderVO.shippingTime == null}" />
+
+
+				<!-- 用於顯示的格式化日期 -->
+				<div class="col-md-12">
+					<label for="formattedReceiveTime" class="form-label">出貨時間</label> <input
+						type="text" class="form-control" id="formattedReceiveTime"
+						th:value="${#dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd HH:mm:ss')}"
+						readonly />
 				</div>
-				
+
+
+
+
+
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
-				
-			</form> 
+
+			</form>
 		</div>
 	</main>
 	<!-- End Main -->
@@ -157,10 +226,13 @@
 		type="text/javascript"></script>
 	<script>
 		//============ 取消按鈕的跳轉事件設定 start =============
-		document.getElementById("cancel-btn").addEventListener("click",
-				function() {
-					window.location.href = "/back/productorder/productordersearch"; // 將網頁重定向到指定的 URL
-				});
+		document
+				.getElementById("cancel-btn")
+				.addEventListener(
+						"click",
+						function() {
+							window.location.href = "/back/productorder/productordersearch"; // 將網頁重定向到指定的 URL
+						});
 
 		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
 		var loadjsCompletedEvent = new Event("loadjsCompleted");
@@ -235,7 +307,7 @@
 							blob_holder.removeChild(blob_holder.childNodes[0]);
 						}
 						blob_holder.appendChild(image);
-						
+
 						// 移除多顯示的圖片
 						clearChildNodesExceptLast();
 					};
@@ -270,6 +342,8 @@
 			}
 		}
 	</script>
- 
-  </body>
+
+
+
+</body>
 </html>
