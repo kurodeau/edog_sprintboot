@@ -112,11 +112,18 @@
 												// const responseData = JSON.parse(xhr.responseText);
 												const responseData = xhr.responseText;
 												console.log("!!這個現在很怪喔!responseData=" + responseData);
+												if (responseData === "已將商品移出收藏" || responseData === "已將商品加入收藏") {
+													alert(responseData);
+												}
+												else {
+													alert("請登入會員以使用收藏與其他便利功能");
+												}
 
 												// 顯示跳窗提示回傳訊息
-												alert("這個應該怪怪的responseData");
+												// alert(responseData);
 											} else {
 												console.error('Request failed with status:', xhr.status);
+												alert("收藏功能錯誤");
 											}
 										};
 
@@ -192,13 +199,13 @@
 							</button> -->
 						</div>
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom" onclick="switchFavoritesStatus()">
+							<button class="btn btn-shopcart-custom" onclick="addIntoCart()">
 								<i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
 							</button>
 						</div>
 						<script>
 							// 定義一個函數, 每次操作加入購物車按鈕都依照所指定數量, 將該商品加入購物車(已有則疊加)
-							function switchFavoritesStatus() {
+							function addIntoCart() {
 								// 抓到按鈕, 還有數量設定的欄位
 								const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
 								const quantityInput = document.getElementById('quantityInput');
@@ -207,13 +214,13 @@
 									// 獲取商品ID或其他需要的資訊
 									const currentUrl = window.location.href;
 									const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID
-									const productNum = quantityInput.value;
-									console.log("我要加入購物車的是productId=" + productId + " ,productNum=" + productNum);
+									const productQty = quantityInput.value;
+									console.log("我要加入購物車的是productId=" + productId + " ,productQty=" + productQty);
 
 									// 構建要傳遞的資料
 									const data = {
 										productId: productId,
-										productNum: productNum
+										productQty: productQty
 									};
 
 									// 發送 POST 請求
@@ -231,16 +238,57 @@
 										})
 										.catch(error => {
 											console.error('加入購物車失敗:', error);
-											alert('加入購物車失敗');
+											alert('請登入會員以使用購物車與其他便利功能!');
 										});
 								};
 							};
 						</script>
 
 						<div class="col-auto d-flex">
-							<button class="btn btn-userdark text-white">
+							<button class="btn btn-userdark text-white" id="buyItNow-btn">
 								&nbsp;&nbsp;直接購買</button>
 						</div>
+						<script>
+							$(document).ready(function () {
+								$('#buyItNow-btn').click(function () {
+									console.log("測試訊息:有綁到直接購買按鈕");
+									// 將商品資訊封裝成資料, 轉成JSON字串
+									let goingBuyProduct = new Map();
+									let keyName = "keyName";
+									const currentUrl = window.location.href;
+									const urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
+									let productId = currentUrl.match(/\d+$/)[0];
+									let productQty = document.getElementById('quantityInput').value;
+									goingBuyProduct.set(keyName, [{ "productId": productId, "productQty": productQty }]);
+									console.log("測試訊息:goingBuyProduct=" + goingBuyProduct);
+									const obj = Object.fromEntries(goingBuyProduct);
+									const GoingBuyProductJsonStr = JSON.stringify(obj);
+									console.log("測試訊息:GoingBuyProductJsonStr" + GoingBuyProductJsonStr);
+
+									// 使用 jQuery AJAX 送出 POST 請求
+									$.ajax({
+										url: '/front/buyer/buyProductWithoutCart', // 替換成你的 POST 請求 URL
+										type: 'POST',
+										contentType: 'application/json', // 設置請求header
+										data: GoingBuyProductJsonStr, // 資料轉JSON JSON 格式
+										success: function (responseData) {
+											window.location.href = urlReturn;
+											console.log(responseData);
+											console.log('POST 请求成功');
+										},
+										error: function (xhr, status,
+											error) {
+											// 请求失败处理
+											console.error('POST 请求失败:',
+												error);
+											console.log('狀態:', status);
+											console.log('回應內容:',
+												xhr.responseText);
+										}
+									});
+								});
+							});
+						</script>
 					</section>
 				</div>
 			</div>
