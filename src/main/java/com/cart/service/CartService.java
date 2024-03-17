@@ -238,20 +238,20 @@ public class CartService {
 				String redisKeyType = jedis.type(redisKey);
 				if( !(redisKeyType.equals("hash")) ) {
 //					System.out.println("異常已經存在,且不是Hash型別");
-					return "異常已經存在,且不是Hash型別";
+					return "這個redisKey不是Hash型別";
 				}
 			}			
 //			System.out.println("測試訊息:" + redisKey + "型別檢查OK");
 			
 			// 確認指定的 ProductId 是否存在於 redisKey 內, 並將之加一
-//			String productNum = "1";
+			String productNumF = "0";
 			if( (jedis.hget(redisKey, productId)) != null ) {
-				productNum = String.valueOf(Integer.parseInt(jedis.hget(redisKey, productId)) + 1)  ;
+				productNumF = String.valueOf( Integer.parseInt(jedis.hget(redisKey, productId)) + Integer.parseInt(productNum) );
 //				System.out.println("測試訊息productId=" + productId + ", productNum=" + productNum);
 			}
 			
 			// 將 productId 跟 數量, 塞回對應的redisKey
-			jedis.hset(redisKey, productId, productNum);
+			jedis.hset(redisKey, productId, productNumF);
 
 		} catch (Exception e) {
 			System.out.println("從redis讀出資料有問題");
