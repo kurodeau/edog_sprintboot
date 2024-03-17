@@ -3,6 +3,9 @@
 
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
+
+
+
 </head>
 
 <body>
@@ -146,30 +149,39 @@
 											<label for="inputEmail3" class="col-sm-2 col-form-label">*姓名:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control receiver-input"
-													id="inputPassword3" style="width: 30%;" value="金城武">
-												<div style="color: red;">*此為必填欄位</div>
+													id="receiver-name" style="width: 30%;" value="金城武">
+													
+													 <span class="error-message" style="color: red;" id="name-error"></span>
+												
 											</div>
 										</div>
 										<div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label ">*手機:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control mobile-input"
-													id="inputPassword3" placeholder="09xx000xxx"
+													 placeholder="09xx000xxx"
 													style="width: 30%;" value="0912345678">
+													 <span class="error-message" style="color: red;" id="mobile-error"></span>
+													
+													
+													
 											</div>
 										</div>
-										<div class="row mb-3">
+										<!-- <div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label">*電子信箱:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control " id="inputPassword3"
 													style="width: 30%;" value="edog666@gmail.com">
-											</div>
+											</div> -->
 										</div>
 										<div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label ">*地址:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control address-input"
-													id="inputPassword3" style="width: 30%;" value="直送台北101樓謝謝">
+													 style="width: 30%;" value="直送台北101樓謝謝">
+													
+													 <span class="error-message" style="color: red;" id="address-error"></span>
+													
 											</div>
 										</div>
 									</div>
@@ -264,7 +276,7 @@
 				</div>
 			</div>
 			<div class="row d-flex justify-content-end align-items-center">
-				<div class="col-1-5">結帳 NT$</div>
+				<div class="col-1-5">合計 NT$</div>
 				<div class="col-2 cart-payment d-flex justify-content-end">
 					<span class="payment">0</span>元
 				</div>
@@ -272,122 +284,11 @@
 
 			<div class="row justify-content-end">
 				<div class="col-auto">
-					<button class="btn btn-primary" id="checkout-btn">去買單</button>
+					<button class="btn btn-primary" id="checkout-btn">結帳</button>
 				</div>
 			</div>
 
 
-			<!-- 
-			<div class="row d-flex justify-content-end align-items-center">
-    <div class="col-1-5">運費 NT$</div>
-    <div class="col-2 shipping-fee d-flex justify-content-end">
-        <span class="fee">0</span>元
-    </div>
-</div>
-<div class="row d-flex justify-content-end align-items-center">
-    <div class="col-1-5">合計 NT$</div>
-    <div class="col-2 cart-payment d-flex justify-content-end">
-        <span class="payment">600</span>元
-    </div>
-    <div class="col-auto">
-        <button class="btn btn-primary" id="checkout-btn">去買單</button>
-    </div>
-</div>
-			 -->
-
-
-
-
-
-
-
-
-			<!-- <div class="row d-flex justify-content-end align-items-center">
-					<div class="col-1-5">結帳 NT$</div>
-					<div class="col-2 cart-payment d-flex justify-content-end">
-						<span class="payment">600</span>元
-					</div>
-					<div class="col-auto">
-						<button class="btn btn-primary" id="checkout-btn">去買單</button>
-					</div> -->
-
-
-
-
-			<!-- <script>
-						$(document).ready(function () {
-							$('#checkout-btn').click(function () {
-								console.log("按鈕有綁到JS Event");
-
-								let selectedProductsMap = new Map();
-
-								// 將選取的商品編號封裝成資料
-								selectedProductsMap = collectSelectedProducts();
-								console.log(selectedProductsMap);
-								const obj = Object.fromEntries(selectedProductsMap);
-
-								// 将普通对象转换为JSON字符串
-								const selectedProductsJsonStr = JSON.stringify(obj);
-
-								// console.log(jsonString);
-
-							
-								let url = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
-								let urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/';
-
-								fetch((url), {
-									method: "POST",
-									header: {
-										'Content-Type': 'application/json'
-										// 如果還有其他的 headers，請在這裡添加
-									},
-									body: selectedProductsJsonStr
-								}).then(response => {
-
-									return response.text();
-								}).then((dataBeforeParsed) => {
-									console.log(dataBeforeParsed);
-									console.log();
-									const dataAfterParsed = JSON.parse(dataBeforeParsed);
-									console.log(dataAfterParsed); // 此处是正确的写法
-									if (parseInt(dataAfterParsed.status) !== 200) {
-										alert(dataAfterParsed.msg);
-									} else {
-										console.log('成功:', dataAfterParsed.msg);
-										window.location.href = urlReturn;
-									}
-								}).catch(error => {
-									// 在這裡處理錯誤情況
-
-								});
-
-							});
-						});
-
-						function collectSelectedProducts() {
-
-							let selectedProductsMap = new Map();
-
-							// 遍歷每個選中的項目
-							document.querySelectorAll(".cart-item-click:checked").forEach((element) => {
-								let sellerName = element.closest(".cart-seller").querySelector(".cart-sellerId").textContent;
-								let productId = parseInt(element.closest('.item-row-custom').querySelector('.cart-productId').textContent);
-								var productQty = parseInt(element.closest('.item-row-custom').querySelector('.cart-qty').textContent);
-
-								if (selectedProductsMap.has(sellerName)) {
-									selectedProductsMap.get(sellerName).push({ "productId": productId, "productQty": productQty });
-								} else {
-									selectedProductsMap.set(sellerName, [{ "productId": productId, "productQty": productQty }]);
-								}
-							});
-							selectedProductsMap.forEach((value, key) => {
-								console.log(key);
-							});
-
-							return selectedProductsMap;
-
-						}
-					</script> -->
 
 
 			<script>
@@ -406,7 +307,7 @@
             
             // 遍歷每個賣家
             $('.cart-seller').each(function() {
-                let sellerId = $(this).find('.get_sellerId').text(); // 假設賣家ID儲存在這裡
+                let sellerId = $(this).find('.get_sellerId').text(); // 賣家ID儲存在這裡
                 let receiver = $(this).find('.receiver-input').val(); // 收件人姓名輸入框的class
                 let mobile = $(this).find('.mobile-input').val(); // 收件人手機輸入框的class
                 let contactAddress = $(this).find('.address-input').val(); // 收件地址輸入框的class
@@ -636,59 +537,71 @@
 				        document.querySelector(".cart-payment .payment").textContent = totalAmount.toFixed(0);
 				    }
 					
-					/* function updateCheckoutAmount() {
-				        let totalAmount = 0;
-				        let totalShippingFee = 0; // 用于存储总的运费
-				        const sellerTotals = new Map(); // 用于存储每个卖家的订单总金额
-
-				        // 遍历所有商品行
-				        document.querySelectorAll(".cart-seller").forEach(function (seller) {
-				            let sellerTotal = 0; // 单个卖家的订单总金额
-				            seller.querySelectorAll(".item-row-custom").forEach(function (item) {
-				                const priceElement = item.querySelector(".cart-price");
-				                const price = parseFloat(priceElement.textContent);
-
-				                const qtyElement = item.querySelector(".cart-qty");
-				                const qty = parseFloat(qtyElement.textContent);
-
-				                sellerTotal += (price * qty);
-				            });
-
-				            let shippingFee = 0;
-				            if (sellerTotal < 999) {
-				                shippingFee = 70; // 如果单个卖家的订单总金额没有超过999，加上运费70元
-				                totalShippingFee += shippingFee; // 累加到总的运费
-				            }
-
-				            // 存储每个卖家的总金额，包括运费
-				            const sellerId = seller.querySelector(".cart-sellerId").textContent;
-				            sellerTotals.set(sellerId, sellerTotal + shippingFee);
-
-				            totalAmount += sellerTotal + shippingFee; // 累加到总金额，包括运费
-				        });
-
-				        // 更新显示的总金额和运费
-				        const totalAmountElement = document.querySelector(".cart-payment .payment");
-				        totalAmountElement.textContent = totalAmount.toFixed(0);
-				        
-				        const shippingFeeElement = document.querySelector(".shipping-fee .fee");
-				        shippingFeeElement.textContent = totalShippingFee.toFixed(0); // 更新运费显示
-				    } */
-					
-					
-						
-					
-					
-					
-					
-					
-					
-					
-					
-					
+				
 					
 				});
 	</script>
+	
+	
+	<script>
+function validateInput() {
+    let isValid = true;
+
+    // 姓名驗證
+    const name = document.getElementById('receiver-name').value;
+    const nameError = document.getElementById('name-error');
+    if (!/^[a-zA-Z\u4e00-\u9fa5]{1,10}$/.test(name)) {
+        nameError.textContent = '請輸入有效的姓名（最多10個字符，不含特殊字符）';
+        isValid = false;
+    } else {
+        nameError.textContent = '';
+    }
+
+    // 手機驗證
+    const mobile = document.getElementById('receiver-mobile').value;
+    const mobileError = document.getElementById('mobile-error');
+    if (!/^09\d{8}$/.test(mobile)) {
+        mobileError.textContent = '請輸入有效的手機號碼（09開頭的10位數字）';
+        isValid = false;
+    } else {
+        mobileError.textContent = '';
+    }
+
+    // 地址驗證
+    const address = document.getElementById('receiver-address').value;
+    const addressError = document.getElementById('address-error');
+    if (!/^[\u4e00-\u9fa5a-zA-Z0-9\s,，]{1,100}$/.test(address)) {
+        addressError.textContent = '請輸入有效的地址（最多50個字符，可包含中文、英文、數字、空格及逗號）';
+        isValid = false;
+    } else {
+        addressError.textContent = '';
+    }
+
+    return isValid;
+}
+
+// 綁定表單提交事件
+document.getElementById('checkout-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // 防止表單提交
+    if (validateInput()) {
+        // 如果驗證通過，執行提交邏輯
+        console.log('提交資料');
+    } else {
+        console.log('驗證失敗');
+    }
+});
+</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 
 </html>

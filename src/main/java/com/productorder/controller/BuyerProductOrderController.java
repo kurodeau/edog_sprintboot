@@ -81,7 +81,7 @@ public class BuyerProductOrderController {
 		
 	//訂單結帳按鈕  	
 		@PostMapping("create_orders")
-		public ResponseEntity<?> orderCheckout(@RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
+		public ResponseEntity<?> orderCheckout(@Valid @RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
 //		    Integer memberId =  session.getAttribute(memberId);
 //			Integer memberId = 1;
 			

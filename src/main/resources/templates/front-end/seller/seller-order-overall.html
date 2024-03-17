@@ -138,7 +138,7 @@
 		                 <div class="row header-row-custom">
 		                    <div class="col-2">訂單編號</div>
 		                    <div class="col-2">訂單日期</div>
-		                    <div class="col-3">買家實付金額</div>
+		                    <div class="col-3">訂單金額</div>
 		                    <div class="col-3">狀態</div>
 		                    <div class="col-2">操作</div>
 		                  </div>
@@ -148,8 +148,8 @@
 		                  
 		                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderList}">
 		                    <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-		                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-		                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+		                    <div class="col-2 " th:text="${ #dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+		                    <div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
 		                   <!--  <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
 										                   <div class="col-2">
 								        <span th:switch="${productOrderVO.orderStatus}">
@@ -214,19 +214,19 @@
               
              <div class="container mt-3 container-list-custom">
                  <div class="row header-row-custom">
-                    <div class="col-2">訂單編號</div>
-                    <div class="col-2">訂單日期</div>
-                    <div class="col-3">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
+                   		                    <div class="col-2">訂單編號</div>
+		                    <div class="col-2">訂單日期</div>
+		                    <div class="col-3">訂單金額</div>
+		                    <div class="col-3">狀態</div>
+		                    <div class="col-2">操作</div>
+		                  </div>
 
 
              	<div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderPendingConfirm}">
 
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
                     <!-- <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
                      <div class="col-2">
 								        <span th:switch="${productOrderVO.orderStatus}">
@@ -288,19 +288,19 @@
               >
               <div class="container mt-3 container-list-custom">
                   <div class="row header-row-custom">
-                    <div class="col-2">訂單編號</div>
-                    <div class="col-2">訂單日期</div>
-                    <div class="col-3">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
+                  		                    <div class="col-2">訂單編號</div>
+		                    <div class="col-2">訂單日期</div>
+		                    <div class="col-3">訂單金額</div>
+		                    <div class="col-3">狀態</div>
+		                    <div class="col-2">操作</div>
+		                  </div>
 
                   <!-- Item 1 -->
                   <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderSellerProcessing}">
 
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
                   <!--   <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
                   <div class="col-2">
 								        <span th:switch="${productOrderVO.orderStatus}">
@@ -360,17 +360,17 @@
               
               <div class="container mt-3 container-list-custom">
                   <div class="row header-row-custom">
-                    <div class="col-2">訂單編號</div>
-                    <div class="col-2">訂單日期</div>
-                    <div class="col-3">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
+                  		                    <div class="col-2">訂單編號</div>
+		                    <div class="col-2">訂單日期</div>
+		                    <div class="col-3">訂單金額</div>
+		                    <div class="col-3">狀態</div>
+		                    <div class="col-2">操作</div>
+		                  </div>
                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCompleted}">
 
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
                     <!-- <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
                     
                     <div class="col-2">
@@ -429,20 +429,20 @@
               
               <div class="container mt-3 container-list-custom">
                   <div class="row header-row-custom">
-                    <div class="col-2">訂單編號</div>
-                    <div class="col-2">訂單日期</div>
-                    <div class="col-3">買家實付金額</div>
-                    <div class="col-3">狀態</div>
-                    <div class="col-2">操作</div>
-                  </div>
+                  		                    <div class="col-2">訂單編號</div>
+		                    <div class="col-2">訂單日期</div>
+		                    <div class="col-3">訂單金額</div>
+		                    <div class="col-3">狀態</div>
+		                    <div class="col-2">操作</div>
+		                  </div>
 
                   <!-- Item 1 -->
 
                  <div class="row item-row-custom" th:each="productOrderVO : ${sellerProductOrderCanceled}">
 
                     <div class="col-2" th:text="${productOrderVO.orderId}"></div>
-                    <div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-                    <div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
+                    <div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    <div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
                  <!--    <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
                  
                  <div class="col-2">

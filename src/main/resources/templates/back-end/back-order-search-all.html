@@ -52,8 +52,8 @@
                 
                 <td class="text-center" th:text="${productOrderVO.buyerVO.memberId}"></td>
                 
-                <td class="text-center" th:text="${productOrderVO.orderOrigPrice}"></td>
-                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
+                <td class="text-center" th:text="${productOrderVO.orderOrigPrice}+元"></td>
+                <td class="text-center" th:text="${productOrderVO.actualPay}+元"></td>
                 <td class="text-center" th:text="${productOrderVO.invoiceNumber}"></td>
                <!--  <td class="text-center" th:text="${productOrderVO.couponId}"></td> -->
                 
@@ -86,7 +86,8 @@
                 <td class="text-center" th:text="${productOrderVO.mobile}"></td>
                 <td class="text-center" th:text="${productOrderVO.contactAddress}"></td>
                 <td class="text-center" th:text="${productOrderVO.isDelivered}? '已出貨' : '未出貨'"></td>
-                <td class="text-center" th:text="${#dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+             <!--    <td class="text-center" th:text="${#dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd hh:mm:ss')}"></td> -->
+                <td class="text-center" th:text="${productOrderVO.shippingTime != null ? #dates.format(productOrderVO.shippingTime, 'yyyy-MM-dd hh:mm:ss') : '尚未出貨'}"></td>
                 <td class="text-center" >
                  
                  

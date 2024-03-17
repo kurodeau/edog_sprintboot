@@ -85,15 +85,15 @@ public class SellerProductOrderController {
 		protected List<ProductOrderVO> sellerProductOrderList( Model model) {
 //			
 			
-			Integer sellerId =1;
-//			SecurityContext secCtx = SecurityContextHolder.getContext();
-//	        Authentication authentication = secCtx.getAuthentication();
-//	        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//			Integer sellerId =1;
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //	        Integer sellerId = sellerVO.getSellerId();
 			
 			
 			
-			List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerId);
+			List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerVO.getSellerId());
 			return list;
 		}
 		
