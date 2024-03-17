@@ -48,10 +48,9 @@ public class FrontBuyerController extends HttpServlet{
 //		return "back-end/back-buyer-add"; // 應該改成創帳號PAGE
 //	}
 
-	/*
-	 * This method will be called on addEmp.html form submission, handling POST
-	 * request It also validates the user input
-	 */
+
+	// 前台新增買家帳號, 應該跟買家註冊重複, 待確認現在註冊是不是用這個?
+    // /front/buyer/insertBuyer
 	@PostMapping("insertBuyer")
 	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
@@ -107,11 +106,8 @@ public class FrontBuyerController extends HttpServlet{
 		return "back-end/back-buyer-list"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
 	}               
 
-	/*
-	 * This method will be called on listAllEmp.html form submission, handling POST
-	 * request
-	 */
-	// /buyer/buyer/updateBuyer
+
+	//從sidebar進入修改會員資料  /buyer/buyer/updateBuyer
 	@GetMapping("updateBuyer")
 	public String updateBuyer(ModelMap model) {
 		
@@ -132,19 +128,51 @@ public class FrontBuyerController extends HttpServlet{
 	
 	
 	@PostMapping("submitUpdateBuyer")
-	public String submitUpdateBuyer(ModelMap model) {
+	public String submitUpdateBuyer(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
+			@RequestParam("petImg") MultipartFile[] parts) throws IOException{
 		
-		// 從登入狀態抓取用戶ID
+		// 從登入狀態抓取用戶ID對應的資料
 		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
         Authentication authentication = secCtx.getAuthentication();
-        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
-
-//        memberId = String.valueOf(buyerVO.getMemberId());
+        buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());
         
         System.out.println("送交修改的會員資料是memberId=" + memberId);
 
-		return "front-end/buyer/buyer-main"; // 查詢完成後轉交update_emp_input.html
+        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
+		result = removeFieldError(buyerVO, result, "petImg");
+
+		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
+			// BuyerService buyerSvc = new BuyerService();
+			byte[] petImg = buyerSvc.getOneBuyer(buyerVO.getMemberId()).getPetImg();
+			buyerVO.setPetImg(petImg);
+		} else {
+			for (MultipartFile multipartFile : parts) {
+				byte[] petImg = multipartFile.getBytes();
+				buyerVO.setPetImg(petImg);
+			}
+		}
+		if (result.hasErrors()) {
+			// 修改成進行修改資料的PAGE
+			System.out.println("測試訊息:圖片的判斷有問題, 提早返回edit");
+//			System.out.println("測試訊息:" + result.);
+			return "front-end/buyer/buyer-buyer-edit";
+		}
+		
+		/*************************** 2.開始修改資料 *****************************************/
+		// BuyerService buyerSvc = new BuyerService();
+		buyerSvc.updateBuyer(buyerVO);
+		System.out.println("有走道updateBuyer方法");
+		
+		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("success", "- (修改成功)");
+		buyerVO = buyerSvc.getOneBuyer(Integer.valueOf(buyerVO.getMemberId()));
+		model.addAttribute("buyerVO", buyerVO);
+		System.out.println("有走道return之前");
+        
+		return "front-end/buyer/buyer-main"; // 
 	}
 	
 
