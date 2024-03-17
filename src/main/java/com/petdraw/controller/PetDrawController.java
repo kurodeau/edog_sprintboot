@@ -10,7 +10,10 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.security.core.Authentication;
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 import com.petdraw.enums.PetDrawStatusEnum;
@@ -67,24 +70,29 @@ public class PetDrawController {
 
 //    http://localhost:8080/servername/pairPets?=memberMainId=123456&memberPa
 	@PostMapping("/startpairing")
-	public String startpairing(ModelMap model) throws IOException {
+	public String startpairing(HttpServletRequest request,ModelMap model) throws IOException {
 		PairResponse pairResponse = new PairResponse();
-
-		// Test
-		BuyerVO buyerCurrentVO = buyerSvc.getOneBuyer(1);
-
-		PetDrawVO petDrawVO = new PetDrawVO();
-
+		HttpSession httpSession = request.getSession();
+		String eMail = (String) httpSession.getAttribute("username");
+		BuyerVO buyerVO = buyerSvc.findByOnlyOneEmail(eMail);
+//	    SecurityContext secCtx = SecurityContextHolder.getContext();
+//	    Authentication authentication = secCtx.getAuthentication();
+//	    BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+	    
+	    // Test
+//	    BuyerVO buyerCurrentVO = buyerSvc.getOneBuyer(memberId);
+	    
+	    PetDrawVO petDrawVO = new PetDrawVO();
 		// 設定抽卡人ID
-		petDrawVO.setMemberId(buyerCurrentVO.getMemberId());
+		petDrawVO.setMemberId(buyerVO.getMemberId());
 		petDrawVO.setPetDrawTime(new Date());
 
 		pairResponse.setPetDrawVO(petDrawVO);
-		pairResponse.setMemberVO(buyerCurrentVO);
+		pairResponse.setMemberVO(buyerVO);
 
 		pairResponse.setPetDrawVO(petDrawVO);
 
-		BuyerVO buyerPairVO = petDrawSvc.getRandomBuyerVONotEqualTo(buyerCurrentVO);
+		BuyerVO buyerPairVO = petDrawSvc.getRandomBuyerVONotEqualTo(buyerVO);
 		pairResponse.setMemberPairVO(buyerPairVO);
 
 		model.addAttribute("pairResponse", pairResponse);
