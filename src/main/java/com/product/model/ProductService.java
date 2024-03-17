@@ -61,12 +61,38 @@ public class ProductService {
 
 		return list;
 	}
+	
+	
+	
+	public List<ProductVO> getSellerProductAll(Integer sellerId) {
 
-	public List<ProductVO> getSellOutProduct() {
+		List<ProductVO> allProducts = repository.findSellerProductAll(sellerId);
 
-		List<ProductVO> allProducts = repository.findAll();
+		List<ProductVO> list = allProducts.stream().filter(pt -> Boolean.TRUE.equals(pt.getIsEnabled()))
+				.collect(Collectors.toList());
+
+		return list;
+	}
+	
+	
+
+	public List<ProductVO> getSellOutProduct(Integer sellerId) {
+
+		List<ProductVO> allProducts = repository.findSellerProductAll(sellerId);
 		List<ProductVO> list = allProducts.stream()
-				.filter(pt -> "已售完".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
+				.filter(pt -> "已售完".equals(pt.getProductStatus()) 
+						&& Boolean.TRUE.equals(pt.getIsEnabled())
+						&& pt.getProductStockQuantity()==0)
+						
+				.collect(Collectors.toList());
+		return list;
+	}
+
+	public List<ProductVO> getSellerProductLaunch(Integer sellerId) {
+
+		List<ProductVO> allProducts = repository.findSellerProductAll(sellerId);
+		List<ProductVO> list = allProducts.stream()
+				.filter(pt -> "已上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
 				.collect(Collectors.toList());
 		return list;
 	}
@@ -80,9 +106,11 @@ public class ProductService {
 		return list;
 	}
 
-	public List<ProductVO> getProductUnLaunch() {
+	
+	
+	public List<ProductVO> getProductUnLaunch(Integer sellerId) {
 
-		List<ProductVO> allProducts = repository.findAll();
+		List<ProductVO> allProducts = repository.findSellerProductAll(sellerId);
 		List<ProductVO> list = allProducts.stream()
 				.filter(pt -> "未上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
 				.collect(Collectors.toList());
@@ -158,6 +186,18 @@ public class ProductService {
 					predicateList
 							.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceTo)));
 				}
+				
+				
+				
+				String keyword = formData.getKeyword();
+				if (keyword !=null && keyword.trim().length() > 0 ) {
+					
+					predicateList.add(criteriaBuilder.like(root.get("productName"),"%" + keyword + "%" ));
+					
+					
+				}
+			
+				
 
 				Join<ProductVO, ProductSortVO> productSortJoin = root.join("productSortVO");
 				List<String> categoryList = formData.getProductCategory();

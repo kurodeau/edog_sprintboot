@@ -44,21 +44,35 @@ public class AdService {
 		return list;
 
 	}
+	
+	
+	public List<AdVO> getSellerAdAll(Integer sellerId) {
 
-	public List<AdVO> getReviewAd() {
+		List<AdVO> allAds = repository.findSellerAdAll(sellerId);
 
-		List<AdVO> allAds = repository.findAll();
+		List<AdVO> list = allAds.stream().filter(ad -> Boolean.TRUE.equals(ad.getIsEnabled()))
+				.collect(Collectors.toList());
+
+		return list;
+
+	}
+
+	public List<AdVO> getReviewAd(Integer sellerId) {
+
+		List<AdVO> allAds = repository.findSellerAdAll(sellerId);
 
 		List<AdVO> list = allAds.stream() // for each
-				.filter(ad -> "審核中".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
+				.filter(ad -> "審核中".equals(ad.getAdStatus())
+						||"審核失敗".equals(ad.getAdStatus())
+						&& Boolean.TRUE.equals(ad.getIsEnabled()))
 				.collect(Collectors.toList());
 
 		return list;
 	}
 
-	public List<AdVO> getUnLaunchAd() {
+	public List<AdVO> getUnLaunchAd(Integer sellerId) {
 
-		List<AdVO> allAds = repository.findAll();
+		List<AdVO> allAds = repository.findSellerAdAll(sellerId);
 
 		List<AdVO> list = allAds.stream()
 				.filter(ad -> "未上架".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
@@ -67,9 +81,9 @@ public class AdService {
 		return list;
 	}
 
-	public List<AdVO> getLaunchAd() {
+	public List<AdVO> getLaunchAd(Integer sellerId) {
 
-		List<AdVO> allAds = repository.findAll();
+		List<AdVO> allAds = repository.findSellerAdAll(sellerId);
 
 		List<AdVO> list = allAds.stream()
 				.filter(ad -> "已上架".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
@@ -117,7 +131,7 @@ public class AdService {
 				.filter(ad -> "已上架".equals(ad.getAdStatus()) 
 						&& Boolean.TRUE.equals(ad.getIsEnabled())
 						&& ad.getAdId()!=1
-						&& Integer.valueOf(2).equals(ad.getAdLv())
+						&& Integer.valueOf(0).equals(ad.getAdLv())
 						&& ad.getAdStartTime().compareTo(currentSqlDate) <= 0
 						&& ad.getAdEndTime().compareTo(currentSqlDate) >= 0)
 				.collect(Collectors.toList());

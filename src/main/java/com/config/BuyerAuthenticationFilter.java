@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 
-@Component
 public class BuyerAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final BuyerService buyerSvc;

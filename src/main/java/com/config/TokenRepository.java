@@ -1,14 +1,17 @@
-package com.token;
+package com.config;
 
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.util.JedisUtil;
 
+import groovyjarjarantlr4.v4.parse.ANTLRParser.delegateGrammar_return;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 
@@ -45,10 +48,38 @@ public class TokenRepository {
     }
     
 
-    public void deleteToken(String tokenKey) {
+    public void revokeToken(String tokenKey) {
         try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
             jedis.select(DATABASE_INDEX);
             jedis.del(tokenKey);
+        } catch (JedisException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    
+    
+    public void  revokeAllUserTokens(Integer userId) {
+        try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+            jedis.select(DATABASE_INDEX);
+
+            Set<String> tokenKeys = jedis.keys("*");
+
+            Set<String> userTokenKeys = tokenKeys.stream()
+                                                 .filter(tokenKey -> {
+                                                     // 从 Redis 中检索 JSON 数据
+                                                     String json = jedis.get(tokenKey);
+                                                     
+                                                     // 使用您的 JSON 解析方法来解析 JSON 数据并提取 userId
+                                                     TokenDTO tokenDTO = convertJsonToDto(json);
+                                                     Integer tokenId = tokenDTO.getId();
+                                                     
+                                                     return tokenId != null && tokenId.equals(userId);
+                                                 })
+                                                 .collect(Collectors.toSet());
+
+            userTokenKeys.forEach(jedis::del);
         } catch (JedisException e) {
             e.printStackTrace();
         }

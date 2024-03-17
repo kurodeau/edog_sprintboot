@@ -1,19 +1,22 @@
 package com.config;
 
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
@@ -63,6 +66,19 @@ public class JwtService {
 		// Claims 代表了 JWT 的聲明部分，而 getSubject 方法用於獲取
 		// JWT 的主體聲明（Subject），即表示 JWT 中包含的使用者名稱
 	}
+	
+	
+	public List<String> extractRoles(String token) {
+	    final Claims claims = extractAllClaims(token);
+	    
+	    List<Map<String, String>> authorities = (List<Map<String, String>>) claims.get("authorities");
+	    
+	    List<String> roles = authorities.stream()
+	            .map(authority -> authority.get("authority"))
+	            .collect(Collectors.toList());
+	    
+	    return roles;
+	}
 
 	// 這是一個私有方法，用於構建 JWT
 	private String buildToken(
@@ -73,7 +89,7 @@ public class JwtService {
 			// JWT 的過期時間，以毫秒為單位
 			long expiration) {
 		// 使用 Jwts 建構 JWT
-		return Jwts.builder()
+		 String a =Jwts.builder()
 				// 設置 JWT 的聲明，包括額外的聲明、主體、發行時間和到期時間
 				// 設置額外的聲明，這些聲明可以包含除了預設聲明之外的其他信息
 				.setClaims(extraClaims)
@@ -87,6 +103,9 @@ public class JwtService {
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
 				// 獲取最終的 JWT 字串表示形式
 				.compact();
+		 System.out.println(a);
+		 
+		 return a;
 	}
 
 	// 生成帶有額外聲明的 JWT

@@ -46,21 +46,5 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 		response.sendRedirect("/front/seller/main");
 	}
 
-	private String getLoggedInSellerVO(Authentication authentication) {
-		// 根據你的 Authentication 實現方式獲取 SellerVO
-		// 這裡只是一個示例，實際情況可能需要根據你的應用程式進行修改
-
-		String userEmail;
-
-		userEmail = authentication.getName();
-		return userEmail;
-	}
-
-	private void setSellerVOToSecurityContext(SellerVO sellerVO, Authentication authentication) {
-		// 在這裡將 SellerVO 存儲在安全上下文中
-		// 這裡只是一個示例，實際情況可能需要根據你的應用程式進行修改
-		
-		SecurityContextHolder.getContext().setAuthentication(
-				new UsernamePasswordAuthenticationToken(sellerVO, null, authentication.getAuthorities()));
-	}
+	
 }

@@ -1,6 +1,7 @@
 package com.seller.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,7 +25,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.product.model.ProductVO;
+import com.ad.model.AdVO;
 import com.productorder.model.ProductOrderVO;
 import com.sellerLv.entity.SellerLvVO;
 import com.validator.MyZeroValidator;
@@ -43,6 +45,8 @@ public class SellerVO implements java.io.Serializable {
 	private Integer sellerId;
 
 
+
+
 /////打開訂單關聯/////////////////////////////////////////
 //	private Set<ProductOrderVO> productOrders;
 //
@@ -57,6 +61,7 @@ public class SellerVO implements java.io.Serializable {
 
 /////////////////////////////////////////////////////////
 
+
 //////////////商品與賣家的關聯///////////////////////
 //	private Set<ProductVO> productVOs;
 //
@@ -70,7 +75,11 @@ public class SellerVO implements java.io.Serializable {
 //		this.productVOs = productVOs;
 //	}
 
-///////////////////////////////////////
+/////訂單關聯/////////////////////////////////////////
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="sellerVO")
+	@OrderBy("sellerId asc")
+	private Set<ProductOrderVO> productOrders ;
+
 
 
 //////////////等級與賣家的關聯///////////////////////
@@ -138,6 +147,20 @@ public class SellerVO implements java.io.Serializable {
 
 	@Column(name = "isConfirm")
 	private Boolean isConfirm = false;
+	
+	@OneToMany(cascade = CascadeType.ALL , mappedBy = "sellerVO")
+	private Set<AdVO> adVO = new HashSet<AdVO>();
+	
+	
+	
+	
+	public Set<AdVO> getAdVO() {
+		return adVO;
+	}
+
+	public void setAdVO(Set<AdVO> adVO) {
+		this.adVO = adVO;
+	}
 
 	public Integer getSellerId() {
 		return sellerId;
@@ -316,6 +339,15 @@ public class SellerVO implements java.io.Serializable {
 
 	public void setIsConfirm(Boolean isConfirm) {
 		this.isConfirm = isConfirm;
+	}
+	
+/////////////訂單關聯///////////
+	public Set<ProductOrderVO> getProductOrders() {
+		return productOrders;
+	}
+
+	public void setProductOrders(Set<ProductOrderVO> productOrders) {
+		this.productOrders = productOrders;
 	}
 
 	@Override

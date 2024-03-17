@@ -1,4 +1,4 @@
-package com.token;
+package com.config;
 
 
 public enum TokenUserTypeEnum {

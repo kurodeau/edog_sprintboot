@@ -36,6 +36,9 @@ import com.report.entity.ReportVO;
 import com.report.service.ReportService;
 import com.reportType.entity.ReportTypeVO;
 import com.reportType.service.ReportTypeService;
+import com.msg.entity.MsgVO;
+import com.msg.service.MsgService;
+import com.msgType.entity.MsgTypeVO;
 
 @Controller
 @ComponentScan(basePackages = {"com.article", "com.articleType"})
@@ -60,6 +63,9 @@ public class ArticleController {
 
 	@Autowired
 	ReportTypeService reportTypeSvc;
+	
+	@Autowired
+	MsgService msgSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -179,22 +185,6 @@ public class ArticleController {
 				articleVO.setUpFiles(buf);
 			}
 		}
-//		if (result.hasErrors() || parts[0].isEmpty()) {
-//			System.out.println("Id: " + articleVO.getArticleId());
-//			System.out.println("Buyer: " + articleVO.getBuyerVO());
-//			System.out.println("ArticleType: " + articleVO.getArticleTypeVO());
-//			System.out.println("Title: " + articleVO.getArticleTitle());
-//			System.out.println("Content: " + articleVO.getArticleContent());
-//			System.out.println("Time: " + articleVO.getArtUpdateTime());
-//			System.out.println("Like: " + articleVO.getArticleLike());
-//			System.out.println("Comment: " + articleVO.getArticleComment());
-//			System.out.println("Share: " + articleVO.getArticleShare());
-//			System.out.println("IsEnabled: " + articleVO.getIsEnabled());
-//			System.out.println("UpFiles: " + articleVO.getUpFiles());
-////			return "front-end/article/addArticle";
-//			return "front-end/article/post-article";
-//		}
-//		articleVO.setArtUpdateTime(new Date());
 		/*************************** 2.開始新增資料 *****************************************/
 		// EmpService empSvc = new EmpService();
 		articleSvc.addArticle(articleVO);
@@ -308,11 +298,24 @@ public class ArticleController {
 	}
 
 	@PostMapping("/like")
-	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId) {
+	public ResponseEntity<String> increaseLikes(@RequestParam("articleId") String articleId, ModelMap model) {
 	    ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId)); // 根据文章 ID 获取文章对象
 	    if (articleVO != null) {
 	        articleVO.setArticleLike(articleVO.getArticleLike()+1); // 增加喜欢数
 	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
+	        MsgVO msgVO = new MsgVO();
+	        msgVO.setArticleVO(articleVO); // 设置关联的文章 ID
+	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        MsgTypeVO msgTypeVO =new MsgTypeVO();
+	        msgTypeVO.setMsgTypeId(1);
+	        msgVO.setMsgTypeVO(msgTypeVO);
+	        msgVO.setMsgTime(new Date());
+	        msgVO.setIsRead(false);
+	        msgVO.setIsEnabled(true);
+	        // 其他需要设置的属性
+	        msgSvc.addMsg(msgVO);
+	        // 保存msgVO到数据库
+	        model.addAttribute("msgVO", msgVO);
 	        return new ResponseEntity<>("Likes increased successfully", HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>("Article not found", HttpStatus.NOT_FOUND);

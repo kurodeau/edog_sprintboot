@@ -522,9 +522,14 @@ document.getElementById('sendCommentBtn').addEventListener('click', function() {
     
     // 创建一个新的 XMLHttpRequest 对象
     var xhr = new XMLHttpRequest();
-    
-    // 设置请求方法和 URL
-    xhr.open('POST', 'http://localhost:8081/edogSpringMVC_Thymeleaf/reply/insert', true);
+    var currentUrl = window.location.href; // 获取当前页面的完整 URL
+	var baseUrl = currentUrl.split('/article')[0]; // 使用 '/article' 分割当前 URL，并获取前面部分作为基础 URL
+	var endpoint = '/reply/insert';
+	var fullUrl = baseUrl + endpoint;
+	
+	xhr.open('POST', fullUrl, true);
+
+
     
     // 设置请求头
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');

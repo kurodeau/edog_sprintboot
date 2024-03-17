@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,10 +28,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.buyer.entity.BuyerVO;
-import com.buyer.service.BuyerService;
+import com.manager.ManagerPasswordEncoder;
+import com.manager.ManagerService;
+import com.manager.ManagerVO;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
 
@@ -60,12 +61,11 @@ public class MultiSecurityConfiguration {
 	@Autowired
 	SellerService sellerSvc;
 
-	// 
+	//
 	@Autowired
 	@Qualifier("sellerDetailsService") // Use the correct qualifier if needed
 	private UserDetailsService sellerDetailsService;
 
-	
 	@Autowired
 	@Qualifier("sellerPasswordEncoder")
 	private SellerPasswordEncoder sellerPasswordEncoder;
@@ -95,47 +95,69 @@ public class MultiSecurityConfiguration {
 				"/vendors/**", "/mainjs/**", "/icons/**");
 	}
 
+	/////////////////// MANAGER 配置///////////////////////////
 	@Autowired
-	@Qualifier("buyerRequestMatcher")
-	RequestMatcher buyerRequestMatcher;
+	private ManagerService managerSvc;
+	
+	@Autowired
+	@Qualifier("managerPasswordEncoder")
+	private ManagerPasswordEncoder managerPasswordEncoder;
 
+	//////////////////// BUYER 配置///////////////////////////
+	
 	@Autowired
-	private BuyerService buyerSvc;
+	MultiFilterConfig multiFilterConfig;
+//
+//	@Autowired
+//	@Qualifier("buyerRequestMatcher")
+//	RequestMatcher buyerRequestMatcher;
+//
+//	@Autowired
+//	private BuyerService buyerSvc;
+//
+//	@Autowired
+//	@Qualifier("buyerPasswordEncoder")
+//	private BuyerPasswordEncoder buyerPasswordEncoder;
+//
+//	@Autowired
+//	private BuyeAuthenticationFailureHandler buyeAuthenticationFailureHandler;
 
-	@Autowired
-	@Qualifier("buyerPasswordEncoder")
-	private BuyerPasswordEncoder buyerPasswordEncoder;
-
-	@Autowired
-	private BuyeAuthenticationFailureHandler buyeAuthenticationFailureHandler;
+	/////////////////// 針對沒登入使用者的配置///////////////////////////
 
 	@Autowired
 	private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+	/////////////////// filterChain配置///////////////////////////
+
+	
+	@Value("${myserver.back.entry}")
+	String backEntryPoint;
+	
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		
+		 BuyerAuthenticationFilter buyerAuthenticationFilter = multiFilterConfig.createBuyerAuthenticationFilter(authenticationManager(http));
+		 JwtAuthenticationFilter jwtAuthenticationFilter = multiFilterConfig.createJwtAuthenticationFilter(authenticationManager(http));
 
-		BuyerAuthenticationFilter buyerAuthenticationFilter = new BuyerAuthenticationFilter(authenticationManager(http),
-				buyerRequestMatcher, buyerSvc, buyerPasswordEncoder, buyeAuthenticationFailureHandler);
-
-		// http.authorizeRequests(authorize -> authorize
-		// .antMatchers("/**").permitAll()).csrf().disable();
-		http
-				.authorizeRequests(authorize -> authorize
-						.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-						.antMatchers("/front/seller/**").hasRole("SELLER")
-						.antMatchers("/front/buyer/**").hasRole("BUYER"))
+		http.authorizeRequests(authorize -> authorize.antMatchers("/front/seller/report")
+				.hasAnyRole("SELLERLV2", "SELLERLV3").antMatchers("/front/seller/**").hasRole("SELLER")
+				.antMatchers("/front/buyer/**").hasRole("BUYER")
+				.antMatchers("/back/"+backEntryPoint+"/login").permitAll()
+				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
+				.antMatchers("/back/newsTicker/**").hasRole("MANAGERJWT")
+				.antMatchers("/back/main").hasRole("MANAGER")
+				)
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-		http.formLogin(form -> form.loginPage("/seller/login")
-				.loginProcessingUrl("/seller/login")
+		http.formLogin(form -> form.loginPage("/seller/login").loginProcessingUrl("/seller/login")
 				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
 				.successHandler(sellerAuthenticationSuccessHandler))
 				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
 						.authenticationEntryPoint(customAuthenticationEntryPoint))
-				.csrf()
-				.disable().authenticationManager(authenticationManager(http)).logout(logout -> logout
-						.logoutUrl("/logout") // 配置登出 URL
+				.csrf().disable().authenticationManager(authenticationManager(http))
+				.logout(logout -> logout.logoutUrl("/logout") // 配置登出 URL
 						.logoutSuccessHandler((request, response, authentication) -> {
 							Object targetVO = authentication.getPrincipal();
 							// System.out.println(targetVO);
@@ -164,20 +186,18 @@ public class MultiSecurityConfiguration {
 
 			if (authentication != null && authentication.isAuthenticated()) {
 				// 如果已經驗證
-				System.out.println("GossipAuthenticationProvider-authenticate");
+//				System.out.println("GossipAuthenticationProvider-authenticate");
 				return authentication;
 			}
 
 			String name = authentication.getName();
 			String password = authentication.getCredentials().toString();
+			System.out.println(name);
 
 			// Split the name using "-http"
 			String[] parts = name.split("-http");
-//			System.out.println(parts[0]);
 			// john.doe@example.com
-			
-//			System.out.println(parts[1]);
-			// ://localhost:8081/seller/login?error
+
 
 			// Check if there is a second part
 			if (parts.length < 2) {
@@ -187,15 +207,10 @@ public class MultiSecurityConfiguration {
 			// The second part is the true name
 			String trueName = parts[0];
 
-//			System.out.println(trueName);
-//			System.out.println(password);
 
-			
-			
 			if (parts[1].contains("seller")) {
 				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
-				System.out.println("GossipAuthenticationProvider" + sellerVO);
 				// Check if the sellerVO is not null and the password matches
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
@@ -218,19 +233,42 @@ public class MultiSecurityConfiguration {
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
 							break;
 						}
-						
-						return new UsernamePasswordAuthenticationToken(sellerVO, password,
-								authorities);
+
+						return new UsernamePasswordAuthenticationToken(sellerVO, password, authorities);
 					} else {
 						throw new BadCredentialsException("密碼輸入有誤");
 					}
 				} else {
-					throw new UsernameNotFoundException("帳號輸入有誤");
+					throw new UsernameNotFoundException("沒有此帳戶");
 				}
-			} else {
-				// Handle other cases or throw an exception for unsupported users
-				throw new UsernameNotFoundException("沒有此帳戶");
 			}
+			
+			
+			if (parts[1].contains("back/api")) {
+				ManagerVO managerVO = managerSvc.findByOnlyOneEmail(trueName);
+				
+				if(managerVO == null) {
+					throw new UsernameNotFoundException("沒有此帳戶");
+				}
+				
+//				System.out.println(password);
+//				System.out.println(managerVO.getManagerPassword());
+//				
+//				System.out.println(managerPasswordEncoder.matches(password,  managerVO.getManagerPassword()));
+				if (!managerPasswordEncoder.matches(password,  managerVO.getManagerPassword())) {
+					throw new BadCredentialsException("密碼輸入有誤");
+				}
+				
+				List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+				authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+		        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(managerVO, password, authorities);
+		        SecurityContextHolder.getContext().setAuthentication(authToken);
+				return authToken;
+				 
+			}
+
+			throw new UsernameNotFoundException("路徑錯誤");
+
 		}
 
 		@Override
