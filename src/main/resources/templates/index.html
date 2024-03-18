@@ -74,18 +74,19 @@
 					<div id="subImageCarousel2" class="carousel slide mt-3 w-100" data-bs-ride="carousel">
 						<div class="carousel-inner">
 							<!-- Loop through additional sub images -->
-							<div class="carousel-item active">
+							<div class="carousel-item active" th:each="adVO :${adhomePageUsed}">
 								<div class="subimage-custom w-100">
-									<img class="img-fluid max-width-md img-md-sub" src="https://fakeimg.pl/800x230"
-										alt="" />
+									<img class="img-fluid max-width-md img-md-sub"
+										th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}" alt=""
+										style="width: 330px; height: 95px;" />
 								</div>
 							</div>
-							<div class="carousel-item">
-								<div class="subimage-custom w-100">
-									<img class="img-fluid max-width-md img-md-sub" src="https://fakeimg.pl/800x230"
-										alt="" />
-								</div>
-							</div>
+<!-- 							<div class="carousel-item"> -->
+<!-- 								<div class="subimage-custom w-100"> -->
+<!-- 									<img class="img-fluid max-width-md img-md-sub" src="https://fakeimg.pl/800x230" -->
+<!-- 										alt="" /> -->
+<!-- 								</div> -->
+<!-- 							</div> -->
 							<!-- Additional subimage carousel items can be added here if needed -->
 						</div>
 						<button class="carousel-control-prev" type="button" data-bs-target="#subImageCarousel2"
@@ -116,13 +117,13 @@
 					th:each="productVO : ${allProductListData}">
 					<a th:href="'/product/' + ${productVO.productId}">
 						<div class="card product-card">
-							<div class="badge card-badge-custom">廣告</div>
-							<div class="card-status-custom">已售完</div>
+<!-- 							<div class="badge card-badge-custom">廣告</div> -->
+<!-- 							<div class="card-status-custom">已售完</div> -->
 							<img th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
-								class="card-img-top" alt="Product 1" />
+								class="card-img-top" alt="Product 1" style="max-width: 300px; max-height: 300px;"/>
 							<div class="card-body d-flex flex-column justify-content-between">
-								<h3 class="card-text" th:text="${productVO.productName}"></h3>
-								<p class="card-text" th:text="${productVO.productDetails}">
+								<h7 class="card-text" th:text="${productVO.productName}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h7>
+								<p class="card-text" th:text="${productVO.productDetails}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 
 								</p>
 								<h5 class="price-tag">

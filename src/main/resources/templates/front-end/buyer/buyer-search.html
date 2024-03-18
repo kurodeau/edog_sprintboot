@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
+	<th:block th:insert="~{/fragment-head}"></th:block>
 </head>
 
 <body>
 	<header th:replace="~{/fragment-headerV2}"></header>
-
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
 
@@ -23,14 +22,14 @@
 					th:each="productVO : ${productIdList}">
 					<a th:href="'/product/' + ${productVO.productId}">
 						<div class="card product-card">
-							<div class="badge card-badge-custom">廣告</div>
-							<div class="card-status-custom">已售完</div>
+<!-- 							<div class="badge card-badge-custom">廣告</div> -->
+<!-- 							<div class="card-status-custom">已售完</div> -->
 							<img
 								th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 								class="card-img-top" alt="Product 1" />
 							<div class="card-body d-flex flex-column justify-content-between">
-								<h3 class="card-text" th:text="${productVO.productName}"></h3>
-								<p class="card-text" th:text=${productVO.productDetails}></p>
+								<h7 class="card-text" th:text="${productVO.productName}" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h7>
+								<p class="card-text" th:text=${productVO.productDetails} style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></p>
 								<h5 class="price-tag">
 									$ <span th:text=${productVO.price}></span>
 								</h5>
