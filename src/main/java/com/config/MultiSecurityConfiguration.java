@@ -184,22 +184,17 @@ public class MultiSecurityConfiguration {
 
 		public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+			
 			if (authentication != null && authentication.isAuthenticated()) {
-				// 如果已經驗證
-//				System.out.println("GossipAuthenticationProvider-authenticate");
+				// 如果已存在secCtx(買家) 返回
 				return authentication;
 			}
 
 			String name = authentication.getName();
 			String password = authentication.getCredentials().toString();
-			System.out.println(name);
 
-			// Split the name using "-http"
+			// dasd@gmail.com-http://seller/login
 			String[] parts = name.split("-http");
-			// john.doe@example.com
-
-
-			// Check if there is a second part
 			if (parts.length < 2) {
 				throw new UsernameNotFoundException("Invalid Input");
 			}
@@ -209,9 +204,7 @@ public class MultiSecurityConfiguration {
 
 
 			if (parts[1].contains("seller")) {
-				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
-				// Check if the sellerVO is not null and the password matches
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
 						throw new BadCredentialsException("帳戶尚未被啟用，請於信箱收信");
@@ -219,7 +212,9 @@ public class MultiSecurityConfiguration {
 
 					if (sellerPasswordEncoder.matches(password, sellerVO.getSellerPassword())) {
 						List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+						
 						switch (sellerVO.getSellerLvId().getSellerLvId()) {
+						
 						case 1:
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
@@ -233,7 +228,6 @@ public class MultiSecurityConfiguration {
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
 							break;
 						}
-
 						return new UsernamePasswordAuthenticationToken(sellerVO, password, authorities);
 					} else {
 						throw new BadCredentialsException("密碼輸入有誤");
@@ -242,31 +236,26 @@ public class MultiSecurityConfiguration {
 					throw new UsernameNotFoundException("沒有此帳戶");
 				}
 			}
+
 			
-			
-			if (parts[1].contains("back/api")) {
+
+			if (parts[1].contains("back") && parts[1].contains("auth/authenticate")) {
 				ManagerVO managerVO = managerSvc.findByOnlyOneEmail(trueName);
-				
+
 				if(managerVO == null) {
 					throw new UsernameNotFoundException("沒有此帳戶");
 				}
-				
-//				System.out.println(password);
-//				System.out.println(managerVO.getManagerPassword());
-//				
-//				System.out.println(managerPasswordEncoder.matches(password,  managerVO.getManagerPassword()));
+								
 				if (!managerPasswordEncoder.matches(password,  managerVO.getManagerPassword())) {
 					throw new BadCredentialsException("密碼輸入有誤");
 				}
 				
 				List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 				authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-		        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(managerVO, password, authorities);
-		        SecurityContextHolder.getContext().setAuthentication(authToken);
-				return authToken;
-				 
-			}
 
+				return new UsernamePasswordAuthenticationToken(managerVO, password, authorities);
+			}
+			
 			throw new UsernameNotFoundException("路徑錯誤");
 
 		}

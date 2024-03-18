@@ -1,26 +1,30 @@
 package com.config;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.List;
 
 public class TokenDTO {
     private Integer id;
-    private String token;
-    private String userType;
+    private List<String> authorities;
+    private String sub;
+    private Long iat;
+    private Long exp;
 
-  
+    // Constructor
+    public TokenDTO(Integer id, List<String> authorities, String sub, Long iat, Long exp) {
+        this.id = id;
+        this.authorities = authorities;
+        this.sub = sub;
+        this.iat = iat;
+        this.exp = exp;
+    }
+
     public TokenDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public TokenDTO(Integer id, String token, String userType) {
-		super();
-		this.id = id;
-		this.token = token;
-		this.userType = userType;
-	}
-
-	public Integer getId() {
+	// Getter and Setter methods
+    public Integer getId() {
         return id;
     }
 
@@ -28,45 +32,73 @@ public class TokenDTO {
         this.id = id;
     }
 
-    public String getToken() {
-        return token;
+    public List<String> getAuthorities() {
+        return authorities;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
     }
 
-    public String getUserType() {
-        return userType;
+    public String getSub() {
+        return sub;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 
-    // Builder class
+    public Long getIat() {
+        return iat;
+    }
+
+    public void setIat(Long iat) {
+        this.iat = iat;
+    }
+
+    public Long getExp() {
+        return exp;
+    }
+
+    public void setExp(Long exp) {
+        this.exp = exp;
+    }
+
+    // Builder pattern
     public static class Builder {
         private Integer id;
-        private String token;
-        private String userType;
+        private List<String> authorities;
+        private String sub;
+        private Long iat;
+        private Long exp;
 
         public Builder id(Integer id) {
             this.id = id;
             return this;
         }
-        
-        public Builder token(String token) {
-            this.token = token;
+
+        public Builder authorities(List<String> authorities) {
+            this.authorities = authorities;
             return this;
         }
 
-        public Builder userType(String userType) {
-            this.userType = userType;
+        public Builder sub(String sub) {
+            this.sub = sub;
+            return this;
+        }
+
+        public Builder iat(Long iat) {
+            this.iat = iat;
+            return this;
+        }
+
+        public Builder exp(Long exp) {
+            this.exp = exp;
             return this;
         }
 
         public TokenDTO build() {
-            return new TokenDTO(id, token, userType);
+            return new TokenDTO(id, authorities, sub, iat, exp);
         }
     }
 }

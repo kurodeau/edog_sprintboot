@@ -16,7 +16,7 @@ public class ManagerRequestMatcher implements RequestMatcher {
 
     public ManagerRequestMatcher() {
         this.getMatcher = new AntPathRequestMatcher("/back/seller/**", HttpMethod.GET.name());
-        this.postMatcher = new AntPathRequestMatcher("/back/seller/**", HttpMethod.POST.name());
+        this.postMatcher = new AntPathRequestMatcher("/back/api/seller/**", HttpMethod.POST.name());
     }
 
     @Override

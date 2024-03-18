@@ -72,6 +72,7 @@ public class MultiFilterConfig {
         return  new JwtAuthenticationFilter( jwtservice,
     			userDetailsService,
     			tokenRepository(),
-    			managerRequestMatcher);
+    			managerRequestMatcher,
+    			managerSvc);
     }
 }

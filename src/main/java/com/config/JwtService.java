@@ -24,6 +24,9 @@ public class JwtService {
 	private String secretKey;
 	@Value("${application.security.jwt.expiration}")
 	private long jwtExpiration;
+	
+	@Value("${application.security.jwt.short.expiration}")
+	private long jwtShortExpiration;
 	@Value("${application.security.jwt.refresh-token.expiration}")
 	private long refreshExpiration;
 
@@ -32,6 +35,22 @@ public class JwtService {
 		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		// 使用 Keys 工具類將 byte 陣列轉換為 HmacSha 類型的簽名金鑰
 		return Keys.hmacShaKeyFor(keyBytes);
+	}
+
+	private Date convertUnixTimestampToDate(long unixTimestamp) {
+		return new Date(unixTimestamp * 1000); // 轉換為毫秒
+	}
+
+	// 這個方法用於從JWT中提取發行時間
+	public Date extractIssuedAt(String token) {
+		// 使用 extractClaim 方法提取JWT中的發行時間聲明（iat）
+		return convertUnixTimestampToDate(extractClaim(token, Claims::getIssuedAt).getTime() / 1000);
+	}
+
+	// 這個方法用於從JWT中提取到期時間
+	public Date extractExpirationDate(String token) {
+		// 使用 extractClaim 方法提取JWT中的到期時間聲明（exp）
+		return convertUnixTimestampToDate(extractClaim(token, Claims::getExpiration).getTime() / 1000);
 	}
 
 	// 這是一個私有方法，用於從 JWT 中提取所有聲明
@@ -66,18 +85,56 @@ public class JwtService {
 		// Claims 代表了 JWT 的聲明部分，而 getSubject 方法用於獲取
 		// JWT 的主體聲明（Subject），即表示 JWT 中包含的使用者名稱
 	}
-	
-	
+
+	public Integer extractId(String token) {
+		final Claims claims = extractAllClaims(token);
+
+		Integer id = claims.get("id", Integer.class);
+
+		return id;
+	}
+
 	public List<String> extractRoles(String token) {
+	    // 從JWT中提取所有聲明
 	    final Claims claims = extractAllClaims(token);
-	    
-	    List<Map<String, String>> authorities = (List<Map<String, String>>) claims.get("authorities");
-	    
-	    List<String> roles = authorities.stream()
-	            .map(authority -> authority.get("authority"))
-	            .collect(Collectors.toList());
-	    
-	    return roles;
+
+	    // 從聲明中獲取"authorities"聲明
+	    List<String> authorities = (List<String>) claims.get("authorities");
+
+	    return authorities;
+	}
+	
+	
+	// 生成帶有額外聲明的 JWT
+	public String generateShortToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+		// 調用 buildToken 方法來生成 JWT
+		return buildTokenWithShort(extraClaims, userDetails, jwtExpiration);
+	}
+	
+	
+	private String buildTokenWithShort(
+			// 額外的聲明，可以包含除了預設聲明之外的其他聲明
+			Map<String, Object> extraClaims,
+			// 使用者詳細資訊，通常用於設置 JWT 的主體（Subject）
+			UserDetails userDetails,
+			// JWT 的過期時間，以毫秒為單位
+			long expiration) {
+		// 使用 Jwts 建構 JWT
+		String a = Jwts.builder()
+				// 設置 JWT 的聲明，包括額外的聲明、主體、發行時間和到期時間
+				// 設置額外的聲明，這些聲明可以包含除了預設聲明之外的其他信息
+				.setClaims(extraClaims)
+				// 設置 JWT 的主體，通常是使用者名稱
+				.setSubject(userDetails.getUsername())
+				// 設置 JWT 的發行時間為當前時間
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				// 設置 JWT 的到期時間
+				.setExpiration(new Date(System.currentTimeMillis() + jwtShortExpiration))
+				// 使用指定的簽名密鑰進行簽署，使用 HS256 簽名算法
+				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
+				// 獲取最終的 JWT 字串表示形式
+				.compact();
+		return a;
 	}
 
 	// 這是一個私有方法，用於構建 JWT
@@ -89,7 +146,7 @@ public class JwtService {
 			// JWT 的過期時間，以毫秒為單位
 			long expiration) {
 		// 使用 Jwts 建構 JWT
-		 String a =Jwts.builder()
+		String a = Jwts.builder()
 				// 設置 JWT 的聲明，包括額外的聲明、主體、發行時間和到期時間
 				// 設置額外的聲明，這些聲明可以包含除了預設聲明之外的其他信息
 				.setClaims(extraClaims)
@@ -103,9 +160,7 @@ public class JwtService {
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256)
 				// 獲取最終的 JWT 字串表示形式
 				.compact();
-		 System.out.println(a);
-		 
-		 return a;
+		return a;
 	}
 
 	// 生成帶有額外聲明的 JWT

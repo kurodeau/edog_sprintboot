@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -63,61 +65,89 @@ public class AuthenticationService {
 		Integer id = managerService.addManager(managerVO);
 		var jwtToken = jwtService.generateToken(userdetails);
 		var refreshToken = jwtService.generateRefreshToken(userdetails);
-		saveUserToken(id, jwtToken);
+		saveUserToken(managerVO, jwtToken ,List.of("ROLE_MANAGER"));
 		return new AuthenticationResponse.Builder().accessToken(jwtToken).refreshToken(refreshToken).build();
 	}
 
-	private void saveUserToken(Integer id, String jwtToken) {
-		TokenDTO token = new TokenDTO.Builder().id(id).token(jwtToken).userType("MANAGER").build();
-		tokenRepository.saveToken("managerId:" + id, token, jwtExpiration);
+	private void saveUserToken(ManagerVO managerVO, String jwtToken , List<String> authorities) {
+		
+		
+				
+				
+		  TokenDTO token = new TokenDTO.Builder()
+                  .id(managerVO.getManagerId())
+                  .authorities(authorities)
+                  .sub(managerVO.getManagerEmail())
+                  .exp(jwtService.extractExpirationDate(jwtToken).getTime())
+                  .iat(jwtService.extractIssuedAt(jwtToken).getTime())
+                  .build();		
+		  
+		  tokenRepository.saveToken("managerId:" + managerVO.getManagerId(), token, jwtExpiration);
 	}
 
 	public AuthenticationResponse authenticate(AuthenticationRequest request) {
+	    Authentication auth = null;
+	    
+	    try {
+	        auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+	    } catch (Exception e) {
+	        return new AuthenticationResponse.Builder().accessToken(e.getMessage()).build();
+	    }
 
-		try {
-			authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+	    ManagerVO managerVO = (ManagerVO) auth.getPrincipal();
+	    String encodedPassword = managerPasswordEncoder.encode(managerVO.getManagerPassword());
+	    Integer rolesNo = managerVO.getManagerPer();
+	    
+	    List<String> authorities = new ArrayList<>();
+	    authorities.add("ROLE_MANAGER");
+	    if (rolesNo == 10) {
+	        authorities.add("ROLE_MANAGERJWT");
+	    } else if (rolesNo == 20){
+	        authorities.add("ROLE_MANAGERJWTV2");
+	    }
+	    
+	    // 生成JWT令牌
+	    Map<String, Object> extraClaims = new HashMap<>();
+	    extraClaims.put("authorities", authorities);
+	    extraClaims.put("id", managerVO.getManagerId());
+	    UserDetails userDetails = User.builder()
+	            .username(managerVO.getManagerEmail())
+	            .password(encodedPassword)
+	            .authorities(authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()))
+	            .build();
+	    
+	    String jwtToken  = null;
+	    if (authorities.contains("ROLE_MANAGERJWTV2")) {
+		     jwtToken = jwtService.generateShortToken(extraClaims, userDetails);
+	    } else {
+		     jwtToken = jwtService.generateToken(extraClaims, userDetails);
 
-		} catch (Exception e) {
-			return new AuthenticationResponse.Builder().accessToken(e.getMessage()).build();
-		}
+	    }
+	    
+	    
+	    
+	    // 生成刷新令牌
+	    String refreshToken = jwtService.generateRefreshToken(userDetails);
 
-		String trueEmail = request.getEmail().split("-http")[0];
-		ManagerVO managerVO = managerService.findByOnlyOneEmail(trueEmail);
+	    // 將JWT令牌和刷新令牌存儲到數據庫中
+	    revokeUserToken(userDetails, managerVO.getManagerId());
+	    saveUserToken(managerVO, jwtToken,authorities);
+	    Optional<TokenDTO> tokenDto =tokenRepository.findToken("managerId:"+managerVO.getManagerId());
+	    
+//	   if( tokenDto.isPresent()) {
+//		    TokenDTO token = tokenDto.get();
+//
+//		   System.out.println(token.getSub());
+//	   }
+	    // 設置身份驗證上下文
+	    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(managerVO, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+	    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-		
-		String encodedPassword = managerPasswordEncoder.encode(managerVO.getManagerPassword());
-		Integer rolesNo = managerVO.getManagerPer();
-		
-		
-		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-		if (rolesNo == 10) {
-			authorities.add(new SimpleGrantedAuthority("ROLE_MANAGERJWT"));
-		}
-		UserDetails userdetails = User.builder().username(managerVO.getManagerEmail()).password(encodedPassword)
-				.authorities(authorities).build();
-		managerVO.setManagerPassword(encodedPassword);
-
-		Map<String, Object> extraClaims = new HashMap<>();
-		extraClaims.put("authorities", authorities);
-
-
-		String jwtToken = jwtService.generateToken(extraClaims, userdetails);
-		
-		String refreshToken = jwtService.generateRefreshToken(userdetails);
-
-
-		revokeUserToken(userdetails, managerVO.getManagerId());
-		saveUserToken(managerVO.getManagerId(), jwtToken);
-		
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(managerVO, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        
-		return new AuthenticationResponse.Builder().accessToken(jwtToken).refreshToken(refreshToken).build();
-
+	    
+	    // 返回身份驗證響應
+	    return new AuthenticationResponse.Builder().accessToken(jwtToken).refreshToken(refreshToken).build();
 	}
+
 
 	private void revokeUserToken(UserDetails userdetails, Integer id) {
 
@@ -153,7 +183,7 @@ public class AuthenticationService {
 		if (jwtService.isTokenValid(refreshToken, userdetails)) {
 			var accessToken = jwtService.generateToken(userdetails);
 			revokeUserToken(userdetails, managerVO.getManagerId());
-			saveUserToken(managerVO.getManagerId(), accessToken);
+			saveUserToken(managerVO, accessToken ,List.of("ROLE_MANAGER"));
 
 			// 構建新的身份驗證響應
 

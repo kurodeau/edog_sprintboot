@@ -39,69 +39,59 @@
                       <p class="text-center small"></p>
                     </div>
 
-                    <form
-                      class="row g-3 needs-validation"
-                      novalidate
-                      id="loginForm"
-                    >
-                      <div class="col-12">
-                        <label for="yourUsername" class="form-label"
-                          >使用者名稱</label
-                        >
-                        <div class="input-group has-validation">
-                          <!--
+                    <div class="col-12">
+                      <label for="yourUsername" class="form-label"
+                        >使用者名稱</label
+                      >
+                      <div class="input-group has-validation">
+                        <!--
                         <span class="input-group-text" id="inputGroupPrepend">@</span> -->
-                          <input
-                            type="text"
-                            name="email"
-                            class="form-control"
-                            id="yourUsername"
-                            required
-                          />
-                          <div class="invalid-feedback">
-                            請輸入後臺管理者名稱
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <label for="yourPassword" class="form-label"
-                          >密碼</label
-                        >
                         <input
-                          type="password"
-                          name="password"
+                          type="text"
+                          name="email"
                           class="form-control"
-                          id="yourPassword"
+                          id="yourUsername"
                           required
                         />
-                        <div class="invalid-feedback">請輸入後臺管理者密碼</div>
+                        <div class="invalid-feedback">請輸入後臺管理者名稱</div>
                       </div>
+                    </div>
 
-                      <div class="col-12">
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="remember"
-                            value="true"
-                            id="rememberMe"
-                          />
-                          <label class="form-check-label" for="rememberMe"
-                            >記住登入資訊</label
-                          >
-                        </div>
-                      </div>
-                      <div class="col-12">
-                        <button
-                          class="btn btn-primary w-100"
-                          type="submit"
-                          style="background-color: var(--admin-red_tint)"
+                    <div class="col-12">
+                      <label for="yourPassword" class="form-label">密碼</label>
+                      <input
+                        type="password"
+                        name="password"
+                        class="form-control"
+                        id="yourPassword"
+                        required
+                      />
+                      <div class="invalid-feedback">請輸入後臺管理者密碼</div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="remember"
+                          value="true"
+                          id="rememberMe"
+                        />
+                        <label class="form-check-label" for="rememberMe"
+                          >記住登入資訊</label
                         >
-                          登入
-                        </button>
                       </div>
-                    </form>
+                    </div>
+                    <div class="col-12">
+                      <button
+                        class="btn btn-primary w-100 loginBtn"
+                        type="submit"
+                        style="background-color: var(--admin-red_tint)"
+                      >
+                        登入
+                      </button>
+                    </div>
                     <div class="for-room" style="height: 30px"></div>
                   </div>
                 </div>
@@ -125,8 +115,8 @@
 
     <script>
       document
-        .getElementById("loginForm")
-        .addEventListener("submit", function (event) {
+        .querySelector(".loginBtn")
+        .addEventListener("click", function (event) {
           event.preventDefault();
 
           let url =
@@ -136,6 +126,8 @@
             ":" +
             window.location.port +
             "/back/api/v1/auth/authenticate";
+
+          alert(url);
 
           let email = document.getElementById("yourUsername").value;
           let password = document.getElementById("yourPassword").value;

@@ -59,9 +59,9 @@ public class BuyerAuthenticationFilter extends AbstractAuthenticationProcessingF
 
 			BuyerVO buyerVO = buyerSvc.findByOnlyOneEmail(username);
 
-			System.out.println(buyerSvc);
-			System.out.println(buyerPasswordEncoder);
-			System.out.println(buyerVO);
+//			System.out.println(buyerSvc);
+//			System.out.println(buyerPasswordEncoder);
+//			System.out.println(buyerVO);
 
 			if (username == null || username.isEmpty()) {
 				throw new UsernameNotFoundException("請輸入用戶名");
@@ -80,7 +80,6 @@ public class BuyerAuthenticationFilter extends AbstractAuthenticationProcessingF
 			SecurityContextHolder.getContext().setAuthentication(
 	                new UsernamePasswordAuthenticationToken(buyerVO, null, authenticationResult.getAuthorities()));
 			
-//			System.out.println("BuyerAuthenticationFilter"+"買家認證成功");
 			return authenticationResult;
 
 		}
@@ -97,13 +96,12 @@ public class BuyerAuthenticationFilter extends AbstractAuthenticationProcessingF
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		System.out.println("BuyerAuthenticationFilter"+"買家認證成功" +"successfulAuthentication");
 
 		List<String> roles = authResult.getAuthorities().stream().map(authority -> authority.getAuthority())
 				.collect(Collectors.toList());
+		
 		HttpSession session = request.getSession();
 		session.setAttribute("username", obtainUsername(request));
-		session.setAttribute("roles", roles);
 		
 		
 		chain.doFilter(request, response);
