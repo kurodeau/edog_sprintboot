@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.article.entity.ArticleVO;
@@ -24,7 +25,8 @@ public interface ArticleRepository extends JpaRepository<ArticleVO, Integer> {
 	
 	List<ArticleVO> findByBuyerVO(BuyerVO buyerVO);
 	
-	List<ArticleVO> findByArticleTitleContaining(String articleTitle);
+	 @Query("SELECT a FROM ArticleVO a WHERE a.articleTitle LIKE %:searchText%")
+	    List<ArticleVO> searchArticles(@Param("searchText") String searchText);
 
 
 

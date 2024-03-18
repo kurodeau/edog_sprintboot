@@ -65,28 +65,7 @@ public class ReplyController {
 		
 	}
 
-	/*
-	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
-	 */
-//	@PostMapping("insert")
-//	public void insert(@Valid ReplyVO replyVO, BindingResult result, @RequestParam("articleId") String articleId, 
-//	                   HttpServletRequest request, HttpServletResponse response) 
-//	        throws IOException {
-//	    ArticleVO articleVO = new ArticleVO();
-//	    articleVO.setArticleId(Integer.valueOf(articleId));
-//	    BuyerVO buyerVO = new BuyerVO();
-//	    buyerVO.setMemberId(1);
-//	    /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-//	    replyVO.setReplyTime(new Date());
-//	    replyVO.setReplyLike(0);
-//	    replyVO.setIsEnabled(true);
-//	    
-//	    /*************************** 2.開始新增資料 *****************************************/
-//	    replySvc.addReply(replyVO);
-//	    /*************************** 3.新增完成,準備轉交(Send the Success view) **************/
-//	    // 重定向到当前页面
-//	    response.sendRedirect(request.getRequestURI());
-//	}
+
 	@PostMapping("/insert")
     public ResponseEntity<String> insertReply(@RequestParam("commentContent") String commentContent,
                                               @RequestParam("articleId") String articleId) {
@@ -95,14 +74,12 @@ public class ReplyController {
 			 Authentication authentication = secCtx.getAuthentication();
 			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			 Integer memberId = buyerVO.getMemberId();
-			 System.out.println(memberId);
-			 System.out.println(Integer.valueOf(articleId));
             // 创建一个新的回复对象
             ReplyVO replyVO = new ReplyVO();
-            ArticleVO articleVO = new ArticleVO();
-//            int comment = articleVO.getArticleComment();
-//            articleVO.setArticleComment(comment+1);
-            articleVO.setArticleId(Integer.valueOf(articleId));
+            ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
+            articleVO.setArticleComment(articleVO.getArticleComment()+1);
+            articleSvc.updateArticle(articleVO);
+
             replyVO.setReplyContent(commentContent);
             replyVO.setReplyTime(new Date());
             replyVO.setArticleVO(articleVO);
@@ -115,7 +92,7 @@ public class ReplyController {
             replySvc.addReply(replyVO);
             MsgVO msgVO = new MsgVO();
 	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        msgVO.setBuyerVO(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(2);
 	        msgVO.setMsgTypeVO(msgTypeVO);
@@ -202,7 +179,7 @@ public class ReplyController {
 	    	replySvc.updateReply(replyVO); // 更新文章信息到数据库
 	    	MsgVO msgVO = new MsgVO();
 	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(buyerVO);
+	        msgVO.setBuyerVO(replyVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(3);
 	        msgVO.setMsgTypeVO(msgTypeVO);

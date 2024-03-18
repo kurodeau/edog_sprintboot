@@ -204,9 +204,7 @@ public class ArticleController {
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
 		 System.out.println(memberId);
-//		 BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
 		 model.addAttribute("buyerVO", buyerVO);
-		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(articleVO, result, "upFiles");
 		articleVO.setArtCreateTime(new Date());
 		articleVO.setArtUpdateTime(null);
@@ -241,7 +239,9 @@ public class ArticleController {
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
 		 System.out.println(memberId);
-		 reportVO.setBuyerVO(buyerVO);
+		 Integer replyId = reportVO.getReplyVO().getReplyId();
+		 ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId));
+		 reportVO.setBuyerVO(replyVO.getBuyerVO());
 		 model.addAttribute("buyerVO", buyerVO);
 		reportVO.setReportTargetType(1);
 		reportVO.setArticleVO(null);
@@ -265,7 +265,9 @@ public class ArticleController {
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
 		 System.out.println(memberId);
-		 reportVO.setBuyerVO(buyerVO);
+		 Integer articleId = reportVO.getArticleVO().getArticleId();
+		 ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
+		 reportVO.setBuyerVO(articleVO.getBuyerVO());
 		 model.addAttribute("buyerVO", buyerVO);
 		reportVO.setReportTargetType(0);
 		reportVO.setReplyVO(null);
@@ -354,7 +356,7 @@ public class ArticleController {
 	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
 	        MsgVO msgVO = new MsgVO();
 	        msgVO.setArticleVO(articleVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(buyerVO);
+	        msgVO.setBuyerVO(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(1);
 	        msgVO.setMsgTypeVO(msgTypeVO);
