@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS product (
     price INT,
     productStockQuantity INT,
     productSoldQuantity INT DEFAULT 0,
-    productDetails VARCHAR(100),
+    productDetails VARCHAR(500),
     productStatus VARCHAR(10),
     productCreationTime DATETIME DEFAULT CURRENT_TIMESTAMP,
     animalType VARCHAR(10),
