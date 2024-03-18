@@ -28,38 +28,23 @@ public class SellerAuthenticationSuccessHandler implements AuthenticationSuccess
 			Authentication authentication) throws IOException, ServletException {
 
 		// (1) SellerVOToSecurityContext去取的用戶資訊
+		// No need beacause we have Stored UserAuth in (MultiSecurityConfiguration -- GossipAuthenticationProvider)
 		// 在這裡獲取登入成功的使用者資訊，例如 SellerVO
-		String sellerEmail = getLoggedInSellerVO(authentication);
-
-		SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(sellerEmail);
-
-		// 將 SellerVO 存儲在安全上下文中
-		setSellerVOToSecurityContext(sellerVO, authentication);
+//		String sellerEmail = getLoggedInSellerVO(authentication);
+//
+//		SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(sellerEmail);
+//
+//		// 將 SellerVO 存儲在安全上下文中
+//		setSellerVOToSecurityContext(sellerVO, authentication);
 
 		
 		// (2) HttpSession去取的用戶資訊
 		HttpSession session = request.getSession();
-		session.setAttribute("sellerVO", sellerVO);
+		session.setAttribute("sellerVO", authentication.getPrincipal());
 		
 		// 這裡可以進行其他登入成功後的處理，例如重定向等
 		response.sendRedirect("/front/seller/main");
 	}
 
-	private String getLoggedInSellerVO(Authentication authentication) {
-		// 根據你的 Authentication 實現方式獲取 SellerVO
-		// 這裡只是一個示例，實際情況可能需要根據你的應用程式進行修改
-
-		String userEmail;
-
-		userEmail = authentication.getName();
-		return userEmail;
-	}
-
-	private void setSellerVOToSecurityContext(SellerVO sellerVO, Authentication authentication) {
-		// 在這裡將 SellerVO 存儲在安全上下文中
-		// 這裡只是一個示例，實際情況可能需要根據你的應用程式進行修改
-
-		SecurityContextHolder.getContext().setAuthentication(
-				new UsernamePasswordAuthenticationToken(sellerVO, null, authentication.getAuthorities()));
-	}
+	
 }

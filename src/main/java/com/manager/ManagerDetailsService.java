@@ -41,8 +41,6 @@ public class ManagerDetailsService  implements UserDetailsService {
 		managerVO.setManagerEmail(user.getUsername());
 //		buyerVO.setMemberPassword( buyerPasswordEncoder.encode(buyerVO.getMemberPassword())); //原本是這個, 怪怪的
 		managerVO.setManagerPassword( managerPasswordEncoder.encode(user.getPassword()));
-		managerVO.setIsConfirm(true);
-
 		
 		managerRepo.save(managerVO);
 	}
@@ -67,31 +65,13 @@ public class ManagerDetailsService  implements UserDetailsService {
 	}
 
 
-//	@Override
-//	public void changePassword(String oldPassword, String newPassword) {
-//		
-//		
-//	}
-	
-//	@Override
-//	public boolean userExists(String username) {
-//		BuyerVO targetUser = buyerRepo.findByEmail(username);
-//		return targetUser != null;
-//	}
-	
-	
-	@Override
-	// UserDetailsService 用於獲取用戶名，用來從DB中獲取User對象，並驗證用戶
-	// 在UsernamePasswordAutheniticationFilter過濾器 AttemptAutheniciation方法中
-	// 把用戶輸入的密碼和SQL中或的密名進行驗證
+
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		
 //		SellerVO targetUser =  sellerRepo.findByEmail(username);
 		ManagerVO targetUser =  managerRepo.findByOnlyOneEmail(username);
-		
-		
-		
+	
 		
 		
 		
@@ -116,7 +96,7 @@ public class ManagerDetailsService  implements UserDetailsService {
 			return new org.springframework.security.core.userdetails.User(
 				    targetUser.getManagerEmail(),
 				    targetUser.getManagerPassword(),
-				    targetUser.getIsConfirm(),  // 用户启用状态
+				    true,  // 用户启用状态
 				    true,  // 用戶帳號是否過期
 				    true,  // 用戶憑證是否過期
 				    true,  // 用戶是否未被鎖定
