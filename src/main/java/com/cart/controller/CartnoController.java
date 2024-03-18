@@ -180,7 +180,7 @@ public class CartnoController extends HttpServlet {
             return ResponseEntity.badRequest().body(result);
         }
         String productId = jsonObject.getString("productId");
-        String productNum = jsonObject.getString("productNum");
+        String productNum = jsonObject.getString("productQty");
 //        System.out.println("測試訊息:productId="+productId+" ,productNum="+productNum);
         
         String memberId = "9"; //測試有登入, 預設值
