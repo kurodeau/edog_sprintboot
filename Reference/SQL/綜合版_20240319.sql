@@ -401,8 +401,8 @@ msgTypeContent varchar(100)
 -- 通知  創建table-- 
 create table IF NOT EXISTS msg(
 msgId int primary key AUTO_INCREMENT,
-senderMemberId int,
-receiverMemberId int,
+memberId int,
+foreign key(memberId) references buyer(memberId),
 articleId int,
 foreign key(articleId) references article(articleId),
 replyId int,
@@ -415,9 +415,7 @@ msgTypeId int,
 foreign key(msgTypeId) references msgType(msgTypeId),
 msgTime datetime DEFAULT CURRENT_TIMESTAMP,
 isRead boolean,
-isEnabled boolean,
-CONSTRAINT fk_member_sender FOREIGN KEY (senderMemberId) REFERENCES buyer(memberId),
-CONSTRAINT fk_member_receiver FOREIGN KEY (receiverMemberId) REFERENCES buyer(memberId)
+isEnabled boolean
 );
 
 
@@ -558,16 +556,12 @@ VALUES
   -- 跑馬燈  放入測試資料-- 
 INSERT INTO newsTicker (newsTickerContent, sort, startTime, endTime, isDisplay)
 VALUES 
-  ('時間內正常顯示', 1, NOW(), DATE('2024-12-13 00:00:00'), true),
-  ('時間內但不顯示', 2, NOW(), DATE('2024-12-13 00:00:00'), false),
-  ('時間已經過了不會看到', 3, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), true),
-  ('時間不會到,不會看到', 4, DATE('2024-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true),
-  ('時間內正常顯示,但id5排序10', 10, NOW(), DATE('2024-12-13 00:00:00'), true),
-  ('Maintenance Alert: System Upgrade', 6, NOW(), DATE_ADD(NOW(), INTERVAL 10 DAY), true),
-  ('Employee of the Month: John Doe', 7, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), true),
-  ('Limited-time Offer: Free Shipping', 8, NOW(), DATE_ADD(NOW(), INTERVAL 20 DAY), true),
-  ('Community Event: Charity Run', 9, NOW(), DATE_ADD(NOW(), INTERVAL 40 DAY), true),
-  ('時間內正常顯示,但id10排序5', 5, NOW(), DATE('2024-12-13 00:00:00'), true);
+  ('歡迎來到EDOG,毛小孩的快樂天堂', 1, NOW(), DATE('2024-12-13 00:00:00'), true),
+  ('這個不應該顯示', 2, NOW(), DATE('2024-12-13 00:00:00'), false),
+  ('最齊全的寵物百貨讓你逛到手軟', 3, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), false),
+  ('80年代主題風貓窩熱賣中', 3, DATE('2023-12-13 00:00:00'), DATE('2023-12-14 00:00:00'), true),
+  ('未來戰狗潔牙骨上架', 3, DATE('2025-12-13 00:00:00'), DATE('2025-12-14 00:00:00'), true),
+  ('罐罐坐飛機!!百種進口罐罐讓你花式養刁貓主子', 4, DATE('2023-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true);
   -- 匯款明細  放入測試資料-- 
 INSERT INTO remittance (
     sellerId,remittanceEstimatedTime,remittanceTime,settlementTime,
@@ -869,15 +863,16 @@ INSERT INTO msgType (msgTypeContent) VALUES
     ('留言檢舉');
     
 -- 通知  放入測試資料-- 
-INSERT INTO msg (receiverMemberId, senderMemberId, articleId, replyId, reportId, petdrawId, msgTypeId, msgTime, isRead, isEnabled) VALUES
-    (1, 2, 1, null, null, null, 1, '2024-03-14 08:00:00', FALSE, TRUE),
-    (2, 3, null, 2, null, null, 2, '2024-03-14 09:30:00', TRUE, TRUE),
-    (3, 4, null, 4, null, null, 3, '2024-03-14 10:45:00', FALSE, TRUE),
-    (4, 5, null, null, null, null, 4, '2024-03-14 11:20:00', TRUE, TRUE),
-    (5, null, null, null, 1, null, 5, '2024-03-14 13:00:00', TRUE, FALSE),
-    (1, null, null, null, 3, null, 6, '2024-03-14 14:15:00', FALSE, TRUE),
-    (2, 5, 2, null, null, null, 1, '2024-03-14 15:45:00', TRUE, TRUE),
-    (3, 4, null, 3, null, null, 2, '2024-03-14 16:30:00', FALSE, TRUE),
-    (4, 3, null, 4, null, null, 3, '2024-03-14 17:20:00', TRUE, TRUE),
-    (5, 2, null, null, null, null, 4, '2024-03-14 18:00:00', TRUE, FALSE);
+INSERT INTO msg (memberId, articleId, replyId, reportId, petdrawId, msgTypeId, msgTime, isRead, isEnabled) VALUES
+    (1, 1, null, null, null, 1, '2024-03-14 08:00:00', FALSE, TRUE),
+    (2, null, 2, null, null, 2, '2024-03-14 09:30:00', TRUE, TRUE),
+    (3, null, 4, null, null, 3, '2024-03-14 10:45:00', FALSE, TRUE),
+    (4, null, null, null, null, 4, '2024-03-14 11:20:00', TRUE, TRUE),
+    (5, null, null, 1, null, 5, '2024-03-14 13:00:00', TRUE, FALSE),
+    (1, null, null, 3, null, 6, '2024-03-14 14:15:00', FALSE, TRUE),
+    (2, 2, null, null, null, 1, '2024-03-14 15:45:00', TRUE, TRUE),
+    (3, null, 3, null, null, 2, '2024-03-14 16:30:00', FALSE, TRUE),
+    (4, null, 4, null, null, 3, '2024-03-14 17:20:00', TRUE, TRUE),
+    (5, null, null, null, null, 4, '2024-03-14 18:00:00', TRUE, FALSE);
+
 
