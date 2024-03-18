@@ -98,13 +98,13 @@ public class SellerProductOrderIdController {
 	@ModelAttribute("sellerProductOrderList") 
 	protected List<ProductOrderVO> sellerProductOrderList(Model model) {
 		
-		Integer sellerId =1;
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//		Integer sellerId =1;
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //        Integer sellerId = sellerVO.getSellerId();
 
-		List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.findBySellerId(sellerVO.getSellerId());
 		return list;
 	}
 	
@@ -112,14 +112,14 @@ public class SellerProductOrderIdController {
 	@ModelAttribute("sellerProductOrderPendingConfirm") 
 	protected List<ProductOrderVO> sellerProductOrderPendingConfirm( Model model) {
 		
-		Integer sellerId =1;
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//		Integer sellerId =1;
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //        Integer sellerId = sellerVO.getSellerId();
 		
 		
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderPendingConfirm(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderPendingConfirm(sellerVO.getSellerId());
 		return list;
 	}
 	
@@ -128,13 +128,13 @@ public class SellerProductOrderIdController {
 	protected List<ProductOrderVO> sellerProductOrderSellerProcessing( Model model) {
 //		
 		
-		Integer sellerId =1;
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//		Integer sellerId =1;
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //        Integer sellerId = sellerVO.getSellerId();
 		
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderSellerProcessing(sellerVO.getSellerId());
 		return list;
 	}
 	
@@ -143,16 +143,16 @@ public class SellerProductOrderIdController {
 	protected List<ProductOrderVO> getSellerProductOrderCompleted( Model model) {
 		
 		
-		Integer sellerId =1;
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//		Integer sellerId =1;
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //        Integer sellerId = sellerVO.getSellerId();
 		
 		
 		
 		
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCompleted(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCompleted(sellerVO.getSellerId());
 		return list;
 	}
 	
@@ -161,13 +161,13 @@ public class SellerProductOrderIdController {
 	protected List<ProductOrderVO> getSellerProductOrderCanceled(Model model) {
 		
 		
-		Integer sellerId =1;
-//		SecurityContext secCtx = SecurityContextHolder.getContext();
-//        Authentication authentication = secCtx.getAuthentication();
-//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//		Integer sellerId =1;
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 //        Integer sellerId = sellerVO.getSellerId();
 
-		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCanceled(sellerId);
+		List<ProductOrderVO> list = productOrderSvc.getSellerProductOrderCanceled(sellerVO.getSellerId());
 		return list;
 	}
 	
