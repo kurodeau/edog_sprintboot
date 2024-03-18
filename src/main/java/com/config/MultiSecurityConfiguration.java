@@ -110,9 +110,6 @@ public class MultiSecurityConfiguration {
 		BuyerAuthenticationFilter buyerAuthenticationFilter = new BuyerAuthenticationFilter(authenticationManager(http),
 				buyerRequestMatcher, buyerSvc, buyerPasswordEncoder, buyeAuthenticationFailureHandler);
 
-		 http.authorizeRequests(authorize -> authorize
-		 .antMatchers("/edog_sprintboot/chatroom/**")
-		 .permitAll()).csrf().disable();
 		 
 		http
 				.authorizeRequests(authorize -> authorize
