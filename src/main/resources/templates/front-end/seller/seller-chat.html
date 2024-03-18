@@ -351,7 +351,7 @@ function getUsername() {
     return new Promise(function(resolve, reject) {
         $.ajax({
             type: "post",
-            url: "/front/seller/getusername",
+            url: "/seller/getusername",
             success: function(response) {
                 $("#userName").text(response); // 将回应值设置到 #userName 元素中
                 resolve(response); // 成功时调用 resolve，并传递响应值
@@ -379,7 +379,8 @@ function initializePage() {
 		var host = window.location.host;
 		var path = window.location.pathname;
 		var webCtx = path.substring(0, path.indexOf('//front/seller', 1));
-		var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
+		var endPointURL = "ws://" + "localhost:8081" + "/edog_sprintboot" + "/chatroom";
+// 		var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
 
 		var statusOutput = document.getElementById("statusOutput");
 		var messagesArea = document.getElementById("messagesArea");
@@ -402,7 +403,7 @@ function initializePage() {
 		// create a websocket
 		var webSocket = new WebSocket(endPointURL);
 
-		console.log("endPointURL")
+		console.log(endPointURL);
 
 		webSocket.onopen = function(event) {
 			console.log(event.target);

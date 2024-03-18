@@ -25,8 +25,8 @@ import com.websocketchat.model.State;
 
 
 @CrossOrigin
-//@ServerEndpoint("/front/seller/FriendWS/userName") // chat.jsp 第25行
-public class FriendWS {                                                     // 並行(同時進行) Safe-thread ,  同步鎖定並非整個集合而是裡面的空間
+@ServerEndpoint("/chatroom") // chat.jsp 第25行
+public class FriendWS2 {                                                     // 並行(同時進行) Safe-thread ,  同步鎖定並非整個集合而是裡面的空間
 	private static Map<String, Session> sessionsMap = new ConcurrentHashMap<>();
 	Gson gson = new Gson();
 

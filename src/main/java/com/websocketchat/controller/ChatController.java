@@ -1,6 +1,8 @@
 package com.websocketchat.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,38 +14,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
 import com.seller.entity.SellerVO;
+import com.websocketchat.model.ChatMessage;
 
-@RequestMapping("/front/seller")
+@RequestMapping("/seller")
 @Controller
 public class ChatController {
 
-	
-	@PostMapping(value="getusername" , produces = "application/json")
-	public ResponseEntity<?> getUserName(){
-		
-		
-		SecurityContext secCtx = SecurityContextHolder.getContext();
-        Authentication authentication = secCtx.getAuthentication();
-        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+	@MessageMapping("/sendMessage")
+	@SendTo("/topic/public")
+	public ChatMessage sendMessage(ChatMessage message) {
+		return message;
+	}
 
-        String sellerName = sellerVO.getSellerCompany();
-        
-    	Gson gson = new Gson();
-		
-        String userName = gson.toJson(sellerName);
-		
+	@PostMapping(value = "getusername", produces = "application/json")
+	public ResponseEntity<?> getUserName() {
+
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+
+		String sellerName = sellerVO.getSellerCompany();
+
+		Gson gson = new Gson();
+
+		String userName = gson.toJson(sellerName);
+
 		return ResponseEntity.ok(userName);
 	}
-	
-	
+
 	@GetMapping("chatroom")
-		public String chatRoom (Model model) {
-			return "front-end/seller/seller-chat";
-		}
-	
-	
-	
-	
-	
-	
+	public String chatRoom(Model model) {
+		return "front-end/seller/seller-chat";
+	}
+
 }

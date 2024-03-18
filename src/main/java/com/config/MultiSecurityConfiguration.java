@@ -110,13 +110,16 @@ public class MultiSecurityConfiguration {
 		BuyerAuthenticationFilter buyerAuthenticationFilter = new BuyerAuthenticationFilter(authenticationManager(http),
 				buyerRequestMatcher, buyerSvc, buyerPasswordEncoder, buyeAuthenticationFailureHandler);
 
-//		 http.authorizeRequests(authorize -> authorize
-//		 .antMatchers("/**").permitAll()).csrf().disable();
+		 http.authorizeRequests(authorize -> authorize
+		 .antMatchers("/edog_sprintboot/chatroom/**")
+		 .permitAll()).csrf().disable();
+		 
 		http
 				.authorizeRequests(authorize -> authorize
 						.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
 						.antMatchers("/front/seller/**").hasRole("SELLER")
 						.antMatchers("/front/buyer/**").hasRole("BUYER"))
+						
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		http.formLogin(form -> form.loginPage("/seller/login").permitAll().loginProcessingUrl("/seller/login")
