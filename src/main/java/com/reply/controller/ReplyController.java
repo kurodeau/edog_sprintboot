@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,6 +30,9 @@ import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
+import com.articleLike.entity.ArticleLikeVO;
+import com.replyLike.entity.ReplyLikeVO;
+import com.replyLike.service.ReplyLikeService;
 import com.buyer.entity.BuyerVO;
 import com.msg.entity.MsgVO;
 import com.msg.service.MsgService;
@@ -44,6 +50,9 @@ public class ReplyController {
 	
 	@Autowired
 	MsgService msgSvc;
+	
+	@Autowired
+	ReplyLikeService replyLikeSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -56,54 +65,34 @@ public class ReplyController {
 		
 	}
 
-	/*
-	 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
-	 */
-//	@PostMapping("insert")
-//	public void insert(@Valid ReplyVO replyVO, BindingResult result, @RequestParam("articleId") String articleId, 
-//	                   HttpServletRequest request, HttpServletResponse response) 
-//	        throws IOException {
-//	    ArticleVO articleVO = new ArticleVO();
-//	    articleVO.setArticleId(Integer.valueOf(articleId));
-//	    BuyerVO buyerVO = new BuyerVO();
-//	    buyerVO.setMemberId(1);
-//	    /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-//	    replyVO.setReplyTime(new Date());
-//	    replyVO.setReplyLike(0);
-//	    replyVO.setIsEnabled(true);
-//	    
-//	    /*************************** 2.開始新增資料 *****************************************/
-//	    replySvc.addReply(replyVO);
-//	    /*************************** 3.新增完成,準備轉交(Send the Success view) **************/
-//	    // 重定向到当前页面
-//	    response.sendRedirect(request.getRequestURI());
-//	}
+
 	@PostMapping("/insert")
     public ResponseEntity<String> insertReply(@RequestParam("commentContent") String commentContent,
                                               @RequestParam("articleId") String articleId) {
         try {
+        	SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 Integer memberId = buyerVO.getMemberId();
             // 创建一个新的回复对象
             ReplyVO replyVO = new ReplyVO();
-            ArticleVO articleVO = new ArticleVO();
-            articleVO.setArticleId(Integer.valueOf(articleId));
+            ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
+            articleVO.setArticleComment(articleVO.getArticleComment()+1);
+            articleSvc.updateArticle(articleVO);
+
             replyVO.setReplyContent(commentContent);
             replyVO.setReplyTime(new Date());
             replyVO.setArticleVO(articleVO);
-    	    BuyerVO buyerVO = new BuyerVO();
-    	    buyerVO.setMemberId(1);
     	    replyVO.setBuyerVO(buyerVO);
     	    replyVO.setReplyTime(new Date());
     	    replyVO.setReplyLike(0);
     	    replyVO.setIsEnabled(true);
 
-    	    // 设置文章 ID
-            // 这里可以根据实际情况从数据库中获取文章对象并设置
-            articleVO.setArticleId(Integer.valueOf(articleId));
             // 保存回复到数据库
             replySvc.addReply(replyVO);
             MsgVO msgVO = new MsgVO();
 	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        msgVO.setBuyerVO(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(2);
 	        msgVO.setMsgTypeVO(msgTypeVO);
@@ -176,6 +165,16 @@ public class ReplyController {
 	public ResponseEntity<String> increaseLikes(@RequestParam("replyId") String replyId) {
 		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId)); // 根据文章 ID 获取文章对象
 	    if (replyVO != null) {
+	    	SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			 Authentication authentication = secCtx.getAuthentication();
+			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			 Integer memberId = buyerVO.getMemberId();
+			 System.out.println(memberId);
+	    	ReplyLikeVO replyLikeVO = new ReplyLikeVO();
+	    	replyLikeVO.setBuyerVO(buyerVO);
+	    	replyLikeVO.setReplyVO(replyVO);
+	    	replyLikeVO.setReplyLikeTime(new Date());
+	    	replyLikeSvc.addReplyLike(replyLikeVO);
 	    	replyVO.setReplyLike(replyVO.getReplyLike()+1); // 增加喜欢数
 	    	replySvc.updateReply(replyVO); // 更新文章信息到数据库
 	    	MsgVO msgVO = new MsgVO();
@@ -198,6 +197,18 @@ public class ReplyController {
 	public ResponseEntity<String> decreaseLikes(@RequestParam("replyId") String replyId) {
 		ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId)); // 根据文章 ID 获取文章对象
 	    if (replyVO != null) {
+	    	SecurityContext secCtx = SecurityContextHolder.getContext() ;
+			Authentication authentication = secCtx.getAuthentication();
+			BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			Integer memberId = buyerVO.getMemberId();
+			System.out.println(memberId);
+			System.out.println(Integer.valueOf(replyId));
+			Integer replyLikeId = replyLikeSvc.findReplyLikeIdByMemberIdAndArticleId(buyerVO, replyVO);
+	    	replyLikeSvc.deleteReplyLike(replyLikeId);
+	    	MsgTypeVO msgTypeVO = new MsgTypeVO();
+	    	msgTypeVO.setMsgTypeId(3);
+	    	Integer msgId = msgSvc.findArticleLikeIdByMemberIdAndReplyIdAndMsgTypeId(buyerVO, replyVO,msgTypeVO);
+	    	msgSvc.deleteMsg(msgId);
 	        int currentLikes = replyVO.getReplyLike();
 	        if (currentLikes > 0) { // 只有喜欢数大于 0 时才能执行减少操作
 	        	replyVO.setReplyLike(currentLikes - 1); // 减少喜欢数

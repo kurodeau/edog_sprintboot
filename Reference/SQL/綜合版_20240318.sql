@@ -313,16 +313,7 @@ replyId int,
 FOREIGN KEY (replyId) REFERENCES reply(replyId),
 replyLikeTime datetime DEFAULT CURRENT_TIMESTAMP
  );
--- 通知  創建table-- 
-create table IF NOT EXISTS msg(
-msgId int primary key AUTO_INCREMENT,
-memberId int,
-foreign key(memberId) references buyer(memberId),
-msgType int,
-msgContent varchar(100),
-msgTime datetime DEFAULT CURRENT_TIMESTAMP,
-isEnabled boolean
-);
+
 -- 商品圖片  創建table-- 
 CREATE TABLE IF NOT EXISTS productImage (
     productImgId INT AUTO_INCREMENT PRIMARY KEY,
@@ -402,7 +393,30 @@ FOREIGN KEY (articleId) REFERENCES article(articleId),
 FOREIGN KEY (reportTypeId) REFERENCES reportType(reportTypeId)
 );
 
-
+-- 通知分類  創建table-- 
+create table IF NOT EXISTS msgType(
+msgTypeId int primary key AUTO_INCREMENT,
+msgTypeContent varchar(100)
+);
+-- 通知  創建table-- 
+create table IF NOT EXISTS msg(
+msgId int primary key AUTO_INCREMENT,
+memberId int,
+foreign key(memberId) references buyer(memberId),
+articleId int,
+foreign key(articleId) references article(articleId),
+replyId int,
+foreign key(replyId) references reply(replyId),
+reportId int,
+foreign key(reportId) references report(reportId),
+petdrawId int,
+foreign key(petdrawId) references petdraw(petdrawId),
+msgTypeId int,
+foreign key(msgTypeId) references msgType(msgTypeId),
+msgTime datetime DEFAULT CURRENT_TIMESTAMP,
+isRead boolean,
+isEnabled boolean
+);
 
 
 -- 賣家等級  放入測試資料
@@ -507,7 +521,7 @@ VALUES
   ('alen@example.com', 'adminpass6', 10, CURRENT_TIMESTAMP),
   ('red@example.com', 'adminpass7', 10, CURRENT_TIMESTAMP),
   ('timmiy@example.com', 'adminpass8', 20, CURRENT_TIMESTAMP),
-  ('testmanager2@gmail.com', '$2a$10$VAHoLewjAHro12EGZmD1zu1TNOSiUGrJJ6FMLf1FzKAcp/kzqrMly', 10, CURRENT_TIMESTAMP),
+  ('fren@example.com', 'adminpass9', 10, CURRENT_TIMESTAMP),
   ('testmanager@gmail.com', '$2a$10$AMRbaSaciFN/8ry3CuZLq.8O7wKw.zSh4WKHU9Kup0riB/Etu6nPC', 10, CURRENT_TIMESTAMP);
 -- 廣告  放入假資料-- 
 
@@ -703,12 +717,7 @@ VALUES
     (3, 2, '2023-02-10 18:00:00'),
     (4, 2, '2023-02-11 19:00:00'),
     (5, 2, '2023-02-12 12:00:00');
--- 通知  放入測試資料-- 
-INSERT INTO msg (memberId, msgType, msgContent, msgTime, isEnabled)
-VALUES
-    (1, 1, '您的訂單已經發貨，請注意查收', '2023-01-05 12:00:00', true),
-    (2, 2, '您的會員資料已經更新', '2023-02-10 17:30:00', true),
-    (3, 1, '新的促銷活動即將開始，請留意通知', '2023-03-15 14:45:00', true);
+
 -- 商品圖片  放入測試資料-- 
 INSERT INTO productImage (productId, productImg, productImgTime, isCover, isEnabled)
 VALUES
@@ -784,4 +793,26 @@ INSERT INTO report (reportMemberId, reportTargetType, replyId, articleId, report
 (3, 0, NULL, 4, 8, '2023-08-15 09:45:00', 0, NULL), 
 (4, 0, NULL, 5, 5, '2023-09-02 11:20:00', 0, NULL), 
 (5, 1, 5, NULL, 10, '2023-10-10 13:55:00', 0, NULL);
+
+-- 通知分類  放入測試資料-- 
+INSERT INTO msgType (msgTypeContent) VALUES 
+    ('文章喜歡'),
+    ('文章留言'),
+    ('留言喜歡'),
+    ('被抽到'),
+    ('文章檢舉'),
+    ('留言檢舉');
+    
+-- 通知  放入測試資料-- 
+INSERT INTO msg (memberId, articleId, replyId, reportId, petdrawId, msgTypeId, msgTime, isRead, isEnabled) VALUES
+    (1, 1, null, null, null, 1, '2024-03-14 08:00:00', FALSE, TRUE),
+    (2, null, 2, null, null, 2, '2024-03-14 09:30:00', TRUE, TRUE),
+    (3, null, 4, null, null, 3, '2024-03-14 10:45:00', FALSE, TRUE),
+    (4, null, null, null, null, 4, '2024-03-14 11:20:00', TRUE, TRUE),
+    (5, null, null, 1, null, 5, '2024-03-14 13:00:00', TRUE, FALSE),
+    (1, null, null, 3, null, 6, '2024-03-14 14:15:00', FALSE, TRUE),
+    (2, 2, null, null, null, 1, '2024-03-14 15:45:00', TRUE, TRUE),
+    (3, null, 3, null, null, 2, '2024-03-14 16:30:00', FALSE, TRUE),
+    (4, null, 4, null, null, 3, '2024-03-14 17:20:00', TRUE, TRUE),
+    (5, null, null, null, null, 4, '2024-03-14 18:00:00', TRUE, FALSE);
 
