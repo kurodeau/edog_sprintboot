@@ -35,77 +35,62 @@
 				</div> -->
 
 			<!-- 如果你購物車沒有東西, 顯示這裡 -->
-			<div class="col-12" th:if="${#maps.isEmpty(cartClassfi) }">
+			<!-- <div class="col-12" th:if="${#maps.isEmpty(cartClassfi) }">
 				<a href="/">你的購物車是空的，馬上去逛逛吧~</a>
-			</div>
+			</div> -->
 
-			<!-- 先進行大迴圈, 從redis 取出資料 -->
+	<!-- 先進行大迴圈, 從redis 取出資料 -->
 
-			<section class="cart-seller mt-3"
-				th:each="sellerCompany : ${cartClassfi}">
+		<section class="cart-seller mt-3"
+				th:each="sellerCompany, sellerStat : ${cartClassfi}">
 
-				<div class="container mt-3 container-list-custom">
+			<div class="container mt-3 container-list-custom">
 
-					<div class="row header-row-custom">
-						<div class="col-auto px-0">
-							<input class="form-check-input cart-header-click" type="checkbox"
-								value="" aria-label="Checkbox for following text input" hidden />
+						<div class="row header-row-custom">
+							<div class="col-auto px-0">
+								<input class="form-check-input cart-header-click" type="checkbox"
+									value="" aria-label="Checkbox for following text input" hidden />
+							</div>
+							<div class="col">
+								賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
+									class="cart-sellerId" th:text="${sellerCompany.key}"></b>
+								</span> <span> <span class="get_sellerId"
+									th:text="${sellerCompany.value.iterator().next().sellerVO.sellerId}"
+									hidden></span>
+								</span>
+		
+		
+							</div>
 						</div>
-						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
-								class="cart-sellerId" th:text="${sellerCompany.key}"></b>
-							</span> <span> <span class="get_sellerId"
-								th:text="${sellerCompany.value.iterator().next().sellerVO.sellerId}"
-								hidden></span>
-							</span>
 
 
+						<div class="row sec-row-custom">
+							<div class="col-1">
+								<input class="form-check-input cart-overall-click"
+									type="checkbox" value=""
+									aria-label="Checkbox for following text input" hidden />
+							</div>
+							<div class="col-3">商品圖片</div>
+							<div class="col-2">商品名稱</div>
+							<div class="col-2 d-flex justify-content-end">單個價格</div>
+							<div class="col-2 d-flex justify-content-end">購買數量</div>
+							<!-- <div class="col d-flex justify-content-center">操作</div> -->
 						</div>
-					</div>
 
 
 
-
-					<div class="row sec-row-custom">
-						<div class="col-1">
-							<input class="form-check-input cart-overall-click"
-								type="checkbox" value=""
-								aria-label="Checkbox for following text input" hidden />
-						</div>
-						<div class="col-3">商品圖片</div>
-						<div class="col-2">商品名稱</div>
-						<div class="col-2 d-flex justify-content-end">單個價格</div>
-						<div class="col-2 d-flex justify-content-end">購買數量</div>
-						<!-- <div class="col d-flex justify-content-center">操作</div> -->
-					</div>
-
-
-
-
-					<!-- <div class="row header-row-custom">
-						<div class="col-auto px-0">
-							<input class="form-check-input cart-header-click" type="checkbox"
-								value="" aria-label="Checkbox for following text input" hidden />
-						</div>
-						<div class="col">
-							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
-								class="cart-sellerId" th:text="${sellerCompany.key}"></b>
-							</span>
-						</div>
-					</div> -->
-
-					<!-- 後套入小迴圈的資料 -->
+			<!-- 後套入小迴圈的資料 -->
 					<div class="row item-row-custom"
 						th:each="cartVO : ${cartClassfi[ sellerCompany.key ]}">
-						<div class="col-1 px-0">
-							<input class="form-check-input cart-item-click" type="checkbox"
-								value="" aria-label="Checkbox for following text input" hidden />
-						</div>
-						<div class="col-3">
-							<img
-								th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
-								width="100px" />
-						</div>
+							<div class="col-1 px-0">
+								<input class="form-check-input cart-item-click" type="checkbox"
+									value="" aria-label="Checkbox for following text input" hidden />
+							</div>
+							<div class="col-3">
+								<img
+									th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
+									width="100px" />
+							</div>
 						<div class="col-2" th:text="${cartVO.productVO.productName}">商品名稱</div>
 						<!--  <div class="col-2 get_sellerId" th:text="${cartVO.sellerVO.sellerId}" >獲取賣家Id</div>  -->
 						<div class="col-2 d-flex justify-content-end cart-price"
@@ -116,22 +101,22 @@
 							th:text="${cartVO.productVO.productId}" style="display: none">productId</div>
 						<div
 							class="col d-flex flex-column align-items-center justify-content-center">
-							<!-- <button class="product btn-func">更改數量</button> -->
-							<!-- <button class="btn-func cart-item-delete" th:data-memberId="9"
-								th:data-productId="${cartVO.productVO.productId}"
-								th:productId="${cartVO.productVO.productId}"
-								onclick="removeOneFromCart(this)">移出購物車</button> -->
-
 						</div>
 					</div>
 
+
+
 					<div style="margin-top: 30px;"></div>
 
-					<form>
-						<div class="accordion" id="accordionExample">
+					<!-- <form> -->
+						<!--  <div class="accordion" id="accordionExample">  -->
+						<div class="accordion" th:id="${'accordionExample-' + sellerStat.index}">
+						<!-- <div class="accordion" th:id="${'receiver-mobile-' + sellerStat.index}"> -->
 							<div class="accordion-item">
 								<h2 class="accordion-header">
-									<button class="accordion-button" type="button"
+								
+								
+							<!-- 		<button class="accordion-button" type="button"
 										data-bs-toggle="collapse" data-bs-target="#collapseOne"
 										aria-expanded="true" aria-controls="collapseOne"
 										style="color: #41464b; background-color: #e2e3e5; border-color: #d3d6d8;">
@@ -139,61 +124,95 @@
 								</h2>
 								<div id="collapseOne" class="accordion-collapse collapse show"
 									data-bs-parent="#accordionExample">
-									<div class="accordion-body">
+						<div class="accordion-body">
+						 -->
+						
+						   <button class="accordion-button" type="button"
+                        data-bs-toggle="collapse" th:data-bs-target="${'#collapseOne-' + sellerStat.index}"
+                        aria-expanded="true" th:aria-controls="${'collapseOne-' + sellerStat.index}"
+                        style="color: #41464b; background-color: #e2e3e5; border-color: #d3d6d8;">
+                    收件者資訊
+                </button>
+            </h2>
+            <div th:id="${'collapseOne-' + sellerStat.index}" class="accordion-collapse collapse show"
+                 th:data-bs-parent="${'#accordionExample-' + sellerStat.index}">
+                <div class="accordion-body">
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
 										<!-- <div class="mb-3 form-check">
 										<input type="checkbox" class="form-check-input"
 											id="exampleCheck2"> <label class="form-check-label"
 											for="exampleCheck2">同會員資訊</label>
 									</div> -->
-										<div class="row mb-3">
-											<label for="inputEmail3" class="col-sm-2 col-form-label">*姓名:</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control receiver-input"
-													id="receiver-name" style="width: 30%;" value="金城武">
-													
-													 <span class="error-message" style="color: red;" id="name-error"></span>
-												
-											</div>
-										</div>
-										<div class="row mb-3">
-											<label for="inputPassword3" class="col-sm-2 col-form-label ">*手機:</label>
-											<div class="col-sm-10">
-												<input type="text" class="form-control mobile-input"
-													 placeholder="09xx000xxx"
-													style="width: 30%;" value="0912345678">
-													 <span class="error-message" style="color: red;" id="mobile-error"></span>
-													
-													
-													
-											</div>
-										</div>
+								<div class="row mb-3">
+									<label th:for="${'receiver-name-' + sellerStat.index}" class="col-sm-2 col-form-label">*姓名:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control receiver-input"
+											 style="width: 30%;" value="Peter"
+											 th:id="${'receiver-name-' + sellerStat.index}"
+											 >
+											
+											 <span class="error-message" style="color: red;" id="name-error"></span>
+										
+									</div>
+								</div>
+								
+								<div class="row mb-3">
+									<label  th:for="${'receiver-mobile-' + sellerStat.index}" class="col-sm-2 col-form-label ">*手機:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control mobile-input"
+											 placeholder="09xxxxxxxx"
+											 style="width: 30%;" value="0911222333"
+											 th:id="${'receiver-mobile-' + sellerStat.index}"
+											 
+											 
+											 >
+											 <span class="error-message" style="color: red;" id="mobile-error"></span>
+											
+											
+											
+									</div>
+								</div>
 										<!-- <div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label">*電子信箱:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control " id="inputPassword3"
 													style="width: 30%;" value="edog666@gmail.com">
 											</div> -->
-										</div>
+										
 										<div class="row mb-3">
-											<label for="inputPassword3" class="col-sm-2 col-form-label ">*地址:</label>
+											<label th:for="${'receiver-address-' + sellerStat.index}" class="col-sm-2 col-form-label ">*地址:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control address-input"
-													 style="width: 30%;" value="直送台北101樓謝謝">
+													 style="width: 30%;" value="台北市中山區南京東路三段219號4樓403號教室"
+													 
+													  th:id="${'receiver-address-' + sellerStat.index}"
+													 >
 													
 													 <span class="error-message" style="color: red;" id="address-error"></span>
 													
 											</div>
 										</div>
+										</div>
+										
 									</div>
 								</div>
 							</div>
 						</div>
-					</form>
+<!-- 					</form> -->
 			</section>
 
 			<div style="margin-top: 30px;"></div>
 			<form>
-				<div class="accordion accordion-flush" id="paymentAccordion">
+				<div class="accordion accordion-flush" id="paymentAccordion" style="width:1294.67px; margin: 0 auto; ">
 					<div class="accordion-item">
 						<h2 class="accordion-header">
 							<button class="accordion-button collapsed" type="button"
@@ -226,7 +245,7 @@
 			</form>
 			<div style="margin-top: 30px;"></div>
 			<form>
-				<div class="accordion accordion-flush" id="deliveryAccordion">
+				<div class="accordion accordion-flush" id="deliveryAccordion" style="width:1294.67px; margin: 0 auto; ">
 					<div class="accordion-item">
 						<h2 class="accordion-header">
 							<button class="accordion-button collapsed" type="button"
@@ -257,10 +276,42 @@
 
 					</div>
 				</div>
+				
+		<section class="cart-pay-sticky px-5 mt-5" style="width:1294.67px; margin: 0 auto; ">
+
+
+			<div class="row d-flex justify-content-end align-items-center">
+				<div class="col-1-5">商品金額 NT$</div>
+				<div class="col-2 product-total d-flex justify-content-end">
+					<span class="total">0</span>元
+				</div>
+			</div>
+			<div class="row d-flex justify-content-end align-items-center">
+				<div class="col-1-5">運費 NT$</div>
+				<div class="col-2 shipping-fee d-flex justify-content-end">
+					<span class="fee">0</span>元
+				</div>
+			</div>
+			<div class="row d-flex justify-content-end align-items-center">
+				<div class="col-1-5">合計 NT$</div>
+				<div class="col-2 cart-payment d-flex justify-content-end">
+					<span class="payment">0</span>元
+				</div>
+			</div>
+
+			<div class="row justify-content-end">
+				<div class="col-auto">
+					<button type ="button" class="btn btn-primary" id="checkout-btn" style="width: 130px; height: 45px; font-size: 20px;">結帳</button>
+				</div>
+			</div>
+				
+				</section>
+				
+				
 			</form>
 		</div>
 
-		<section class="cart-pay-sticky px-5 mt-5">
+	<!-- 	<section class="cart-pay-sticky px-5 mt-5">
 
 
 			<div class="row d-flex justify-content-end align-items-center">
@@ -286,93 +337,184 @@
 				<div class="col-auto">
 					<button class="btn btn-primary" id="checkout-btn">結帳</button>
 				</div>
-			</div>
+			</div> -->
 
 
 
 
-			<script>
-    $(document).ready(function() {
-        // 綁定提交按鈕事件
-        $('#checkout-btn').click(function(event) {
-            event.preventDefault(); // 阻止按鈕的默認提交行為
-            
-            // 初始化購物車數據對象
-            let shoppingCartDTO = {
-                carts: []
-            };
+				<script>
+							
+							
+				    $(document).ready(function() {
+				        // 綁定提交按鈕事件
+				        $('#checkout-btn').click(function(event) {
+				            event.preventDefault(); // 阻止按鈕的默認提交行為
+				            
+				
+				       	   if (validateInput()) {
+				        	   console.log('資料驗證通過，準備發送請求。');
+				            	         
+				            // 初始化購物車數據對象
+				            let shoppingCartDTO = {
+				                carts: []
+				            };
+				
+				            // 假設你已經有了一種方式來區分不同的賣家和它們的產品信息
+				            // 以下是一個示例過程，你需要根據自己的HTML結構進行調整
+				            
+				            // 遍歷每個賣家
+				            $('.cart-seller').each(function() {
+				                let sellerId = $(this).find('.get_sellerId').text(); // 賣家ID儲存在這裡
+				                let receiver = $(this).find('.receiver-input').val(); // 收件人姓名輸入框的class
+				                let mobile = $(this).find('.mobile-input').val(); // 收件人手機輸入框的class
+				                let contactAddress = $(this).find('.address-input').val(); // 收件地址輸入框的class
+				                
+				              /*   alert(receiver);
+				                alert(mobile); */
+				               /*  alert(contactAddress); */
+				                
+				                // 組裝每個賣家的產品信息
+				                let products = [];
+				                $(this).find('.item-row-custom').each(function() {
+				                    let productId = $(this).find('.cart-productId').text();
+				                    let quantity = $(this).find('.cart-qty').text();
+				                    products.push({
+				                        productId: parseInt(productId),
+				                        quantity: parseInt(quantity)
+				                    });
+				                });
+				
+				                // 將賣家信息添加到購物車數據對象
+				                shoppingCartDTO.carts.push({
+				                    sellerId: parseInt(sellerId),
+				                    receiverInfo: {
+				                        receiver: receiver,
+				                        mobile: mobile,
+				                        contactAddress: contactAddress
+				                    },
+				                    products: products
+				                });
+				            });
+				            
+				         // 在发送 POST 请求之前打印 shoppingCartDTO 的 JSON 字符串
+				           /*  console.log(JSON.stringify(shoppingCartDTO)); */
+				
+				            // 使用fetch發送POST請求
+				            fetch('create_orders', {
+				                method: 'POST',
+				                headers: {
+				                    'Content-Type': 'application/json'
+				                },
+				                body: JSON.stringify(shoppingCartDTO)
+				            })
+				            .then(response => response.json())
+				            
+				            .then(data => {
+				  							  console.log('Success:', data);  //data = "message", "Orders created successfully."
+										   
+				  							  
+				  						     // 在这里处理成功的消息
+										    // 这里你可以根据情况做一些操作，比如显示成功的提示信息等等
+										    // 如果需要跳转页面，可以在这里执行跳转操作
+				  							window.location.href = '/';
+								})
+							.catch(error => {
+							    console.error('Error:', error);
+							    // 在这里处理错误，比如显示错误信息给用户
+							});
+				            
+				            }else {
+				                console.log('資料驗證失敗，停止提交。');
+				            }
+				            
+				        });
+				        
+				        
+				        
+				        /* function validateInput() {
+				            let isValid = true;
+				            // 姓名驗證
+				            const name = $('#receiver-name').val();
+				            if (!/^[a-zA-Z\u4e00-\u9fa5]{1,10}$/.test(name)) {
+				                $('#name-error').text('請輸入有效的姓名（最多10個字符，不含特殊字符）');
+				                isValid = false;
+				            } else {
+				                $('#name-error').text('');
+				            }
+				
+				            // 手機驗證
+				            const mobile = $('.mobile-input').val();
+				            if (!/^09\d{8}$/.test(mobile)) {
+				                $('#mobile-error').text('請輸入有效的手機號碼（09開頭的10位數字）');
+				                isValid = false;
+				            } else {
+				                $('#mobile-error').text('');
+				            }
+				
+				            // 地址驗證
+				            const address = $('.address-input').val();
+				            if (!address.trim().length) { // 這裡只是一個簡單的例子，您可能需要更復雜的驗證
+				                $('#address-error').text('請輸入有效的地址');
+				                isValid = false;
+				            } else {
+				                $('#address-error').text('');
+				            }
+				
+				            return isValid;
+				        } */
+				        
+				        
+				        function validateInput() {
+				            let isValid = true;
 
-            // 假設你已經有了一種方式來區分不同的賣家和它們的產品信息
-            // 以下是一個示例過程，你需要根據自己的HTML結構進行調整
-            
-            // 遍歷每個賣家
-            $('.cart-seller').each(function() {
-                let sellerId = $(this).find('.get_sellerId').text(); // 賣家ID儲存在這裡
-                let receiver = $(this).find('.receiver-input').val(); // 收件人姓名輸入框的class
-                let mobile = $(this).find('.mobile-input').val(); // 收件人手機輸入框的class
-                let contactAddress = $(this).find('.address-input').val(); // 收件地址輸入框的class
-                
-              /*   alert(receiver);
-                alert(mobile); */
-               /*  alert(contactAddress); */
-                
-                // 組裝每個賣家的產品信息
-                let products = [];
-                $(this).find('.item-row-custom').each(function() {
-                    let productId = $(this).find('.cart-productId').text();
-                    let quantity = $(this).find('.cart-qty').text();
-                    products.push({
-                        productId: parseInt(productId),
-                        quantity: parseInt(quantity)
-                    });
-                });
+				            // 遍歷每個賣家的收貨信息
+				            $('.cart-seller').each(function() {
+				                // 使用 .find() 來獲取當前賣家區塊內的輸入元素
+				                const name = $(this).find('.receiver-input').val();
+				                const mobile = $(this).find('.mobile-input').val();
+				                const address = $(this).find('.address-input').val();
 
-                // 將賣家信息添加到購物車數據對象
-                shoppingCartDTO.carts.push({
-                    sellerId: parseInt(sellerId),
-                    receiverInfo: {
-                        receiver: receiver,
-                        mobile: mobile,
-                        contactAddress: contactAddress
-                    },
-                    products: products
-                });
-            });
-            
-         // 在发送 POST 请求之前打印 shoppingCartDTO 的 JSON 字符串
-           /*  console.log(JSON.stringify(shoppingCartDTO)); */
+				                // 驗證姓名
+				                if (!/^[a-zA-Z\u4e00-\u9fa5]{1,10}$/.test(name)) {
+				                    $(this).find('#name-error').text('請輸入有效的姓名（最多10個字符，不含特殊字符）');
+				                    isValid = false;
+				                } else {
+				                    $(this).find('#name-error').text('');
+				                }
 
-            // 使用fetch發送POST請求
-            fetch('create_orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(shoppingCartDTO)
-            })
-            .then(response => response.json())
-            
-            .then(data => {
-  							  console.log('Success:', data);  //data = "message", "Orders created successfully."
-						   
-  							  
-  						     // 在这里处理成功的消息
-						    // 这里你可以根据情况做一些操作，比如显示成功的提示信息等等
-						    // 如果需要跳转页面，可以在这里执行跳转操作
-  							window.location.href = '/';
-				})
-			.catch(error => {
-			    console.error('Error:', error);
-			    // 在这里处理错误，比如显示错误信息给用户
-			});
-            
-            
-        });
-    });
-</script>
+				                // 驗證手機
+				                if (!/^09\d{8}$/.test(mobile)) {
+				                    $(this).find('#mobile-error').text('請輸入有效的手機號碼（09開頭的10位數字）');
+				                    isValid = false;
+				                } else {
+				                    $(this).find('#mobile-error').text('');
+				                }
+
+				                // 驗證地址
+				                if (!address.trim().length) {
+				                    $(this).find('#address-error').text('請輸入有效的地址');
+				                    isValid = false;
+				                } else {
+				                    $(this).find('#address-error').text('');
+				                }
+				            });
+
+				            return isValid;
+				        }
+
+				        
+				        
+				        
+				        
+				        
+				        
+				        
+				        
+				    });
+				</script>
 
 
-		</section>
+		
 
 		<!-- Content for All Orders Tab -->
 		<!-- </div> -->
@@ -386,164 +528,165 @@
 
 	<!-- Local JS File -->
 	<div th:replace="fragment-js"></div>
-
-	<script>
-		document
-			.addEventListener(
-				"DOMContentLoaded",
-				function () {
-					init();
-
-					function init() {
-						updateCheckoutAmount();
-					}
-
-					function handlesectionClick(event) {
-						const currentClicked = this.checked;
-						console.log(currentClicked);
-
-						const overallSection = this
-							.closest(".container-list-custom");
-						const headerClicks = overallSection
-							.querySelectorAll(".cart-header-click");
-
-						headerClicks
-							.forEach(
-								function (headerClick) {
-									if (currentClicked !== headerClick.checked) {
-										headerClick.click();
+	
+<!-- 前端處理顯示的結帳金額 -->
+				<script>
+					document
+						.addEventListener(
+							"DOMContentLoaded",
+							function () {
+								init();
+			
+								function init() {
+									updateCheckoutAmount();
+								}
+			
+								function handlesectionClick(event) {
+									const currentClicked = this.checked;
+									console.log(currentClicked);
+			
+									const overallSection = this
+										.closest(".container-list-custom");
+									const headerClicks = overallSection
+										.querySelectorAll(".cart-header-click");
+			
+									headerClicks
+										.forEach(
+											function (headerClick) {
+												if (currentClicked !== headerClick.checked) {
+													headerClick.click();
+												}
+											}, this);
+								}
+			
+								function handleItemClick(event) {
+									event.stopPropagation();
+			
+									const secCart = this.closest(".cart-seller");
+									const isAllItemClicked = secCart
+										.querySelectorAll(".item-row-custom input:checked").length === secCart
+											.querySelectorAll(".item-row-custom").length;
+			
+									secCart.querySelector(".cart-header-click").checked = isAllItemClicked;
+									updateCheckoutAmount();
+								}
+			
+								function handleHeaderClick(event) {
+									event.stopPropagation();
+			
+									const secCart = this.closest(".cart-seller");
+									const subClicks = secCart
+										.querySelectorAll(".item-row-custom input");
+			
+									subClicks.forEach(function (subClick) {
+										subClick.checked = this.checked;
+									}, this);
+			
+									// Process overall click
+									const overallSection = this
+										.closest(".container-list-custom");
+									const isAllHeaderClicked = overallSection
+										.querySelectorAll(".header-row-custom input:checked").length === overallSection
+											.querySelectorAll(".header-row-custom").length;
+			
+									overallSection
+										.querySelector(".cart-overall-click").checked = isAllHeaderClicked;
+									updateCheckoutAmount();
+								}
+			
+								const itemClickEls = document
+									.querySelectorAll(".cart-item-click");
+								const headerClickEls = document
+									.querySelectorAll(".cart-header-click");
+								const sectionClickEl = document
+									.querySelector(".cart-overall-click");
+			
+								itemClickEls.forEach(function (itemClickEl) {
+									itemClickEl.addEventListener("click",
+										handleItemClick);
+								});
+			
+								headerClickEls.forEach(function (headerClickEl) {
+									headerClickEl.addEventListener("click",
+										handleHeaderClick);
+								});
+			
+								sectionClickEl.addEventListener("click",
+									handlesectionClick);
+			
+								function handleItemDelete(event) {
+									event.stopPropagation();
+			
+									const rowItem = this
+										.closest(".item-row-custom");
+			
+									if (!rowItem)
+										return;
+			
+									const secCart = rowItem.parentElement;
+			
+									rowItem.remove();
+			
+									if (secCart
+										&& secCart
+											.querySelectorAll(".item-row-custom").length === 0) {
+										secCart.remove();
 									}
-								}, this);
-					}
-
-					function handleItemClick(event) {
-						event.stopPropagation();
-
-						const secCart = this.closest(".cart-seller");
-						const isAllItemClicked = secCart
-							.querySelectorAll(".item-row-custom input:checked").length === secCart
-								.querySelectorAll(".item-row-custom").length;
-
-						secCart.querySelector(".cart-header-click").checked = isAllItemClicked;
-						updateCheckoutAmount();
-					}
-
-					function handleHeaderClick(event) {
-						event.stopPropagation();
-
-						const secCart = this.closest(".cart-seller");
-						const subClicks = secCart
-							.querySelectorAll(".item-row-custom input");
-
-						subClicks.forEach(function (subClick) {
-							subClick.checked = this.checked;
-						}, this);
-
-						// Process overall click
-						const overallSection = this
-							.closest(".container-list-custom");
-						const isAllHeaderClicked = overallSection
-							.querySelectorAll(".header-row-custom input:checked").length === overallSection
-								.querySelectorAll(".header-row-custom").length;
-
-						overallSection
-							.querySelector(".cart-overall-click").checked = isAllHeaderClicked;
-						updateCheckoutAmount();
-					}
-
-					const itemClickEls = document
-						.querySelectorAll(".cart-item-click");
-					const headerClickEls = document
-						.querySelectorAll(".cart-header-click");
-					const sectionClickEl = document
-						.querySelector(".cart-overall-click");
-
-					itemClickEls.forEach(function (itemClickEl) {
-						itemClickEl.addEventListener("click",
-							handleItemClick);
-					});
-
-					headerClickEls.forEach(function (headerClickEl) {
-						headerClickEl.addEventListener("click",
-							handleHeaderClick);
-					});
-
-					sectionClickEl.addEventListener("click",
-						handlesectionClick);
-
-					function handleItemDelete(event) {
-						event.stopPropagation();
-
-						const rowItem = this
-							.closest(".item-row-custom");
-
-						if (!rowItem)
-							return;
-
-						const secCart = rowItem.parentElement;
-
-						rowItem.remove();
-
-						if (secCart
-							&& secCart
-								.querySelectorAll(".item-row-custom").length === 0) {
-							secCart.remove();
-						}
-
-						updateCheckoutAmount();
-					}
-
-					const itemDeleteEls = document
-						.querySelectorAll(".cart-item-delete");
-
-					itemDeleteEls.forEach(function (itemDeleteEl) {
-						itemDeleteEl.addEventListener("click",
-							handleItemDelete);
-					});
-					
-					function updateCheckoutAmount() {
-				        let totalProductAmount = 0; // 用于存储商品总金额
-				        let totalShippingFee = 0; // 用于存储总的运费
-				        let totalAmount = 0; // 总金额，包括运费
-
-				        // 遍历所有商品行
-				        document.querySelectorAll(".cart-seller").forEach(function (seller) {
-				            let sellerProductTotal = 0; // 单个卖家的商品总金额
-				            seller.querySelectorAll(".item-row-custom").forEach(function (item) {
-				                const priceElement = item.querySelector(".cart-price");
-				                const price = parseFloat(priceElement.textContent);
-
-				                const qtyElement = item.querySelector(".cart-qty");
-				                const qty = parseFloat(qtyElement.textContent);
-
-				                sellerProductTotal += (price * qty);
-				            });
-
-				            totalProductAmount += sellerProductTotal; // 累加到商品总金额
-
-				            // 判断是否需要加运费
-				            let shippingFee = 0;
-				            if (sellerProductTotal < 999) {
-				                shippingFee = 70; // 如果单个卖家的商品总金额没有超过999，加上运费70元
-				                totalShippingFee += shippingFee; // 累加到总的运费
-				            }
-				        });
-
-				        totalAmount = totalProductAmount + totalShippingFee; // 总金额等于商品金额加上运费
-
-				        // 更新显示的商品金额、运费和总金额
-				        document.querySelector(".product-total .total").textContent = totalProductAmount.toFixed(0);
-				        document.querySelector(".shipping-fee .fee").textContent = totalShippingFee.toFixed(0);
-				        document.querySelector(".cart-payment .payment").textContent = totalAmount.toFixed(0);
-				    }
-					
-				
-					
-				});
-	</script>
+			
+									updateCheckoutAmount();
+								}
+			
+								const itemDeleteEls = document
+									.querySelectorAll(".cart-item-delete");
+			
+								itemDeleteEls.forEach(function (itemDeleteEl) {
+									itemDeleteEl.addEventListener("click",
+										handleItemDelete);
+								});
+								
+								function updateCheckoutAmount() {
+							        let totalProductAmount = 0; // 用于存储商品总金额
+							        let totalShippingFee = 0; // 用于存储总的运费
+							        let totalAmount = 0; // 总金额，包括运费
+			
+							        // 遍历所有商品行
+							        document.querySelectorAll(".cart-seller").forEach(function (seller) {
+							            let sellerProductTotal = 0; // 单个卖家的商品总金额
+							            seller.querySelectorAll(".item-row-custom").forEach(function (item) {
+							                const priceElement = item.querySelector(".cart-price");
+							                const price = parseFloat(priceElement.textContent);
+			
+							                const qtyElement = item.querySelector(".cart-qty");
+							                const qty = parseFloat(qtyElement.textContent);
+			
+							                sellerProductTotal += (price * qty);
+							            });
+			
+							            totalProductAmount += sellerProductTotal; // 累加到商品总金额
+			
+							            // 判断是否需要加运费
+							            let shippingFee = 0;
+							            if (sellerProductTotal < 999) {
+							                shippingFee = 70; // 如果单个卖家的商品总金额没有超过999，加上运费70元
+							                totalShippingFee += shippingFee; // 累加到总的运费
+							            }
+							        });
+			
+							        totalAmount = totalProductAmount + totalShippingFee; // 总金额等于商品金额加上运费
+			
+							        // 更新显示的商品金额、运费和总金额
+							        document.querySelector(".product-total .total").textContent = totalProductAmount.toFixed(0);
+							        document.querySelector(".shipping-fee .fee").textContent = totalShippingFee.toFixed(0);
+							        document.querySelector(".cart-payment .payment").textContent = totalAmount.toFixed(0);
+							    }
+								
+							
+								
+							});
+				</script>
 	
 	
-	<script>
+	<!-- <script>
 function validateInput() {
     let isValid = true;
 
@@ -590,7 +733,7 @@ document.getElementById('checkout-btn').addEventListener('click', function(event
         console.log('驗證失敗');
     }
 });
-</script>
+</script> -->
 	
 	
 	
