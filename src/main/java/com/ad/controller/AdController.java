@@ -2,6 +2,7 @@ package com.ad.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,7 @@ import com.ad.model.AdVO;
 import com.allenum.AdStatusEnum;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
+import com.sellerLv.entity.SellerLvVO;
 
 @Controller
 @RequestMapping("/front/seller/ad")
@@ -41,6 +44,32 @@ public class AdController {
 
 	@GetMapping("add")
 	public String selleradsadd(Model model) {
+
+
+//		List<String> adTypeSelectList = new ArrayList<>();
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+
+		SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+		Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+
+//		if (sellerLvId == 2) {
+//			adTypeSelectList.add("BaseType");
+//
+//		} else if (sellerLvId == 3) {
+//			adTypeSelectList.add("BaseType");
+//			adTypeSelectList.add("PremiumType");
+//		} else {
+//			adTypeSelectList.add("FUCKU");
+//		}
+//		
+		System.out.println(sellerLvId);
+		
+		model.addAttribute("sellerLvId",sellerLvId);
+
+
 		return "front-end/seller/seller-ads-add";
 	}
 
@@ -68,10 +97,9 @@ public class AdController {
 
 		// 這段之後要修改成抓SellerId
 		SecurityContext secCtx = SecurityContextHolder.getContext();
-        Authentication authentication = secCtx.getAuthentication();
-        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 
-        
 		adVO.setSellerVO(sellerVO);
 
 		long currentTime = System.currentTimeMillis();
@@ -121,12 +149,9 @@ public class AdController {
 		}
 		/*************************** 2.開始修改資料 *****************************************/
 
-		
-		
 		AdVO orginalSellerId = adSvc.getOneAd(adVO.getAdId());
 		adVO.setSellerVO(orginalSellerId.getSellerVO());
-		
-		
+
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
 		adVO.setAdImgUploadTime(timestamp);
@@ -152,42 +177,34 @@ public class AdController {
 		model.addAttribute("success", "-(刪除成功)");
 		return "back-end/emp/ListAllAd";
 	}
-	
+
 	@PostMapping("launch")
-	public String launch(@RequestParam("adId") String adId , ModelMap model) {
-		
+	public String launch(@RequestParam("adId") String adId, ModelMap model) {
+
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		adVO.setAdStatus(AdStatusEnum.ENABLED.getStatus());
 		adSvc.updateAd(adVO);
-		
+
 		List<AdVO> list = adSvc.getAll();
 		model.addAttribute("adListData", list);
 		model.addAttribute("success", "-(刪除成功)");
 		return "redirect:/front/seller/ad/adlist";
-		
-		
+
 	}
-	
-	
+
 	@PostMapping("unLaunch")
-	public String unLaunch(@RequestParam("adId") String adId , ModelMap model) {
-		
+	public String unLaunch(@RequestParam("adId") String adId, ModelMap model) {
+
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		adVO.setAdStatus(AdStatusEnum.DISABLED.getStatus());
 		adSvc.updateAd(adVO);
-		
-		
+
 		List<AdVO> list = adSvc.getAll();
 		model.addAttribute("adListData", list);
 		model.addAttribute("success", "-(刪除成功)");
 		return "redirect:/front/seller/ad/adlist";
-		
-	
-		
+
 	}
-	
-	
-	
 
 	@PostMapping("deleteStatus")
 	public String deleteStatus(@RequestParam("adId") String adId, ModelMap model) {
