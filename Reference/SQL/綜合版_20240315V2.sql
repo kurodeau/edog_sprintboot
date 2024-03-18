@@ -99,12 +99,12 @@ notifyTime datetime,
 notifyState varchar(10)
 );
 -- 後臺管理者  創建table-- 
-Create Table IF NOT EXISTS managerUser(
-managerUserId int AUTO_INCREMENT primary key ,
-managerUserName varchar(100) ,
+Create Table IF NOT EXISTS manager(
+managerId int AUTO_INCREMENT primary key ,
+managerEmail varchar(100) ,
 managerPassword varchar(100) ,
 managerPer int ,
-createtime datetime DEFAULT CURRENT_TIMESTAMP
+managerCreatetime datetime DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS ad (
 adid int AUTO_INCREMENT primary KEY,
@@ -496,18 +496,18 @@ VALUES
   (10, 'Upcoming Deadline: Project Submission', '2023-12-05 18:00:00', null),
   (20, 'Happy Birthday! 🎉', '2023-12-10 00:00:00', null);
   -- 後臺管理者  放入測試資料-- 
-INSERT INTO managerUser (managerUserName, managerPassword, managerPer, createtime)
+INSERT INTO manager (managerEmail, managerPassword, managerPer, managerCreatetime)
 VALUES 
-  ('Luisa', 'adminpass1', 10, NOW()),
-  ('Sakiko', 'adminpass2', 20, NOW()),
-  ('Soyo', 'adminpass3', 10, NOW()),
-  ('Dgeetia', 'adminpass4', 10, NOW()),
-  ('Grand', 'adminpass5', 20, NOW()),
-  ('Alen', 'adminpass6', 10, NOW()),
-  ('Red', 'adminpass7', 10, NOW()),
-  ('Timmiy', 'adminpass8', 20, NOW()),
-  ('Fren', 'adminpass9', 10, NOW()),
-  ('Lulia', 'adminpass10', 10, NOW());
+  ('luisa@example.com', 'adminpass1', 10, CURRENT_TIMESTAMP),
+  ('sakiko@example.com', 'adminpass2', 20, CURRENT_TIMESTAMP),
+  ('soyo@example.com', 'adminpass3', 10, CURRENT_TIMESTAMP),
+  ('dgeetia@example.com', 'adminpass4', 10, CURRENT_TIMESTAMP),
+  ('grand@example.com', 'adminpass5', 20, CURRENT_TIMESTAMP),
+  ('alen@example.com', 'adminpass6', 10, CURRENT_TIMESTAMP),
+  ('red@example.com', 'adminpass7', 10, CURRENT_TIMESTAMP),
+  ('timmiy@example.com', 'adminpass8', 20, CURRENT_TIMESTAMP),
+  ('fren@example.com', 'adminpass9', 10, CURRENT_TIMESTAMP),
+  ('testmanager@gmail.com', '$2a$10$AMRbaSaciFN/8ry3CuZLq.8O7wKw.zSh4WKHU9Kup0riB/Etu6nPC', 10, CURRENT_TIMESTAMP);
 -- 廣告  放入假資料-- 
 
 INSERT INTO ad (sellerId,adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, adStatus, adCreateTime, isEnabled)
@@ -783,5 +783,4 @@ INSERT INTO report (reportMemberId, reportTargetType, replyId, articleId, report
 (3, 0, NULL, 4, 8, '2023-08-15 09:45:00', 0, NULL), 
 (4, 0, NULL, 5, 5, '2023-09-02 11:20:00', 0, NULL), 
 (5, 1, 5, NULL, 10, '2023-10-10 13:55:00', 0, NULL);
-
 

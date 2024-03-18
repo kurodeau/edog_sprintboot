@@ -55,7 +55,7 @@ public class ArticleService {
 	}
 	
 	 public List<ArticleVO> searchArticles(String searchText) {
-	         return repository.findByArticleTitleContaining(searchText);
+	         return repository.searchArticles(searchText);
 
 	    }
 	}

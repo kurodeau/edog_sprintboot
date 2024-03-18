@@ -1,8 +1,8 @@
 package com.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,6 +11,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	@Autowired
 	private ChangeHeaderInfoInterceptor  changeHeaderInfoInterceptor ;
 
+	@Value("${myserver.back.entry}")
+	String loginPath;
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		
@@ -30,6 +33,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/adlist"); 
 		// 買家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/main"); 
+		
+		
+		// 後台家部分
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/"+loginPath+"/login"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/main"); 
 
 		
 	}

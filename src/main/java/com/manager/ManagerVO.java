@@ -19,7 +19,7 @@ public class ManagerVO implements Serializable{
 	
 	
 	
-	private Integer managerUserId;
+	private Integer managerId;
 	
 	private String managerEmail;
 	
@@ -27,19 +27,10 @@ public class ManagerVO implements Serializable{
 	
 	private Integer managerPer;
 	
-	private Timestamp createtime;
+	private Timestamp managerCreatetime;
 
-	private Boolean isConfirm;
 	
-	
-	@Column(name = "isConfrim")
-	public Boolean getIsConfirm() {
-		return isConfirm;
-	}
 
-	public void setIsConfirm(Boolean isConfirm) {
-		this.isConfirm = isConfirm;
-	}
 
 	@Column(name = "managerEmail")
 	public String getManagerEmail() {
@@ -52,13 +43,13 @@ public class ManagerVO implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="managerUserId" , updatable = false)
-	public Integer getManagerUserId() {
-		return managerUserId;
+	@Column(name="managerId" , updatable = false)
+	public Integer getManagerId() {
+		return managerId;
 	}
 
-	public void setManagerUserId(Integer managerUserId) {
-		this.managerUserId = managerUserId;
+	public void setManagerId(Integer managerId) {
+		this.managerId = managerId;
 	}
 	
 
@@ -81,13 +72,13 @@ public class ManagerVO implements Serializable{
 		this.managerPer = managerPer;
 	}
 
-	@Column(name ="createtime")
-	public Timestamp getCreatetime() {
-		return createtime;
+	@Column(name ="managerCreatetime")
+	public Timestamp getManagerCreatetime() {
+		return managerCreatetime;
 	}
 
-	public void setCreatetime(Timestamp createtime) {
-		this.createtime = createtime;
+	public void setManagerCreatetime(Timestamp managerCreatetime) {
+		this.managerCreatetime = managerCreatetime;
 	}
 	
 	

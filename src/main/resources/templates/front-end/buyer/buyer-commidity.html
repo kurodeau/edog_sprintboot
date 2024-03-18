@@ -84,13 +84,14 @@
 
 					<section class="commidity-details-custom d-flex justify-content-start gap-3">
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom" onclick="switchFavoritesStatus()">
-								<i class="ri-heart-line"></i><i class="ri-heart-fill" style="display:none;"></i>&nbsp;&nbsp;加入收藏
+							<button class="btn btn-collection-custom" onclick="switchFavoritesStatus()">
+								<i class="ri-heart-line"></i><i class="ri-heart-fill"
+									style="display:none;"></i>&nbsp;&nbsp;加入收藏
 							</button>
 							<script>
 								// 定義一個函數, 每次操作加入收藏按鈕都切換收藏狀態
 								function switchFavoritesStatus() {
-									const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
+									const addToFavoritesBtn = document.querySelector('.btn-collection-custom');
 									// 如果按鈕存在
 									if (addToFavoritesBtn) {
 										// 獲取商品ID或其他需要的資訊
@@ -111,11 +112,18 @@
 												// const responseData = JSON.parse(xhr.responseText);
 												const responseData = xhr.responseText;
 												console.log("!!這個現在很怪喔!responseData=" + responseData);
+												if (responseData === "已將商品移出收藏" || responseData === "已將商品加入收藏") {
+													alert(responseData);
+												}
+												else {
+													alert("請登入會員以使用收藏與其他便利功能");
+												}
 
 												// 顯示跳窗提示回傳訊息
-												alert("這個應該怪怪的responseData");
+												// alert(responseData);
 											} else {
 												console.error('Request failed with status:', xhr.status);
+												alert("收藏功能錯誤");
 											}
 										};
 
@@ -134,7 +142,7 @@
 								// 定义一个函数，用于绑定事件和发送请求
 								function checkFavoritesStatus() {
 									// 找到加入收藏按钮
-									const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
+									const addToFavoritesBtn = document.querySelector('.btn-collection-custom');
 									// 如果按鈕存在, 而且買家有登入
 									if (addToFavoritesBtn && true) {
 										// 獲取商品ID或其他需要的資訊
@@ -186,19 +194,101 @@
 								document.addEventListener('DOMContentLoaded', checkFavoritesStatus);
 							</script>
 
-							<button class="btn btn-like-custom" style="display: none">
+							<!-- <button class="btn btn-like-custom" style="display: none">
 								<i class="ri-heart-fill"></i>&nbsp;&nbsp;取消收藏
-							</button>
+							</button> -->
 						</div>
 						<div class="col-auto d-flex">
-							<button class="btn btn-shopcart-custom">
+							<button class="btn btn-shopcart-custom" onclick="addIntoCart()">
 								<i class="ri-shopping-cart-2-line"></i>&nbsp;&nbsp;放入購物車
 							</button>
 						</div>
+						<script>
+							// 定義一個函數, 每次操作加入購物車按鈕都依照所指定數量, 將該商品加入購物車(已有則疊加)
+							function addIntoCart() {
+								// 抓到按鈕, 還有數量設定的欄位
+								const addToFavoritesBtn = document.querySelector('.btn-shopcart-custom');
+								const quantityInput = document.getElementById('quantityInput');
+								// 如果按鈕存在且設定數量欄位存在
+								if (addToFavoritesBtn && quantityInput) {
+									// 獲取商品ID或其他需要的資訊
+									const currentUrl = window.location.href;
+									const productId = currentUrl.match(/\d+$/)[0]; // 從網址中抓商品ID
+									const productQty = quantityInput.value;
+									console.log("我要加入購物車的是productId=" + productId + " ,productQty=" + productQty);
+
+									// 構建要傳遞的資料
+									const data = {
+										productId: productId,
+										productQty: productQty
+									};
+
+									// 發送 POST 請求
+									fetch('/front/buyer/cart/addToCartFromProduct', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/json'
+										},
+										body: JSON.stringify(data)
+									})
+										.then(response => response.json())
+										.then(data => {
+											console.log('加入購物車成功:', data);
+											alert('已經加入購物車');
+										})
+										.catch(error => {
+											console.error('加入購物車失敗:', error);
+											alert('請登入會員以使用購物車與其他便利功能!');
+										});
+								};
+							};
+						</script>
+
 						<div class="col-auto d-flex">
-							<button class="btn btn-userdark text-white">
+							<button class="btn btn-userdark text-white" id="buyItNow-btn">
 								&nbsp;&nbsp;直接購買</button>
 						</div>
+						<script>
+							$(document).ready(function () {
+								$('#buyItNow-btn').click(function () {
+									console.log("測試訊息:有綁到直接購買按鈕");
+									// 將商品資訊封裝成資料, 轉成JSON字串
+									let goingBuyProduct = new Map();
+									let keyName = "keyName";
+									const currentUrl = window.location.href;
+									const urlReturn = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/front/buyer/order_checkout';
+									let productId = currentUrl.match(/\d+$/)[0];
+									let productQty = document.getElementById('quantityInput').value;
+									goingBuyProduct.set(keyName, [{ "productId": productId, "productQty": productQty }]);
+									console.log("測試訊息:goingBuyProduct=" + goingBuyProduct);
+									const obj = Object.fromEntries(goingBuyProduct);
+									const GoingBuyProductJsonStr = JSON.stringify(obj);
+									console.log("測試訊息:GoingBuyProductJsonStr" + GoingBuyProductJsonStr);
+
+									// 使用 jQuery AJAX 送出 POST 請求
+									$.ajax({
+										url: '/front/buyer/buyProductWithoutCart', // 替換成你的 POST 請求 URL
+										type: 'POST',
+										contentType: 'application/json', // 設置請求header
+										data: GoingBuyProductJsonStr, // 資料轉JSON JSON 格式
+										success: function (responseData) {
+											window.location.href = urlReturn;
+											console.log(responseData);
+											console.log('POST 请求成功');
+										},
+										error: function (xhr, status,
+											error) {
+											// 请求失败处理
+											console.error('POST 请求失败:',
+												error);
+											console.log('狀態:', status);
+											console.log('回應內容:',
+												xhr.responseText);
+										}
+									});
+								});
+							});
+						</script>
 					</section>
 				</div>
 			</div>

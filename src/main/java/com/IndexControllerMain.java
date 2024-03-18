@@ -132,42 +132,45 @@ public class IndexControllerMain {
 		return "/front-end/buyer/buyer-commidityV2";
 	}
 
-//	@PostMapping(value = "/search", produces = "application/json")
-//	public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
-//		System.out.println("+++++++++++++++++++++++++++++++");
-//
-//		System.out.println(formData);
-//
-//		List<ProductVO> prodList = productSvc.compositeQuery(formData);
-//		System.out.println("Size = " + prodList.size());
-//		prodList.forEach(System.out::println);
-//
-//		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
-//				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
-//
-//		List<Integer> productListId = prodList.stream().map(productVO -> productVO.getProductId())
-//				.collect(Collectors.toList());
-//
-//		return ResponseEntity.ok(productListId);
-//
-//	}
-//
-//	@GetMapping("/searchresult")
-//	public String productSearchResult(@RequestParam("productListId") String productListId, ModelMap model) {
-//
-//		String[] productIdArray = productListId.split(",");
-//
-//		List<ProductVO> productList = new ArrayList<>();
-//		for (String productId : productIdArray) {
-//			ProductVO product = productSvc.getOneProduct(Integer.valueOf(productId));
-//			productList.add(product);
-//		}
-//
-//		model.addAttribute("productIdList", productList);
-//
-//		return "/front-end/buyer/buyer-search";
-//
-//	}
+	// @PostMapping(value = "/search", produces = "application/json")
+	// public ResponseEntity<?> seachProducts(@RequestBody FormData formData) {
+	// System.out.println("+++++++++++++++++++++++++++++++");
+	//
+	// System.out.println(formData);
+	//
+	// List<ProductVO> prodList = productSvc.compositeQuery(formData);
+	// System.out.println("Size = " + prodList.size());
+	// prodList.forEach(System.out::println);
+	//
+	// productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(),
+	// formData.getRatings(),
+	// formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
+	//
+	// List<Integer> productListId = prodList.stream().map(productVO ->
+	// productVO.getProductId())
+	// .collect(Collectors.toList());
+	//
+	// return ResponseEntity.ok(productListId);
+	//
+	// }
+	//
+	// @GetMapping("/searchresult")
+	// public String productSearchResult(@RequestParam("productListId") String
+	// productListId, ModelMap model) {
+	//
+	// String[] productIdArray = productListId.split(",");
+	//
+	// List<ProductVO> productList = new ArrayList<>();
+	// for (String productId : productIdArray) {
+	// ProductVO product = productSvc.getOneProduct(Integer.valueOf(productId));
+	// productList.add(product);
+	// }
+	//
+	// model.addAttribute("productIdList", productList);
+	//
+	// return "/front-end/buyer/buyer-search";
+	//
+	// }
 
 	@GetMapping("/searchresult")
 	public String searchResult(@RequestParam(value = "animalType", required = false) String animalType,
@@ -210,24 +213,20 @@ public class IndexControllerMain {
 
 		// 調用 ProductService 執行複合查詢
 		List<ProductVO> productResult = productSvc.compositeQuery(formData);
-		
-		
-		
-			System.out.println("+++++++++++++++++++++++++++++++");
-	
-			System.out.println(formData);
-	
-		
-			System.out.println("Size = " + productResult.size());
-			productResult.forEach(System.out::println);
-	
-			productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
-					formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
 
-		
+		System.out.println("+++++++++++++++++++++++++++++++");
+
+		System.out.println(formData);
+
+		System.out.println("Size = " + productResult.size());
+		productResult.forEach(System.out::println);
+
+		productSvc.getBy(formData.getAnimalType(), formData.getProductCategory(), formData.getRatings(),
+				formData.getPriceFrom(), formData.getPriceTo(), formData.getKeyword());
+
 		List<ProductVO> productList = productResult.stream()
 				.filter(pt -> "已上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
-						.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		model.addAttribute("productIdList", productList);
 
 		return "/front-end/buyer/buyer-search"; // 返回結果

@@ -85,7 +85,11 @@ public class ArticleIdController {
 		System.out.println("搜索内容：" + searchText);
 		
 		List<ArticleVO> searchResults = articleSvc.searchArticles(searchText);
-       
+		
+		if (searchResults.isEmpty()) {
+			model.addAttribute("errorMessage", "查無資料");
+			return "front-end/article/nothing";
+		}
 		model.addAttribute("searchResults", searchResults);
 		return "front-end/article/forum-homesearch";
     }

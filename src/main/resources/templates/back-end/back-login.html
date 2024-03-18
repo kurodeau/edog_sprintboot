@@ -1,24 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>EDog</title>
-
-    <style></style>
-    <script src="loadcss.js"></script>
+    <th:block th:insert="~{/fragment-head}"></th:block>
   </head>
-
   <body>
-    <!-- ======= Header, 後臺登入應該不需要Header ======= -->
+    <!-- ======= Header ======= -->
 
-    <!-- ======= Sidebar, 後臺登入應該不需要Sidebar ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/back-end/header-back}"></th:block>
+    </header>
 
-    <!-- ======= Main ======= -->
-    <main>
+    <main class="main-nosidebar">
       <div class="container">
         <section
           class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
@@ -47,65 +39,59 @@
                       <p class="text-center small"></p>
                     </div>
 
-                    <form class="row g-3 needs-validation" novalidate>
-                      <div class="col-12">
-                        <label for="yourUsername" class="form-label"
-                          >使用者名稱</label
-                        >
-                        <div class="input-group has-validation">
-                          <!--
+                    <div class="col-12">
+                      <label for="yourUsername" class="form-label"
+                        >使用者名稱</label
+                      >
+                      <div class="input-group has-validation">
+                        <!--
                         <span class="input-group-text" id="inputGroupPrepend">@</span> -->
-                          <input
-                            type="text"
-                            name="username"
-                            class="form-control"
-                            id="yourUsername"
-                            required
-                          />
-                          <div class="invalid-feedback">
-                            請輸入後臺管理者名稱
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-12">
-                        <label for="yourPassword" class="form-label"
-                          >密碼</label
-                        >
                         <input
-                          type="password"
-                          name="password"
+                          type="text"
+                          name="email"
                           class="form-control"
-                          id="yourPassword"
+                          id="yourUsername"
                           required
                         />
-                        <div class="invalid-feedback">請輸入後臺管理者密碼</div>
+                        <div class="invalid-feedback">請輸入後臺管理者名稱</div>
                       </div>
+                    </div>
 
-                      <div class="col-12">
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            name="remember"
-                            value="true"
-                            id="rememberMe"
-                          />
-                          <label class="form-check-label" for="rememberMe"
-                            >記住登入資訊</label
-                          >
-                        </div>
-                      </div>
-                      <div class="col-12">
-                        <button
-                          class="btn btn-primary w-100"
-                          type="submit"
-                          style="background-color: var(--admin-red_tint)"
+                    <div class="col-12">
+                      <label for="yourPassword" class="form-label">密碼</label>
+                      <input
+                        type="password"
+                        name="password"
+                        class="form-control"
+                        id="yourPassword"
+                        required
+                      />
+                      <div class="invalid-feedback">請輸入後臺管理者密碼</div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="remember"
+                          value="true"
+                          id="rememberMe"
+                        />
+                        <label class="form-check-label" for="rememberMe"
+                          >記住登入資訊</label
                         >
-                          登入
-                        </button>
                       </div>
-                    </form>
+                    </div>
+                    <div class="col-12">
+                      <button
+                        class="btn btn-primary w-100 loginBtn"
+                        type="submit"
+                        style="background-color: var(--admin-red_tint)"
+                      >
+                        登入
+                      </button>
+                    </div>
                     <div class="for-room" style="height: 30px"></div>
                   </div>
                 </div>
@@ -124,15 +110,49 @@
         </section>
       </div>
     </main>
-    <!-- End #main -->
-    <!-- End Main -->
 
-    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+    <div th:replace="@{/fragment-js}"></div>
 
-    <!-- Vendor & Main JS Files -->
-    <script src="loadjs.js"></script>
+    <script>
+      document
+        .querySelector(".loginBtn")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
 
-    <!-- Local JS File -->
-    <script></script>
+          let url =
+            window.location.protocol +
+            "//" +
+            window.location.hostname +
+            ":" +
+            window.location.port +
+            "/back/api/v1/auth/authenticate";
+
+          alert(url);
+
+          let email = document.getElementById("yourUsername").value;
+          let password = document.getElementById("yourPassword").value;
+          formData = { email: email, password: password };
+          fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              localStorage.setItem("access_token", data.access_token);
+              localStorage.setItem("refresh_token", data.refresh_token);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+    </script>
   </body>
 </html>
