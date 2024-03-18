@@ -158,6 +158,9 @@
 			data: jsonData,
 			success: function (responseData) {
 				console.log('走馬燈資料取得成功');
+				if ('data' in responseData) {
+					$('#newsTickerCoutent').text(responseData.data);
+				}
 			},
 			error: function (xhr, status, error) {
 				console.error('走馬燈資料取得失敗:', error);

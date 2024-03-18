@@ -54,9 +54,19 @@ public class FrontNewsTickerController {
             return ResponseEntity.badRequest().body(result);
         }
         String currentTime = jsonObject.getString("currentTime");
-        
-		System.out.println( newsTickerSvc.showNewsTicker(currentTime) );
-		return ResponseEntity.ok("測試訊息:回傳的走馬燈POST字串");
+		
+        JSONObject jsonNewsTickers = new JSONObject();
+		jsonNewsTickers.put( "data", newsTickerSvc.showNewsTicker(currentTime) );
+		System.out.println( "測試資料:印出要回傳的內容=" + jsonNewsTickers );
+//        String newsTickersStr = newsTickerSvc.showNewsTicker(currentTime);
+//        System.out.println( newsTickersStr );
+		// 這個不是正規作法
+		HashMap<String, String> hashMap = new HashMap<String, String>();
+		hashMap.put("data", newsTickerSvc.showNewsTicker(currentTime));
+		
+		
+		return ResponseEntity.ok(hashMap);
+		
 	}
 
 }
