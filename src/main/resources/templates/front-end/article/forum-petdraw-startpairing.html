@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
+<link rel="stylesheet" href="/css/style.css">
 
-<meta property="og:description"
-	content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
 </head>
+
 <body>
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
@@ -91,37 +97,39 @@
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
 	<main class="main main-layout-seller">
-		<div class="seller-container mt-5">
-			<div class="pagetitle ">
-				<p id="timer"></p>
+		<div class="seller-container">
+			<div class="pagetitle">
 
+				<form th:action="@{/front/forum/petdraw/startpairing/update}"
+					method="post" th:object="${pairResponse}"
+					enctype="multipart/form-data">
+					<div
+						class="atm_mk_stnw88 atm_tk_1u1b7xl atm_fq_1ssbidh atm_tr_zr6sja atm_3f_1n6thub atm_5j_1fwxnve atm_ks_15vqwwr a1af3bqe">
+						<div
+							class="atm_e2_uuw12j atm_vy_uuw12j atm_ks_15vqwwr atm_mk_h2mmj6 atm_2d_16vjel sofhfzb">
+							<img
+								th:src="@{/front/forum/petdraw/PetDrawReader} + '?memberpairId=' + *{memberPairVO.memberId}"
+								width="100px" />
+						</div>
+					</div>
 
-				<form method="get" th:action="@{/front/forum/petdraw/checkpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="配對結果" >
+					<div>
+						<label>配對的會員編號:</label> 
+							<input type="text"th:field="*{memberPairVO.memberId}" style="border: 0px; font-weight: bold;" readonly /><br />
+							<!-- <input type="hidden" th:field="*{memberVO.memberId}"/> -->
+							<input type="hidden" th:field="*{memberVO}"/>
+							<input type="hidden" th:field="*{petDrawVO}"/>
+							<input type="hidden" th:field="*{memberPairVO}"/>
+					</div>
+
+							<input type="hidden" name="isMemberLike" th:value="true" id="likeHiddenInput" />
+							<input type="hidden" name="isMemberLike" th:value="false" id="dislikeHiddenInput" />
+
+							<button type="submit" onclick="setLike(true)">喜歡</button>
+							<button type="submit" onclick="setLike(false)">取消</button>
+
 				</form>
-
-
-				
-				<form method="post" th:action="@{/front/forum/petdraw/startpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="開始抽卡" >
-				</form>
-
-				
-				<form method="post" th:action="@{/front/forum/petdraw/othersparing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="有人想跟你配對" >
-				</form>
-
 			</div>
-			
 		</div>
 	</main>
 	<!-- End Main -->
@@ -159,8 +167,8 @@
 				<a href="/"
 					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
 					<svg class="bi" width="32" height="32" fill="currentColor">
-                        <use xlink:href="bootstrap-icons.svg#heart-fill" />
-                    </svg>
+						<use xlink:href="bootstrap-icons.svg#heart-fill" />
+					</svg>
 				</a>
 				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
 					© 2023 CatTom.版權所有。</p>
@@ -174,43 +182,16 @@
 	<div th:replace="~{/fragment-datatableJs}"></div>
 
 	<script>
-	document.addEventListener('DOMContentLoaded', function () {
-	    const timerDisplay = document.getElementById('timer');
-
-	    function updateTimer() {
-	        const currentTime = new Date();
-	        const nextDrawTime = new Date();
-
-	        // 將下一次抽卡時間設置為台北時間午夜0點
-	        if (currentTime.getUTCHours() >= 16) {
-	        	 // 如果當前UTC時間超過16:00，設置為明天
-	            nextDrawTime.setUTCDate(currentTime.getUTCDate() + 1);
-	        }
-	        // 台北午夜0點等於UTC的16:00
-	        nextDrawTime.setUTCHours(16, 0, 0, 0);
-
-	        const countdownFunc = () => {
-	            const currentTime = new Date();
-	            const timeDifference = nextDrawTime - currentTime;
-	            if (timeDifference <= 0) {
-	                clearInterval(interval);
-	                timerDisplay.textContent = '已到抽卡時間!';
-	                return;
-	            }
-
-	            const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
-	            const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-	            const seconds = Math.floor((timeDifference / 1000) % 60);
-	            timerDisplay.textContent = `午夜倒數計時: ${hours}時 ${minutes}分 ${seconds}秒`;
-	        };
-
-	        countdownFunc();
-	        const interval = setInterval(countdownFunc, 1000);
-	    }
-
-	    updateTimer();
-	});
-    </script>
+		function setLike(isLike) {
+			if (isLike) {
+				document.getElementById("likeHiddenInput").value = "true";
+				document.getElementById("dislikeHiddenInput").value = "false";
+			} else {
+				document.getElementById("likeHiddenInput").value = "false";
+				document.getElementById("dislikeHiddenInput").value = "true";
+			}
+		}
+	</script>
 
 </body>
 

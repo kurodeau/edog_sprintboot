@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
+<link rel="stylesheet" href="/css/style.css">
 
-<meta property="og:description"
-	content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
 </head>
+
 <body>
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
@@ -90,38 +96,37 @@
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
+	<main class="main main-layout-seller ">
 		<div class="seller-container mt-5">
-			<div class="pagetitle ">
-				<p id="timer"></p>
+			<div class="pagetitle">
 
+				<div th:each="pairResponse : ${pairResponses}">
+					<form th:action="@{/front/forum/petdraw/otherpairing/update}+ '?memberpairId=' + *{memberVO.memberId}"
+						method="post" th:object="${pairResponse}"
+						enctype="multipart/form-data">
 
-				<form method="get" th:action="@{/front/forum/petdraw/checkpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="配對結果" >
-				</form>
+						<img
+							th:src="@{/front/forum/petdraw/PetDrawReader} + '?memberpairId=' + *{memberVO.memberId}"
+							width="100px" />
+						<div>
+							<label>配對的會員編號:</label> <span th:text="*{memberVO.memberId}"
+								style="font-weight: bold;"></span><br />
+						</div>
 
+						<div>
+							<label>是否喜歡:</label> 
+								<input type="radio" name="memberLike"th:value="true"  th:checked="${pairResponse.petDraw.isMemberLike}" /> 是
+								<input type="radio" name="memberLike" th:value="false"  th:checked="${!pairResponse.petDraw.isMemberLike}" /> 否
+								
+							
+						</div>
 
-				
-				<form method="post" th:action="@{/front/forum/petdraw/startpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="開始抽卡" >
-				</form>
-
-				
-				<form method="post" th:action="@{/front/forum/petdraw/othersparing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
-					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="有人想跟你配對" >
-				</form>
+						<button type="submit">確認</button>
+					</form>
+				</div>
 
 			</div>
-			
+
 		</div>
 	</main>
 	<!-- End Main -->
@@ -159,8 +164,8 @@
 				<a href="/"
 					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
 					<svg class="bi" width="32" height="32" fill="currentColor">
-                        <use xlink:href="bootstrap-icons.svg#heart-fill" />
-                    </svg>
+						<use xlink:href="bootstrap-icons.svg#heart-fill" />
+					</svg>
 				</a>
 				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
 					© 2023 CatTom.版權所有。</p>
@@ -174,43 +179,25 @@
 	<div th:replace="~{/fragment-datatableJs}"></div>
 
 	<script>
-	document.addEventListener('DOMContentLoaded', function () {
-	    const timerDisplay = document.getElementById('timer');
+		function setPreference(preference) {
+			// Update the hidden input's value
+			document.getElementById('preferenceInput').value = preference;
 
-	    function updateTimer() {
-	        const currentTime = new Date();
-	        const nextDrawTime = new Date();
-
-	        // 將下一次抽卡時間設置為台北時間午夜0點
-	        if (currentTime.getUTCHours() >= 16) {
-	        	 // 如果當前UTC時間超過16:00，設置為明天
-	            nextDrawTime.setUTCDate(currentTime.getUTCDate() + 1);
-	        }
-	        // 台北午夜0點等於UTC的16:00
-	        nextDrawTime.setUTCHours(16, 0, 0, 0);
-
-	        const countdownFunc = () => {
-	            const currentTime = new Date();
-	            const timeDifference = nextDrawTime - currentTime;
-	            if (timeDifference <= 0) {
-	                clearInterval(interval);
-	                timerDisplay.textContent = '已到抽卡時間!';
-	                return;
-	            }
-
-	            const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
-	            const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-	            const seconds = Math.floor((timeDifference / 1000) % 60);
-	            timerDisplay.textContent = `午夜倒數計時: ${hours}時 ${minutes}分 ${seconds}秒`;
-	        };
-
-	        countdownFunc();
-	        const interval = setInterval(countdownFunc, 1000);
-	    }
-
-	    updateTimer();
-	});
-    </script>
+			// Implement any additional logic to handle the preference (true or false)
+			console.log('Preference set to:', preference);
+			// Here you might want to send this preference to the server or handle it in some other way.
+		}
+		
+		function setLike(ispairLike) {
+			if (ispairLike) {
+				document.getElementById("likeHiddenInput").value = "true";
+				document.getElementById("dislikeHiddenInput").value = "false";
+			} else {
+				document.getElementById("likeHiddenInput").value = "false";
+				document.getElementById("dislikeHiddenInput").value = "true";
+			}
+		}
+	</script>
 
 </body>
 
