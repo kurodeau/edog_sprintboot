@@ -16,26 +16,36 @@
     <main class="main main-layout-seller">
     <div class="seller-container">
 			<div class="pagetitle">
-    <h1  style="margin-top: 30px;">警告</h1>
-	        <hr> 
+			<h1  style="margin-top: 30px;">喜愛文章</h1>
+
+	     
 	        </div> 
-	          <div style="text-align: center;">
-			    <p>以下文章已被檢舉並經過調查，確認違反了社區規定。因此，我們已將該文章移除。</p>
+	        
+			<table id="articleLikeTable" 
+				style="width: 100%">
+				<tbody>
+					<th:block th:each="articleLikeVO : ${myArticleLikeList}">
+						<tr th:if="${articleLikeVO.articleVO.isEnabled}" class="forum-article" th:onclick="'redirectToUpdatePage(\'' + @{/article/getOne_For_Update(id=${articleLikeVO.articleVO.articleId})} + '\')'">
+						<td style="display: none;" th:text="${articleLikeVO.articleVO.articleId}"></td>
+							<td class="avatar-category">
+						        <span class="avatar-name" th:text="${articleLikeVO.articleVO.buyerVO.memberName}"></span>
+						        <span class="category-name" th:text="${articleLikeVO.articleVO.articleTypeVO.articleTypeName}"></span>
+						    </td>
+							<td class="article-title" th:text="${articleLikeVO.articleVO.articleTitle}"></td>
+							<td class="interaction-section">
+						        <i class="bi bi-suit-heart"></i>
+						        <span class="article-like" th:text="${articleLikeVO.articleVO.articleLike}"></span>
+						        <i class="bi bi-chat-dots"></i>
+						        <span class="article-comment" th:text="${articleLikeVO.articleVO.articleComment}"></span>
+						    
+							<span class="post-time time" th:if="${articleLikeVO.articleVO.artUpdateTime != null}" th:text="${#dates.format(articleLikeVO.articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')} + ' 更新'"></span>
+							<span class="post-time time" th:unless="${articleLikeVO.articleVO.artUpdateTime != null}" th:text="${#dates.format(articleLikeVO.articleVO.artCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+							</td>
+						</tr>
+					</th:block>
 
-			    <div style="text-align: center;">
-			    <div class="article-info-container" style="text-align: left; display: inline-block; border: 1px solid #ccc; padding: 10px;">
-			        <span class="title-category">
-			            <span class="article-title" th:text="${articleVO.articleTitle}"></span>
-			        </span>
-			        <hr>
-			        <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
-			        <span><img th:if="${articleVO.upFiles != null}"
-			                th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
-			                width="100px"></span><br/>
-			    </div>
-			</div>
-
-			</div>
+				</tbody>
+			</table>
 		</div>
 	</main>
     <!-- End Main -->
