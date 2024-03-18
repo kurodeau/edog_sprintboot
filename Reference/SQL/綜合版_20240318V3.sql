@@ -558,7 +558,9 @@ VALUES
   ('歡迎來到EDOG,毛小孩的快樂天堂', 1, NOW(), DATE('2024-12-13 00:00:00'), true),
   ('這個不應該顯示', 2, NOW(), DATE('2024-12-13 00:00:00'), false),
   ('最齊全的寵物百貨讓你逛到手軟', 3, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), false),
-  ('罐罐坐飛機!!百種進口罐罐讓你花市養刁貓主子', 4, DATE('2024-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true);
+  ('80年代主題風貓窩熱賣中', 3, DATE('2023-12-13 00:00:00'), DATE('2023-12-14 00:00:00'), true),
+  ('未來戰狗潔牙骨上架', 3, DATE('2025-12-13 00:00:00'), DATE('2025-12-14 00:00:00'), true),
+  ('罐罐坐飛機!!百種進口罐罐讓你花式養刁貓主子', 4, DATE('2023-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true);
   -- 匯款明細  放入測試資料-- 
 INSERT INTO remittance (
     sellerId,remittanceEstimatedTime,remittanceTime,settlementTime,

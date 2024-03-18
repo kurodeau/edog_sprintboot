@@ -45,7 +45,7 @@ public class NewsTickerService {
 	
 	public List<NewsTickerVO> findAllByIsDisplayTrueOrderBySortDesc() {
 		System.out.println("測試訊息:有進入findByIsDisplayTrue()");
-		return repository.findAllByIsDisplayTrueOrderBySortDesc();
+		return repository.findAllByIsDisplayTrueAndTimeRangeOrderBySortDesc();
 	}
 	
 	public String showNewsTicker(String currentTime) {
