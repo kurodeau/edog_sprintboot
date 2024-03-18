@@ -38,17 +38,8 @@
 				        width="100px"></span><br/>
 				
 				    <div class="interaction-section">
-				     <span th:if="${articleLikeVO != null}">
-				            <i class="bi bi-suit-heart-fill islike-btn" data-article-id="articleId"></i>
-				        </span>
-				        <span th:unless="${articleLikeVO != null}">
-				            <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
-				        </span>
+				        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
 				        <span class="article-like" th:text="${articleVO.articleLike}"></span>
-				        
-<!-- 				        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i> -->
-<!-- 				        <span class="article-like" th:text="${articleVO.articleLike}"></span> -->
-				        
 				        <i class="bi bi-chat-dots" id="commentIcon"></i>
 				        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
 				        <i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
@@ -71,17 +62,7 @@
                         </div>
                     <div class="interaction-section">
                         <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
-                        
-                        <span th:if="${replyVO.likeIt}==1">
-
-                        <i class="bi bi-suit-heart-fill isreply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
-                        </span>
-                        
-                        <span th:if="${replyVO.likeIt}!=1">
                         <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
-                        </span>
-                        
-                        
                         <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
                         <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
                         <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
@@ -319,7 +300,7 @@ $('.like-btn').click(function() {
             type: 'POST',
             data: { articleId: articleId }, // 包含 articleId 参数
             success: function(response) {
-            	 location.reload();
+                // 如果请求成功，不需要执行任何操作
             },
             error: function(xhr, status, error) {
                 // 处理请求错误，恢复喜欢数显示
@@ -332,14 +313,14 @@ $('.like-btn').click(function() {
         // 如果未喜欢，增加喜欢数并标记为已喜欢
         $(this).addClass('liked');
         likeCountElement.text(currentLikeCount + 1);
-        console.log('Article ID:', articleId);
+        
         // 向后端发送POST请求，喜欢数加一
         $.ajax({
             url: '/article/like',
             type: 'POST',
             data: { articleId: articleId }, // 包含 articleId 参数
             success: function(response) {
-            	 location.reload();
+                // 如果请求成功，不需要执行任何操作
             },
             error: function(xhr, status, error) {
                 // 处理请求错误，恢复喜欢数显示
@@ -350,60 +331,8 @@ $('.like-btn').click(function() {
         });
     }
     
-});
-//文章已喜歡	    
-$('.islike-btn').click(function() {
-    var likeCountElement = $(this).siblings('.article-like');
-    
-    // 获取当前喜欢数和喜欢状态
-    var currentLikeCount = parseInt(likeCountElement.text());
-    var isLiked = $(this).hasClass('Liked');
-    
-    // 获取文章ID
-    var articleId = $('.report-article-button').attr('id');
-    
-    if (isLiked) {
-    	// 如果未喜欢，增加喜欢数并标记为已喜欢
-        $(this).addClass('liked');
-        likeCountElement.text(currentLikeCount + 1);
-        
-        // 向后端发送POST请求，喜欢数加一
-        $.ajax({
-            url: '/article/like',
-            type: 'POST',
-            data: { articleId: articleId }, // 包含 articleId 参数
-            success: function(response) {
-            	 location.reload();
-            },
-            error: function(xhr, status, error) {
-                // 处理请求错误，恢复喜欢数显示
-                $(this).removeClass('liked');
-                likeCountElement.text(currentLikeCount);
-                console.error(error);
-            }
-        });
-    } else {
-    	// 如果已经喜欢，取消喜欢
-        $(this).removeClass('liked');
-        likeCountElement.text(currentLikeCount - 1);
-        console.log('Article ID:', articleId);
-        // 向后端发送POST请求，喜欢数减一
-        $.ajax({
-            url: '/article/unlike',
-            type: 'POST',
-            data: { articleId: articleId }, // 包含 articleId 参数
-            success: function(response) {
-            	 location.reload();
-            },
-            error: function(xhr, status, error) {
-                // 处理请求错误，恢复喜欢数显示
-                $(this).addClass('liked');
-                likeCountElement.text(currentLikeCount);
-                console.error(error);
-            }
-        });
-        
-    }
+    // 打印文章ID到控制台
+    console.log('Article ID:', articleId);
 });
 
 
@@ -432,7 +361,7 @@ $('.reply-like-btn').click(function() {
             type: 'POST',
             data: { replyId: replyId }, // 包含 articleId 参数
             success: function(response) {
-            	location.reload();
+                // 如果请求成功，不需要执行任何操作
             },
             error: function(xhr, status, error) {
                 // 处理请求错误，恢复喜欢数显示
@@ -452,7 +381,7 @@ $('.reply-like-btn').click(function() {
             type: 'POST',
             data: { replyId: replyId }, // 包含 articleId 参数
             success: function(response) {
-            	location.reload();
+                // 如果请求成功，不需要执行任何操作
             },
             error: function(xhr, status, error) {
                 // 处理请求错误，恢复喜欢数显示
@@ -465,62 +394,6 @@ $('.reply-like-btn').click(function() {
 
     // 打印文章ID到控制台
     console.log('reply ID:', replyId);
-});
-//留言喜歡
-$('.isreply-like-btn').click(function() {
-    var likeCountElement = $(this).siblings('.reply-like');
-    
-    // 获取当前喜欢数和喜欢状态
-    var currentLikeCount = parseInt(likeCountElement.text());
-    var isLiked = $(this).hasClass('liked');
-    
-    // 获取文章ID
-    var replyId = $(this).attr('id');
-    
-    if (isLiked) {
-    	// 如果未喜欢，增加喜欢数并标记为已喜欢
-        $(this).addClass('liked');
-        likeCountElement.text(currentLikeCount + 1);
-        
-        // 向后端发送POST请求，喜欢数加一
-        $.ajax({
-            url: '/reply/like',
-            type: 'POST',
-            data: { replyId: replyId }, // 包含 articleId 参数
-            success: function(response) {
-            	location.reload();
-            },
-            error: function(xhr, status, error) {
-                // 处理请求错误，恢复喜欢数显示
-                $(this).removeClass('liked');
-                likeCountElement.text(currentLikeCount);
-                console.error(error);
-            }
-        });
-    } else {
-    	 // 如果已经喜欢，取消喜欢
-        $(this).removeClass('liked');
-        likeCountElement.text(currentLikeCount - 1);
-        console.log('reply ID:', replyId);
-        // 向后端发送POST请求，喜欢数减一
-        $.ajax({
-            url: '/reply/unlike',
-            type: 'POST',
-            data: { replyId: replyId }, // 包含 articleId 参数
-            success: function(response) {
-            	location.reload();
-            },
-            error: function(xhr, status, error) {
-                // 处理请求错误，恢复喜欢数显示
-                $(this).addClass('liked');
-                likeCountElement.text(currentLikeCount);
-                console.error(error);
-            }
-        });
-        
-    }
-
-
 });
 
 var commentIcon = document.getElementById('commentIcon');
@@ -578,7 +451,84 @@ $('#sendCommentBtn').on('click', function() {
 
 });
 
+const likeBtn = document.querySelector('.like-btn');
 
+//定义变量来跟踪按钮的喜爱状态
+let isLiked = false;
+
+//添加点击事件监听器
+likeBtn.addEventListener('click', function() {
+ // 切换填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ } else {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+ // 切换喜爱状态
+ isLiked = !isLiked;
+});
+
+//添加鼠标移入事件监听器
+likeBtn.addEventListener('mouseover', function() {
+ // 如果按钮处于喜爱状态，则保持填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+});
+
+//添加鼠标移出事件监听器
+likeBtn.addEventListener('mouseout', function() {
+ // 如果按钮处于非喜爱状态，则恢复为空心
+ if (!isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ }
+});
+
+	// 获取所有留言的 tr 元素
+	const replyRows = document.querySelectorAll('#example tbody tr');
+
+// 遍历每个留言的 tr 元素
+replyRows.forEach(function(replyRow) {
+    // 获取当前留言的愛心图标元素
+    const replylikeBtn = replyRow.querySelector('.reply-like-btn');
+
+    // 定义变量来跟踪愛心状态
+    let isLiked = false;
+
+    // 为愛心图标添加点击事件监听器
+    replylikeBtn.addEventListener('click', function() {
+        // 根据愛心状态切换填充状态
+        if (isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        } else {
+        	replylikeBtn.classList.remove('bi-suit-heart');
+        	replylikeBtn.classList.add('bi-suit-heart-fill');
+        }
+        // 切换愛心状态
+        isLiked = !isLiked;
+    });
+
+    // 为愛心图标添加鼠标移入事件监听器
+    replylikeBtn.addEventListener('mouseover', function() {
+        // 将愛心图标变为实心
+        replylikeBtn.classList.remove('bi-suit-heart');
+        replylikeBtn.classList.add('bi-suit-heart-fill');
+    });
+
+    // 为愛心图标添加鼠标移出事件监听器
+    replylikeBtn.addEventListener('mouseout', function() {
+        // 如果愛心处于空心状态则恢复为空心
+        if (!isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        }
+    });
+});
 
 
 

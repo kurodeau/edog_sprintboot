@@ -92,7 +92,8 @@ public class ReplyController {
             replySvc.addReply(replyVO);
             MsgVO msgVO = new MsgVO();
 	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        msgVO.setSenderMember(buyerVO);
+	        msgVO.setReceiverMember(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(2);
 	        msgVO.setMsgTypeVO(msgTypeVO);
@@ -179,7 +180,8 @@ public class ReplyController {
 	    	replySvc.updateReply(replyVO); // 更新文章信息到数据库
 	    	MsgVO msgVO = new MsgVO();
 	        msgVO.setReplyVO(replyVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        msgVO.setSenderMember(buyerVO);
+	        msgVO.setReceiverMember(replyVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(3);
 	        msgVO.setMsgTypeVO(msgTypeVO);

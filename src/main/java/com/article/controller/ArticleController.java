@@ -32,6 +32,8 @@ import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 import com.reply.entity.ReplyVO;
 import com.reply.service.ReplyService;
+import com.replyLike.entity.ReplyLikeVO;
+import com.replyLike.service.ReplyLikeService;
 import com.seller.entity.SellerVO;
 import com.article.entity.ArticleVO;
 import com.article.service.ArticleService;
@@ -74,6 +76,9 @@ public class ArticleController {
 
 	@Autowired
 	ArticleLikeService articleLikeSvc;
+
+	@Autowired
+	ReplyLikeService replyLikeSvc;
 	/*
 	 * This method will serve as addEmp.html handler.
 	 */
@@ -138,15 +143,40 @@ public class ArticleController {
 			 Authentication authentication = secCtx.getAuthentication();
 			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			 Integer memberId = buyerVO.getMemberId();
-			 System.out.println(memberId);
 			 model.addAttribute("buyerVO", buyerVO);
 			 
 			ArticleVO articleVO = articleSvc.getOneArticle(articleId);
 			model.addAttribute("articleVO", articleVO);
 			
+			Integer articleLikeId = articleLikeSvc.findArticleLikeIdByMemberIdAndArticleId(buyerVO, articleVO);
+			if (articleLikeId != null) {
+			ArticleLikeVO articleLikeVO = articleLikeSvc.getOneArticleLike(articleLikeId);
+			    // 如果articleLikeVO不为null，表示用户对该文章已经点赞，添加到模型中
+			    model.addAttribute("articleLikeVO", articleLikeVO);
+			    // 这里可以执行其他操作，如处理articleLikeVO对象的属性等
+			} 
+
+			
 			List<ReplyVO> replyVOList = replySvc.getByArticleId(articleVO);
 		    model.addAttribute("replyVOList", replyVOList);
+			
+//			Integer replyLikeId = replyLikeSvc.findReplyLikeIdByMemberIdAndArticleId(buyerVO, replyVO);
+//			ReplyLikeVO replyLikeVO = replyLikeSvc.getOneReplyLike(replyLikeId);
+//			model.addAttribute("replyLikeVO", replyLikeVO);
 		    
+
+		    for (ReplyVO replyVO : replyVOList) {
+		        Integer replyLikeId = replyLikeSvc.findReplyLikeIdByMemberIdAndArticleId(buyerVO, replyVO);
+		        replyVO.setLikeIt(0);
+		         if (replyLikeId != null) {
+		        	 replyVO.setLikeIt(1);
+		        	 System.out.println("replyLikeId:"+replyLikeId);
+		        	 System.out.println("replyId:"+replyVO.getReplyId());
+		        }
+		    }
+		    
+
+
 		    ReportVO reportVO = new ReportVO();
 		    model.addAttribute("reportVO", reportVO);
 			return "front-end/article/list-one-article";
@@ -356,7 +386,8 @@ public class ArticleController {
 	        articleSvc.updateArticle(articleVO); // 更新文章信息到数据库
 	        MsgVO msgVO = new MsgVO();
 	        msgVO.setArticleVO(articleVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        msgVO.setSenderMember(buyerVO);
+	        msgVO.setReceiverMember(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(1);
 	        msgVO.setMsgTypeVO(msgTypeVO);

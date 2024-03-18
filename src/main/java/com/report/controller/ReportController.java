@@ -272,7 +272,7 @@ public class ReportController {
 		if(articleVO.getIsEnabled()==false) {
 	    	MsgVO msgVO = new MsgVO();
 	        msgVO.setReportVO(reportVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(articleVO.getBuyerVO());
+	        msgVO.setReceiverMember(articleVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(5);
 	        msgVO.setMsgTypeVO(msgTypeVO);
@@ -314,7 +314,7 @@ public class ReportController {
 		if(replyVO.getIsEnabled()==false) {
 			MsgVO msgVO = new MsgVO();
 	        msgVO.setReportVO(reportVO); // 设置关联的文章 ID
-	        msgVO.setBuyerVO(replyVO.getBuyerVO());
+	        msgVO.setReceiverMember(replyVO.getBuyerVO());
 	        MsgTypeVO msgTypeVO =new MsgTypeVO();
 	        msgTypeVO.setMsgTypeId(6);
 	        msgVO.setMsgTypeVO(msgTypeVO);
