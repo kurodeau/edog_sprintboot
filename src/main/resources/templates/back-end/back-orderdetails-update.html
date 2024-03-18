@@ -108,7 +108,7 @@
 				<div class="col-md-12">
 					<label for="comments" class="form-label">評論內容</label> <input
 						type="text" class="form-control" id="comments"
-						name="comments" th:field="*{comments}"  />
+						th:field="*{comments}"  />
 				</div>
 				
 				
@@ -126,7 +126,8 @@
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
-					<button type="submit" class="btn btn-primary">提交修改</button>
+					<button type="button" class="btn btn-primary">提交修改</button>
+					<!-- <button type="button" onclick="aaa(this)">123</button> -->
 				</div>
 				
 			</form> 
@@ -143,6 +144,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
 		type="text/javascript"></script>
 	<script>
+	
+		function aaa(e) {
+			const form = document.querySelector('#myForm');
+			console.log(form);
+		}
+	
 		//============ 取消按鈕的跳轉事件設定 start =============
 		document.getElementById("cancel-btn").addEventListener("click",
 				function() {

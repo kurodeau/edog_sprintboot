@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<th:block th:insert="~{/fragment-head}"></th:block>
+<!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<nav
+			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
+			<div class="container-fluid">
+				<div class="collapse navbar-collapse d-flex justify-content-between"
+					id="navbarSupportedContent">
+					<!-- Start NavBar  -->
+					<!-- NavBar--LeftSide  -->
+					<ul class="navbar-nav me-auto mb-2">
+						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+							<i class="bi bi-list"></i> <a
+							class="nav-link cancel-default-behavior" aria-current="page"
+							href="#">選單</a>
+						</li>
+						<li class="nav-item d-flex align-items-center"><a
+							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
+						<li class="nav-item"><a class="nav-link"
+							href="seller-login.html">賣家中心</a></li>
+						<li class="nav-item"><a class="nav-link"
+							th:href="@{/article/listAll}">論壇</a></li>
+					</ul>
+
+					<!-- NavBar--RightSide  -->
+					<ul class="navbar-nav ms-auto mb-2">
+
+						<!-- 測試進入後台入口 -->
+						<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="#">註冊</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!-- End NavBar  -->
+
+		<!-- Start SearchBar  -->
+		<div class="container-fluid bg-user search-container-custom">
+			<div class="row">
+				<!-- Start SearchBar-Logo  -->
+				<div
+					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
+					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
+						srcset="" />
+				</div>
+				<!-- End SearchBar-Logo  -->
+
+				<!-- Start SearchBar-Input  -->
+				<div
+					class="col d-flex searchItem flex-column search-item-container-custom">
+					<form class="form-inline w-100" method="post"
+						th:action="@{petdraw}">
+						<div class="row py-2 search-row-custom w-100 pe-2">
+							<div class="col">
+								<input class="form-control mr-sm-2 w-100 search-input-custom"
+									type="search" placeholder="請在此進行文章搜索" aria-label="Search"
+									name="searchText" />
+							</div>
+							<div class="col-auto">
+								<button class="btn btn-user search-button-custom d-flex"
+									type="submit">
+									<i class="me-2 ri-search-line"></i>
+									<div class="col-auto d-none d-md-block">Search</div>
+								</button>
+							</div>
+						</div>
+					</form>
+					<div class="my-2 keyword-container-custom">
+						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
+							class="badge rounded-pill keyword-item-custom">玩具</span>
+					</div>
+				</div>
+				<!-- End SearchBar-Input  -->
+
+			</div>
+		</div>
+	</header>
+	<!-- End NavBar  -->
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="front-end/article/aside-forum.html"></aside>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller ">
+		<div class="seller-container mt-5">
+			<div class="pagetitle">
+
+				<div th:each="pairResponse : ${pairResponses}">
+					<form th:action="@{/front/forum/petdraw/otherpairing/update}+ '?memberpairId=' + *{memberVO.memberId}"
+						method="post" th:object="${pairResponse}"
+						enctype="multipart/form-data">
+
+						<img
+							th:src="@{/front/forum/petdraw/PetDrawReader} + '?memberpairId=' + *{memberVO.memberId}"
+							width="100px" />
+						<div>
+							<label>配對的會員編號:</label> <span th:text="*{memberVO.memberId}"
+								style="font-weight: bold;"></span><br />
+						</div>
+
+						<div>
+							<label>是否喜歡:</label> 
+								<input type="radio" name="memberLike"th:value="true"  th:checked="${pairResponse.petDraw.isMemberLike}" /> 是
+								<input type="radio" name="memberLike" th:value="false"  th:checked="${!pairResponse.petDraw.isMemberLike}" /> 否
+								
+							
+						</div>
+
+						<button type="submit">確認</button>
+					</form>
+				</div>
+
+			</div>
+
+		</div>
+	</main>
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout">
+		<div
+			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">關於我們</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">人才招募</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+				</ul>
+			</div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">常見問題</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">Q&A</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row footer-container-custom">
+			<div class="col-3"></div>
+
+			<div class="col-auto">
+				<a href="/"
+					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+					<svg class="bi" width="32" height="32" fill="currentColor">
+						<use xlink:href="bootstrap-icons.svg#heart-fill" />
+					</svg>
+				</a>
+				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
+					© 2023 CatTom.版權所有。</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer -->
+
+	<!-- Vendor JS Files -->
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-datatableJs}"></div>
+
+	<script>
+		function setPreference(preference) {
+			// Update the hidden input's value
+			document.getElementById('preferenceInput').value = preference;
+
+			// Implement any additional logic to handle the preference (true or false)
+			console.log('Preference set to:', preference);
+			// Here you might want to send this preference to the server or handle it in some other way.
+		}
+		
+		function setLike(ispairLike) {
+			if (ispairLike) {
+				document.getElementById("likeHiddenInput").value = "true";
+				document.getElementById("dislikeHiddenInput").value = "false";
+			} else {
+				document.getElementById("likeHiddenInput").value = "false";
+				document.getElementById("dislikeHiddenInput").value = "true";
+			}
+		}
+	</script>
+
+</body>
+
+</html>

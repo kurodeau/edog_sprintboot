@@ -4,19 +4,7 @@
 
 <th:block th:insert="~{/fragment-head}"></th:block>
 <!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
- <style>
 
-        /* 动画效果 */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation-name: fadeIn;
-            animation-duration: 2s;
-        }
-    </style>
 <meta property="og:description"
 	content="每天午夜12點快來認識新的朋友吧!在這個頁面你可以抽取一位新朋友他會秀出他可愛的寵物只要雙方同意接受邀請你們就可以開始聊天!">
 </head>
@@ -105,9 +93,7 @@
 	<main class="main main-layout-seller">
 		<div class="seller-container mt-5">
 			<div class="pagetitle ">
-				<div id="countdown">
-					午夜倒數計時: <span id="timer">Loading...</span>
-				</div>
+				<p id="timer"></p>
 
 
 				<form method="get" th:action="@{/front/forum/petdraw/checkpairing}"
@@ -188,148 +174,42 @@
 	<div th:replace="~{/fragment-datatableJs}"></div>
 
 	<script>
-        let hasDrawnCard = false;
+	document.addEventListener('DOMContentLoaded', function () {
+	    const timerDisplay = document.getElementById('timer');
 
-        function drawCard() {
-            // 檢查是否已經抽過卡
-            if (!hasDrawnCard) {
-                // 使用 Ajax 或其他方式從後端獲取會員抽卡的數據
-                // 這裡假設你有一個名為 '/api/member/draw' 的 API
-                fetch('/api/member/draw')
-                    .then(response => response.json())
-                    .then(data => {
-                        // 處理從後端獲取的會員抽卡數據
-                        handleMemberDraw(data);
-                        showCountdown();  // 在抽卡後顯示倒數計時
-                    })
-                    .catch(error => console.error('Error fetching member draw data:', error));
-            }
-        }
+	    function updateTimer() {
+	        const currentTime = new Date();
+	        const nextDrawTime = new Date();
 
-        function handleMemberDraw(memberData) {
-        	// 在這裡處理從後端獲取的會員抽卡數據
-            const cardContainer = document.getElementById('cardContainer');
-            const memberProfile = document.getElementById('memberProfile');
-            const memberPhoto = document.getElementById('memberPhoto');
-            const memberInfo = document.getElementById('memberInfo');
+	        // 將下一次抽卡時間設置為台北時間午夜0點
+	        if (currentTime.getUTCHours() >= 16) {
+	        	 // 如果當前UTC時間超過16:00，設置為明天
+	            nextDrawTime.setUTCDate(currentTime.getUTCDate() + 1);
+	        }
+	        // 台北午夜0點等於UTC的16:00
+	        nextDrawTime.setUTCHours(16, 0, 0, 0);
 
-            // 更新會員照片
-            memberPhoto.src = 'data:image/png;base64,' + memberData.petImg;
-            memberPhoto.alt = `Member: ${memberData.memberName}`;
-            
-            // 更新會員個人資料
-            memberInfo.innerHTML = `<p>ID: ${memberData.memberId}</p>
-                                <p>Name: ${memberData.memberName}</p>
-                                <p>Name: ${memberData.petName}</p>
-                                <!-- 其他資料可自行添加 -->
-                                <div style="height: 30px;"></div>
-                                <button onclick="showChatWindow()">聊天</button>`; // 添加一個聊天按鈕
+	        const countdownFunc = () => {
+	            const currentTime = new Date();
+	            const timeDifference = nextDrawTime - currentTime;
+	            if (timeDifference <= 0) {
+	                clearInterval(interval);
+	                timerDisplay.textContent = '已到抽卡時間!';
+	                return;
+	            }
 
-                                // 顯示會員照片和個人資料
-                                memberProfile.style.display = 'block';
+	            const hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+	            const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+	            const seconds = Math.floor((timeDifference / 1000) % 60);
+	            timerDisplay.textContent = `午夜倒數計時: ${hours}時 ${minutes}分 ${seconds}秒`;
+	        };
 
-            // 創建一個圖片元素
-            const image = document.createElement('img');
-            image.src = 'data:image/png;base64,' + memberData.petImg; // 使用 Base64 編碼的圖片資料
-            image.alt = `Pet: ${memberData.petName}`;
-            image.style.width = '320px';  // 設置圖片寬度為 320 像素
-            image.style.height = '320px'; // 設置圖片高度為 320 像素
+	        countdownFunc();
+	        const interval = setInterval(countdownFunc, 1000);
+	    }
 
-            // 創建一個文字元素
-            const text = document.createElement('p');
-            text.textContent = `ID: ${memberData.memberId}\nName: ${memberData.memberName}\nPet: ${memberData.petName}`;
-            // 如果存在 petDraw 欄位，顯示相關信息
-            if (memberData.petDraw) {
-                const mainInfo = document.createElement('p');
-                mainInfo.textContent = `Main: ${memberData.petDraw.memberId.memberName}`;
-
-                const pairInfo = document.createElement('p');
-                pairInfo.textContent = `Pair: ${memberData.petDraw.memberPairId.memberName}`;
-
-                const isMemberLikeInfo = document.createElement('p');
-                isMemberLikeInfo.textContent = `Is Member Like: ${memberData.petDraw.isMemberLike}`;
-
-                const isMemberPairLikeInfo = document.createElement('p');
-                isMemberPairLikeInfo.textContent = `Is Member Pair Like: ${memberData.petDraw.isMemberPairLike}`;
-
-                card.appendChild(mainInfo);
-                card.appendChild(pairInfo);
-                card.appendChild(isMemberLikeInfo);
-                card.appendChild(isMemberPairLikeInfo);
-            }
-
-            // 將圖片和文字添加到卡片中
-            card.appendChild(image);
-            card.appendChild(text);
-
-            // 將卡片添加到 cardContainer 中
-            cardContainer.appendChild(card);
-
-            hasDrawnCard = true; // 更新抽卡狀態
-        }
-
-     
-
-        function startCountdown() {
-            const countdownElement = document.getElementById('countdown');
-            const drawButton = document.getElementById('drawButton');
-
-            let countdownSeconds = localStorage.getItem('countdownSeconds') || 86400; // 從localStorage讀取剩餘時間，預設為一天
-
-            function updateCountdown() {
-                const hours = Math.floor(countdownSeconds / 3600);
-                const minutes = Math.floor((countdownSeconds % 3600) / 60);
-                const seconds = countdownSeconds % 60;
-
-                countdownElement.textContent = `明天可抽卡倒數：${hours} 小時 ${minutes} 分鐘 ${seconds} 秒`;
-
-                if (countdownSeconds === 0) {
-                    drawButton.disabled = false; // 啟用按鈕
-                    countdownElement.textContent = ''; // 清空倒數計時顯示
-                } else {
-                    countdownSeconds--;
-                    localStorage.setItem('countdownSeconds', countdownSeconds); // 將剩餘時間存儲到localStorage
-                    setTimeout(updateCountdown, 1000); // 每秒更新一次
-                }
-            }
-
-            updateCountdown();
-        }
-
-        // 在頁面載入時檢查localStorage中是否有剩餘時間，如果有，更新按鈕狀態
-        window.onload = function () {
-            const drawButton = document.getElementById('drawButton');
-            const storedSeconds = localStorage.getItem('countdownSeconds');
-
-            if (storedSeconds && storedSeconds > 0) {
-                drawButton.disabled = true; // 禁用按鈕
-                startCountdown();
-            }
-        };
-
-        function resetCardDraw() {
-            // 重置抽卡狀態
-            hasDrawnCard = false;
-
-            // 清空會員資料區塊
-            const memberProfile = document.getElementById('memberProfile');
-            memberProfile.style.display = 'none';
-
-            // 清空卡片容器
-            const cardContainer = document.getElementById('cardContainer');
-            cardContainer.innerHTML = '';
-
-            // 隱藏倒數計時器
-            const countdownElement = document.getElementById('countdown');
-            countdownElement.style.display = 'none';
-
-            // 啟用抽卡按鈕
-            const drawButton = document.getElementById('drawButton');
-            drawButton.disabled = false;
-
-            // 清空localStorage中的倒數時間
-            localStorage.removeItem('countdownSeconds');
-        }
+	    updateTimer();
+	});
     </script>
 
 </body>

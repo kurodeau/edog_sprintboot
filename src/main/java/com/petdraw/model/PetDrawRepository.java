@@ -1,4 +1,4 @@
-package com.petdraw.model;
+																														package com.petdraw.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,19 +18,23 @@ public interface PetDrawRepository extends JpaRepository<PetDrawVO, Integer> {
 	void deleteByPetDrawId(int PetDrawId);
 
 	//	 根據 memberMain 和 petDrawTime 查詢
-	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND petDrawTime >= :petDrawTime", nativeQuery = true)
+	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND petdrawtime >= :petDrawTime", nativeQuery = true)
 	List<PetDrawVO> findByMemberIdAndAfterPetDrawTime(@Param("memberId") Integer buyerId, @Param("petDrawTime") LocalDateTime afterDate);
 
-//	// 根據 memberPair 和 memberPairResTime 查詢
-	//List<PetDrawVO> findByMemberPairAndMemberPairIdResTime(BuyerVO memberPairId, LocalDate memberPairResTime);
+	// 根據 memberPair 和 memberPairResTime 查詢
+	@Query(value = "SELECT * FROM petdraw WHERE memberpairId = :memberpairId AND memberrestime >= :memberrestime", nativeQuery = true)
+	List<PetDrawVO> findByMemberPairIdAndMemberPairResTime(@Param("memberpairId") Integer buyerId,@Param("memberrestime") LocalDateTime afterDate);
 	
 	@Query(value = "SELECT COUNT(*) FROM PetDrawVO", nativeQuery = true)
 	Integer findMemberCount();
 	
-	@Query(value = "SELECT * FROM PetDrawVO WHERE memberId =: memberId", nativeQuery = true)
-	List<BuyerVO> findByMemberId(Integer memberId);
+	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND memberPairId = :memberPairId ORDER BY memberrestime DESC LIMIT 1", nativeQuery = true)
+	PetDrawVO findByMemberIdAndMemberPairId(Integer memberId, Integer memberPairId);
 	
-	@Query(value = "SELECT * FROM PetDrawVO WHERE memberPairId =: memberPairId", nativeQuery = true)
+	@Query(value = "SELECT memberrestime FROM petdraw WHERE memberId = :memberId ORDER BY memberrestime DESC LIMIT 1", nativeQuery = true)
+	PetDrawVO findByMemberIdAndAfterMemberResTime(Integer memberId);
+	
+	@Query(value = "SELECT * FROM petdraw WHERE memberPairId = :memberPairId", nativeQuery = true)
 	List<BuyerVO> findByMemberPairId(Integer memberPairId);
 
 	

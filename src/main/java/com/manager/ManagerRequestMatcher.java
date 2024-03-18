@@ -11,14 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Qualifier("managerRequestMatcher")
 public class ManagerRequestMatcher implements RequestMatcher {
-    private AntPathRequestMatcher matcher;
+    private AntPathRequestMatcher getMatcher;
+    private AntPathRequestMatcher postMatcher;
 
     public ManagerRequestMatcher() {
-        this.matcher = new AntPathRequestMatcher("/manager/login/check", HttpMethod.POST.name());
+        this.getMatcher = new AntPathRequestMatcher("/back/api/seller/**", HttpMethod.GET.name());
+        this.postMatcher = new AntPathRequestMatcher("/back/api/seller/**", HttpMethod.POST.name());
     }
 
     @Override
     public boolean matches(HttpServletRequest request) {
-        return matcher.matches(request);
+        return getMatcher.matches(request) || postMatcher.matches(request);
     }
 }

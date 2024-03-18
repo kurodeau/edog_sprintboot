@@ -60,6 +60,7 @@ public class SellerLvControllerFront extends HttpServlet {
 	@GetMapping("edit")
 	public String selleredit(Model model, HttpSession session) {
 
+		// SecCtx取出資料
 		SecurityContext secCtx = SecurityContextHolder.getContext();
 		System.out.println("secCtx" + secCtx);
 
@@ -75,12 +76,15 @@ public class SellerLvControllerFront extends HttpServlet {
 //			System.out.println(sellerVO);
 
 		if (result.hasErrors()) {
-//				System.out.println("==============XXXXXXXXXXXXXX");
-//				System.out.println("updateSeller");
-//				System.out.println(result);
-//				System.out.println("==============XXXXXXXXXXXXXX");
+
 			return "front-end/seller/seller-sellerLv-edit";
 		}
+		
+		// secCtx存入資料
+		sellerSvc.updateSecureContext(sellerVO);
+		model.addAttribute("sellerVO", sellerVO);
+		
+		
 		sellerSvc.updateSeller(sellerVO);
 
 		return "redirect:/front/seller/main" + "?updateSuccess=true";
@@ -121,29 +125,8 @@ public class SellerLvControllerFront extends HttpServlet {
 			System.out.println(jsonString);
 
 			// SECURIT設定資訊
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			Integer sellerLvId = sellerUpdateVO.getSellerLvId().getSellerLvId();
-			List<GrantedAuthority> authorities = new ArrayList<>();
-			
-			switch (sellerLvId) {
-			case 1:
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
-				break;
-			case 2:
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV2"));
-				break;
-			case 3:
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
-				authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV3"));
-				break;
-			}
-			
-			SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(sellerUpdateVO, null, authorities));
-			
-			
-			
+			sellerSvc.updateSecureContext(sellerUpdateVO);
+
 			
 			return ResponseEntity.status(HttpStatus.OK).body(jsonString);
 

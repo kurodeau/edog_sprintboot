@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.seller.entity.SellerVO;
 import com.buyer.entity.BuyerVO;
+import com.manager.ManagerVO;
+import com.seller.entity.SellerVO;
 
 @Component
 public class ChangeHeaderInfoInterceptor implements HandlerInterceptor {
@@ -33,23 +34,29 @@ public class ChangeHeaderInfoInterceptor implements HandlerInterceptor {
             boolean isAnonymous = authentication instanceof AnonymousAuthenticationToken;
             if (isAnonymous) {
                 modelAndView.addObject("loggedIn", false);
+                modelAndView.addObject("loggedInJWT", false);
+
             } else if (authentication != null && authentication.isAuthenticated()) {
                 modelAndView.addObject("loggedIn", true);
+                modelAndView.addObject("loggedInJWT", false);
+
                 Object principal = authentication.getPrincipal();
                 
 
 
                 if (principal instanceof SellerVO) {
                     SellerVO sellerVO = (SellerVO) principal;
-                    modelAndView.addObject("sellerLoggedIn", true);
-                    modelAndView.addObject("buyerLoggedIn", false);
                     modelAndView.addObject("theName", sellerVO.getSellerCompany());
                     // 添加賣家特定的邏輯
                 } else if (principal instanceof BuyerVO) {
                     BuyerVO buyerVO = (BuyerVO) principal;
-                    modelAndView.addObject("sellerLoggedIn", false);
-                    modelAndView.addObject("buyerLoggedIn", true);
                     modelAndView.addObject("theName", buyerVO.getMemberName());
+                    // 添加買家特定的邏輯
+                }  else if (principal instanceof ManagerVO) {
+                	ManagerVO managerVO = (ManagerVO) principal;
+                    modelAndView.addObject("loggedIn", false);
+                    modelAndView.addObject("loggedInJWT", true);
+                    modelAndView.addObject("theName", managerVO.getManagerEmail());
                     // 添加買家特定的邏輯
                 }
             } else {

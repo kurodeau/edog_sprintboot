@@ -40,8 +40,29 @@ public class NewsTickerService {
 	}
 	
 	public Integer getCount() {
-		return (int) repository.count();
+		return (int) repository.count();	
 	}
+	
+	public List<NewsTickerVO> findByIsDisplayTrue() {
+		System.out.println("測試訊息:有進入findByIsDisplayTrue()");
+		return repository.findAllByIsDisplayTrue();
+	}
+	
+	public String showNewsTicker(String currentTime) {
+//		System.out.println("測試訊息:currentTime= "+currentTime);
+		// 把清單中的 newsTickerVO 迴圈拿出訊息, 串接成字串
+		StringBuilder newsTickersStrBlu = new StringBuilder();
+		List<NewsTickerVO> newsTickerList = findByIsDisplayTrue() ;
+		for( NewsTickerVO newsTickerVO : newsTickerList ) {
+			newsTickersStrBlu.append(newsTickerVO.getNewsTickerContent());
+			newsTickersStrBlu.append("    ");
+		}		
+		String newsTickersStr = newsTickersStrBlu.toString();
+		System.out.println( "測試訊息:newsTickersStr= " + newsTickersStr );
+		
+		return newsTickersStr;
+	}
+	
 	
 
 }

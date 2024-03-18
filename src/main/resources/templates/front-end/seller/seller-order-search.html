@@ -37,9 +37,29 @@
             <th:block th:each="productOrderVO : ${sellerProductOrderList}">
               <tr>
                 <td class="text-center" th:text="${productOrderVO.orderId}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderTime}"></td>
-                <td class="text-center" th:text="${productOrderVO.actualPay}"></td>
-                <td class="text-center" th:text="${productOrderVO.orderStatus}"></td>
+                <td class="text-center" th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td class="text-center" th:text="${productOrderVO.actualPay}+元"></td>
+                <td class="text-center" >
+                
+                
+                <div th:switch="${productOrderVO.orderStatus}">
+    <span th:case="1">賣家待確認</span>
+    <span th:case="2">訂單不成立（買家取消）</span>
+    <span th:case="3">訂單不成立（賣家取消）</span>
+    <span th:case="4">訂單成立</span>
+    <span th:case="5">賣家理貨中</span>
+    <span th:case="6">商品已出貨</span>
+    <span th:case="7">訂單完成</span>
+    <span th:case="8">付款成功</span>
+    <span th:case="9">付款失敗</span>
+    <span th:case="10">退貨</span>
+    <!-- You can add more cases here for other statuses -->
+    <span th:case="*">未知</span> <!-- Default case if none of the above match -->
+</div>
+                
+                
+                
+                </td>
                 <td class="text-center" >
                   <a
                     class="btn"

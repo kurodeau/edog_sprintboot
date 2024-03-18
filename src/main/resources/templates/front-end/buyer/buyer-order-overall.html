@@ -7,7 +7,7 @@
 
 	<!-- ======= Header ======= -->
 	<header class="fixed-top">
-		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
 	</header>
 
 	<!-- ======= Sidebar ======= -->
@@ -34,7 +34,7 @@
 							<button class="nav-link seller-nav-link" id="pending-tab"
 								data-bs-toggle="tab" data-bs-target="#bordered-pending"
 								type="button" role="tab" aria-controls="pending"
-								aria-selected="false">未處理</button>
+								aria-selected="false">待處理</button>
 						</li>
 						<li class="nav-item" role="presentation">
 							<button class="nav-link seller-nav-link" id="shipped-tab"
@@ -92,7 +92,7 @@
 								<div class="row header-row-custom">
 									<div class="col-2">訂單編號</div>
 									<div class="col-2">訂單日期</div>
-									<div class="col-3">買家實付金額</div>
+									<div class="col-3">訂單金額</div>
 									<div class="col-3">狀態</div>
 									<div class="col-2">操作</div>
 								</div>
@@ -103,22 +103,55 @@
 								<div class="row item-row-custom"
 									th:each="productOrderVO : ${buyerProductOrderList}">
 									<div class="col-2" th:text="${productOrderVO.orderId}"></div>
-									<div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-									<div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-									<div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+									<div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+									<div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
+									<!-- <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
+									 <div class="col-2">
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
 									<div class="col-3 d-flex flex-column align-items-center">
 
 										<form method="post"
-											th:action="@{/front/seller/productorder/confirm}">
+											th:action="@{/front/buyer/productorder/buyerconfirm}"
+											th:if="${productOrderVO.orderStatus == 6}"
+											
+											>
 											<button type="submit"
-												class="product align-self-start btn-func">接受訂單</button>
+												class="product align-self-start btn-func">訂單完成</button>
 											<input type="hidden" name="orderId"
 												th:value="${productOrderVO.orderId}">
 										</form>
 
 
 										<form method="post"
-											th:action="@{/front/seller/productorder/cancel}">
+											th:action="@{/front/buyer/productorder/cancel}"
+											th:if="${productOrderVO.orderStatus == 1}"
+											>
 											<button class="product align-self-start btn-func">
 												取消訂單</button>
 											<input type="hidden" name="orderId"
@@ -129,7 +162,7 @@
 
 
 										<form method="get"
-											th:action="@{/front/seller/productorder/getOrderdetails}">
+											th:action="@{/front/buyer/productorder/getOrderdetails}">
 											<button class="product align-self-start btn-func">
 												查看詳情</button>
 											<input type="hidden" name="orderId"
@@ -146,7 +179,7 @@
 
 
 
-						<!-- 未處理 -->
+						<!-- 待處理 -->
 						<div class="tab-pane" id="bordered-pending" role="tabpanel"
 							aria-labelledby="pending-tab">
 
@@ -154,7 +187,7 @@
 								<div class="row header-row-custom">
 									<div class="col-2">訂單編號</div>
 									<div class="col-2">訂單日期</div>
-									<div class="col-3">買家實付金額</div>
+									<div class="col-3">訂單金額</div>
 									<div class="col-3">狀態</div>
 									<div class="col-2">操作</div>
 								</div>
@@ -164,11 +197,31 @@
 									th:each="productOrderVO : ${buyerProductOrderPendingConfirm}">
 
 									<div class="col-2" th:text="${productOrderVO.orderId}"></div>
-									<div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-									<div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-									<div class="col-2" th:switch="${productOrderVO.orderStatus}">
+									<div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+									<div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
+									<!-- <div class="col-2" th:switch="${productOrderVO.orderStatus}">
 										<p th:case="1">處理中</p>
-									</div>
+									</div> -->
+									 <div class="col-2">
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+									
+									
+									
+									
 									<div class="col-3 d-flex flex-column align-items-center">
 
 										<!-- 										<form method="post" -->
@@ -190,7 +243,7 @@
 
 
 										<form method="get"
-											th:action="@{/front/seller/productorder/getOrderdetails}">
+											th:action="@{/front/buyer/productorder/getOrderdetails}">
 											<button class="product align-self-start btn-func">
 												查看詳情</button>
 											<input type="hidden" name="orderId"
@@ -204,14 +257,14 @@
 						</div>
 
 
-						<!-- 處理中 -->
+			<!-- 處理中 -->
 						<div class="tab-pane" id="bordered-shipped" role="tabpanel"
 							aria-labelledby="shipped-tab">
 							<div class="container mt-3 container-list-custom">
 								<div class="row header-row-custom">
 									<div class="col-2">訂單編號</div>
 									<div class="col-2">訂單日期</div>
-									<div class="col-3">買家實付金額</div>
+									<div class="col-3">訂單金額</div>
 									<div class="col-3">狀態</div>
 									<div class="col-2">操作</div>
 								</div>
@@ -221,12 +274,36 @@
 									th:each="productOrderVO : ${buyerProductOrderProcessing}">
 
 									<div class="col-2" th:text="${productOrderVO.orderId}"></div>
-									<div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-									<div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-									<div class="col-2" th:switch="${productOrderVO.orderStatus}">
+									<div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+									<div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
+									<!-- <div class="col-2" th:switch="${productOrderVO.orderStatus}">
 										<p th:case="5">賣家理貨中</p>
 										<p th:case="6">商品已出貨</p>
-									</div>
+									</div> -->
+									
+									 <div class="col-2">
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+									
+									
+									
+									
+									
+									
+									
 									<div class="col-3 d-flex flex-column align-items-center">
 
 
@@ -234,7 +311,7 @@
 											<form method="post"
 												th:action="@{/front/buyer/productorder/buyerconfirm}">
 												<button type="submit"
-													class="product align-self-start btn-func">確認收貨</button>
+													class="product align-self-start btn-func">訂單完成</button>
 												<input type="hidden" name="orderId"
 													th:value="${productOrderVO.orderId}">
 											</form>
@@ -243,7 +320,7 @@
 
 
 										<form method="get"
-											th:action="@{/front/seller/productorder/getOrderdetails}">
+											th:action="@{/front/buyer/productorder/getOrderdetails}">
 
 											<button class="product align-self-start btn-func">
 												查看詳情</button>
@@ -267,7 +344,7 @@
 								<div class="row header-row-custom">
 									<div class="col-2">訂單編號</div>
 									<div class="col-2">訂單日期</div>
-									<div class="col-3">買家實付金額</div>
+									<div class="col-3">訂單金額</div>
 									<div class="col-3">狀態</div>
 									<div class="col-2">操作</div>
 								</div>
@@ -275,16 +352,39 @@
 									th:each="productOrderVO : ${buyerProductOrderCompleted}">
 
 									<div class="col-2" th:text="${productOrderVO.orderId}"></div>
-									<div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-									<div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-									<div class="col-2" th:text="${productOrderVO.orderStatus}"></div>
+									<div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+									<div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
+									<!-- <div class="col-2" th:text="${productOrderVO.orderStatus}"></div> -->
+									  <div class="col-2">
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+									
+									
+									
+									
+									
+									
+									
 									<div class="col-3 d-flex flex-column align-items-center">
 
 
 
 
 										<form method="get"
-											th:action="@{/front/seller/productorder/getOrderdetails}">
+											th:action="@{/front/buyer/productorder/getOrderdetails}">
 
 											<button class="product align-self-start btn-func">
 												查看詳情</button>
@@ -313,7 +413,7 @@
 								<div class="row header-row-custom">
 									<div class="col-2">訂單編號</div>
 									<div class="col-2">訂單日期</div>
-									<div class="col-3">買家實付金額</div>
+									<div class="col-3">訂單金額</div>
 									<div class="col-3">狀態</div>
 									<div class="col-2">操作</div>
 								</div>
@@ -324,20 +424,48 @@
 									th:each="productOrderVO : ${buyerProductOrderCanceled}">
 
 									<div class="col-2" th:text="${productOrderVO.orderId}"></div>
-									<div class="col-2 " th:text="${productOrderVO.orderTime}"></div>
-									<div class="col-3 " th:text="${productOrderVO.actualPay}"></div>
-									<div class="col-2" th:switch="${productOrderVO.orderStatus}">
+									<div class="col-2 " th:text="${#dates.format(productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+									<div class="col-3 " th:text="${productOrderVO.actualPay}+元"></div>
+									<!-- <div class="col-2" th:switch="${productOrderVO.orderStatus}">
 										<p th:case="2">訂單不成立(買家取消)</p>
 										<p th:case="3">訂單不成立(賣家取消)</p>
 
-									</div>
+									</div> -->
+									
+									
+									 <div class="col-2">
+								        <span th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								            <!-- You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span>
+								    </div>
+									
+									
+									
+									
+									
+									
+									
+									
+									
+									
 									<div class="col-3 d-flex flex-column align-items-center">
 
 
 
 
 										<form method="get"
-											th:action="@{/front/seller/productorder/getOrderdetails}">
+											th:action="@{/front/buyer/productorder/getOrderdetails}">
 
 											<button class="product align-self-start btn-func">
 												查看詳情</button>

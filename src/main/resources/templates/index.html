@@ -6,104 +6,7 @@
 </head>
 
 <body>
-	<header class="fixed-top">
-		<nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a class="nav-link cancel-default-behavior" aria-current="page"
-								href="#">選單</a>
-						</li>
-
-						<li class="nav-item d-flex align-items-center"><a class="nav-link active" aria-current="page"
-								th:href="@{/}">電子商城</a>
-						</li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/front/seller/main}">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/back/main}"
-								style="color: red">後台中心(測試入口)</a></li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
-						<li class="nav-item"><a class="nav-link" th:href="@{/front/buyer/main}"
-								style="color: red">買家中心(測試入口)</a>
-						</li>
-					</ul>
-
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-						<li class="nav-item" th:unless="${loggedIn}"><a class="nav-link" href="#" data-bs-toggle="modal"
-								data-bs-target="#loginSelectGroup">登入或註冊</a></li>
-						<li class="nav-item d-flex gap-3 align-items-center" th:if="${loggedIn}"><span
-								th:if="${theName != null and theName != ''}" th:text="${theName}"></span><a
-								class="nav-link" th:href="@{/logout}">登出</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-
-
-		<!-- Start SearchBar  -->
-		<div class="container-fluid bg-user search-container-custom">
-			<div class="row">
-				<!-- Start SearchBar-Logo  -->
-				<div class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
-					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt="" srcset="" />
-				</div>
-				<!-- End SearchBar-Logo  -->
-
-
-				<!-- Start SearchBar-Input  -->
-				<div class="col d-flex searchItem flex-column search-item-container-custom">
-					<form class="form-inline w-100">
-						<div class="row py-2 search-row-custom w-100 pe-2">
-							<div class="col">
-								<input class="form-control mr-sm-2 w-100 search-input-custom " type="search"
-									placeholder="請在此進行商品檢索" aria-label="Search" />
-							</div>
-							<div class="col-auto">
-								<button class="btn btn-user search-button-custom d-flex" type="submit">
-									<i class="me-2 ri-search-line"></i>
-									<div class="col-auto d-none d-md-block ">Search</div>
-								</button>
-							</div>
-						</div>
-					</form>
-<!-- 					<div class="my-2 keyword-container-custom"> -->
-<!-- 						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span -->
-<!-- 							class="badge rounded-pill keyword-item-custom">玩具</span> -->
-<!-- 					</div> -->
-				</div>
-				<!-- End SearchBar-Input  -->
-
-				<!-- Start SearchBar-Function  -->
-				<div
-					class="col-2 d-block col-sm-2 d-flex align-items-start justify-content-start cart-container-custom">
-					<a th:href="@{/front/buyer/cart/list}" style="text-decoration: none; color: inherit;">
-						<div class="baritem d-flex align-items-center justify-content-start cart-item-custom">
-							<i class="ri-shopping-cart-2-line"></i>
-							<div class="cart d-none d-lg-block ml-1">購物車</div>
-						</div>
-					</a>
-				</div>
-				<!-- End SearchBar-Function  -->
-			</div>
-		</div>
-		<!-- Start Banner  -->
-		<div class="container-fluid justify-content-between align-items-center banner-container-custom">
-			<div class="row">
-				<div class="col banner-content text-center banner-content-custom">
-					<p class="mb-1 mt-1 banner-para-custom">This is a sample
-						horizontal full-width banner.</p>
-				</div>
-				<div class="col-auto buttona mb-0 d-flex justify-content-end banner-close-custom">
-					<i class="mb-1 mt-1 ri-close-line banner-close"></i>
-				</div>
-			</div>
-		</div>
-		<!-- End Banner  -->
-	</header>
+	<header th:replace="~{/fragment-headerV2}"></header>
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
 
@@ -238,34 +141,8 @@
 	</main>
 	<!-- End Main -->
 
-	<div class="modal fade" id="loginSelectGroup" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="loginLabel">登入或註冊</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body d-flex flex-column gap-5 justify-content-center align-items-center">
-					<div class="d-flex gap-5">
-						<a th:href="@{/buyer/login}" class="btn btn-primary">買家登入</a> <a th:href="@{/buyer/register}"
-							class="btn btn-primary">買家註冊</a>
-					</div>
-					<div class="d-flex gap-5">
-						<a th:href="@{/seller/login}" class="btn btn-seller">賣家登入</a> <a th:href="@{/seller/register}"
-							class="btn btn-seller">賣家註冊</a>
-					</div>
-					<div class="d-flex gap-5">
-						<a th:href="@{/admin/login}" class="btn btn-primary">後台登入</a> <a th:href="@{/admin/register}"
-							class="btn btn-primary">後台註冊</a>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
+	<div th:replace="~{/fragment-loginBox}"></div>
+	
 	<div th:replace="@{fragment-footer}"></div>
 	<div th:replace="@{fragment-js}"></div>
 	<!-- End Footer -->
