@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.buyer.service.BuyerService;
@@ -29,6 +31,7 @@ import com.productorder.model.ProductOrderVO;
 import com.productorder.model.ShoppingCartDTO;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
+import com.util.HttpResult;
 import com.buyer.entity.BuyerVO;
 @Controller
 @RequestMapping("/front/buyer")
@@ -81,7 +84,7 @@ public class BuyerProductOrderController {
 		
 	//訂單結帳按鈕  	
 		@PostMapping("create_orders")
-		public ResponseEntity<?> orderCheckout(@RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
+		public ResponseEntity<?> orderCheckout(@Valid @RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
 //		    Integer memberId =  session.getAttribute(memberId);
 //			Integer memberId = 1;
 			
@@ -205,6 +208,28 @@ public class BuyerProductOrderController {
 			model.addAttribute("success", "- (刪除成功)");
 			return "back-end/productOrder/listAllProductOrder"; // 刪除完成後轉交listAllEmp.html
 		}
+		
+		
+		
+		/*
+		 * 直接從商品詳細頁面點立刻購買按鈕用, /front/buyer/buyProductWithoutCart
+		 * 再 Redis 上創立資料後, 回到前端再跳轉到訂單結帳畫面
+		 */
+		@RequestMapping(value = "buyProductWithoutCart", method = RequestMethod.POST)	
+		public ResponseEntity<?> buyProductWithoutCart(@RequestBody String jsonData) {
+			System.out.println("測試訊息:有進入buyProductWithoutCart 這個controller");
+			JSONObject jsonObject = new JSONObject(jsonData);
+	        System.out.println(jsonData);
+	        if(jsonData==null || jsonData.equals("{}")){
+	            HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
+	            return ResponseEntity.badRequest().body(result);
+	        }
+	        // 呼叫生成order Redis 資料的方法
+	        productOrderSvc.buyProductWithoutCart( jsonObject );
+	        
+		    // 返回適當的響應
+		    return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
+		}	
 
 		
 		}

@@ -16,8 +16,9 @@ public class ManagerService {
 	@Autowired
 	ManagerRepository repository;
 
-	public void addManager(ManagerVO managerVO) {
-		repository.save(managerVO);
+	public Integer addManager(ManagerVO managerVO) {
+	    ManagerVO savedManager = repository.save(managerVO);
+	    return savedManager.getManagerId();
 	}
 
 	public void updateManager(ManagerVO managerVO) {
@@ -26,7 +27,7 @@ public class ManagerService {
 
 	public void deleteManager(Integer managerUserId) {
 		if (repository.existsById(managerUserId))
-			repository.deleteByAdId(managerUserId);
+			repository.deleteById(managerUserId);
 	}
 
 	public ManagerVO getOneManager(Integer managerUserId) {

@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -57,11 +58,17 @@ public class FileService {
 		String startTimeStr = startTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 
+
+		
+		// 獲取靜態資源目錄的路徑
 		Path staticPath = Paths.get(resourceLoader.getResource("classpath:static").getURI());
+
+		// 組合目標檔案的檔案名稱
 		String targetFileName = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
+
+		// 解析目標檔案的完整路徑，這裡假設目標檔案位於靜態資源目錄下
 		Path filePath = staticPath.resolve(targetFileName);
 
-		String destinationPath = targetFileName;
 
 		try (InputStream fis = classPathResource.getInputStream();
 				FileOutputStream fos = new FileOutputStream(filePath.toFile());) {
@@ -73,7 +80,6 @@ public class FileService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Resource resourceDest = resourceLoader.getResource("classpath:spreadsheet/");
 
 //		Path staticPath2 = Paths.get(resourceLoader.getResource("classpath:static").getURI());
 //        String targetFileName2 = "OrderDetail_" + sellerId + "_" + startTimeStr + "_" + endTimeStr + ".xlsx";
@@ -86,9 +92,29 @@ public class FileService {
 
 			Sheet sheet = wb.getSheetAt(0);
 			List<ProductOrderVO> productOrderVOs = productOrdSvc.findAllBySellerIdOrderByTime(sellerId);
-
+			
+		
+//			System.out.println(startTime);
+//			System.out.println(endTime);
+			productOrderVOs = productOrderVOs.stream()
+				    .filter(order -> 
+				        order.getOrderTime().toLocalDateTime().isAfter(startTime.atStartOfDay()) && 
+				        order.getOrderTime().toLocalDateTime().isBefore(endTime.plusDays(1).atStartOfDay())
+				    )
+				    .collect(Collectors.toList()); 
+			
+			
+			if(productOrderVOs.size() ==0) {
+				wb.write(fos);
+				return targetFileName;
+			}
+//			System.out.println(productOrderVOs);
 //			System.out.println(productOrderVOs.get(0).getOrderId());
-			Integer a1 = productOrderVOs.get(0).getOrderId();
+
+			
+			// 將過濾後的結果收集為列表
+//			System.out.println(productOrderVOs.get(0).getOrderId());
+//			Integer a1 = productOrderVOs.get(0).getOrderId();
 
 			Row currentRow;
 //			currentRow = sheet.getRow(0);
@@ -98,6 +124,8 @@ public class FileService {
 //					System.out.print(cell.getStringCellValue() + "\t");
 //				}
 //			}
+			
+
 
 			List<OrderReportDTO> combinedData = new ArrayList<>();
 			for (ProductOrderVO productOrderVO : productOrderVOs) {
@@ -114,6 +142,8 @@ public class FileService {
 				}
 			}
 
+
+			
 			for (int row = 1; row <= combinedData.size(); row++) {
 				currentRow = sheet.getRow(row);
 				if (currentRow != null) {
@@ -170,10 +200,12 @@ public class FileService {
 				}
 
 			}
-			wb.write(fos);
-		}
 
-		return "";
+			wb.write(fos);
+
+		}
+		return targetFileName;
+
 	}
 
 }

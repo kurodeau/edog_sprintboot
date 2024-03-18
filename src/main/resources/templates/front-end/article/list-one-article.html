@@ -11,80 +11,9 @@
 </head>
 <body>
 	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/article/listAll}">論壇</a></li>
-					</ul>
-
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-
-						<!-- 測試進入後台入口 -->
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">註冊</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-
-		<!-- Start SearchBar  -->
-		<div class="container-fluid bg-user search-container-custom">
-			<div class="row">
-				<!-- Start SearchBar-Logo  -->
-				<div
-					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
-					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
-						srcset="" />
-				</div>
-				<!-- End SearchBar-Logo  -->
-
-				<!-- Start SearchBar-Input  -->
-				<div
-					class="col d-flex searchItem flex-column search-item-container-custom">
-					<form class="form-inline w-100" method="post" th:action="@{getOne_For_Display}">
-					    <div class="row py-2 search-row-custom w-100 pe-2">
-					        <div class="col">
-					            <input class="form-control mr-sm-2 w-100 search-input-custom"
-					                type="search" placeholder="請在此進行文章搜索" aria-label="Search" name="searchText" />
-					        </div>
-					        <div class="col-auto">
-					            <button class="btn btn-user search-button-custom d-flex"
-					                type="submit">
-					                <i class="me-2 ri-search-line"></i>
-					                <div class="col-auto d-none d-md-block">Search</div>
-					            </button>
-					        </div>
-					    </div>
-					</form>
-					<div class="my-2 keyword-container-custom">
-						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
-							class="badge rounded-pill keyword-item-custom">玩具</span>
-					</div>
-				</div>
-				<!-- End SearchBar-Input  -->
-
-			</div>
-		</div>
-	</header>
+	        <header class="fixed-top">
+	      <th:block th:insert="~{/front-end/article/header-article}"></th:block>
+	    </header>
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
 	<!-- ======= Main ======= -->
@@ -92,7 +21,7 @@
 		<div class="seller-container article-container">
 			<div class="pagetitle"></div>
 			<div style="margin-top: 30px;" th:fragment="listOneArticle-div">
-				<!-- 				<span th:text="${articleVO.articleId}"></span><br/> -->
+								<span class=hide th:text="${articleVO.articleId}"></span><br/>
 				<div class="article-info-container">
 				    <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
 				    
@@ -166,19 +95,12 @@
 					</div>
 					<div class="modal-body" align="center">
 					<form id="article-report-form" th:action="@{insert-article-report}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
-						<div>
-							<select class="form-select" th:field="*{buyerVO.memberId}" style="width: 300px;">
-								<option th:each="buyerVO : ${buyerListData}"
-									th:value="${buyerVO.memberId}" th:text="${buyerVO.memberName}" />
-							</select>
-						</div>
 						<div class="hide">
 					        <label>文章編號:</label>
 					        <input type="text" id="articleIdField" readonly /><br/>
 					        <input type="hidden" id="report-articleId" th:field="*{articleVO.articleId}" />
 				    	</div>
 				    	<div>
-				    	</br>
 							<select class="form-select" th:field="*{reportTypeVO.reportTypeId}" style="width: 300px;">
 								<option th:each="reportTypeVO : ${reportTypeListData}"
 									th:value="${reportTypeVO.reportTypeId}"
@@ -206,12 +128,7 @@
 					</div>
 					<div class="modal-body" align="center">
 					<form id="reply-report-form" th:action="@{insert-reply-report}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
-						<div>
-							<select class="form-select" th:field="*{buyerVO.memberId}" style="width: 300px;">
-								<option th:each="buyerVO : ${buyerListData}"
-									th:value="${buyerVO.memberId}" th:text="${buyerVO.memberName}" />
-							</select>
-						</div>
+						
 						<div class="hide">
 					        <label>回復編號:</label>
 					        <input type="text" id="commentIdField" readonly /><br/>
@@ -219,7 +136,6 @@
 				    	</div>
 				    	
 				    	<div>
-				    	</br>
 							<select class="form-select" th:field="*{reportTypeVO.reportTypeId}" style="width: 300px;">
 								<option th:each="reportTypeVO : ${reportTypeListData}"
 									th:value="${reportTypeVO.reportTypeId}"
@@ -516,43 +432,25 @@ function sendComment() {
     console.log("Sending comment...");
 }
 
-document.getElementById('sendCommentBtn').addEventListener('click', function() {
-    var commentContent = document.getElementById('commentInputtext').value;
+$('#sendCommentBtn').on('click', function() {
+    var commentContent = $('#commentInputtext').val();
     var articleId = $('.report-article-button').attr('id');
     
-    // 创建一个新的 XMLHttpRequest 对象
-    var xhr = new XMLHttpRequest();
-    var currentUrl = window.location.href; // 获取当前页面的完整 URL
-	var baseUrl = currentUrl.split('/article')[0]; // 使用 '/article' 分割当前 URL，并获取前面部分作为基础 URL
-	var endpoint = '/reply/insert';
-	var fullUrl = baseUrl + endpoint;
-	
-	xhr.open('POST', fullUrl, true);
-
-
-    
-    // 设置请求头
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
-    // 定义请求完成后的回调函数
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-            // 请求成功，您可以在此处处理成功后的逻辑
-        	window.location.reload();
-        } else {
-            // 请求失败，您可以在此处处理失败后的逻辑
-//             alert('請輸入留言：' + xhr.statusText);
-        }
+    // 构建要发送的数据对象
+    var data = {
+        commentContent: commentContent,
+        articleId: articleId
     };
     
-    // 定义请求错误时的处理逻辑
-    xhr.onerror = function () {
-        alert('请求错误！');
-    };
-    
-    // 发送请求并将评论内容和文章 ID 作为参数发送
-    xhr.send('commentContent=' + encodeURIComponent(commentContent) + '&articleId=' + encodeURIComponent(articleId));
+    // 发送 POST 请求
+    $.post('/edogSpringMVC_Thymeleaf/reply/insert', data)
+    .done(function(response) {
+        // 请求成功的处理逻辑
+        window.location.reload();
+    })
+
 });
+
 const likeBtn = document.querySelector('.like-btn');
 
 //定义变量来跟踪按钮的喜爱状态

@@ -23,8 +23,10 @@
         
        	  <div>
   			  <div th:text=" '訂單編號：' + ${Orderdetails[0].productOrderVO.orderId}"></div>
-  			  <div th:text=" '訂單金額：' + ${Orderdetails[0].productOrderVO.actualPay}"></div>
-  			  <div th:text=" '成立時間：' + ${Orderdetails[0].productOrderVO.orderTime}"></div>
+  			  <div th:text=" '訂單金額(含運費)：' + ${Orderdetails[0].productOrderVO.actualPay}+元"></div>
+  			  <div th:text=" '訂單運費：' + ${Orderdetails[0].productOrderVO.memberPaysShipping}+元"></div>
+  			 <!--  <div th:text=" '成立時間：' + ${Orderdetails[0].productOrderVO.orderTime}"></div> -->
+  			  <div th:text=" '訂單建立時間：' + ${#dates.format(Orderdetails[0].productOrderVO.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
 <!--   			  <div th:text=" '訂單狀態：' + ${Orderdetails[0].productOrderVO.orderStatus}"></div>-->
 <div th:switch="${Orderdetails[0].productOrderVO.orderStatus}">
     <span th:case="1">訂單狀態：賣家待確認</span>
@@ -72,7 +74,9 @@
             <tr>
               <th class="text-center">商品編號</th>
               <th class="text-center">商品名稱</th>
+              <th class="text-center">商品價格</th>
               <th class="text-center">商品購買數量</th>
+              <th class="text-center">合計</th>
               <th class="text-center">已評論</th>
               <th class="text-center">評分星數</th>
               <th class="text-center">評論時間</th>
@@ -86,11 +90,14 @@
               <tr>
                 <td class="text-center" th:text="${orderDetailsVO.productVO.productId}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.productVO.productName}"></td>
+                <td class="text-center" th:text="'$'+${orderDetailsVO.productVO.price}"></td>
                 <td class="text-center" th:text="${orderDetailsVO.purchaseQuantity}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '是' : '否'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '無'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? orderDetailsVO.commentedTime : '無'}"></td>
-                <td class="text-center" th:text="${orderDetailsVO.comments != null ? orderDetailsVO.comments : '尚無評論'}"></td>
+                  <td class="text-center" th:text="${orderDetailsVO.productVO.price * orderDetailsVO.purchaseQuantity}+元"></td>
+                <td class="text-center" th:text="${orderDetailsVO.isCommented == 1 ? '已評論' : '未評論'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.stars != null ? orderDetailsVO.stars : '未評分'}"></td>
+               <!--  <td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? orderDetailsVO.commentedTime : '無'}"></td> -->
+<td class="text-center" th:text="${orderDetailsVO.commentedTime != null ? #dates.format(orderDetailsVO.commentedTime, 'yyyy-MM-dd HH:mm:ss') : '無'}"></td>
+                <td class="text-center" th:text="${orderDetailsVO.comments != null ? orderDetailsVO.comments : '無評論內容'}"></td>
               </tr>
             </th:block>
           </tbody>

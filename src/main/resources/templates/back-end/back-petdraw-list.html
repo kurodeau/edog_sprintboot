@@ -29,8 +29,8 @@
             <!-- 循環顯示所有抽獎紀錄 -->
             <tr th:each="petDraw : ${petDraws}">
                 <td th:text="${petDraw.petDrawId}">抽卡ID</td>
-                <td th:text="${petDraw.memberMain}">主要會員ID</td>
-                <td th:text="${petDraw.memberPair}">配對會員ID</td>
+                <td th:text="${petDraw.memberId}">主要會員ID</td>
+                <td th:text="${petDraw.memberPairId}">配對會員ID</td>
                 <td th:text="${petDraw.isMemberLike}">是否喜歡</td>
                 <td th:text="${#dates.format(petDraw.petDrawTime, 'yyyy-MM-dd HH:mm')}">抽卡時間</td>
                 <td>

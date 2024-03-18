@@ -835,13 +835,25 @@ mark.green {
 	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 懸停時增加陰影 */
 }
 
-        /* 动画效果 */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+/* 动画效果 */
+
+@keyframes fadeIn {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1; }
         }
 
         .fade-in {
             animation-name: fadeIn;
             animation-duration: 2s;
+        }
+
+ .countdown {
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
         }

@@ -1,38 +1,75 @@
-  <header class="fixed-top">
-<!--       <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller"> -->
-      <nav class="navbar navbar-expand navbar-expand-sm navbar-light"
-           style="background-color:lightblue;">
-        <div class="container-fluid">
-          <div
-            class="collapse navbar-collapse d-flex justify-content-between"
-            id="navbarSupportedContent"
-          >
-            <!-- Start NavBar  -->
-            <!-- NavBar--LeftSide  -->
-            <ul class="navbar-nav me-auto mb-2">
-              <li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-                <i class="bi bi-list"></i>
-                <a
-                  class="nav-link cancel-default-behavior"
-                  aria-current="page"
-                  href="#"
-                  >選單</a
-                >
-              </li>
-            </ul>
 
-            <!-- NavBar--RightSide  -->
-            <ul class="navbar-nav ms-auto mb-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">[當前登入管理者名稱]</a>
-              </li>
-              <!-- 不可以登出後瀏覽, 登出後強制退回豋入頁(邏輯不是這裡處理) -->
-              <li class="nav-item">
-                <a class="nav-link" href="@{/logout}">登出</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End NavBar  -->
-    </header>
+<header class="fixed-top">
+	<!--       <nav class="navbar navbar-expand navbar-expand-sm navbar-light bg-seller"> -->
+	<nav class="navbar navbar-expand navbar-expand-sm navbar-light"
+		style="background-color: lightblue;">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse d-flex justify-content-between"
+				id="navbarSupportedContent">
+				<!-- Start NavBar  -->
+				<!-- NavBar--LeftSide  -->
+				<ul class="navbar-nav me-auto mb-2">
+					<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
+						<i class="bi bi-list"></i> <a
+						class="nav-link cancel-default-behavior" aria-current="page"
+						href="#">選單</a>
+					</li>
+				</ul>
+
+				<!-- NavBar--RightSide  -->
+				<ul class="navbar-nav ms-auto mb-2">
+						<li class="nav-item d-flex gap-3 align-items-center"
+						th:if="${loggedInJWT}"><span
+						th:if="${theName != null and theName != ''}" th:text="${theName}"></span><a
+						class="nav-link" th:href="@{/logout/jwt}">JWT登出</a>
+						<a
+						class="nav-link" th:href="@{/back/main}">後台首頁</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!-- End NavBar  -->
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 找到登出按鈕
+    var logoutBtn = document.querySelector('.nav-link[href="/logout/jwt"]');
+
+    // 添加點擊事件監聽器
+    logoutBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      // 調用登出函數
+      logout();
+    });
+
+    // 登出函數
+    function logout() {
+      let token = localStorage.getItem("access_token");
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${token}`);
+      // 向伺服器發送登出請求
+      fetch('/logout', {
+        method: 'POST',
+        headers: headers,
+      })
+      .then(response => {
+        if (response.ok) {
+          // 登出成功，處理進一步的操作（如果需要）
+          console.log('登出成功');
+          let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+          window.location.href = url;
+
+        } else {
+          // 處理錯誤情況
+          console.error('登出失敗');
+        }
+      })
+      .catch(error => {
+        // 處理網路錯誤
+        console.error('網路錯誤:', error);
+      });
+    }
+  });
+</script>
