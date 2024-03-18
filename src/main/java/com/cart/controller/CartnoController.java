@@ -75,7 +75,7 @@ public class CartnoController extends HttpServlet {
 		JSONObject jsonObject = new JSONObject(jsonData);
         System.out.println(jsonData);
         if(jsonData==null || jsonData.equals("{}")){
-            HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
+            HttpResult<String> result = new HttpResult<>(400, "", "至少要選擇一項要結帳的商品");
             return ResponseEntity.badRequest().body(result);
         }
               

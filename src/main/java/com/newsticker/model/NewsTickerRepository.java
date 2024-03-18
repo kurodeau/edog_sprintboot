@@ -16,6 +16,6 @@ public interface NewsTickerRepository extends JpaRepository<NewsTickerVO, Intege
 	@Query(value = "delete from newsTicker where newsTickerId =?1", nativeQuery = true)
 	void deleteByNewsTickerId(int newsTickerId);
 
-	@Query("SELECT n FROM NewsTickerVO n WHERE n.isDisplay = true")
-	List<NewsTickerVO> findAllByIsDisplayTrue();
+	@Query("SELECT n FROM NewsTickerVO n WHERE n.isDisplay = true ORDER BY n.sort DESC")
+	List<NewsTickerVO> findAllByIsDisplayTrueOrderBySortDesc();
 }

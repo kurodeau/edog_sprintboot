@@ -43,16 +43,16 @@ public class NewsTickerService {
 		return (int) repository.count();	
 	}
 	
-	public List<NewsTickerVO> findByIsDisplayTrue() {
+	public List<NewsTickerVO> findAllByIsDisplayTrueOrderBySortDesc() {
 		System.out.println("測試訊息:有進入findByIsDisplayTrue()");
-		return repository.findAllByIsDisplayTrue();
+		return repository.findAllByIsDisplayTrueOrderBySortDesc();
 	}
 	
 	public String showNewsTicker(String currentTime) {
 //		System.out.println("測試訊息:currentTime= "+currentTime);
 		// 把清單中的 newsTickerVO 迴圈拿出訊息, 串接成字串
 		StringBuilder newsTickersStrBlu = new StringBuilder();
-		List<NewsTickerVO> newsTickerList = findByIsDisplayTrue() ;
+		List<NewsTickerVO> newsTickerList = findAllByIsDisplayTrueOrderBySortDesc() ;
 		for( NewsTickerVO newsTickerVO : newsTickerList ) {
 			newsTickersStrBlu.append(newsTickerVO.getNewsTickerContent());
 			newsTickersStrBlu.append("    ");
