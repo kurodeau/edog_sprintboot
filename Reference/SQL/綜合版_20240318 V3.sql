@@ -528,17 +528,17 @@ VALUES
 
 INSERT INTO ad (sellerId,adimg, adImgUploadTime, adName, adUrl, adStartTime, adEndTime, adLv, adMemo, adStatus, adCreateTime, isEnabled)
 VALUES 
-  (1,NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 1, 'This is a test ad.', "審核中", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 2, 'Another test ad.', "審核中", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 3, 'Yet another test ad.', "審核中", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 4, 'Test ad number four.', "審核中", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 5, 'The last test ad.', "未上架", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "未上架", NOW(), true),
-  (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
-  (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true),
-  (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2023-12-13 00:00:00'), 6, 'Sample ad.', "已上架", NOW(), true);
+  (1,NULL, NOW(), 'Test Ad 1', 'https://www.google.com/', NOW(), DATE('2099-12-31 00:00:00'), 1, 'This is a test ad.', "平台使用", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 2', 'https://www.google.com/', NOW(), DATE('2099-12-31 00:00:00'), 1, 'Another test ad.', "平台使用", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 3', 'https://www.google.com/', NOW(), DATE('2099-12-31 00:00:00'), 0, 'Yet another test ad.', "平台使用", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 4', 'https://www.google.com/', NOW(), DATE('2099-12-31 00:00:00'), 0, 'Test ad number four.', "平台使用", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 5', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 1, 'The last test ad.', "已上架", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 6', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 1, 'Sample ad.', "已上架", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 7', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 1, 'Sample ad.', "已上架", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 8', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 0, 'Sample ad.', "已上架", NOW(), true),
+  (3,NULL, NOW(), 'Test Ad 9', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 0, 'Sample ad.', "已上架", NOW(), true),
+  (1,NULL, NOW(), 'Test Ad 10', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 0, 'Sample ad.', "已上架", NOW(), true),
+  (2,NULL, NOW(), 'Test Ad 11', 'https://www.google.com/', NOW(), DATE('2024-12-31 00:00:00'), 1, 'Sample ad.', "已上架", NOW(), true);
 
 -- 廣告審核  放入測試資料-- 
 INSERT INTO adConfirm (adid, failReason, confirmTime, reviewStatus)
