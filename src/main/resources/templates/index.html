@@ -3,6 +3,29 @@
 
 <head>
 	<th:block th:insert="~{/fragment-head}"></th:block>
+
+	<style>
+		.marquee-container {
+			width: 100%;
+			overflow: hidden;
+		}
+
+		.marquee-content {
+			display: inline-block;
+			white-space: nowrap;
+			animation: marquee 10s linear infinite;
+		}
+
+		@keyframes marquee {
+			0% {
+				transform: translateX(0);
+			}
+
+			100% {
+				transform: translateX(-100%);
+			}
+		}
+	</style>
 </head>
 
 <body>
@@ -93,14 +116,46 @@
 		<div class="container-fluid justify-content-between align-items-center banner-container-custom">
 			<div class="row">
 				<div class="col banner-content text-center banner-content-custom">
-					<p class="mb-1 mt-1 banner-para-custom">This is a sample
-						horizontal full-width banner.</p>
+					<p class="mb-1 mt-1 banner-para-custom marquee-content">
+						全台最大網上寵物生活平台EDog正式上線!
+					</p>
 				</div>
 				<div class="col-auto buttona mb-0 d-flex justify-content-end banner-close-custom">
 					<i class="mb-1 mt-1 ri-close-line banner-close"></i>
 				</div>
 			</div>
 		</div>
+		<script>
+			// 定義一個函數來發送 AJAX 請求
+			function getNewsTickers() {
+				// 建立當前時間的 JSON 物件
+				const currentTime = new Date().toISOString();
+				console.log("測試訊息:currentTime= " + currentTime);
+				const data = {
+					currentTime: currentTime
+				};
+				const jsonData = JSON.stringify(data);
+
+				// 使用 AJAX 送出 POST 請求
+				$.ajax({
+					url: '/front/newsTicker/showNewsTicker', // 替換成你的目標 URL
+					type: 'POST',
+					contentType: 'application/json',
+					data: jsonData,
+					success: function (responseData) {
+						console.log('成功發送時間資料到伺服器');
+					},
+					error: function (xhr, status, error) {
+						console.error('發送時間資料到伺服器失敗:', error);
+						console.log('狀態:', status);
+						console.log('回應內容:', xhr.responseText);
+					}
+				});
+			}
+
+			// 使用 setInterval 定時執行 sendTimeData 函數
+			document.addEventListener("DOMContentLoaded", getNewsTickers, false); // 30 分鐘為 30 * 60 * 1000 毫秒
+		</script>
 		<!-- End Banner  -->
 	</header>
 	<!-- ======= Sidebar ======= -->
