@@ -61,31 +61,45 @@
 				<table id="example" class="display" style="width: 100%">
     <tbody>
         <th:block th:each="replyVO:${replyVOList}">
-            <tr th:if="${replyVO.isEnabled}">
+            <tr >
                 <td>
-                        <div>
+                        <div th:if="${replyVO.isEnabled}">
                             <span class="avatar-name" th:text="${replyVO.buyerVO.memberName}"></span>
                         </div>
-                        <div class="message-container">
+                        <div th:if="${replyVO.isEnabled == false}">
+                            <span class="avatar-name">此留言已被刪除</span>
+                        </div>
+                        <div th:if="${replyVO.isEnabled}" class="message-container">
                             <span th:text="${replyVO.replyContent}"></span>
                         </div>
-                    <div class="interaction-section">
+                        
+                        <div th:if="${replyVO.isEnabled == false}" class="message-container">
+                            <span>此留言因違反規定已被刪除</span>
+                        </div>
+                    <div th:if="${replyVO.isEnabled}" class="interaction-section">
                         <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
                         
-                        <span th:if="${replyVO.likeIt}==1">
-
-                        <i class="bi bi-suit-heart-fill isreply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
-                        </span>
+	                        <span th:if="${replyVO.likeIt}==1">
+	
+	                        <i class="bi bi-suit-heart-fill isreply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
+	                        </span>
+	                        
+	                        <span th:if="${replyVO.likeIt}!=1">
+	                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
+	                        </span>
+	                        
+	                        <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
+	                        <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
                         
-                        <span th:if="${replyVO.likeIt}!=1">
-                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
-                        </span>
+                        	<span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </div>
+                    
+                    <div th:if="${replyVO.isEnabled == false}" class="interaction-section">
+                        <span class="floor-count" th:text="${replyVOStat.count + '樓'}" style="margin-right: 25%"></span>
                         
-                        
-                        <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
-                        <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
                         <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                     </div>
+                    
                 </td>
             </tr>
         </th:block>

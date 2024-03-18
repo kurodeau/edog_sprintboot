@@ -170,7 +170,6 @@ public class ReplyController {
 			 Authentication authentication = secCtx.getAuthentication();
 			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			 Integer memberId = buyerVO.getMemberId();
-			 System.out.println(memberId);
 	    	ReplyLikeVO replyLikeVO = new ReplyLikeVO();
 	    	replyLikeVO.setBuyerVO(buyerVO);
 	    	replyLikeVO.setReplyVO(replyVO);
@@ -203,8 +202,6 @@ public class ReplyController {
 			Authentication authentication = secCtx.getAuthentication();
 			BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			Integer memberId = buyerVO.getMemberId();
-			System.out.println(memberId);
-			System.out.println(Integer.valueOf(replyId));
 			Integer replyLikeId = replyLikeSvc.findReplyLikeIdByMemberIdAndArticleId(buyerVO, replyVO);
 	    	replyLikeSvc.deleteReplyLike(replyLikeId);
 	    	MsgTypeVO msgTypeVO = new MsgTypeVO();

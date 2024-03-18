@@ -130,7 +130,6 @@ public class ArticleController {
 			 Authentication authentication = secCtx.getAuthentication();
 			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			 Integer memberId = buyerVO.getMemberId();
-			 System.out.println(memberId);
 			ArticleVO articleVO = new ArticleVO();
 			articleVO.setBuyerVO(buyerVO);
 			model.addAttribute("buyerVO", buyerVO);
@@ -233,7 +232,6 @@ public class ArticleController {
 		 Authentication authentication = secCtx.getAuthentication();
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
-		 System.out.println(memberId);
 		 model.addAttribute("buyerVO", buyerVO);
 		result = removeFieldError(articleVO, result, "upFiles");
 		articleVO.setArtCreateTime(new Date());
@@ -268,7 +266,6 @@ public class ArticleController {
 		 Authentication authentication = secCtx.getAuthentication();
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
-		 System.out.println(memberId);
 		 Integer replyId = reportVO.getReplyVO().getReplyId();
 		 ReplyVO replyVO = replySvc.getOneReply(Integer.valueOf(replyId));
 		 reportVO.setBuyerVO(replyVO.getBuyerVO());
@@ -294,7 +291,6 @@ public class ArticleController {
 		 Authentication authentication = secCtx.getAuthentication();
 		 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 		 Integer memberId = buyerVO.getMemberId();
-		 System.out.println(memberId);
 		 Integer articleId = reportVO.getArticleVO().getArticleId();
 		 ArticleVO articleVO = articleSvc.getOneArticle(Integer.valueOf(articleId));
 		 reportVO.setBuyerVO(articleVO.getBuyerVO());
@@ -375,7 +371,6 @@ public class ArticleController {
 			 Authentication authentication = secCtx.getAuthentication();
 			 BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 			 Integer memberId = buyerVO.getMemberId();
-			 System.out.println(memberId);
 			 model.addAttribute("buyerVO", buyerVO);
 	    	ArticleLikeVO articleLikeVO = new ArticleLikeVO();
 	    	articleLikeVO.setBuyerVO(buyerVO);
@@ -413,9 +408,7 @@ public class ArticleController {
 				Authentication authentication = secCtx.getAuthentication();
 				BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
 				Integer memberId = buyerVO.getMemberId();
-				System.out.println(memberId);
 				model.addAttribute("buyerVO", buyerVO);
-				System.out.println(Integer.valueOf(articleId));
 				Integer articleLikeId = articleLikeSvc.findArticleLikeIdByMemberIdAndArticleId(buyerVO, articleVO);
 		    	articleLikeSvc.deleteArticleLike(articleLikeId);
 		    	MsgTypeVO msgTypeVO = new MsgTypeVO();
