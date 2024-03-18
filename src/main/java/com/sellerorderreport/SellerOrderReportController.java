@@ -1,6 +1,8 @@
 package com.sellerorderreport;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,9 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,7 +28,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.productorder.model.ProductOrderService;
@@ -45,43 +53,58 @@ public class SellerOrderReportController {
 		return "/front-end/seller/seller-report";
 	}
 
-	@GetMapping("/report/api/orders/{sellerIdstr}")
-	public ResponseEntity<?> allOrders(@PathVariable String sellerIdstr) {
+	@GetMapping("/report/api/orders")
+	public ResponseEntity<?> allOrders() {
+
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = null;
+		Integer sellerTargetId = null;
+		if (authentication != null && authentication.getPrincipal() instanceof SellerVO) {
+			sellerVO = (SellerVO) authentication.getPrincipal();
+			sellerTargetId = sellerVO.getSellerId();
+		}
+
+		System.out.println(sellerTargetId);
 
 		try {
 
-			Integer sellerTargetId = null;
-
-			if (sellerIdstr.equals("0")) {
-				SecurityContext secCtx = SecurityContextHolder.getContext();
-				Authentication authentication = secCtx.getAuthentication();
-				if (authentication != null && authentication.getPrincipal() instanceof SellerVO) {
-					SellerVO sellerTargetVO = (SellerVO) authentication.getPrincipal();
-					sellerTargetId = Integer.valueOf(sellerIdstr);
-				} else {
-					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-							.body(new HttpResult<>(500, null, "找不到該用戶"));
-
-				}
-
-			} else {
-				sellerTargetId = Integer.valueOf(sellerIdstr);
+			if (sellerTargetId == null) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+						.body(new HttpResult<>(500, null, "找不到該用戶"));
 			}
 
 			final Integer finalSellerTargetId = sellerTargetId; // Make sellerTargetId effectively final
 
-			List<ProductOrderVO> productOrderVOs = productOrderService.getAll();
+			List<ProductOrderVO> productOrderVOs = productOrderService.findBySellerId(finalSellerTargetId);
 
-
+			// !!!! 注意stream內部一定要用固定常數
 			List<ProductOrderVO> filteredOrders = productOrderVOs.stream()
-					.filter(order -> order.getSellerId() == finalSellerTargetId)
 					.sorted((order1, order2) -> order1.getOrderTime().compareTo(order2.getOrderTime()))
 					.collect(Collectors.toList());
 
-//			for (ProductOrderVO filteredOrder : filteredOrders) {
-//				System.out.println(filteredOrder.getOrderTime());
-//			}
+			List<OrderDiagramDTO> orderReports = new ArrayList<>();
+			List<Map<String, Object>> jsonList = new ArrayList<>();
 
+			// 假如完全沒有資料
+			if (filteredOrders.size() == 0) {
+				OrderDiagramDTO orderDiagramDTO = new OrderDiagramDTO();
+				orderDiagramDTO.setOrderCount(0);
+				orderDiagramDTO.setTimestamp(LocalDateTime.now());
+				orderReports.add(orderDiagramDTO);
+
+				Map<String, Object> jsonMap = new HashMap<>();
+
+				String isoDateTime = orderDiagramDTO.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
+				jsonMap.put("timestamp", isoDateTime);
+				jsonMap.put("orderCount", orderDiagramDTO.getOrderCount());
+				jsonList.add(jsonMap);
+
+				System.out.println(jsonList);
+				return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(200, jsonList, "該用戶無資料"));
+			}
+
+			// 假如有資料
 			ZoneId taipeiZone = ZoneId.of("Asia/Taipei");
 			LocalDateTime startTime = filteredOrders.get(0).getOrderTime().toInstant().atZone(taipeiZone)
 					.toLocalDateTime();
@@ -89,17 +112,18 @@ public class SellerOrderReportController {
 					.atZone(taipeiZone).toLocalDateTime();
 			// LocalDateTime startTime = filteredOrders.get(0).getOrderTime().toLocalTime();
 
-			List<OrderDiagramDTO> orderReports = generateOrderReports(startTime, endTime, filteredOrders);
+			orderReports = generateOrderReports(startTime, endTime, filteredOrders);
 
 			for (OrderDiagramDTO orderReport : orderReports) {
 //				System.out.println(orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME) + "count"+ orderReport.getOrderCount());
 				String isoDateTime = orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
 			}
 
-			List<Map<String, Object>> jsonList = new ArrayList<>();
+			jsonList = new ArrayList<>();
 			for (OrderDiagramDTO orderReport : orderReports) {
-				String isoDateTime = orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
 				Map<String, Object> jsonMap = new HashMap<>();
+				String isoDateTime = orderReport.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME);
+
 				jsonMap.put("timestamp", isoDateTime);
 				jsonMap.put("orderCount", orderReport.getOrderCount());
 				jsonList.add(jsonMap);
@@ -146,13 +170,49 @@ public class SellerOrderReportController {
 //		}
 	}
 
-	@GetMapping("/report/test")
-	public ResponseEntity<?> generateReport(Model model) throws IOException {
-		
-		LocalDate startTime = LocalDate.of(2022, 1, 1);
-		LocalDate endTime = LocalDate.of(2022, 12, 31);
-		fileSvc.generateFiles(startTime, endTime,1);
-		return ResponseEntity.ok().build();
+	@Autowired
+	private ResourceLoader resourceLoader;
+
+	@PostMapping("/report/download")
+	public ResponseEntity<?> downloadReport(Model model, @RequestBody String jsonStr) throws IOException {
+
+		String startTimeStr = null;
+		String endTimeStr = null;
+		try {
+
+			JSONObject jsonObj = new JSONObject(jsonStr);
+			startTimeStr = jsonObj.getString("startTime");
+			endTimeStr = jsonObj.getString("endTime");
+		} catch (JSONException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HttpResult<>(400, null, "資料包裝錯誤"));
+		}
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate startTimeDate = LocalDate.parse(startTimeStr, formatter);
+		LocalDate endTimeDate = LocalDate.parse(endTimeStr, formatter);
+		System.out.println(jsonStr);
+
+		String filename = fileSvc.generateFiles(startTimeDate, endTimeDate, 1);
+		System.out.println(filename);
+		System.out.println(jsonStr);
+
+
+		Resource resource = resourceLoader.getResource("classpath:static/" + filename);
+
+		InputStream in = resource.getInputStream();
+		ByteArrayOutputStream byOut = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = in.read(buffer)) != -1) {
+			byOut.write(buffer, 0, length);
+		}
+
+		byte[] byteFileContent = byOut.toByteArray();
+
+		return ResponseEntity.ok()
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename).body(byteFileContent);
 	}
 
 	public List<OrderDiagramDTO> generateOrderReports(LocalDateTime startTime, LocalDateTime endTime,

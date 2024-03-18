@@ -76,6 +76,14 @@ public class SellerController extends HttpServlet {
 	// /back/seller/listAll
 	@GetMapping("list")
 	public String listAllSeller(ModelMap model) {
+		System.out.println();
+		return "back-end/back-seller-list";
+	}
+	
+	
+	// FOR JWT
+	@PostMapping("list")
+	public String listAllSellerJWT(ModelMap model) {
 		return "back-end/back-seller-list";
 	}
 

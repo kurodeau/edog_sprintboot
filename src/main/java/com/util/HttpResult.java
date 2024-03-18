@@ -1,8 +1,5 @@
 package com.util;
-import java.time.Duration;
-
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpResult<T> {
     private int status;
@@ -40,5 +37,16 @@ public class HttpResult<T> {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+    
+    
+    public String toJsonString() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

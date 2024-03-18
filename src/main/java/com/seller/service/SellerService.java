@@ -31,4 +31,6 @@ public interface SellerService {
      void saveUserDetails(SellerVO sellerVO);
      
      Boolean isDuplcateEmail(String email);
+     
+     void updateSecureContext(SellerVO sellerVO);
 }
