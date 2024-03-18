@@ -98,29 +98,35 @@ public class MultiSecurityConfiguration {
 	/////////////////// MANAGER 配置///////////////////////////
 	@Autowired
 	private ManagerService managerSvc;
-	
+
 	@Autowired
 	@Qualifier("managerPasswordEncoder")
 	private ManagerPasswordEncoder managerPasswordEncoder;
 
-	//////////////////// BUYER 配置///////////////////////////
+	@Autowired
+	private TokenRepository tokenRepository;
 	
 	@Autowired
+	private JwtService jwtSvc;
+
+	//////////////////// BUYER 配置///////////////////////////
+
+	@Autowired
 	MultiFilterConfig multiFilterConfig;
-//
-//	@Autowired
-//	@Qualifier("buyerRequestMatcher")
-//	RequestMatcher buyerRequestMatcher;
-//
-//	@Autowired
-//	private BuyerService buyerSvc;
-//
-//	@Autowired
-//	@Qualifier("buyerPasswordEncoder")
-//	private BuyerPasswordEncoder buyerPasswordEncoder;
-//
-//	@Autowired
-//	private BuyeAuthenticationFailureHandler buyeAuthenticationFailureHandler;
+	//
+	// @Autowired
+	// @Qualifier("buyerRequestMatcher")
+	// RequestMatcher buyerRequestMatcher;
+	//
+	// @Autowired
+	// private BuyerService buyerSvc;
+	//
+	// @Autowired
+	// @Qualifier("buyerPasswordEncoder")
+	// private BuyerPasswordEncoder buyerPasswordEncoder;
+	//
+	// @Autowired
+	// private BuyeAuthenticationFailureHandler buyeAuthenticationFailureHandler;
 
 	/////////////////// 針對沒登入使用者的配置///////////////////////////
 
@@ -129,25 +135,22 @@ public class MultiSecurityConfiguration {
 
 	/////////////////// filterChain配置///////////////////////////
 
-	
 	@Value("${myserver.back.entry}")
 	String backEntryPoint;
-	
-	
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
-		 BuyerAuthenticationFilter buyerAuthenticationFilter = multiFilterConfig.createBuyerAuthenticationFilter(authenticationManager(http));
-		 JwtAuthenticationFilter jwtAuthenticationFilter = multiFilterConfig.createJwtAuthenticationFilter(authenticationManager(http));
+
+		BuyerAuthenticationFilter buyerAuthenticationFilter = multiFilterConfig
+				.createBuyerAuthenticationFilter(authenticationManager(http));
+		JwtAuthenticationFilter jwtAuthenticationFilter = multiFilterConfig
+				.createJwtAuthenticationFilter(authenticationManager(http));
 
 		http.authorizeRequests(authorize -> authorize.antMatchers("/front/seller/report")
 				.hasAnyRole("SELLERLV2", "SELLERLV3").antMatchers("/front/seller/**").hasRole("SELLER")
-				.antMatchers("/front/buyer/**").hasRole("BUYER")
-				.antMatchers("/back/"+backEntryPoint+"/login").permitAll()
-				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
-				.antMatchers("/back/newsTicker/**").hasRole("MANAGERJWT")
-				.antMatchers("/back/main").hasRole("MANAGER")
-				)
+				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login")
+				.permitAll().antMatchers("/back/api/v1/auth/authenticate").permitAll()
+				.antMatchers("/back/newsTicker/**").hasRole("MANAGERJWT").antMatchers("/back/main").hasRole("MANAGER"))
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -157,13 +160,19 @@ public class MultiSecurityConfiguration {
 				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
 						.authenticationEntryPoint(customAuthenticationEntryPoint))
 				.csrf().disable().authenticationManager(authenticationManager(http))
-				.logout(logout -> logout.logoutUrl("/logout") // 配置登出 URL
+					.logout(logout -> logout.logoutUrl("/logout") // 配置登出 URL
 						.logoutSuccessHandler((request, response, authentication) -> {
+							if (authentication==null) {return;}
 							Object targetVO = authentication.getPrincipal();
-							// System.out.println(targetVO);
-							// System.out.println(targetVO instanceof BuyerVO);
-
-							String finalPath = null;
+						
+							final String authHeader = request.getHeader("Authorization");
+							final String jwt;
+							String finalPath = "/";
+							
+							
+							System.out.println("authHeader"+authHeader);
+							
+							
 							if (targetVO != null && targetVO instanceof BuyerVO) {
 								SecurityContextHolder.clearContext();
 								finalPath = "/buyer/login";
@@ -171,7 +180,20 @@ public class MultiSecurityConfiguration {
 							} else if (targetVO != null && targetVO instanceof SellerVO) {
 								SecurityContextHolder.clearContext();
 								finalPath = "/seller/login";
+							} else if (authHeader != null && authHeader.startsWith("Bearer ")) {
+								jwt = authHeader.substring(7);
+								Integer userId = jwtSvc.extractId(jwt);
+								String redisTokenKey = "managerId:" + userId;
+								var storedToken = tokenRepository.findToken(redisTokenKey);
+
+								if (storedToken != null) {
+									tokenRepository.revokeToken(redisTokenKey);
+									SecurityContextHolder.clearContext();
+
+								}
+								finalPath = "/buyer/login";
 							}
+							
 							// 這個處理器將應用於所有的登出請求
 							response.sendRedirect(request.getContextPath() + finalPath);
 
@@ -184,7 +206,6 @@ public class MultiSecurityConfiguration {
 
 		public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-			
 			if (authentication != null && authentication.isAuthenticated()) {
 				// 如果已存在secCtx(買家) 返回
 				return authentication;
@@ -193,8 +214,9 @@ public class MultiSecurityConfiguration {
 			String name = authentication.getName();
 			String password = authentication.getCredentials().toString();
 
-			// dasd@gmail.com-http://seller/login
+			// Split the name using "-http"
 			String[] parts = name.split("-http");
+			// Check if there is a second part
 			if (parts.length < 2) {
 				throw new UsernameNotFoundException("Invalid Input");
 			}
@@ -202,8 +224,8 @@ public class MultiSecurityConfiguration {
 			// The second part is the true name
 			String trueName = parts[0];
 
-
 			if (parts[1].contains("seller")) {
+				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
@@ -212,9 +234,9 @@ public class MultiSecurityConfiguration {
 
 					if (sellerPasswordEncoder.matches(password, sellerVO.getSellerPassword())) {
 						List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-						
+
 						switch (sellerVO.getSellerLvId().getSellerLvId()) {
-						
+
 						case 1:
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 							authorities.add(new SimpleGrantedAuthority("ROLE_SELLERLV1"));
@@ -237,25 +259,23 @@ public class MultiSecurityConfiguration {
 				}
 			}
 
-			
-
 			if (parts[1].contains("back") && parts[1].contains("auth/authenticate")) {
 				ManagerVO managerVO = managerSvc.findByOnlyOneEmail(trueName);
 
-				if(managerVO == null) {
+				if (managerVO == null) {
 					throw new UsernameNotFoundException("沒有此帳戶");
 				}
-								
-				if (!managerPasswordEncoder.matches(password,  managerVO.getManagerPassword())) {
+
+				if (!managerPasswordEncoder.matches(password, managerVO.getManagerPassword())) {
 					throw new BadCredentialsException("密碼輸入有誤");
 				}
-				
+
 				List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 				authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
 
 				return new UsernamePasswordAuthenticationToken(managerVO, password, authorities);
 			}
-			
+
 			throw new UsernameNotFoundException("路徑錯誤");
 
 		}

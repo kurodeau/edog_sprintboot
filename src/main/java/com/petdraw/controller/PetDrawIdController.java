@@ -17,7 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,7 +27,7 @@ import com.petdraw.model.PetDrawVO;
 
 @Controller
 @Validated
-@RequestMapping("/PetDraw")
+@RequestMapping("/petdraw")
 public class PetDrawIdController {
 	
 	@Autowired
@@ -36,14 +36,22 @@ public class PetDrawIdController {
 	 * This method will be called on select_page.html form submission, handling POST
 	 * request It also validates the PetDraw input
 	 */
-	@PostMapping("getOne_For_Display")
-	public String getOne_For_Display(
+	// //PetDraw/petdraw
+	
+	@GetMapping("petdraw")
+	public String showaddpetdraw(ModelMap model) {
+		return "front-end/article/forum-petdraw";
+	}
+	
+	
+	@GetMapping("petdraw1")
+	public String petdraw(
 		/***************************1.接收請求參數 - 輸入格式的錯誤處理*************************/
 		@NotEmpty(message="寵物抽卡編號: 請勿空白")
 		@Digits(integer = 100, fraction = 0, message = "會員編號: 請填數字-請勿超過{integer}位數")
 		@Min(value = 0001, message = "寵物抽卡編號: 不能小於{value}")
 		@Max(value = 7777, message = "寵物抽卡編號: 不能超過{value}")
-		@RequestParam("petDrawId") String petDrawId,
+		@RequestParam("petDraw1") String petDrawId,
 		ModelMap model) {
 		
 		/***************************2.開始查詢資料*********************************************/
@@ -55,14 +63,13 @@ public class PetDrawIdController {
 		
 		if (petDrawVO == null) {
 			model.addAttribute("errorMessage", "查無資料");
-			return "back-end/petDraw/select_page";
+			return "front-end/article/select_page";
 		}
 		
 		/***************************3.查詢完成,準備轉交(Send the Success view)*****************/
 		model.addAttribute("petDrawVO", petDrawVO);
-		model.addAttribute("getOne_For_Display", "true"); // 旗標getOne_For_Display見select_page.html的第126行 -->
-		
-		return "back-end/petDraw/select_page"; // 查詢完成後轉交select_page.html由其第128行insert listOneEmp.html內的th:fragment="listOnePetDraw-div
+		model.addAttribute("petdraw", "true"); // 旗標petdraw見select_page.html的第126行 -->
+		return "front-end/article/forum-petdraw"; // 查詢完成後轉交select_page.html由其第128行insert listOneEmp.html內的th:fragment="listOnePetDraw-div
 	}
 
 	
@@ -78,7 +85,7 @@ public class PetDrawIdController {
 		model.addAttribute("petDrawListData", list); // for select_page.html 第行用
 		
 		String message = strBuilder.toString();
-	    return new ModelAndView("back-end/petDraw/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
+	    return new ModelAndView("front-end/article/forum-petdraw", "errorMessage", "請修正以下錯誤:<br>"+message);
 	}
 	
 }

@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "petdraw") // 指定對應的資料庫表格名稱
@@ -17,8 +19,8 @@ public class PetDrawVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer petDrawId;
-	private Integer memberMain;
-	private Integer memberPair;
+	private Integer memberId;
+    private Integer memberPairId;
 	private Boolean isMemberLike;
 	// 命名問題 除開發者外 其餘人不知此為何時間
 	private Date memberResTime;
@@ -34,7 +36,7 @@ public class PetDrawVO implements java.io.Serializable {
 	@Id
 	@Column(name = "petDrawId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer getpetDrawId() {
+	public Integer getpetDrawId() {
 		return this.petDrawId;
 	}
 
@@ -42,24 +44,28 @@ public class PetDrawVO implements java.io.Serializable {
 		this.petDrawId = petDrawId;
 	}
 
-	public Integer getMemberMain() {
-		return memberMain;
-	}
+	//@ManyToOne
+    //@JoinColumn(name = "memberId", referencedColumnName = "memberId")
+    public Integer getMemberId() {
+        return memberId;
+    }
 
-	public void setMemberMain(Integer memberMain) {
-		this.memberMain = memberMain;
-	}
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
+    }
 
-	public Integer getMemberPair() {
-		return memberPair;
-	}
+    
 
-	public void setMemberPair(Integer memberPair) {
-		this.memberPair = memberPair;
-	}
+    public Integer getMemberPairId() {
+        return memberPairId;
+    }
+
+    public void setMemberPairId(Integer memberPairId) {
+        this.memberPairId = memberPairId;
+    }
 
 	@Column(name = "isMemberLike")
-	private Boolean getIsMemberLike() {
+	public Boolean getIsMemberLike() {
 		return isMemberLike;
 	}
 
@@ -68,6 +74,8 @@ public class PetDrawVO implements java.io.Serializable {
 	}
 
 	@Column(name = "memberResTime")
+	 @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getMemberResTime() {
 		return memberResTime;
 	}
@@ -77,6 +85,8 @@ public class PetDrawVO implements java.io.Serializable {
 	}
 
 	@Column(name = "memberPairResTime")
+	 @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getMemberPairResTime() {
 		return memberPairResTime;
 	}
@@ -95,6 +105,8 @@ public class PetDrawVO implements java.io.Serializable {
 	}
 
 	@Column(name = "petDrawTime")
+	 @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getPetDrawTime() {
 		return petDrawTime;
 	}

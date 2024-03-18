@@ -430,24 +430,21 @@ VALUES
 
 -- 會員資料  放入測試資料-- 
 INSERT INTO buyer (
-    memberEmail, thirdFrom, memberName,
-    memberPhone, memberMobile, memberBirthday,
-    memberPassword, memberAddress, isMemberEmail,
-    memberRegistrationTime, petName, petImg,
-    petImgUploadTime, petVaccName1, petVaccTime1,
-    petVaccName2, petVaccTime2
-)
-VALUES 
-    ('buyer1@example.com', NULL, 'Buyer1', '1234567890', '0912345678', '1990-01-01', 'password1', 'Address1', true, '2023-01-01 10:00:00', 'Pet1', NULL, NULL, 'Vaccine1', '2023-02-01 12:30:00', 'Vaccine2', '2023-03-15 15:45:00'),
-    ('buyer2@example.com', NULL, 'David', '0987654321', '0923456789', '1985-05-15', 'password2', 'Address2', true, '2023-02-01 11:30:00', '木木鴞', NULL, NULL, 'Vaccine3', '2023-04-05 09:15:00', 'Vaccine4', '2023-06-20 14:00:00'),
-    ('buyer3@example.com', NULL, 'Buyer3', '0912345678', '0934567890', '1995-08-20', 'password3', 'Address3', true, '2023-03-01 14:45:00', 'Pet3', NULL, NULL, 'Vaccine5', '2023-07-10 16:30:00', 'Vaccine6', '2023-09-25 11:45:00'),
-    ('buyer4@example.com', NULL, 'Buyer4', '0923456789', '0945678901', '1988-11-10', 'password4', 'Address4', true, '2023-04-01 09:15:00', 'Pet4', NULL, NULL, 'Vaccine7', '2023-11-01 08:00:00', 'Vaccine8', '2023-12-15 10:20:00'),
-    ('buyer5@example.com', NULL, 'Buyer5', '0934567890', '0956789012', '1992-03-25', 'password5', 'Address5', true, '2023-05-01 12:00:00', 'Pet5', NULL, NULL, 'Vaccine9', '2024-01-05 13:45:00', 'Vaccine10', '2024-03-20 17:00:00'),
-    ('buyer6@example.com', NULL, 'Buyer6', '0945678901', '0967890123', '1980-06-30', 'password6', 'Address6', true, '2023-06-01 15:30:00', 'Pet6', NULL, NULL, 'Vaccine11', '2024-04-10 09:30:00', 'Vaccine12', '2024-06-25 14:15:00'),
-    ('buyer7@example.com', NULL, 'Buyer7', '0956789012', '0978901234', '1998-09-05', 'password7', 'Address7', true, '2023-07-01 18:45:00', 'Pet7', NULL, NULL, 'Vaccine13', '2024-07-20 11:00:00', 'Vaccine14', '2024-09-05 15:30:00'),
-    ('buyer8@example.com', NULL, 'Buyer8', '0967890123', '0989012345', '1983-12-15', 'password8', 'Address8', true, '2023-08-01 21:00:00', 'Pet8', NULL, NULL, 'Vaccine15', '2024-10-01 14:45:00', 'Vaccine16', '2024-12-15 18:00:00'),
-    ('buyer9@example.com', NULL, 'Buyer9', '0978901234', '0990123456', '1991-02-20', 'password9', 'Address9', true, '2023-09-01 09:30:00', 'Pet9', NULL, NULL, 'Vaccine17', '2025-01-15 17:15:00', 'Vaccine18', '2025-03-30 20:30:00'),
-    ('buyer10@example.com', NULL, 'Buyer10', '0989012345', '0910234567', '1987-05-10', 'password10', 'Address10', true, '2023-10-01 12:45:00', 'Pet10', NULL, NULL, 'Vaccine19', '2025-04-20 10:00:00', 'Vaccine20', '2025-06-05 13:15:00');
+    memberEmail, thirdFrom, memberName, memberPhone, memberMobile, memberBirthday,
+    memberPassword, memberAddress, isMemberEmail, memberRegistrationTime, petName, petImg,
+    petImgUploadTime, petVaccName1, petVaccTime1, petVaccName2, petVaccTime2, logitude, latitude
+) VALUES 
+    ('buyer1@example.com', NULL, 'Buyer1', '1234567890', '0912345678', '1990-01-01', 'password1', 'Address1', true, '2023-01-01 10:00:00', 'Pet1', NULL, NULL, 'Vaccine1', '2023-02-01 12:30:00', 'Vaccine2', '2023-03-15 15:45:00', 121.5654, 25.0330),
+    ('buyer2@example.com', NULL, 'David', '0987654321', '0923456789', '1985-05-15', 'password2', 'Address2', true, '2023-02-01 11:30:00', '木木鴞', NULL, NULL, 'Vaccine3', '2023-04-05 09:15:00', 'Vaccine4', '2023-06-20 14:00:00', 121.5654, 25.0330),
+    ('buyer3@example.com', NULL, 'Buyer3', '0912345678', '0934567890', '1995-08-20', 'password3', 'Address3', true, '2023-03-01 14:45:00', 'Pet3', NULL, NULL, 'Vaccine5', '2023-07-10 16:30:00', 'Vaccine6', '2023-09-25 11:45:00', 121.5654, 25.0330),
+    ('buyer4@example.com', NULL, 'Buyer4', '0923456789', '0945678901', '1988-11-10', 'password4', 'Address4', true, '2023-04-01 09:15:00', 'Pet4', NULL, NULL, 'Vaccine7', '2023-11-01 08:00:00', 'Vaccine8', '2023-12-15 10:20:00', 120.6736, 24.1477),
+    ('buyer5@example.com', NULL, 'Buyer5', '0934567890', '0956789012', '1992-03-25', 'password5', 'Address5', true, '2023-05-01 12:00:00', 'Pet5', NULL, NULL, 'Vaccine9', '2024-01-05 13:45:00', 'Vaccine10', '2024-03-20 17:00:00', 120.3014, 22.6273),
+    ('buyer6@example.com', NULL, 'Buyer6', '0945678901', '0967890123', '1980-06-30', 'password6', 'Address6', true, '2023-06-01 15:30:00', 'Pet6', NULL, NULL, 'Vaccine11', '2024-04-10 09:30:00', 'Vaccine12', '2024-06-25 14:15:00', 120.6582, 24.1632), -- 假设台中
+    ('buyer7@example.com', NULL, 'Buyer7', '0956789012', '0978901234', '1998-09-05', 'password7', 'Address7', true, '2023-07-01 18:45:00', 'Pet7', NULL, NULL, 'Vaccine13', '2024-07-20 11:00:00', 'Vaccine14', '2024-09-05 15:30:00', 120.6582, 24.1632), -- 假设台中
+    ('buyer8@example.com', NULL, 'Buyer8', '0967890123', '0989012345', '1983-12-15', 'password8', 'Address8', true, '2023-08-01 21:00:00', 'Pet8', NULL, NULL, 'Vaccine15', '2024-10-01 14:45:00', 'Vaccine16', '2024-12-15 18:00:00', 120.3417, 22.6300), -- 假设高雄
+    ('buyer9@example.com', NULL, 'Buyer9', '0978901234', '0990123456', '1991-02-20', 'password9', 'Address9', true, '2023-09-01 09:30:00', 'Pet9', NULL, NULL, 'Vaccine17', '2025-01-15 17:15:00', 'Vaccine18', '2025-03-30 20:30:00', 121.5402, 25.0478), -- 假设台北
+    ('buyer10@example.com', NULL, 'Buyer10', '0989012345', '0910234567', '1987-05-10', 'password10', 'Address10', true, '2023-10-01 12:45:00', 'Pet10', NULL, NULL, 'Vaccine19', '2025-04-20 10:00:00', 'Vaccine20', '2025-06-05 13:15:00', 121.5402, 25.0478); -- 假设台北
+
 -- 檢舉類型  放入測試資料-- (檢舉資料的測試資料只能新增一次, 有需要自己開起來新增)
 -- INSERT INTO reportType (reportTypeId, reportTypeSort)
 -- VALUES 

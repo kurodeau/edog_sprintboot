@@ -1,17 +1,17 @@
 package com.productorder.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,23 +20,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.buyer.entity.BuyerVO;
 import com.buyer.service.BuyerService;
 import com.orderdetails.model.OrderDetailsService;
-import com.orderdetails.model.OrderDetailsVO;
 import com.product.model.ProductService;
-import com.product.model.ProductVO;
-import com.productorder.model.ProductInfoDTO;
 import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
-import com.productorder.model.ReceiverInfoDTO;
 import com.productorder.model.ShoppingCartDTO;
 import com.seller.entity.SellerVO;
 import com.seller.service.SellerService;
-import com.util.GenerateInvoiceNumber;
-
+import com.util.HttpResult;
+import com.buyer.entity.BuyerVO;
 @Controller
 @RequestMapping("/front/buyer")
 public class BuyerProductOrderController {
@@ -56,11 +52,20 @@ public class BuyerProductOrderController {
 	//訂單結帳正式入口
 		@GetMapping("order_checkout") 
 		public String orderCheckout(Integer memberIdd, Model model, HttpSession session){
-			//暫時給定
-//			session.getAttribute(memberId);
-//			
-			Integer memberId = 8; 
-			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
+
+			
+			
+			
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+
+			
+			
+			
+			
+			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(buyerVO.getMemberId())); 
 			return "front-end/buyer/buyer-order-checkout";
 			
 			
@@ -81,8 +86,22 @@ public class BuyerProductOrderController {
 		@PostMapping("create_orders")
 		public ResponseEntity<?> orderCheckout(@RequestBody ShoppingCartDTO shoppingCartDTO ,HttpSession session ) {
 //		    Integer memberId =  session.getAttribute(memberId);
-			Integer memberId = 1;
-			return productOrderSvc.createOrders(shoppingCartDTO, memberId);
+//			Integer memberId = 1;
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			
+			
+			
+	        productOrderSvc.deletCartOnRedis(buyerVO.getMemberId());
+	        productOrderSvc.deletOrderOnRedis(buyerVO.getMemberId());
+	        
+	        
+	        
+			return productOrderSvc.createOrders(shoppingCartDTO, buyerVO.getMemberId());
+			
+			
 		}
 
 
@@ -189,6 +208,28 @@ public class BuyerProductOrderController {
 			model.addAttribute("success", "- (刪除成功)");
 			return "back-end/productOrder/listAllProductOrder"; // 刪除完成後轉交listAllEmp.html
 		}
+		
+		
+		
+		/*
+		 * 直接從商品詳細頁面點立刻購買按鈕用, /front/buyer/buyProductWithoutCart
+		 * 再 Redis 上創立資料後, 回到前端再跳轉到訂單結帳畫面
+		 */
+		@RequestMapping(value = "buyProductWithoutCart", method = RequestMethod.POST)	
+		public ResponseEntity<?> buyProductWithoutCart(@RequestBody String jsonData) {
+			System.out.println("測試訊息:有進入buyProductWithoutCart 這個controller");
+			JSONObject jsonObject = new JSONObject(jsonData);
+	        System.out.println(jsonData);
+	        if(jsonData==null || jsonData.equals("{}")){
+	            HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
+	            return ResponseEntity.badRequest().body(result);
+	        }
+	        // 呼叫生成order Redis 資料的方法
+	        productOrderSvc.buyProductWithoutCart( jsonObject );
+	        
+		    // 返回適當的響應
+		    return ResponseEntity.ok().body(new HttpResult<>(200,"","success"));
+		}	
 
 		
 		}

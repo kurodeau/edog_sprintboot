@@ -2,7 +2,7 @@
   <ul class="sidebar-nav" id="sidebar-nav">
     <li class="nav-item">
       <a class="nav-link nav-seller-entry" th:href="@{/back/main}">
-        <i class="bi bi-grid"></i> <span>後台中心</span>
+        <i class="bi bi-grid"></i> <span>後台中心(只有這才能登出)</span>
       </a>
     </li>
 
@@ -310,12 +310,15 @@
             return response.text();
           })
           .then((data) => {
-            data = JSON.parse(data);
+              console.log(data);
+
+            let data = JSON.parse(data);
             console.log(parseInt(data.status));
             // 处理从服务器返回的数据
             if (parseInt(data.status) !== 200) {
               alert(data.msg);
             }
+            window.location.href
             console.log(data);
           })
           .catch((error) => {
