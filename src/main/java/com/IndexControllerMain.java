@@ -305,4 +305,13 @@ public class IndexControllerMain {
 		return list;
 	}
 
+	
+	@ModelAttribute("adhomePageUsed")
+	protected List<AdVO> referenceListData5(Model model) {
+		
+		List<AdVO> list = adSvc.getHomePageUsed();
+		
+		return list;
+	}
 }
+

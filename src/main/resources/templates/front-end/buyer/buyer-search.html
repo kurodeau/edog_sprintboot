@@ -74,10 +74,10 @@
 							</div>
 						</div>
 					</form>
-					<div class="my-2 keyword-container-custom">
-						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
-							class="badge rounded-pill keyword-item-custom">玩具</span>
-					</div>
+<!-- 					<div class="my-2 keyword-container-custom"> -->
+<!-- 						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span -->
+<!-- 							class="badge rounded-pill keyword-item-custom">玩具</span> -->
+<!-- 					</div> -->
 				</div>
 				<!-- End SearchBar-Input  -->
 
@@ -124,14 +124,14 @@
 					th:each="productVO : ${productIdList}">
 					<a th:href="'/product/' + ${productVO.productId}">
 						<div class="card product-card">
-							<div class="badge card-badge-custom">廣告</div>
-							<div class="card-status-custom">已售完</div>
+<!-- 							<div class="badge card-badge-custom">廣告</div> -->
+<!-- 							<div class="card-status-custom">已售完</div> -->
 							<img
 								th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
 								class="card-img-top" alt="Product 1" />
 							<div class="card-body d-flex flex-column justify-content-between">
-								<h3 class="card-text" th:text="${productVO.productName}"></h3>
-								<p class="card-text" th:text=${productVO.productDetails}></p>
+								<h7 class="card-text" th:text="${productVO.productName}"></h7>
+<!-- 								<p class="card-text" th:text=${productVO.productDetails}></p> -->
 								<h5 class="price-tag">
 									$ <span th:text=${productVO.price}></span>
 								</h5>

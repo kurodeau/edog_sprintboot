@@ -44,8 +44,7 @@ public class AdService {
 		return list;
 
 	}
-	
-	
+
 	public List<AdVO> getSellerAdAll(Integer sellerId) {
 
 		List<AdVO> allAds = repository.findSellerAdAll(sellerId);
@@ -63,8 +62,7 @@ public class AdService {
 
 		List<AdVO> list = allAds.stream() // for each
 				.filter(ad -> "審核中".equals(ad.getAdStatus())
-						||"審核失敗".equals(ad.getAdStatus())
-						&& Boolean.TRUE.equals(ad.getIsEnabled()))
+						|| "審核失敗".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
 				.collect(Collectors.toList());
 
 		return list;
@@ -101,15 +99,13 @@ public class AdService {
 		java.sql.Date currentSqlDate = new java.sql.Date(long1);
 
 		List<AdVO> list = allAds.stream() // for each
-				.filter(ad -> "已上架".equals(ad.getAdStatus()) 
-						&& Boolean.TRUE.equals(ad.getIsEnabled())
-						&& ad.getAdId()!=1
-						&& Integer.valueOf(1).equals(ad.getAdLv())
+				.filter(ad -> "已上架".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled())
+						&& ad.getAdId() != 1 && Integer.valueOf(1).equals(ad.getAdLv())
 						&& ad.getAdStartTime().compareTo(currentSqlDate) <= 0
 						&& ad.getAdEndTime().compareTo(currentSqlDate) >= 0)
 				.collect(Collectors.toList());
-		
-		if(list ==null || list.size() ==0) {
+
+		if (list == null || list.size() == 0) {
 			Optional<AdVO> noAd = repository.findById(1);
 			list.add(noAd.orElse(null));
 			return list;
@@ -117,8 +113,7 @@ public class AdService {
 
 		return list;
 	}
-	
-	
+
 	public List<AdVO> getBaseHomePageAd() {
 
 		List<AdVO> allAds = repository.findAll();
@@ -128,19 +123,33 @@ public class AdService {
 		java.sql.Date currentSqlDate = new java.sql.Date(long1);
 
 		List<AdVO> list = allAds.stream() // for each
-				.filter(ad -> "已上架".equals(ad.getAdStatus()) 
-						&& Boolean.TRUE.equals(ad.getIsEnabled())
-						&& ad.getAdId()!=1
-						&& Integer.valueOf(0).equals(ad.getAdLv())
+				.filter(ad -> "已上架".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled())
+						&& ad.getAdId() != 1 && Integer.valueOf(0).equals(ad.getAdLv())
 						&& ad.getAdStartTime().compareTo(currentSqlDate) <= 0
 						&& ad.getAdEndTime().compareTo(currentSqlDate) >= 0)
 				.collect(Collectors.toList());
-		
-		if(list ==null || list.size() ==0) {
+
+		if (list == null || list.size() == 0) {
 			Optional<AdVO> noAd = repository.findById(1);
 			list.add(noAd.orElse(null));
 			return list;
 		}
+		
+		
+		return list;
+	}
+
+	public List<AdVO> getHomePageUsed() {
+
+		List<AdVO> allAds = repository.findAll();
+
+
+		List<AdVO> list = allAds.stream()
+				.filter(ad -> "平台使用".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled())
+						&& ad.getAdId() == 3 || ad.getAdId() == 4
+					    && Integer.valueOf(0).equals(ad.getAdLv()))
+				.collect(Collectors.toList());
+		
 
 		return list;
 	}
