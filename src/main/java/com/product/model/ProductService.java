@@ -101,7 +101,9 @@ public class ProductService {
 
 		List<ProductVO> allProducts = repository.findAll();
 		List<ProductVO> list = allProducts.stream()
-				.filter(pt -> "已上架".equals(pt.getProductStatus()) && Boolean.TRUE.equals(pt.getIsEnabled()))
+				.filter(pt -> "已上架".equals(pt.getProductStatus()) 
+						&& Boolean.TRUE.equals(pt.getIsEnabled())
+						&& pt.getProductStockQuantity()!=0)
 				.collect(Collectors.toList());
 		return list;
 	}
