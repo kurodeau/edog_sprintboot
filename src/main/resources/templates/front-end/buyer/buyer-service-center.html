@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:insert="~{/fragment-head}"></th:block>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body>
+  
+    <!-- ======= Header ======= -->
+    <header class="fixed-top">
+      <th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
+    </header>
+
+    <!-- ======= Sidebar ======= -->
+    <aside th:replace="@{front-end/buyer/aside-buyer}"></aside>
+
+    <!-- ======= Main ======= -->
+
+    <main class="main main-layout-seller">
+    <div class="bg-gray-100 py-8">
+        <div class="container mx-auto px-6">
+            <div class="font-bold text-3xl text-center mb-4">Contact Us</div>
+            <!-- Centering the box using flexbox utilities and making it larger -->
+            <div class="flex justify-center">
+                <!-- Adjusting the width for medium and large screens -->
+                <div class="w-full md:w-4/5 lg:w-3/4 px-3 mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <!-- Added margin-right to image for spacing -->
+                            <img th:src="@{/image/customer_service.png}" class="w-50 h-50 mr-20 ml-20">
+                            <div class="flex-1">
+                                <div class="font-bold text-lg" style="font-size:25px;">聯絡電話</div>
+                                <p class="text-gray-600" style="font-size:20px;">(02)2712-0589</p>
+                                <div style="margin-top: 30px;"></div>
+                                <div class="font-bold text-lg" style="font-size:25px;">電子信箱</div>
+                                <p class="text-gray-600" style="font-size:20px;">edogtha105@gmail.com</p>
+                                <div style="margin-top: 30px;"></div>
+                                <div class="font-bold text-lg" style="font-size:25px;">營業時間</div>
+                                <p class="text-gray-600" style="font-size:20px;">週一至週五 9:00-17:00</p>
+                                <div style="margin-top: 30px;"></div>
+                                <img th:src="@{/image/edog_scanner.png}" style="width: 180px; height: 150px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+    <!-- End #main -->
+    <button
+      id="updateSuccess"
+      th:value="${param.updateSuccess}"
+      name="updateSuccess"
+      type="hidden"
+    >
+      UpdateSuccess
+    </button>
+    <!-- End Main -->
+    <!-- 這裡放置你的 Modal 代碼 -->
+    <div
+      class="modal fade"
+      id="updateSuccessModal"
+      tabindex="-1"
+      aria-labelledby="updateSuccessModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">修改成功🎉🎉🎉🎉🎉</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= Footer ======= -->
+
+    <div th:replace="@{fragment-footer}"></div>
+    <div th:replace="@{fragment-js}"></div>
+    <script>
+      window.onload = function () {
+        let updateSuccess = document.querySelector("#updateSuccess");
+        if (updateSuccess.value === "true") {
+          // Show the modal
+          $("#updateSuccessModal").modal("show");
+        }
+      };
+    </script>
+
+    <!-- Local JS File -->
+  </body>
+</html>

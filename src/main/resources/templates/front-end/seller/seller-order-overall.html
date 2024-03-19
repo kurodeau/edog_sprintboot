@@ -184,7 +184,12 @@
 		                    		 	 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
 		                  		  </form>
 		                  		  
-		               		      
+		               		       <form method="post" th:action="@{/front/seller/productorder/shipping}" th:if="${productOrderVO.orderStatus == 5}">
+                    			  <button type="submit" class="product align-self-start btn-func">
+                      				 出貨
+                      			  </button>
+                      			 <input type="hidden" name="orderId" th:value="${productOrderVO.orderId}">
+						  </form> 
 		                  		  
 		                      
 		                     	 <form method="get" th:action="@{/front/seller/productorder/getOrderdetails}">
