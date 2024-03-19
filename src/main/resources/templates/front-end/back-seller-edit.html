@@ -1,482 +1,296 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
 
-  <body>
-    <!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <!-- start帳戶管理 -->
+	<!-- ======= Sidebar ======= -->
+	<!-- start帳戶管理 -->
 
-    <aside th:replace="back-end/aside-back.html"></aside>
+	<aside th:replace="back-end/aside-back.html"></aside>
 
-    <!-- ======= Main ======= -->
-    <main class="main main-layout-seller">
-      <div class="container-fluid seller-container">
-        <h1>編輯賣家資料</h1>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+			<h1>編輯賣家資料</h1>
 
-        <form
-          class="row g-3"
-          id="myForm"
-          th:action="@{update}"
-          th:object="${sellerVO}"
-          method="post"
-          enctype="multipart/form-data"
-          onsubmit="return updateHiddenFields();"
-        >
-          <div class="col-md-12">
-            <label for="inputSellerId" class="form-label">賣家ID</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputSellerId"
-              name="sellerId"
-              th:field="*{sellerId}"
-              aria-describedby="sellerIdFeedback"
-              th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
-              readonly
-            />
-            <div id="sellerIdFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerId')}"
-                th:errors="*{sellerId}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
-          <div class="col-md-12">
-            <label for="sellerLvId" class="form-label">賣家等級</label>
-            <div class="col-md-2">
-              <select
-                class="form-select"
-                name="sellerLvId"
-                id="sellerLvId"
-                th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}"
-              >
-                <option
-                  th:each="sellerLv : ${sellerLvListData}"
-                  th:value="${sellerLv.getSellerLvId()}"
-                  th:text="${sellerLv.getLvName()}"
-                ></option>
-              </select>
-            </div>
-          </div>
+			<form class="row g-3" id="myForm" th:action="@{update}"
+				th:object="${sellerVO}" method="post" enctype="multipart/form-data"
+				onsubmit="return updateHiddenFields();">
+				<div class="col-md-12">
+					<label for="inputSellerId" class="form-label">賣家ID</label> <input
+						type="text" class="form-control" id="inputSellerId"
+						name="sellerId" th:field="*{sellerId}"
+						aria-describedby="sellerIdFeedback"
+						th:classappend="${#fields.hasErrors('sellerId')} ? 'is-invalid' : ''"
+						readonly />
+					<div id="sellerIdFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerId')}"
+							th:errors="*{sellerId}">欄位有誤</p>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<label for="sellerLvId" class="form-label">賣家等級</label>
+					<div class="col-md-2">
+						<select class="form-select" name="sellerLvId" id="sellerLvId"
+							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
+							<option th:each="sellerLv : ${sellerLvListData}"
+								th:value="${sellerLv.getSellerLvId()}"
+								th:text="${sellerLv.getLvName()}"></option>
+						</select>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputSellerId" class="form-label">公司名稱</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputSellerCompany"
-              name="sellerCompany"
-              th:field="*{sellerCompany}"
-              aria-describedby="sellerCompanyFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''"
-            />
-            <div id="sellerCompanyFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompany')}"
-                th:errors="*{sellerCompany}"
-              ></p>
-            </div>
-          </div>
+				<div class="col-md-12">
+					<label for="inputSellerId" class="form-label">公司名稱</label> <input
+						type="text" class="form-control" id="inputSellerCompany"
+						name="sellerCompany" th:field="*{sellerCompany}"
+						aria-describedby="sellerCompanyFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompany')} ? 'is-invalid' : ''" />
+					<div id="sellerCompanyFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompany')}"
+							th:errors="*{sellerCompany}"></p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerContact" class="form-label"
-              >公司負責人</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerContact"
-              name="sellerContact"
-              th:value="${sellerVO.sellerContact}"
-              aria-describedby="sellerContactFeedback"
-              th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerContact" class="form-label">公司負責人</label>
+					<input type="text" class="form-control" id="inputsellerContact"
+						name="sellerContact" th:value="${sellerVO.sellerContact}"
+						aria-describedby="sellerContactFeedback"
+						th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''" />
 
-            <div id="sellerContactFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerContact')}"
-                th:errors="*{sellerContact}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerContactFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerContact')}"
+							th:errors="*{sellerContact}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerEmail" class="form-label">電子郵件</label>
-            <input
-              type="email"
-              class="form-control"
-              id="inputsellerEmail"
-              name="sellerEmail"
-              th:value="${sellerVO.sellerEmail}"
-              aria-describedby="sellerEmailFeedback"
-              th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerEmail" class="form-label">電子郵件</label> <input
+						type="email" class="form-control" id="inputsellerEmail"
+						name="sellerEmail" th:value="${sellerVO.sellerEmail}"
+						aria-describedby="sellerEmailFeedback"
+						th:classappend="${#fields.hasErrors('sellerEmail')} ? 'is-invalid' : ''" />
 
-            <div id="sellerEmailFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerEmail')}"
-                th:errors="*{sellerEmail}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerEmailFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerEmail')}"
+							th:errors="*{sellerEmail}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerTaxId" class="form-label">統一編號</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerTaxId"
-              name="sellerTaxId"
-              th:value="${sellerVO.sellerTaxId}"
-              aria-describedby="sellerTaxIdFeedback"
-              th:classappend="${#fields.hasErrors('sellerTaxId')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerTaxId" class="form-label">統一編號</label> <input
+						type="text" class="form-control" id="inputsellerTaxId"
+						name="sellerTaxId" th:value="${sellerVO.sellerTaxId}"
+						aria-describedby="sellerTaxIdFeedback"
+						th:classappend="${#fields.hasErrors('sellerTaxId')} ? 'is-invalid' : ''" />
 
-            <div id="sellerTaxIdFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerTaxId')}"
-                th:errors="*{sellerTaxId}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerTaxIdFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerTaxId')}"
+							th:errors="*{sellerTaxId}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCapital" class="form-label">資本額</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCapital"
-              name="sellerCapital"
-              th:value="${sellerVO.sellerCapital}"
-              aria-describedby="sellerCapitalFeedback"
-              th:classappend="${#fields.hasErrors('sellerCapital')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerCapital" class="form-label">資本額</label> <input
+						type="text" class="form-control" id="inputsellerCapital"
+						name="sellerCapital" th:value="${sellerVO.sellerCapital}"
+						aria-describedby="sellerCapitalFeedback"
+						th:classappend="${#fields.hasErrors('sellerCapital')} ? 'is-invalid' : ''" />
 
-            <div id="sellerCapitalFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCapital')}"
-                th:errors="*{sellerCapital}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerCapitalFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCapital')}"
+							th:errors="*{sellerCapital}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCompanyPhone" class="form-label"
-              >公司電話</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCompanyPhone"
-              name="sellerCompanyPhone"
-              th:value="${sellerVO.sellerCompanyPhone}"
-              aria-describedby="sellerCompanyPhoneFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompanyPhone')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerCompanyPhone" class="form-label">公司電話</label>
+					<input type="text" class="form-control"
+						id="inputsellerCompanyPhone" name="sellerCompanyPhone"
+						th:value="${sellerVO.sellerCompanyPhone}"
+						aria-describedby="sellerCompanyPhoneFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompanyPhone')} ? 'is-invalid' : ''" />
 
-            <div id="sellerCompanyPhoneFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompanyPhone')}"
-                th:errors="*{sellerCompanyPhone}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerCompanyPhoneFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompanyPhone')}"
+							th:errors="*{sellerCompanyPhone}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerCompanyExtension" class="form-label"
-              >公司分機</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerCompanyExtension"
-              name="sellerCompanyExtension"
-              th:value="${sellerVO.sellerCompanyExtension}"
-              aria-describedby="sellerCompanyExtensionFeedback"
-              th:classappend="${#fields.hasErrors('sellerCompanyExtension')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerCompanyExtension" class="form-label">公司分機</label>
+					<input type="text" class="form-control"
+						id="inputsellerCompanyExtension" name="sellerCompanyExtension"
+						th:value="${sellerVO.sellerCompanyExtension}"
+						aria-describedby="sellerCompanyExtensionFeedback"
+						th:classappend="${#fields.hasErrors('sellerCompanyExtension')} ? 'is-invalid' : ''" />
 
-            <div id="sellerCompanyExtensionFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCompanyExtension')}"
-                th:errors="*{sellerCompanyExtension}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerCompanyExtensionFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCompanyExtension')}"
+							th:errors="*{sellerCompanyExtension}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputsellerMobile" class="form-label">手機號碼</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerMobile"
-              name="sellerMobile"
-              th:value="${sellerVO.sellerMobile}"
-              aria-describedby="sellerMobileFeedback"
-              th:classappend="${#fields.hasErrors('sellerMobile')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputsellerMobile" class="form-label">手機號碼</label> <input
+						type="text" class="form-control" id="inputsellerMobile"
+						name="sellerMobile" th:value="${sellerVO.sellerMobile}"
+						aria-describedby="sellerMobileFeedback"
+						th:classappend="${#fields.hasErrors('sellerMobile')} ? 'is-invalid' : ''" />
 
-            <div id="sellerMobileFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerMobile')}"
-                th:errors="*{sellerMobile}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerMobileFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerMobile')}"
+							th:errors="*{sellerMobile}">欄位有誤</p>
+					</div>
+				</div>
 
-          <input
-            type="hidden"
-            id="sellerCountyValue"
-            name="sellerCounty"
-            th:value="${sellerVO.sellerCounty ?: ''}"
-            aria-describedby="sellerCountyFeedback"
-          />
-          <input
-            type="hidden"
-            id="sellerDistrictValue"
-            name="sellerDistrict"
-            th:value="${sellerVO.sellerDistrict ?: ''}"
-            aria-describedby="sellerDistrictFeedback"
-          />
+				<input type="hidden" id="sellerCountyValue" name="sellerCounty"
+					th:value="${sellerVO.sellerCounty ?: ''}"
+					aria-describedby="sellerCountyFeedback" /> <input
+					type="hidden" id="sellerDistrictValue" name="sellerDistrict"
+					th:value="${sellerVO.sellerDistrict ?: ''}"
+					aria-describedby="sellerDistrictFeedback" />
 
-          <div class="col-md-12">
-            <label for="inputAddress" class="form-label">地址</label>
-            <div class="city-selector-set col-md-12 d-flex flex-row">
-              <div class="col-md-2">
-                <select
-                  class="county form-select"
-                  th:value="${sellerVO.sellerCounty ?: ''}"
-                  th:classappend="${#fields.hasErrors('sellerCounty')} ? 'is-invalid' : ''"
-                ></select>
-              </div>
-              <div class="col-md-2">
-                <select
-                  class="district form-select"
-                  th:value="${sellerVO.sellerDistrict ?: ''}"
-                  th:classappend="${#fields.hasErrors('sellerDistrict')} ? 'is-invalid' : ''"
-                ></select>
-              </div>
-              <div class="col-md-2">
-                <input
-                  class="zipcode form-control"
-                  type="text"
-                  size="3"
-                  readonly
-                  placeholder="郵遞區號"
-                  name="zipcode"
-                />
-              </div>
-            </div>
-            <input
-              type="text"
-              class="form-control mt-2"
-              id="inputAddress"
-              name="sellerAddress"
-              th:value="${sellerVO.sellerAddress ?: 'XX路A巷54號'}"
-              th:classappend="${#fields.hasErrors('sellerAddress')} ? 'is-invalid' : ''"
-              aria-describedby="sellerAddressFeedback"
-            />
-            <div id="sellerCountyFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerCounty')}"
-                th:errors="*{sellerCounty}"
-              >
-                欄位有誤
-              </p>
-            </div>
+				<div class="col-md-12">
+					<label for="inputAddress" class="form-label">地址</label>
+					<div class="city-selector-set col-md-12 d-flex flex-row">
+						<div class="col-md-2">
+							<select class="county form-select"
+								th:value="${sellerVO.sellerCounty ?: ''}"
+								th:classappend="${#fields.hasErrors('sellerCounty')} ? 'is-invalid' : ''"></select>
+						</div>
+						<div class="col-md-2">
+							<select class="district form-select"
+								th:value="${sellerVO.sellerDistrict ?: ''}"
+								th:classappend="${#fields.hasErrors('sellerDistrict')} ? 'is-invalid' : ''"></select>
+						</div>
+						<div class="col-md-2">
+							<input class="zipcode form-control" type="text" size="3" readonly
+								placeholder="郵遞區號" name="zipcode" />
+						</div>
+					</div>
+					<input type="text" class="form-control mt-2" id="inputAddress"
+						name="sellerAddress"
+						th:value="${sellerVO.sellerAddress ?: 'XX路A巷54號'}"
+						th:classappend="${#fields.hasErrors('sellerAddress')} ? 'is-invalid' : ''"
+						aria-describedby="sellerAddressFeedback" />
+					<div id="sellerCountyFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerCounty')}"
+							th:errors="*{sellerCounty}">欄位有誤</p>
+					</div>
 
-            <div id="sellerDistrictFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerDistrict')}"
-                th:errors="*{sellerDistrict}"
-              >
-                欄位有誤
-              </p>
-            </div>
+					<div id="sellerDistrictFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerDistrict')}"
+							th:errors="*{sellerDistrict}">欄位有誤</p>
+					</div>
 
-            <div id="sellerAddressFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerAddress')}"
-                th:errors="*{sellerAddress}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerAddressFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerAddress')}"
+							th:errors="*{sellerAddress}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-3">
-            <label for="inputsellerBankAccount" class="form-label"
-              >銀行帳號名稱</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankAccount"
-              name="sellerBankAccount"
-              th:value="${sellerVO.sellerBankAccount}"
-              aria-describedby="sellerBankAccountFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankAccount')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-3">
+					<label for="inputsellerBankAccount" class="form-label">銀行帳號名稱</label>
+					<input type="text" class="form-control" id="inputsellerBankAccount"
+						name="sellerBankAccount" th:value="${sellerVO.sellerBankAccount}"
+						aria-describedby="sellerBankAccountFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankAccount')} ? 'is-invalid' : ''" />
 
-            <div id="sellerBankAccountFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankAccount')}"
-                th:errors="*{sellerBankAccount}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerBankAccountFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankAccount')}"
+							th:errors="*{sellerBankAccount}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-2">
-            <label for="inputsellerBankCode" class="form-label"
-              >銀行代碼
-            </label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankCode"
-              name="sellerBankCode"
-              th:value="${sellerVO.sellerBankCode}"
-              aria-describedby="sellerBankCodeFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-2">
+					<label for="inputsellerBankCode" class="form-label">銀行代碼
+					</label> <input type="text" class="form-control" id="inputsellerBankCode"
+						name="sellerBankCode" th:value="${sellerVO.sellerBankCode}"
+						aria-describedby="sellerBankCodeFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''" />
 
-            <div id="sellerBankCodeFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankCode')}"
-                th:errors="*{sellerBankCode}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerBankCodeFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankCode')}"
+							th:errors="*{sellerBankCode}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-7">
-            <label for="inputsellerBankAccountNumber" class="form-label"
-              >銀行帳戶</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="inputsellerBankAccountNumber"
-              name="sellerBankAccountNumber"
-              th:value="${sellerVO.sellerBankAccountNumber}"
-              aria-describedby="sellerBankAccountNumberFeedback"
-              th:classappend="${#fields.hasErrors('sellerBankAccountNumber')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-7">
+					<label for="inputsellerBankAccountNumber" class="form-label">銀行帳戶</label>
+					<input type="text" class="form-control"
+						id="inputsellerBankAccountNumber" name="sellerBankAccountNumber"
+						th:value="${sellerVO.sellerBankAccountNumber}"
+						aria-describedby="sellerBankAccountNumberFeedback"
+						th:classappend="${#fields.hasErrors('sellerBankAccountNumber')} ? 'is-invalid' : ''" />
 
-            <div id="sellerBankAccountNumberFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerBankAccountNumber')}"
-                th:errors="*{sellerBankAccountNumber}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerBankAccountNumberFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerBankAccountNumber')}"
+							th:errors="*{sellerBankAccountNumber}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col-md-12">
-            <label for="inputPassword" class="form-label">密碼</label>
-            <input
-              type="text"
-              class="form-control"
-              id="inputPassword"
-              name="sellerPassword"
-              th:value="${sellerVO.sellerPassword}"
-              aria-describedby="sellerPasswordFeedback"
-              th:classappend="${#fields.hasErrors('sellerPassword')} ? 'is-invalid' : ''"
-            />
+				<div class="col-md-12">
+					<label for="inputPassword" class="form-label">密碼</label> <input
+						type="text" class="form-control" id="inputPassword"
+						name="sellerPassword" th:value="${sellerVO.sellerPassword}"
+						aria-describedby="sellerPasswordFeedback"
+						th:classappend="${#fields.hasErrors('sellerPassword')} ? 'is-invalid' : ''" />
 
-            <div id="sellerPasswordFeedback" class="invalid-feedback">
-              <p
-                th:if="${#fields.hasErrors('sellerPassword')}"
-                th:errors="*{sellerPassword}"
-              >
-                欄位有誤
-              </p>
-            </div>
-          </div>
+					<div id="sellerPasswordFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('sellerPassword')}"
+							th:errors="*{sellerPassword}">欄位有誤</p>
+					</div>
+				</div>
 
-          <div class="col mb-3">
-            <label for="inputDate" class="col-sm-2 col-form-label"
-              >帳號創立時間</label
-            >
-            <div class="col-sm-3">
-              <input
-                type="date"
-                class="form-control"
-                name="sellerCreateTime"
-                th:value="${#dates.format(sellerVO.sellerCreateTime, 'yyyy-MM-dd')}"
-                aria-describedby="sellerCreateTimeFeedback"
-                th:classappend="${#fields.hasErrors('sellerCreateTime')} ? 'is-invalid' : ''"
-              />
+				<div class="col mb-3">
+					<label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="sellerCreateTime"
+							th:value="${#dates.format(sellerVO.sellerCreateTime, 'yyyy-MM-dd')}"
+							aria-describedby="sellerCreateTimeFeedback"
+							th:classappend="${#fields.hasErrors('sellerCreateTime')} ? 'is-invalid' : ''" />
 
-              <div id="sellerCreateTimeFeedback" class="invalid-feedback">
-                <p
-                  th:if="${#fields.hasErrors('sellerCreateTime')}"
-                  th:errors="*{sellerCreateTime}"
-                >
-                  欄位有誤
-                </p>
-              </div>
-            </div>
-          </div>
+						<div id="sellerCreateTimeFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('sellerCreateTime')}"
+								th:errors="*{sellerCreateTime}">欄位有誤</p>
+						</div>
+					</div>
+				</div>
 
-          <div class="col-md-2">
-            <label for="inputIsConfirm" class="form-label"
-              >帳號是否審核過</label
-            >
-            <select
-              class="isConfirm form-select"
-              name="isConfirm"
-              id="inputIsConfirm"
-              th:value="${sellerVO.isConfirm}"
-            >
-              <option value="true" th:selected="${sellerVO.isConfirm}">
-                通過
-              </option>
-              <option value="false" th:selected="${!sellerVO.isConfirm}">
-                未通過
-              </option>
-            </select>
-          </div>
+				<div class="col-md-2">
+					<label for="inputIsConfirm" class="form-label">帳號是否審核過</label>
+					<select class="isConfirm form-select" name="isConfirm"
+						id="inputIsConfirm" th:value="${sellerVO.isConfirm}">
+						<option value="true" th:selected="${sellerVO.isConfirm}">
+							通過</option>
+						<option value="false" th:selected="${!sellerVO.isConfirm}">
+							未通過</option>
+					</select>
+				</div>
 
-          <div class="text-center d-flex flex-row gap-5 justify-content-center">
-            <button type="reset" class="btn btn-secondary">取消並離開</button>
-            <button type="submit" class="btn btn-primary">提交修改</button>
-          </div>
-        </form>
-      </div>
-    </main>
+				<div
+					class="text-center d-flex flex-row gap-5 justify-content-center">
+					<button type="reset" class="btn btn-secondary">取消並離開</button>
+					<button type="submit" class="btn btn-primary">提交修改</button>
+				</div>
+			</form>
+		</div>
+	</main>
 
-    <!-- End Main -->
-    <div th:replace="fragment-js"></div>
+	<!-- End Main -->
+	<div th:replace="~{/fragment-footer}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
-    <script>
+	<script>
       document.addEventListener("DOMContentLoaded", function () {
         var countyValue = document
           .querySelector(".county")
@@ -530,6 +344,6 @@
       }
     </script>
 
-    <!-- simpletable -->
-  </body>
+	<!-- simpletable -->
+</body>
 </html>

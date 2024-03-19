@@ -39,58 +39,58 @@
 				<a href="/">你的購物車是空的，馬上去逛逛吧~</a>
 			</div> -->
 
-	<!-- 先進行大迴圈, 從redis 取出資料 -->
+			<!-- 先進行大迴圈, 從redis 取出資料 -->
 
-		<section class="cart-seller mt-3"
+			<section class="cart-seller mt-3"
 				th:each="sellerCompany, sellerStat : ${cartClassfi}">
 
-			<div class="container mt-3 container-list-custom">
+				<div class="container mt-3 container-list-custom">
 
-						<div class="row header-row-custom">
-							<div class="col-auto px-0">
-								<input class="form-check-input cart-header-click" type="checkbox"
-									value="" aria-label="Checkbox for following text input" hidden />
-							</div>
-							<div class="col">
-								賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
-									class="cart-sellerId" th:text="${sellerCompany.key}"></b>
-								</span> <span> <span class="get_sellerId"
-									th:text="${sellerCompany.value.iterator().next().sellerVO.sellerId}"
-									hidden></span>
-								</span>
-		
-		
-							</div>
+					<div class="row header-row-custom">
+						<div class="col-auto px-0">
+							<input class="form-check-input cart-header-click" type="checkbox"
+								value="" aria-label="Checkbox for following text input" hidden />
 						</div>
+						<div class="col">
+							賣家名稱&nbsp;&nbsp;&nbsp;<span class="sellerName"> <b
+								class="cart-sellerId" th:text="${sellerCompany.key}"></b>
+							</span> <span> <span class="get_sellerId"
+								th:text="${sellerCompany.value.iterator().next().sellerVO.sellerId}"
+								hidden></span>
+							</span>
 
 
-						<div class="row sec-row-custom">
-							<div class="col-1">
-								<input class="form-check-input cart-overall-click"
-									type="checkbox" value=""
-									aria-label="Checkbox for following text input" hidden />
-							</div>
-							<div class="col-3">商品圖片</div>
-							<div class="col-2">商品名稱</div>
-							<div class="col-2 d-flex justify-content-end">單個價格</div>
-							<div class="col-2 d-flex justify-content-end">購買數量</div>
-							<!-- <div class="col d-flex justify-content-center">操作</div> -->
 						</div>
+					</div>
+
+
+					<div class="row sec-row-custom">
+						<div class="col-1">
+							<input class="form-check-input cart-overall-click"
+								type="checkbox" value=""
+								aria-label="Checkbox for following text input" hidden />
+						</div>
+						<div class="col-3">商品圖片</div>
+						<div class="col-2">商品名稱</div>
+						<div class="col-2 d-flex justify-content-end">單個價格</div>
+						<div class="col-2 d-flex justify-content-end">購買數量</div>
+						<!-- <div class="col d-flex justify-content-center">操作</div> -->
+					</div>
 
 
 
-			<!-- 後套入小迴圈的資料 -->
+					<!-- 後套入小迴圈的資料 -->
 					<div class="row item-row-custom"
 						th:each="cartVO : ${cartClassfi[ sellerCompany.key ]}">
-							<div class="col-1 px-0">
-								<input class="form-check-input cart-item-click" type="checkbox"
-									value="" aria-label="Checkbox for following text input" hidden />
-							</div>
-							<div class="col-3">
-								<img
-									th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
-									width="100px" />
-							</div>
+						<div class="col-1 px-0">
+							<input class="form-check-input cart-item-click" type="checkbox"
+								value="" aria-label="Checkbox for following text input" hidden />
+						</div>
+						<div class="col-3">
+							<img
+								th:src="@{/front/buyer/collection/DBGifReader} + '?productId=' + ${cartVO.productVO.productId}"
+								width="100px" />
+						</div>
 						<div class="col-2" th:text="${cartVO.productVO.productName}">商品名稱</div>
 						<!--  <div class="col-2 get_sellerId" th:text="${cartVO.sellerVO.sellerId}" >獲取賣家Id</div>  -->
 						<div class="col-2 d-flex justify-content-end cart-price"
@@ -109,14 +109,15 @@
 					<div style="margin-top: 30px;"></div>
 
 					<!-- <form> -->
-						<!--  <div class="accordion" id="accordionExample">  -->
-						<div class="accordion" th:id="${'accordionExample-' + sellerStat.index}">
+					<!--  <div class="accordion" id="accordionExample">  -->
+					<div class="accordion"
+						th:id="${'accordionExample-' + sellerStat.index}">
 						<!-- <div class="accordion" th:id="${'receiver-mobile-' + sellerStat.index}"> -->
-							<div class="accordion-item">
-								<h2 class="accordion-header">
-								
-								
-							<!-- 		<button class="accordion-button" type="button"
+						<div class="accordion-item">
+							<h2 class="accordion-header">
+
+
+								<!-- 		<button class="accordion-button" type="button"
 										data-bs-toggle="collapse" data-bs-target="#collapseOne"
 										aria-expanded="true" aria-controls="collapseOne"
 										style="color: #41464b; background-color: #e2e3e5; border-color: #d3d6d8;">
@@ -126,28 +127,30 @@
 									data-bs-parent="#accordionExample">
 						<div class="accordion-body">
 						 -->
-						
-						   <button class="accordion-button" type="button"
-                        data-bs-toggle="collapse" th:data-bs-target="${'#collapseOne-' + sellerStat.index}"
-                        aria-expanded="true" th:aria-controls="${'collapseOne-' + sellerStat.index}"
-                        style="color: #41464b; background-color: #e2e3e5; border-color: #d3d6d8;">
-                    收件者資訊
-                </button>
-            </h2>
-            <div th:id="${'collapseOne-' + sellerStat.index}" class="accordion-collapse collapse show"
-                 th:data-bs-parent="${'#accordionExample-' + sellerStat.index}">
-                <div class="accordion-body">
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-										<!-- <div class="mb-3 form-check">
+
+								<button class="accordion-button" type="button"
+									data-bs-toggle="collapse"
+									th:data-bs-target="${'#collapseOne-' + sellerStat.index}"
+									aria-expanded="true"
+									th:aria-controls="${'collapseOne-' + sellerStat.index}"
+									style="color: #41464b; background-color: #e2e3e5; border-color: #d3d6d8;">
+									收件者資訊</button>
+							</h2>
+							<div th:id="${'collapseOne-' + sellerStat.index}"
+								class="accordion-collapse collapse show"
+								th:data-bs-parent="${'#accordionExample-' + sellerStat.index}">
+								<div class="accordion-body">
+
+
+
+
+
+
+
+
+
+
+									<!-- <div class="mb-3 form-check">
 										<input type="checkbox" class="form-check-input"
 											id="exampleCheck2"> <label class="form-check-label"
 											for="exampleCheck2">同會員資訊</label>
@@ -179,14 +182,15 @@
 											
 											
 											
+
 									</div>
-								</div>
-										<!-- <div class="row mb-3">
+									<!-- <div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label">*電子信箱:</label>
 											<div class="col-sm-10">
 												<input type="text" class="form-control " id="inputPassword3"
 													style="width: 30%;" value="edog666@gmail.com">
 											</div> -->
+
 										
 										<div class="row mb-3">
 											<label th:for="${'receiver-address-' + sellerStat.index}" class="col-sm-2 col-form-label ">*地址:</label>
@@ -201,18 +205,22 @@
 													
 											</div>
 										</div>
+
 										</div>
-										
 									</div>
 								</div>
+
 							</div>
 						</div>
-<!-- 					</form> -->
+					</div>
+				</div>
+				<!-- 					</form> -->
 			</section>
 
 			<div style="margin-top: 30px;"></div>
 			<form>
-				<div class="accordion accordion-flush" id="paymentAccordion" style="width:1294.67px; margin: 0 auto; ">
+				<div class="accordion accordion-flush" id="paymentAccordion"
+					style="width: 1294.67px; margin: 0 auto;">
 					<div class="accordion-item">
 						<h2 class="accordion-header">
 							<button class="accordion-button collapsed" type="button"
@@ -245,7 +253,8 @@
 			</form>
 			<div style="margin-top: 30px;"></div>
 			<form>
-				<div class="accordion accordion-flush" id="deliveryAccordion" style="width:1294.67px; margin: 0 auto; ">
+				<div class="accordion accordion-flush" id="deliveryAccordion"
+					style="width: 1294.67px; margin: 0 auto;">
 					<div class="accordion-item">
 						<h2 class="accordion-header">
 							<button class="accordion-button collapsed" type="button"
@@ -276,38 +285,40 @@
 
 					</div>
 				</div>
-				
-		<section class="cart-pay-sticky px-5 mt-5" style="width:1294.67px; margin: 0 auto; ">
+
+				<section class="cart-pay-sticky px-5 mt-5"
+					style="width: 1294.67px; margin: 0 auto;">
 
 
-			<div class="row d-flex justify-content-end align-items-center">
-				<div class="col-1-5">商品金額 NT$</div>
-				<div class="col-2 product-total d-flex justify-content-end">
-					<span class="total">0</span>元
-				</div>
-			</div>
-			<div class="row d-flex justify-content-end align-items-center">
-				<div class="col-1-5">運費 NT$</div>
-				<div class="col-2 shipping-fee d-flex justify-content-end">
-					<span class="fee">0</span>元
-				</div>
-			</div>
-			<div class="row d-flex justify-content-end align-items-center">
-				<div class="col-1-5">合計 NT$</div>
-				<div class="col-2 cart-payment d-flex justify-content-end">
-					<span class="payment">0</span>元
-				</div>
-			</div>
+					<div class="row d-flex justify-content-end align-items-center">
+						<div class="col-1-5">商品金額 NT$</div>
+						<div class="col-2 product-total d-flex justify-content-end">
+							<span class="total">0</span>元
+						</div>
+					</div>
+					<div class="row d-flex justify-content-end align-items-center">
+						<div class="col-1-5">運費 NT$</div>
+						<div class="col-2 shipping-fee d-flex justify-content-end">
+							<span class="fee">0</span>元
+						</div>
+					</div>
+					<div class="row d-flex justify-content-end align-items-center">
+						<div class="col-1-5">合計 NT$</div>
+						<div class="col-2 cart-payment d-flex justify-content-end">
+							<span class="payment">0</span>元
+						</div>
+					</div>
 
-			<div class="row justify-content-end">
-				<div class="col-auto">
-					<button type ="button" class="btn btn-primary" id="checkout-btn" style="width: 130px; height: 45px; font-size: 20px;">結帳</button>
-				</div>
-			</div>
-				
+					<div class="row justify-content-end">
+						<div class="col-auto">
+							<button type="button" class="btn btn-primary" id="checkout-btn"
+								style="width: 130px; height: 45px; font-size: 20px;">結帳</button>
+						</div>
+					</div>
+
 				</section>
-				
-				
+
+
 			</form>
 		</div>
 		
@@ -349,7 +360,7 @@
 		
 		
 
-	<!-- 	<section class="cart-pay-sticky px-5 mt-5">
+		<!-- 	<section class="cart-pay-sticky px-5 mt-5">
 
 
 			<div class="row d-flex justify-content-end align-items-center">
@@ -380,9 +391,8 @@
 
 
 
+
 				<!-- <script>
-							
-							
 				    $(document).ready(function() {
 				        // 綁定提交按鈕事件
 				        $('#checkout-btn').click(function(event) {
@@ -707,7 +717,7 @@
 				
 
 
-		
+
 
 		<!-- Content for All Orders Tab -->
 		<!-- </div> -->
@@ -720,10 +730,11 @@
 	<!-- End Footer -->
 
 	<!-- Local JS File -->
-	<div th:replace="fragment-js"></div>
-	
-<!-- 前端處理顯示的結帳金額 -->
-				<script>
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer}"></div>
+
+	<!-- 前端處理顯示的結帳金額 -->
+	<script>
 					document
 						.addEventListener(
 							"DOMContentLoaded",
@@ -877,9 +888,7 @@
 								
 							});
 				</script>
-				
-				
-	
+
 	<!-- <script>
 function validateInput() {
     let isValid = true;
@@ -928,17 +937,17 @@ document.getElementById('checkout-btn').addEventListener('click', function(event
     }
 });
 </script> -->
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 </body>
 
 </html>
