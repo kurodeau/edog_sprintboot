@@ -401,8 +401,8 @@ msgTypeContent varchar(100)
 -- 通知  創建table-- 
 create table IF NOT EXISTS msg(
 msgId int primary key AUTO_INCREMENT,
-memberId int,
-foreign key(memberId) references buyer(memberId),
+senderMemberId int,
+receiverMemberId int,
 articleId int,
 foreign key(articleId) references article(articleId),
 replyId int,
@@ -415,7 +415,9 @@ msgTypeId int,
 foreign key(msgTypeId) references msgType(msgTypeId),
 msgTime datetime DEFAULT CURRENT_TIMESTAMP,
 isRead boolean,
-isEnabled boolean
+isEnabled boolean,
+CONSTRAINT fk_member_sender FOREIGN KEY (senderMemberId) REFERENCES buyer(memberId),
+CONSTRAINT fk_member_receiver FOREIGN KEY (receiverMemberId) REFERENCES buyer(memberId)
 );
 
 
@@ -556,12 +558,16 @@ VALUES
   -- 跑馬燈  放入測試資料-- 
 INSERT INTO newsTicker (newsTickerContent, sort, startTime, endTime, isDisplay)
 VALUES 
-  ('歡迎來到EDOG,毛小孩的快樂天堂', 1, NOW(), DATE('2024-12-13 00:00:00'), true),
-  ('這個不應該顯示', 2, NOW(), DATE('2024-12-13 00:00:00'), false),
-  ('最齊全的寵物百貨讓你逛到手軟', 3, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), false),
-  ('80年代主題風貓窩熱賣中', 3, DATE('2023-12-13 00:00:00'), DATE('2023-12-14 00:00:00'), true),
-  ('未來戰狗潔牙骨上架', 3, DATE('2025-12-13 00:00:00'), DATE('2025-12-14 00:00:00'), true),
-  ('罐罐坐飛機!!百種進口罐罐讓你花式養刁貓主子', 4, DATE('2023-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true);
+  ('時間內正常顯示', 1, NOW(), DATE('2024-12-13 00:00:00'), true),
+  ('時間內但不顯示', 2, NOW(), DATE('2024-12-13 00:00:00'), false),
+  ('時間已經過了不會看到', 3, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), true),
+  ('時間不會到,不會看到', 4, DATE('2024-12-13 00:00:00'), DATE_ADD(DATE('2024-12-13 00:00:00'), INTERVAL 30 DAY), true),
+  ('時間內正常顯示,但id5排序10', 10, NOW(), DATE('2024-12-13 00:00:00'), true),
+  ('Maintenance Alert: System Upgrade', 6, NOW(), DATE_ADD(NOW(), INTERVAL 10 DAY), true),
+  ('Employee of the Month: John Doe', 7, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), true),
+  ('Limited-time Offer: Free Shipping', 8, NOW(), DATE_ADD(NOW(), INTERVAL 20 DAY), true),
+  ('Community Event: Charity Run', 9, NOW(), DATE_ADD(NOW(), INTERVAL 40 DAY), true),
+  ('時間內正常顯示,但id10排序5', 5, NOW(), DATE('2024-12-13 00:00:00'), true);
   -- 匯款明細  放入測試資料-- 
 INSERT INTO remittance (
     sellerId,remittanceEstimatedTime,remittanceTime,settlementTime,
@@ -631,16 +637,16 @@ INSERT INTO articleType (articleTypeName) VALUES
 -- 文章  放入測試資料-- 
 
 INSERT INTO article (articleId, memberId, articleTitle, articleContent, artCreateTime, artUpdateTime, articleLike, articleComment, articleSort, isEnabled) VALUES
-(1, 1, '如何養護你的狗的皮膚', '狗狗的皮膚健康對牠們的幸福至關重要。很多因素可以影響狗狗的皮膚健康，包括環境、飲食和基因。在本文中，我們將介紹一些簡單的方法來保持你的狗狗的皮膚健康，讓牠們活得更舒適。', '2023-01-15 08:00:00', NULL, 15, 5, 5, true),
-(2, 2, '遊山玩水：和狗一起享受大自然', '帶著你的狗狗一同探索大自然，盡情奔跑！無論是在山上遠足、在河邊戲水，還是在草地上奔跑，這都是與你的狗狗一起度過美好時光的好方法。在這篇文章中，我們將分享一些遊山玩水的技巧，讓你和你的狗狗可以安全且快樂地享受大自然。', '2023-02-20 10:30:00', '2023-02-20 10:30:00', 20, 10, 6, true),
-(3, 3, '教你的貓咪使用貓砂盆的技巧', '貓砂盆是貓咪的重要生活用品之一，但有些貓咪可能需要一些時間才能適應使用它。在這篇文章中，我們將分享一些教你的貓咪使用貓砂盆的技巧，幫助你的貓咪順利適應這個新環境。', '2023-03-10 14:45:00', '2023-03-10 14:45:00', 25, 8, 3, true),
-(4, 4, '狗狗的飲食攻略：選擇最適合的狗糧', '狗狗的飲食是牠們健康和幸福的重要組成部分。在市場上有各種各樣的狗糧可供選擇，但如何找到最適合你的狗狗的狗糧呢？在這篇文章中，我們將分享一些關於選擇最適合的狗糧的攻略，讓你的狗狗擁有健康的飲食習慣。', '2023-04-05 16:20:00', '2023-04-05 16:20:00', 30, 12, 4, true),
-(5, 5, '美容秘訣：如何給你的貓洗澡', '給貓咪洗澡可能是一件挑戰，但遵循這些技巧可以讓事情變得更容易。在這篇文章中，我們將分享一些給你的貓洗澡的秘訣，幫助你讓這個過程更加順利和輕鬆。', '2023-05-12 11:10:00', NULL, 18, 7, 2, true),
-(6, 1, '如何保持你的寵物狗健康並開心', '一些簡單的方法可以讓你的狗狗保持健康並快樂。在這篇文章中，我們將分享一些保持你的寵物狗健康並開心的技巧，讓你的寵物與你共度愉快時光。', '2023-06-25 09:30:00', '2023-06-25 09:30:00', 22, 9, 5, true),
-(7, 2, '貓咪養成好習慣的秘訣', '教導你的貓咪一些良好的習慣，讓牠們更容易相處。在這篇文章中，我們將分享一些培養貓咪良好習慣的秘訣，幫助你的貓咪成為更好的伴侶。', '2023-07-18 13:55:00', '2023-07-18 13:55:00', 27, 11, 3, true),
-(8, 3, '寵物旅遊安全注意事項', '帶著你的寵物旅行前應該知道的一些重要注意事項。無論是自駕遊還是乘坐飛機，安全是首要考慮的因素。在這篇文章中，我們將分享一些寵物旅遊安全注意事項，讓你和你的寵物可以安全又愉快地旅行。', '2023-08-07 15:40:00', NULL, 21, 6, 6, true),
-(9, 4, '如何照顧年老的狗狗', '年老的狗狗需要特別的照顧和關注，讓牠們舒適度過晚年。在這篇文章中，我們將分享一些照顧年老的狗狗的技巧，幫助你的狗狗度過舒適的晚年時光。', '2023-09-14 17:25:00', NULL, 24, 10, 5, true),
-(10, 5, '狗狗的食譜：健康自製狗零食', '製作一些營養豐富的自製狗零食，讓你的狗狗愛不釋手。在這篇文章中，我們將分享一些健康的狗狗食譜，幫助你製作美味又營養的狗狗零食。', '2023-10-29 12:15:00', NULL, 28, 13, 4, false);
+(1, 1, '如何養護你的狗的皮膚', '狗狗的皮膚健康對牠們的幸福至關重要。很多因素可以影響狗狗的皮膚健康，包括環境、飲食和基因。在本文中，我們將介紹一些簡單的方法來保持你的狗狗的皮膚健康，讓牠們活得更舒適。', '2023-01-15 08:00:00', NULL, 15, 2, 5, true),
+(2, 2, '遊山玩水：和狗一起享受大自然', '帶著你的狗狗一同探索大自然，盡情奔跑！無論是在山上遠足、在河邊戲水，還是在草地上奔跑，這都是與你的狗狗一起度過美好時光的好方法。在這篇文章中，我們將分享一些遊山玩水的技巧，讓你和你的狗狗可以安全且快樂地享受大自然。', '2023-02-20 10:30:00', '2023-02-20 10:30:00', 20, 2, 6, true),
+(3, 3, '教你的貓咪使用貓砂盆的技巧', '貓砂盆是貓咪的重要生活用品之一，但有些貓咪可能需要一些時間才能適應使用它。在這篇文章中，我們將分享一些教你的貓咪使用貓砂盆的技巧，幫助你的貓咪順利適應這個新環境。', '2023-03-10 14:45:00', '2023-03-10 14:45:00', 25, 2, 3, true),
+(4, 4, '狗狗的飲食攻略：選擇最適合的狗糧', '狗狗的飲食是牠們健康和幸福的重要組成部分。在市場上有各種各樣的狗糧可供選擇，但如何找到最適合你的狗狗的狗糧呢？在這篇文章中，我們將分享一些關於選擇最適合的狗糧的攻略，讓你的狗狗擁有健康的飲食習慣。', '2023-04-05 16:20:00', '2023-04-05 16:20:00', 30, 2, 4, true),
+(5, 5, '美容秘訣：如何給你的貓洗澡', '給貓咪洗澡可能是一件挑戰，但遵循這些技巧可以讓事情變得更容易。在這篇文章中，我們將分享一些給你的貓洗澡的秘訣，幫助你讓這個過程更加順利和輕鬆。', '2023-05-12 11:10:00', NULL, 18, 2, 2, true),
+(6, 1, '如何保持你的寵物狗健康並開心', '一些簡單的方法可以讓你的狗狗保持健康並快樂。在這篇文章中，我們將分享一些保持你的寵物狗健康並開心的技巧，讓你的寵物與你共度愉快時光。', '2023-06-25 09:30:00', '2023-06-25 09:30:00', 22, 0, 5, true),
+(7, 2, '貓咪養成好習慣的秘訣', '教導你的貓咪一些良好的習慣，讓牠們更容易相處。在這篇文章中，我們將分享一些培養貓咪良好習慣的秘訣，幫助你的貓咪成為更好的伴侶。', '2023-07-18 13:55:00', '2023-07-18 13:55:00', 27, 0, 3, true),
+(8, 3, '寵物旅遊安全注意事項', '帶著你的寵物旅行前應該知道的一些重要注意事項。無論是自駕遊還是乘坐飛機，安全是首要考慮的因素。在這篇文章中，我們將分享一些寵物旅遊安全注意事項，讓你和你的寵物可以安全又愉快地旅行。', '2023-08-07 15:40:00', NULL, 21, 0, 6, true),
+(9, 4, '如何照顧年老的狗狗', '年老的狗狗需要特別的照顧和關注，讓牠們舒適度過晚年。在這篇文章中，我們將分享一些照顧年老的狗狗的技巧，幫助你的狗狗度過舒適的晚年時光。', '2023-09-14 17:25:00', NULL, 24, 0, 5, true),
+(10, 5, '狗狗的食譜：健康自製狗零食', '製作一些營養豐富的自製狗零食，讓你的狗狗愛不釋手。在這篇文章中，我們將分享一些健康的狗狗食譜，幫助你製作美味又營養的狗狗零食。', '2023-10-29 12:15:00', NULL, 28, 0, 4, false);
 
 -- 文章喜歡  放入測試資料-- 
 INSERT INTO articleLike (memberId, articleId, articleLikeListTime)
@@ -863,16 +869,15 @@ INSERT INTO msgType (msgTypeContent) VALUES
     ('留言檢舉');
     
 -- 通知  放入測試資料-- 
-INSERT INTO msg (memberId, articleId, replyId, reportId, petdrawId, msgTypeId, msgTime, isRead, isEnabled) VALUES
-    (1, 1, null, null, null, 1, '2024-03-14 08:00:00', FALSE, TRUE),
-    (2, null, 2, null, null, 2, '2024-03-14 09:30:00', TRUE, TRUE),
-    (3, null, 4, null, null, 3, '2024-03-14 10:45:00', FALSE, TRUE),
-    (4, null, null, null, null, 4, '2024-03-14 11:20:00', TRUE, TRUE),
-    (5, null, null, 1, null, 5, '2024-03-14 13:00:00', TRUE, FALSE),
-    (1, null, null, 3, null, 6, '2024-03-14 14:15:00', FALSE, TRUE),
-    (2, 2, null, null, null, 1, '2024-03-14 15:45:00', TRUE, TRUE),
-    (3, null, 3, null, null, 2, '2024-03-14 16:30:00', FALSE, TRUE),
-    (4, null, 4, null, null, 3, '2024-03-14 17:20:00', TRUE, TRUE),
-    (5, null, null, null, null, 4, '2024-03-14 18:00:00', TRUE, FALSE);
-
+INSERT INTO msg (receiverMemberId, senderMemberId, articleId, replyId, reportId, petdrawId, msgTypeId, msgTime, isRead, isEnabled) VALUES
+    (1, 2, 1, null, null, null, 1, '2024-03-14 08:00:00', FALSE, TRUE),
+    (2, 3, null, 2, null, null, 2, '2024-03-14 09:30:00', TRUE, TRUE),
+    (3, 4, null, 4, null, null, 3, '2024-03-14 10:45:00', FALSE, TRUE),
+    (4, 5, null, null, null, null, 4, '2024-03-14 11:20:00', TRUE, TRUE),
+    (5, null, null, null, 1, null, 5, '2024-03-14 13:00:00', TRUE, FALSE),
+    (1, null, null, null, 3, null, 6, '2024-03-14 14:15:00', FALSE, TRUE),
+    (2, 5, 2, null, null, null, 1, '2024-03-14 15:45:00', TRUE, TRUE),
+    (3, 4, null, 3, null, null, 2, '2024-03-14 16:30:00', FALSE, TRUE),
+    (4, 3, null, 4, null, null, 3, '2024-03-14 17:20:00', TRUE, TRUE),
+    (5, 2, null, null, null, null, 4, '2024-03-14 18:00:00', TRUE, FALSE);
 

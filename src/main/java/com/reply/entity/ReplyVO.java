@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.article.entity.ArticleVO;
 import com.articleType.entity.ArticleTypeVO;
@@ -52,6 +53,8 @@ public class ReplyVO implements java.io.Serializable {
     private Integer replyLike;
     private Date replyTime; 
     private Boolean isEnabled;
+    @Transient
+    private Integer likeIt;
 
     public ReplyVO() {
     }
@@ -123,6 +126,14 @@ public class ReplyVO implements java.io.Serializable {
     
     public void setIsEnabled(Boolean isEnabled) {
         this.isEnabled = isEnabled;
-    }  
+    }
+    @Transient
+	public Integer getLikeIt() {
+		return likeIt;
+	}
+    @Transient
+	public void setLikeIt(Integer likeIt) {
+		this.likeIt = likeIt;
+	}  
     
 }

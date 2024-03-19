@@ -236,7 +236,8 @@ public class MsgController {
 
 	    // 将其他需要保持不变的字段也进行复制
 	    msgVO.setIsRead(true);
-	    msgVO.setBuyerVO(originalMsgVO.getBuyerVO());
+	    msgVO.setSenderMember(originalMsgVO.getSenderMember());
+	    msgVO.setReceiverMember(originalMsgVO.getReceiverMember());
 	    msgVO.setArticleVO(originalMsgVO.getArticleVO());
 	    msgVO.setReplyVO(originalMsgVO.getReplyVO());
 	    msgVO.setReportVO(originalMsgVO.getReportVO());
