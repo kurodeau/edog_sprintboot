@@ -85,30 +85,22 @@
 
 				<div class="col-md-12">
 					<label for="productSort" class="form-label">*商品分類</label> <select
-						class="form-select"
-						th:selected="${productSortVO}"
+						class="form-select" th:selected="${productSortVO}"
 						id="productSort" name="productSortNo" required>
 						<option value="" disabled selected>請選擇商品</option>
-						<option value="0"
-							th:selected="${productSortVO == 0} ">食品</option>
-						<option value="1"
-							th:selected="${productSortVO == 1}">玩具</option>
-						<option value="2"
-							th:selected="${productSortVO == 2}">寢具</option>
-						<option value="3"
-							th:selected="${productSortVO == 3}">美容清潔</option>
-						<option value="4"
-							th:selected="${productSortVO == 4}">攜帶袋</option>
-						<option value="5"
-							th:selected="${productSortVO == 5}">服飾</option>
-						<option value="6"
-							th:selected="${productSortVO == 6}">健康保健</option>
-						<option value="7"
-							th:selected="${productSortVO == 7}">配件</option>
+						<option value="0" th:selected="${productSortVO == 0} ">食品</option>
+						<option value="1" th:selected="${productSortVO == 1}">玩具</option>
+						<option value="2" th:selected="${productSortVO == 2}">寢具</option>
+						<option value="3" th:selected="${productSortVO == 3}">美容清潔</option>
+						<option value="4" th:selected="${productSortVO == 4}">攜帶袋</option>
+						<option value="5" th:selected="${productSortVO == 5}">服飾</option>
+						<option value="6" th:selected="${productSortVO == 6}">健康保健</option>
+						<option value="7" th:selected="${productSortVO == 7}">配件</option>
 					</select>
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('productSortVO')}"
-							th:errors="*{productSortVO}" class="error" id="productSortVO.errors"></div>
+							th:errors="*{productSortVO}" class="error"
+							id="productSortVO.errors"></div>
 					</div>
 				</div>
 
@@ -155,6 +147,8 @@
 					</div>
 				</div>
 
+
+
 				<div class="col-md-12">
 					<label for="productDetails" class="form-label">*商品描述</label> <input
 						type="text" th:field="${productVO.productDetails}"
@@ -167,6 +161,10 @@
 							id="productDetails.errors"></div>
 					</div>
 				</div>
+
+
+
+
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
