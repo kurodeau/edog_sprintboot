@@ -1,10 +1,9 @@
 package com.productorder.controller;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.orderdetails.model.OrderDetailsService;
 import com.orderdetails.model.OrderDetailsVO;
@@ -29,7 +27,6 @@ import com.productorder.model.ProductOrderService;
 import com.productorder.model.ProductOrderVO;
 
 @Controller
-@Validated
 @RequestMapping("/back/productorder")
 public class BackProductOrderController {
 	
@@ -88,13 +85,14 @@ public class BackProductOrderController {
 
 //後台更新完訂單跳轉回管理訂單頁面
 	@PostMapping("update")
-	public String update(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model) throws IOException {
+	public String update(@Valid ProductOrderVO productOrderVO,BindingResult result, ModelMap model) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		System.out.println(result);
+//		System.out.println("你有在嗎?");
+//		System.out.println(result);
 		
-//		System.out.println(productOrderVO);
 		
+//		
 		
 		if (result.hasErrors()) {
 			return "back-end/back-order-update";
@@ -210,21 +208,6 @@ public class BackProductOrderController {
 	
 	
 	
-	@ExceptionHandler(value = { ConstraintViolationException.class })
-	//@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ModelAndView handleError(HttpServletRequest req,ConstraintViolationException e,Model model) {
-	    Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-	    StringBuilder strBuilder = new StringBuilder();
-	    for (ConstraintViolation<?> violation : violations ) {
-	          strBuilder.append(violation.getMessage() + "<br>");
-	    }
-	    //==== 以下第80~85行是當前面第69行返回 /src/main/resources/templates/back-end/emp/select_page.html 第97行 與 第109行 用的 ====   
-//	    model.addAttribute("productOrderVO", new ProductOrderVO());
-//    	ProductOrderService productOrderSvc = new ProductOrderService();
-		List<ProductOrderVO> list = productOrderSvc.getAll();
-		model.addAttribute("productOrderListData", list); // for select_page.html 第97 109行用
-		
-		String message = strBuilder.toString();
-	    return new ModelAndView("back-end/productOrder/select_page", "errorMessage", "請修正以下錯誤:<br>"+message);
-	}
+	
+	
 }
