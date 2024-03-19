@@ -1,96 +1,74 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 
-    <!-- ======= Main ======= -->
+	<!-- ======= Main ======= -->
 
-    <main class="main main-layout-seller">
-      <div class="special-text-container">
-        <img src="" alt="" srcset="" />
-        <h1>
-          歡迎回來<br />
-          讓我們一起
-          <mark class="green">
-            <span
-              id="typewrite-text"
-              class="d-inline-block changecontent"
-            ></span>
-          </mark>
-        </h1>
-      </div>
-    </main>
-    <!-- End #main -->
-    <button
-      id="sellerEditSuccess"
-      th:value="${sellerEditSuccess}"
-      name="sellerEditSuccess"
-      type="hidden"
-    >
-      sellerEditSuccess
-    </button>
-    <!-- End Main -->
-    <!-- 這裡放置你的 Modal 代碼 -->
-    <div
-      class="modal fade"
-      id="updateSuccessModal"
-      tabindex="-1"
-      aria-labelledby="updateSuccessModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">修改成功🎉🎉🎉🎉🎉</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+	<main class="main main-layout-seller">
+		<div class="special-text-container">
+			<img src="" alt="" srcset="" />
+			<h1>
+				歡迎回來<br /> 讓我們一起
+				<mark class="green">
+					<span id="typewrite-text" class="d-inline-block changecontent"></span>
+				</mark>
+			</h1>
+		</div>
+	</main>
+	<!-- End #main -->
+	<button id="sellerEditSuccess" th:value="${sellerEditSuccess}"
+		name="sellerEditSuccess" type="hidden">
+		sellerEditSuccess</button>
+	<!-- End Main -->
+	<!-- 這裡放置你的 Modal 代碼 -->
+	<div class="modal fade" id="updateSuccessModal" tabindex="-1"
+		aria-labelledby="updateSuccessModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">修改成功🎉🎉🎉🎉🎉</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- ======= Footer ======= -->
+	<!-- ======= Footer ======= -->
 
-    <div th:replace="@{/fragment-footer}"></div>
-    <div th:replace="@{/fragment-js}"></div>
-    <script>
-      window.onload = function () {
-    
-        let sellerEditSuccess = document.querySelector("#sellerEditSuccess");
+	<div th:replace="~{/fragment-footer}"></div>
+	<div th:replace="~{/fragment-js}"></div>
+	<script>
+		window.onload = function() {
 
-        if (sellerEditSuccess.value === "true") {
-        	
-          // Show the modal
-          $("#updateSuccessModal").modal("show");
-          updateSuccess.value = false;
-        }
-      };
-    </script>
+			let sellerEditSuccess = document
+					.querySelector("#sellerEditSuccess");
 
-    <!-- Local JS File -->
-  </body>
+			if (sellerEditSuccess.value === "true") {
+
+				// Show the modal
+				$("#updateSuccessModal").modal("show");
+				updateSuccess.value = false;
+			}
+		};
+	</script>
+
+	<!-- Local JS File -->
+</body>
 </html>

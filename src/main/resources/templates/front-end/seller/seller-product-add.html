@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 	<!-- ======= Main ======= -->
 
 	<main class="main main-layout-seller">
@@ -25,7 +25,8 @@
 
 			<!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
 			<form class="row g-3" id="imageForm" method="post"
-				th:action="@{insert}" enctype="multipart/form-data">
+				th:object="${productVO}" th:action="@{insert}"
+				enctype="multipart/form-data">
 				<div class="upload__box">
 					<div class="upload__btn-box">
 						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
@@ -58,11 +59,13 @@
 
 				<div class="col-md-12">
 					<label for="productName" class="form-label">商品名稱</label> <input
-						type="text" class="form-control" id="productName"
-						name="productName" />
-					<div id="productNameFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{productName}"
+						onclick="hideContent('productName.errors');" class="form-control"
+						id="productName" name="productName" />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productName')}"
+							th:errors="*{productName}" class="error" id="adName.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
@@ -78,9 +81,11 @@
 						<option value="6">健康保健</option>
 						<option value="7">配件</option>
 					</select>
-					<div id="productSortFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productSortVO')}"
+							th:errors="*{productSortVO}" class="error"
+							id="productSortVO.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
@@ -91,44 +96,56 @@
 						<option value="cat">貓</option>
 						<option value="bird">鳥</option>
 					</select>
-					<div id="productSortFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('animalType')}"
+							th:errors="*{animalType}" class="error" id="animalType.errors"></div>
+					</div>
 				</div>
 
 
 
 				<div class="col-md-12">
 					<label for="productPrice" class="form-label">商品價格</label> <input
-						type="text" class="form-control" id="productPrice" name="Price" />
-					<div id="productPriceFeedback" class="invalid-feedback">
-						Please provide a valid inputProductPrice.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{price}"
+						onclick="hideContent('price.errors');" class="form-control"
+						id="productPrice" name="Price" />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('Price')}"
+							th:errors="*{Price}" class="error"
+							id="Price.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
 					<label for="productStockQuantity" class="form-label">商品庫存</label> <input
-						type="text" class="form-control" id="productStockQuantity"
+						type="text" th:field="*{productStockQuantity}"
+						onclick="hideContent('productStockQuantity.errors');"
+						class="form-control" id="productStockQuantity"
 						name="productStockQuantity" />
-					<div id="productStockQuantityFeedback" class="invalid-feedback">
-						Please provide a valid inputStockQuantity.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productStockQuantity')}"
+							th:errors="*{productStockQuantity}" class="error"
+							id="productStockQuantity.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
 					<label for="productDetails" class="form-label">商品描述</label> <input
-						type="text" class="form-control" id="productDetails"
-						name="productDetails" />
-					<div id="productDetailsFeedback" class="invalid-feedback">
-						Please provide a valid inputProductDetails.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{productDetails}"
+						onclick="hideContent('productDetails.errors');"
+						class="form-control" id="productDetails" name="productDetails" />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productDetails')}"
+							th:errors="*{productDetails}" class="error"
+							id="productDetails.errors"></div>
+					</div>
 				</div>
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button type="reset" class="btn btn-secondary">重設</button>
 					<button type="submit" id="submitButton" class="btn btn-primary">
-						提交2張表</button>
+						送出</button>
 				</div>
 			</form>
 		</div>
@@ -137,46 +154,7 @@
 	<!-- End Main -->
 
 	<!-- ======= Footer ======= -->
-	<footer class="footer footer-layout on">
-		<div
-			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
-			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">關於我們</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">人才招募</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
-				</ul>
-			</div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">常見問題</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">Q&A</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row footer-container-custom">
-			<div class="col-3"></div>
-
-			<div class="col-auto">
-				<a href="/"
-					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-					<svg class="bi" width="32" height="32" fill="currentColor">
-              <use xlink:href="bootstrap-icons.svg#heart-fill" />
-            </svg>
-				</a>
-				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
-					© 2023 CatTom.版權所有。</p>
-			</div>
-		</div>
-	</footer>
+	<div th:replace="~{/fragment-footer}"></div>
 	<!-- End Footer -->
 
 	<!-- Vendor & Main JS Files -->

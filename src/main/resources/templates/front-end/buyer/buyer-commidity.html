@@ -34,13 +34,13 @@
 										th:data-thumb="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}">
 										<img class="img-fluid"
 											th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
-											style="width: 1000px; height: 580px;" />
+											style="max-width: 500px; max-height: 500px;"/>
 									</li>
 									<li th:each="productImgVO, iterStat : ${productImageList}"
 										th:data-thumb="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}">
 										<img class="img-fluid"
 											th:src="@{/seller/product/DBGifProductImgsReader(productImgId=${productImgVO.getProductImgId()})}"
-											style="width: 1000px; height: 580px;" />
+											style="max-width: 500px; max-height: 500px;" />
 									</li>
 								</ul>
 							</div>
@@ -347,8 +347,8 @@
 	</main>
 
 	<!-- End Footer -->
-	<div th:replace="@{fragment-footer}"></div>
-	<div th:replace="@{fragment-js}"></div>
+	<div th:replace="~{/fragment-footer}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
 			$("#lightSlider").lightSlider({

@@ -7,16 +7,21 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
-import com.allenum.AdStatusEnum;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.seller.entity.SellerVO;
 
 
@@ -111,7 +116,7 @@ public class AdVO implements Serializable {
 	}
 
 
-
+	
 	@Column(name="adImg" ,columnDefinition = "longblob")
 	public byte[] getAdImg() {
 		return adImg;
@@ -139,8 +144,10 @@ public class AdVO implements Serializable {
 	}
 
 
-
+	
 	@Column(name = "adName")
+	@NotEmpty(message="請填寫廣告名稱")
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{1,30}$", message = "廣告名稱: 只能是中、英文字母、數字和_ , 且長度必需在1到20之間")	
 	public String getAdName() {
 		return adName;
 	}
@@ -155,6 +162,8 @@ public class AdVO implements Serializable {
 
 
 	@Column(name = "adUrl")
+	@NotEmpty(message="請填寫廣告產品的網址")
+	@URL
 	public String getAdUrl() {
 		return adUrl;
 	}
@@ -167,8 +176,9 @@ public class AdVO implements Serializable {
 	}
 
 
-
+	
 	@Column(name = "adStartTime")
+	@NotNull(message = "請填寫廣告開始時間")	
 	public Date getAdStartTime() {
 		return adStartTime;
 	}
@@ -183,6 +193,7 @@ public class AdVO implements Serializable {
 
 
 	@Column(name = "adEndTime")
+	@NotNull(message = "請填寫廣告結束時間")
 	public Date getAdEndTime() {
 		return adEndTime;
 	}
@@ -197,6 +208,7 @@ public class AdVO implements Serializable {
 
 
 	@Column(name ="adLv")
+	@NotNull(message = "請選擇廣告類型")
 	public Integer getAdLv() {
 		return adLv;
 	}
@@ -209,8 +221,9 @@ public class AdVO implements Serializable {
 	}
 
 
-
+	
 	@Column(name="adMemo")
+	@NotNull(message="請填寫廣告備註")
 	public String getAdMemo() {
 		return adMemo;
 	}

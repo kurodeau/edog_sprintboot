@@ -523,7 +523,7 @@ VALUES
   ('alen@example.com', 'adminpass6', 10, CURRENT_TIMESTAMP),
   ('red@example.com', 'adminpass7', 10, CURRENT_TIMESTAMP),
   ('timmiy@example.com', 'adminpass8', 20, CURRENT_TIMESTAMP),
-  ('testmanager2@gmail.com', '$2a$10$Oy/uUtsbghqq5OuaQMsBa.tZNlMXsCuMxqcoWHI1NwqaxceKRuSyO', 10, CURRENT_TIMESTAMP),
+  ('testmanager2@gmail.com', '$2a$10$Oy/uUtsbghqq5OuaQMsBa.tZNlMXsCuMxqcoWHI1NwqaxceKRuSyO', 20, CURRENT_TIMESTAMP),
   ('testmanager@gmail.com', '$2a$10$Oy/uUtsbghqq5OuaQMsBa.tZNlMXsCuMxqcoWHI1NwqaxceKRuSyO', 10, CURRENT_TIMESTAMP);
 
   -- 廣告  放入假資料-- 
