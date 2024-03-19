@@ -19,7 +19,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		
 		// 首頁部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/"); 
-		
+
 		// 賣家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/main"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/sellerLv/edit"); 
@@ -33,7 +33,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/adlist"); 
 		// 買家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/main"); 
-		
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer"); 
+
+		// 論壇部分
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/listAll"); 
+
 		
 		// 後台家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/"+loginPath+"/login"); 
