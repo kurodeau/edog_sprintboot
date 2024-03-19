@@ -18,7 +18,7 @@
 
 				<!-- NavBar--RightSide  -->
 				<ul class="navbar-nav ms-auto mb-2">
-					<li class="nav-item" th:unless="${loggedIn}"><a class="nav-link" href="#" data-bs-toggle="modal"
+					<li class="nav-item" th:unless="${loggedIn}"><a class="nav-link" th:href="@{/front/buyer/main}" 
 							data-bs-target="#loginSelectGroup">登入或註冊</a></li>
 					<li class="nav-item d-flex gap-3 align-items-center" th:if="${loggedIn}"><span
 							th:if="${theName != null and theName != ''}" th:text="${theName}"></span><a class="nav-link"

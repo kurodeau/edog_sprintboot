@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.msgType.entity.MsgTypeVO;
+import com.petdraw.model.PetDrawVO;
 import com.reply.entity.ReplyVO;
 import com.report.entity.ReportVO;
 import com.article.entity.ArticleVO;
@@ -54,6 +55,7 @@ public class MsgVO implements java.io.Serializable {
     private ReplyVO replyVO;
     private ReportVO reportVO;
     private MsgTypeVO msgTypeVO;
+    private PetDrawVO petDrawVO;
     private Date msgTime; 
     private Boolean isRead;
     private Boolean isEnabled;
@@ -158,4 +160,13 @@ public class MsgVO implements java.io.Serializable {
     	this.isEnabled = isEnabled;
     }  
     
+    @ManyToOne
+    @JoinColumn(name = "petdrawId", referencedColumnName = "petdrawId")
+    public PetDrawVO getPetDrawVO() {
+        return this.petDrawVO;
+    }
+
+    public void setPetDrawVO(PetDrawVO petDrawVO) {
+        this.petDrawVO = petDrawVO;
+    }
 }
