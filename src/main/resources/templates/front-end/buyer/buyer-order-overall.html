@@ -158,7 +158,15 @@
 												th:value="${productOrderVO.orderId}">
 										</form>
 
-
+										<div th:if="${productOrderVO.orderStatus == 6}">
+											<form method="post"
+												th:action="@{/front/buyer/productorder/return}">
+												<button type="submit"
+													class="product align-self-start btn-func">退貨</button>
+												<input type="hidden" name="orderId"
+													th:value="${productOrderVO.orderId}">
+											</form>
+										</div>
 
 
 										<form method="get"
@@ -312,6 +320,16 @@
 												th:action="@{/front/buyer/productorder/buyerconfirm}">
 												<button type="submit"
 													class="product align-self-start btn-func">訂單完成</button>
+												<input type="hidden" name="orderId"
+													th:value="${productOrderVO.orderId}">
+											</form>
+										</div>
+
+										<div th:if="${productOrderVO.orderStatus == 6}">
+											<form method="post"
+												th:action="@{/front/buyer/productorder/return}">
+												<button type="submit"
+													class="product align-self-start btn-func">退貨</button>
 												<input type="hidden" name="orderId"
 													th:value="${productOrderVO.orderId}">
 											</form>

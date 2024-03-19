@@ -16,8 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.buyer.entity.BuyerVO;
 import com.orderdetails.model.OrderDetailsVO;
@@ -142,6 +143,10 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setInvoiceNumber(Integer invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
+	
+	@Size(max = 10, message = "收貨者姓名不能超過10個字")
+	@Pattern(regexp = "^[a-zA-Z\\u4e00-\\u9fa5]+$", message = "收貨者姓名僅能是中文或英文")
+	@NotEmpty(message = "收貨者姓名不能為空")
 	@Column(name = "receiver")
 	public String getReceiver() {
 		return receiver;
@@ -159,6 +164,9 @@ public class ProductOrderVO implements java.io.Serializable {
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
 	}
+	
+	
+	@Pattern(regexp="^09\\d{8}$", message="手機號碼格式不正確，請輸入09開頭的8位數字")
 	@Column(name = "mobile")
 	public String getMobile() {
 		return mobile;
@@ -168,6 +176,7 @@ public class ProductOrderVO implements java.io.Serializable {
 		this.mobile = mobile;
 	}
 	
+	 @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z0-9\\s,.-]{10,100}$", message = "收貨地址格式不正確，請以中文、英文字母、数字、空格、逗號（,）、點（.）以及短橫線（-）组成，並且長度為10-100個字之間。")
 	@Column(name = "contactAddress")
 	public String getContactAddress() {
 		return contactAddress;
