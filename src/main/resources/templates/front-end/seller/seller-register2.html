@@ -71,7 +71,7 @@
 								th:errors="*{sellerEmail}">欄位有誤</p>
 						</div>
 					</div>
-				<div class="px-5 col-md-2"> 
+					<div class="px-5 col-md-2">
 						<button type="button" class="btn btn-primary"
 							onclick="sendVerificationCode()">發送驗證碼</button>
 					</div>
@@ -270,8 +270,8 @@
 
 	<!-- ======= Footer ======= -->
 
-	<div th:replace="@{/fragment-footer-noaside}"></div>
-    <div th:replace="@{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer-noaside}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
 	<!-- Local JS File -->
 

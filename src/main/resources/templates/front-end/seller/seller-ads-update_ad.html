@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 
 	<!-- ======= Main ======= -->
 
@@ -41,11 +41,10 @@
 						<div id="adImgFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
 						<div id="blob_holder">
-							<img
-								th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+							<img th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
 								width="200px" height="150px" />
 						</div>
-						<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
+						<span class="error" th:text="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -53,42 +52,50 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productName" class="form-label">廣告名稱</label> <input
-						type="text" th:field="*{adName}" class="form-control" id="adName"
-						name="adName" />
-					<div id="productNameFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{adName}"
+						onclick="hideContent('adName.errors');" class="form-control"
+						id="adName" name="adName" required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adName')}" th:errors="*{adName}"
+							class="error" id="adName.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productSort" class="form-label">廣告類型</label> <select
 						class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
 						<option value="-1" disabled selected>請選擇廣告版型</option>
-						<option value="0">BaseType</option>
-						<option value="1">PremiumType</option>
+						<option th:if="${sellerLvId == 2}" value="0">BaseType</option>
+						<option th:if="${sellerLvId == 3}" value="0">BaseType</option>
+						<option th:if="${sellerLvId == 3}" value="1">PremiumType</option>
 					</select>
-					<div id="productSortFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adLv')}" th:errors="*{adLv}"
+							class="error" id="adLv.errors"></div>
+					</div>
 				</div>
 
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productStockQuantity" class="form-label">廣告商品網址</label>
-					<input type="text" th:field="*{adUrl}" class="form-control"
-						id="adUrl" name="adUrl" />
-					<div id="productStockQuantityFeedback" class="invalid-feedback">
-						Please provide a valid inputStockQuantity.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<input type="text" th:field="*{adUrl}"
+						onclick="hideContent('adUrl.errors');" class="form-control"
+						id="adUrl" name="adUrl" required placeholder="請輸入產品的網址" />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adUrl')}" th:errors="*{adUrl}"
+							class="error" id="adUrl.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productDetails" class="form-label">廣告備註</label> <input
-						type="text" th:field="*{adMemo}" class="form-control" id="adMemo"
-						name="adMemo" />
-					<div id="productDetailsFeedback" class="invalid-feedback">
-						Please provide a valid inputProductDetails.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{adMemo}"
+						onclick="hideContent('adMemo.errors');" class="form-control"
+						id="adMemo" name="adMemo" required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adMemo')}" th:errors="*{adMemo}"
+							class="error" id="adMemo.errors"></div>
+					</div>
 				</div>
 
 				<div class="row">
@@ -96,12 +103,22 @@
 						<label for="f_date1" class="form-label">廣告起始日期</label> <input
 							type="date" th:field="*{adStartTime}" class="form-control"
 							id="f_date1" name="adStartTime" />
+
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adStartTime')}"
+								th:errors="*{adStartTime}" class="error"></div>
+						</div>
 					</div>
 
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="end-date" class="form-label">廣告結束日期</label> <input
 							type="date" th:field="*{adEndTime}" class="form-control"
 							id="f_date2" name="adEndTime" />
+
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adEndTime')}"
+								th:errors="*{adEndTime}" class="error"></div>
+						</div>
 					</div>
 				</div>
 
@@ -121,46 +138,7 @@
 	<!-- End Main -->
 
 	<!-- ======= Footer ======= -->
-	<footer class="footer footer-layout on">
-		<div
-			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
-			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">關於我們</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">人才招募</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
-				</ul>
-			</div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">常見問題</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">Q&A</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row footer-container-custom">
-			<div class="col-3"></div>
-
-			<div class="col-auto">
-				<a href="/"
-					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-					<svg class="bi" width="32" height="32" fill="currentColor">
-              <use xlink:href="bootstrap-icons.svg#heart-fill" />
-            </svg>
-				</a>
-				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
-					© 2023 CatTom.版權所有。</p>
-			</div>
-		</div>
-	</footer>
+	<div th:replace="~{/fragment-footer}"></div>
 	<!-- End Footer -->
 
 	<!-- Vendor & Main JS Files -->
@@ -250,6 +228,23 @@
 	        alert('表單內容:\n\n' + formValues);
 	        this.submit(); // 手動提交表單
 	    });
+		
+		
+		
+		
+		// 獲取當前日期
+	    var today = new Date();
+	    var dd = String(today.getDate()).padStart(2, '0');
+	    var mm = String(today.getMonth() + 1).padStart(2, '0'); // 一月是 0!
+	    var yyyy = today.getFullYear();
+	    
+	    // 格式化日期
+	    today = yyyy + '-' + mm + '-' + dd;
+	    
+	    // 設置最小日期
+	    document.getElementById("f_date1").min = today;
+	    document.getElementById("f_date2").min = today;
+		
 	</script>
 
 

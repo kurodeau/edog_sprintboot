@@ -64,8 +64,9 @@ public class ProductController {
 		productVO.setRatings(4);
 		productVO.setTotalReviews(50);
 		productVO.setIsEnabled(true);
-
-		model.addAttribute("product", productVO);
+		
+		
+		model.addAttribute("productVO", productVO);
 
 		return "front-end/seller/seller-product-add";
 	}

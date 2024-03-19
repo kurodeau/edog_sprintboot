@@ -1,6 +1,7 @@
 package com.productorder.controller;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -73,7 +74,23 @@ public String buyerCancelProductOrder(@RequestParam("orderId") String orderId , 
 	
 	ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 	productOrderVO.setOrderStatus(2);
-	productOrderSvc.addProductOrder(productOrderVO);
+	productOrderSvc.updateProductOrder(productOrderVO);
+	
+//	memberId = session.getAttribute(memberId);
+//	int memberId = 1;
+//	List<ProductOrderVO> list = productOrderSvc.findByBuyerId(memberId);
+//	model.addAttribute("productOrderList",list);
+	model.addAttribute("success" , "-(刪除訂單成功)");
+	return "redirect:/front/buyer/productorder/buyerproductorderlistall";
+
+}
+
+@PostMapping("return")
+public String buyerRetunProductOrder(@RequestParam("orderId") String orderId , Model model, HttpSession session) {
+	
+	ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+	productOrderVO.setOrderStatus(10);
+	productOrderSvc.updateProductOrder(productOrderVO);
 	
 //	memberId = session.getAttribute(memberId);
 //	int memberId = 1;
@@ -91,7 +108,15 @@ public String buyerConfirmProductOrder(@RequestParam("orderId") String orderId ,
 //	System.out.println(orderId+"++++++++");
 	ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 	productOrderVO.setOrderStatus(7);
-	productOrderSvc.addProductOrder(productOrderVO);
+	
+	
+	long currentTimeMillis = System.currentTimeMillis();
+	   // 使用当前时间的毫秒数创建 Timestamp 对象
+	   Timestamp currentTimestamp = new Timestamp(currentTimeMillis);
+	   Timestamp crCreateDate = currentTimestamp;
+	   productOrderVO.setReceiveTime(crCreateDate);
+	
+	productOrderSvc.updateProductOrder(productOrderVO);
 //	int memberId = 1;
 //	List<ProductOrderVO> list = productOrderSvc.findByBuyerId(memberId);
 //	model.addAttribute("productOrderList",list);

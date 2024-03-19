@@ -44,9 +44,9 @@ public class AdController {
 
 	@GetMapping("add")
 	public String selleradsadd(Model model) {
-
-
-//		List<String> adTypeSelectList = new ArrayList<>();
+		
+		AdVO adVO = new AdVO();
+		
 		SecurityContext secCtx = SecurityContextHolder.getContext();
 		Authentication authentication = secCtx.getAuthentication();
 		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
@@ -54,20 +54,10 @@ public class AdController {
 		SellerLvVO sellerLv = sellerVO.getSellerLvId();
 
 		Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
-
-//		if (sellerLvId == 2) {
-//			adTypeSelectList.add("BaseType");
-//
-//		} else if (sellerLvId == 3) {
-//			adTypeSelectList.add("BaseType");
-//			adTypeSelectList.add("PremiumType");
-//		} else {
-//			adTypeSelectList.add("FUCKU");
-//		}
-//		
-		System.out.println(sellerLvId);
 		
 		model.addAttribute("sellerLvId",sellerLvId);
+		model.addAttribute("adVO", adVO);
+		
 
 
 		return "front-end/seller/seller-ads-add";
@@ -88,10 +78,20 @@ public class AdController {
 			}
 		}
 		if (result.hasErrors() || parts[0].isEmpty()) {
-			System.out.println("sssss");
+			
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+			Authentication authentication = secCtx.getAuthentication();
+			SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
 
+			SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+			Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+			
+			model.addAttribute("sellerLvId",sellerLvId);
+			
+			
 			System.out.println(result);
-			System.out.println(parts[0].isEmpty());
 			return "front-end/seller/seller-ads-add";
 		}
 
@@ -120,11 +120,21 @@ public class AdController {
 
 	@PostMapping("getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("adId") String adId, ModelMap model) {
-		System.out.println(adId);
+		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		/*************************** 2.開始查詢資料 *****************************************/
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+		Authentication authentication = secCtx.getAuthentication();
+		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+
+		SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+		Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+		
+		
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("sellerLvId",sellerLvId);
 		model.addAttribute("adVO", adVO);
 		return "front-end/seller/seller-ads-update_ad";
 	}
@@ -145,6 +155,18 @@ public class AdController {
 			}
 		}
 		if (result.hasErrors()) {
+			
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+			Authentication authentication = secCtx.getAuthentication();
+			SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+
+			SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+			Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+			
+			model.addAttribute("sellerLvId",sellerLvId);
+			
 			return "front-end/seller/seller-ads-update_ad";
 		}
 		/*************************** 2.開始修改資料 *****************************************/

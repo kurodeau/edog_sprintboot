@@ -779,16 +779,7 @@ VALUES
     (4, 2, '2023-02-11 19:00:00'),
     (5, 2, '2023-02-12 12:00:00');
 
--- 商品圖片  放入測試資料-- 
-INSERT INTO productImage (productId, productImg, productImgTime, isCover, isEnabled)
-VALUES
-    (1, NULL, '2023-01-02 14:00:00', TRUE, TRUE),
-    (1, NULL, '2023-01-03 15:30:00', FALSE, FALSE),
-    (2, NULL, '2023-01-03 15:30:00', TRUE, FALSE),
-    (2, NULL, '2023-01-03 15:30:00', FALSE, FALSE),
-    (3, NULL, '2023-01-03 15:30:00', FALSE, TRUE),
-    (4, NULL, '2023-01-03 15:30:00', FALSE, TRUE),
-    (5, NULL, '2023-02-16 08:45:00', TRUE, TRUE);
+
 -- 收藏  放入測試資料-- 
 INSERT INTO collection (productId, memberId, isEnabled, collectionTime)
 VALUES
@@ -797,36 +788,6 @@ VALUES
     (3, 3, false, '2023-03-10 20:45:00'),
     (4, 1, true, '2023-04-15 08:20:00'),
     (5, 3, true, '2023-05-20 12:15:00');
--- 訂單  放入測試資料-- 
-INSERT INTO productOrder (sellerId, memberId, couponId, memberPaysShipping, sellerPaysShipping, orderOrigPrice, actualPay, orderTime, orderStatus, invoiceNumber, receiver, receiveTime, mobile, contactAddress, isDelivered, shippingTime)
-VALUES
-(1, 1, 1, 10, 5, 500, 495, '2023-01-01 10:00:00', 1, 12345, 'John Doe', '2023-01-05 12:00:00', '1234567890', '123 Main St', true, '2023-01-06 14:30:00'),
-(1, 2, 2, 8, 6, 700, 692, '2023-02-01 11:30:00', 2, 23456, 'Jane Smith', '2023-02-05 15:30:00', '9876543210', '456 Oak St', false, null),
-(2, 2, NULL, 12, 4, 600, 588, '2023-03-01 14:45:00', 3, 34567, 'Sam Johnson', null, '3456789012', '789 Pine St', false, null),
-(2, 3, NULL, 15, 3, 800, 785, '2023-04-01 16:00:00', 1, 45678, 'Emily Davis', '2023-04-05 18:00:00', '5678901234', '678 Maple St', true, '2023-04-07 10:00:00'),
-(3, 4, 5, 10, 5, 900, 890, '2023-05-01 09:30:00', 2, 56789, 'Robert Wilson', '2023-05-05 11:45:00', '0123456789', '789 Elm St', false, null);
--- 訂單明細  放入測試資料-- 
-
--- 訂單1的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (1, 1, 2, true, 4, '2024-03-04 12:30:00', '很滿意', 'attachment1.jpg', true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (1, 1, 1, false, NULL, NULL, NULL, NULL, true);
-
--- 訂單2的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (2, 2, 3, true, 5, '2024-03-05 14:45:00', '非常好', 'attachment2.jpg', true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (2, 2, 2, true, 4, '2024-03-05 15:00:00', '不錯', 'attachment3.jpg', true);
-
--- 訂單3的明細 --
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (3, 3, 1, false, NULL, NULL, NULL, NULL, true);
-
-INSERT INTO orderDetails (orderId, productId, purchaseQuantity, isCommented, stars, commentedTime, comments, attachments, isEnable) 
-VALUES (3, 2, 4, true, 3, '2024-03-06 10:20:00', '一般般', 'attachment4.jpg', true);
 
 
 -- 檢舉Type  放入測試資料-- 

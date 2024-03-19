@@ -28,6 +28,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.sendRedirect(ctxPath+"/buyer/login");
         } else if (requestURI.startsWith("/back/")){
             response.sendRedirect(ctxPath+"/");
+        } else if (requestURI.startsWith("/front/forum")){
+            response.sendRedirect(ctxPath+"/buyer/login");
+
         }
     }
 }

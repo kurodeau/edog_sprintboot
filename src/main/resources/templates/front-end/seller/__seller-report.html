@@ -1,100 +1,96 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@^4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
-  </head>
-  <body>
-    <!-- ======= Header ======= -->
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@^4"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@^2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1"></script>
+</head>
+<body>
+	<!-- ======= Header ======= -->
 
-    <header class="fixed-top">
-      <th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <aside th:replace="@{/front-end/seller/aside-seller}"></aside>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="@{/front-end/seller/aside-seller}"></aside>
 
-    <!-- ======= Main ======= -->
+	<!-- ======= Main ======= -->
 
-    <main class="main main-layout-seller">
-      <div class="container-fluid seller-container">
-        <h1>銷售報表</h1>
-        <div class="col-lg-12">
-          <div class="container mb-3">
-            <div class="row">
-              <div class="col-8 d-flex align-items-center gap-4">
-                起始時間<input
-                  type="date"
-                  class="startDate"
-                  value="2022-05-03"
-                />
-                結束時間<input type="date" class="endDate" value="2023-06-03" />
+	<main class="main main-layout-seller">
+		<div class="container-fluid seller-container">
+			<h1>銷售報表</h1>
+			<div class="col-lg-12">
+				<div class="container mb-3">
+					<div class="row">
+						<div class="col-8 d-flex align-items-center gap-4">
+							起始時間<input type="date" class="startDate" value="2022-05-03" />
+							結束時間<input type="date" class="endDate" value="2023-06-03" />
 
-                <button class="btn btn-seller" id="search">
-                  <i class="bi bi-search"></i>搜尋
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">銷售分析</h5>
+							<button class="btn btn-seller" id="search">
+								<i class="bi bi-search"></i>搜尋
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">銷售分析</h5>
 
-              <!-- Line Chart -->
-              <canvas id="lineChart"></canvas>
-              <!-- End Line Chart -->
-            </div>
-          </div>
+						<!-- Line Chart -->
+						<canvas id="lineChart"></canvas>
+						<!-- End Line Chart -->
+					</div>
+				</div>
 
-          <div class="row mt-2">
-            <div class="col-auto d-flex gap-5">
-              <button class="btn btn-seller" id="byYear">年區分</button>
-              <button class="btn btn-seller" id="byMonth">月區分</button>
-              <button class="btn btn-seller" id="byDay">日區分</button>
-            </div>
-          </div>
+				<div class="row mt-2">
+					<div class="col-auto d-flex gap-5">
+						<button class="btn btn-seller" id="byYear">年區分</button>
+						<button class="btn btn-seller" id="byMonth">月區分</button>
+						<button class="btn btn-seller" id="byDay">日區分</button>
+					</div>
+				</div>
 
-          <div class="row mt-5">
-            <div class="col-12 d-flex gap-3">
-              <div class="col-3">
-                匯出起始時間&nbsp;&nbsp;
-                <input type="date" class="startExportDate" value="2022-05-03" />
-              </div>
-              <div class="col-3">
-                匯出結束時間&nbsp;&nbsp;
-                <input type="date" class="endExportDate" value="2023-06-03" />
-              </div>
-              <div class="col-3">
-                <select class="form-select" aria-label="Default select example">
-                  <option value="no" selected disabled>請選擇檔案格式</option>
-                  <option value="xlsx">Excel(.xlsx)</option>
-                  <option value="ods">OpenOffice(.ods)</option>
-                </select>
-              </div>
-              <div class="col-1">
-                <button class="btn btn-seller" id="exportData">匯出</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+				<div class="row mt-5">
+					<div class="col-12 d-flex gap-3">
+						<div class="col-3">
+							匯出起始時間&nbsp;&nbsp; <input type="date" class="startExportDate"
+								value="2022-05-03" />
+						</div>
+						<div class="col-3">
+							匯出結束時間&nbsp;&nbsp; <input type="date" class="endExportDate"
+								value="2023-06-03" />
+						</div>
+						<div class="col-3">
+							<select class="form-select" aria-label="Default select example">
+								<option value="no" selected disabled>請選擇檔案格式</option>
+								<option value="xlsx">Excel(.xlsx)</option>
+								<option value="ods">OpenOffice(.ods)</option>
+							</select>
+						</div>
+						<div class="col-1">
+							<button class="btn btn-seller" id="exportData">匯出</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 
-    <!-- End #main -->
+	<!-- End #main -->
 
-    <!-- End Main -->
+	<!-- End Main -->
 
-    <!-- ======= Footer ======= -->
+	<!-- ======= Footer ======= -->
 
-    <div th:replace="@{/fragment-footer}"></div>
-    <div th:replace="@{/fragment-js}"></div>
+	<div th:replace="@{/fragment-footer}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
-    <!-- Local JS File -->
-    <script>
+	<!-- Local JS File -->
+	<script>
       document.addEventListener("DOMContentLoaded", async function () {
         init();
         let rawISODateData;
@@ -458,5 +454,5 @@
         return aggregatedData;
       }
     </script>
-  </body>
+</body>
 </html>

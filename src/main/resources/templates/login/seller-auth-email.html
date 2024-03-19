@@ -45,9 +45,8 @@
 	</main>
 
 	<!-- End Footer -->
-	<div th:replace="@{/fragment-footer-noaside}"></div>
-
-	<div th:replace="@{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer-noaside}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
 	<script>
       function sendVerificationCode() {
