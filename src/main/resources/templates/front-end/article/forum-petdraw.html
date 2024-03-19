@@ -10,82 +10,9 @@
 </head>
 <body>
 	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<nav
-			class="navbar navbar-expand navbar-expand-sm navbar-light bg-user">
-			<div class="container-fluid">
-				<div class="collapse navbar-collapse d-flex justify-content-between"
-					id="navbarSupportedContent">
-					<!-- Start NavBar  -->
-					<!-- NavBar--LeftSide  -->
-					<ul class="navbar-nav me-auto mb-2">
-						<li class="nav-item d-flex align-items-center toggle-sidebar-btn">
-							<i class="bi bi-list"></i> <a
-							class="nav-link cancel-default-behavior" aria-current="page"
-							href="#">選單</a>
-						</li>
-						<li class="nav-item d-flex align-items-center"><a
-							class="nav-link active" aria-current="page" href="#">電子商城</a></li>
-						<li class="nav-item"><a class="nav-link"
-							href="seller-login.html">賣家中心</a></li>
-						<li class="nav-item"><a class="nav-link"
-							th:href="@{/article/listAll}">論壇</a></li>
-					</ul>
-
-					<!-- NavBar--RightSide  -->
-					<ul class="navbar-nav ms-auto mb-2">
-
-						<!-- 測試進入後台入口 -->
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">註冊</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">登入</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!-- End NavBar  -->
-
-		<!-- Start SearchBar  -->
-		<div class="container-fluid bg-user search-container-custom">
-			<div class="row">
-				<!-- Start SearchBar-Logo  -->
-				<div
-					class="col-auto d-none d-lg-block logo-container-height d-flex align-items-end">
-					<img th:src="@{/image/Medium.png}" class="img-logo-custom" alt=""
-						srcset="" />
-				</div>
-				<!-- End SearchBar-Logo  -->
-
-				<!-- Start SearchBar-Input  -->
-				<div
-					class="col d-flex searchItem flex-column search-item-container-custom">
-					<form class="form-inline w-100" method="post"
-						th:action="@{petdraw}">
-						<div class="row py-2 search-row-custom w-100 pe-2">
-							<div class="col">
-								<input class="form-control mr-sm-2 w-100 search-input-custom"
-									type="search" placeholder="請在此進行文章搜索" aria-label="Search"
-									name="searchText" />
-							</div>
-							<div class="col-auto">
-								<button class="btn btn-user search-button-custom d-flex"
-									type="submit">
-									<i class="me-2 ri-search-line"></i>
-									<div class="col-auto d-none d-md-block">Search</div>
-								</button>
-							</div>
-						</div>
-					</form>
-					<div class="my-2 keyword-container-custom">
-						<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
-							class="badge rounded-pill keyword-item-custom">玩具</span>
-					</div>
-				</div>
-				<!-- End SearchBar-Input  -->
-
-			</div>
-		</div>
-	</header>
+	 <header class="fixed-top">
+	      <th:block th:insert="~{/front-end/article/header-article}"></th:block>
+	    </header>
 	<!-- End NavBar  -->
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="front-end/article/aside-forum.html"></aside>
