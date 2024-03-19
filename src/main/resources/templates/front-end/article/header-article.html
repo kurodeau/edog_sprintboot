@@ -10,8 +10,8 @@
 							href="#">選單</a>
 					</li>
 					<li class="nav-item d-flex align-items-center"><a class="nav-link active" aria-current="page"
-							href="#">電子商城</a></li>
-					<li class="nav-item"><a class="nav-link" href="seller-login.html">賣家中心</a></li>
+							th:href="@{/}">電子商城</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/front/seller/main}">賣家中心</a></li>
 					<li class="nav-item"><a class="nav-link" th:href="@{/article/listAll}">論壇</a></li>
 					<li class="nav-item"><a class="nav-link" th:href="@{/front/buyer/main}">買家中心</a>
 				</ul>
@@ -40,7 +40,7 @@
 
 			<!-- Start SearchBar-Input  -->
 			<div class="col d-flex searchItem flex-column search-item-container-custom">
-				<form class="form-inline w-100" method="post" th:action="@{getOne_For_Display}">
+				<form class="form-inline w-100" method="post" th:action="@{/article/getOne_For_Display}">
 					<div class="row py-2 search-row-custom w-100 pe-2">
 						<div class="col">
 							<input class="form-control mr-sm-2 w-100 search-input-custom" type="search"
@@ -55,7 +55,7 @@
 					</div>
 				</form>
 
-				<div class="my-2 keyword-container-custom">
+				<div class=" my-2 keyword-container-custom" style="visibility: hidden;">
 					<span class="badge rounded-pill keyword-item-custom">寵物床</span> <span
 						class="badge rounded-pill keyword-item-custom">玩具</span>
 				</div>

@@ -35,7 +35,7 @@
 		    <tbody >
 		        <th:block th:each="msgVO : ${myMsgList}">
 		            <!-- 添加间距 -->
-		            <tr th:unless="${msgVO.isRead}" class="forum-msg msg-no-read" th:onclick="'redirectToUpdatePage(\'' + @{/msg/getOne(id=${msgVO.msgId})} + '\')'">
+		            <tr th:unless="${msgVO.isRead}" class="forum-msg msg-no-read" th:onclick="'redirectToUpdatePage(\'' + @{/front/forum/msg/getOne(id=${msgVO.msgId})} + '\')'">
 		                <td style="display: none;" th:text="${msgVO.msgId}"></td>
 				      	<td th:if="${msgVO.msgTypeVO.msgTypeId == 1}">
                         	<i class="bi bi-hearts" style="color: #F00078;"></i>
@@ -84,7 +84,7 @@
         <table id="msgTableRead" style="display: none;border-collapse:separate;">
             <tbody>
                 <th:block th:each="msgVO : ${myMsgList}">
-                    <tr th:if="${msgVO.isRead}" class="forum-msg" th:onclick="'redirectToUpdatePage(\'' + @{/msg/getOne(id=${msgVO.msgId})} + '\')'">
+                    <tr th:if="${msgVO.isRead}" class="forum-msg" th:onclick="'redirectToUpdatePage(\'' + @{/front/forum/msg/getOne(id=${msgVO.msgId})} + '\')'">
                         <td style="display: none;" th:text="${msgVO.msgId}"></td>
                         <td th:if="${msgVO.msgTypeVO.msgTypeId == 1}">
                         	<i class="bi bi-hearts" style="color: #F00078;"></i>
@@ -206,7 +206,7 @@ $('.msg-no-read').click(function() {
     // 发送 AJAX 请求到后端的 update 接口
     $.ajax({
         type: "POST",
-        url: "/msg/update",
+        url: "/front/forum/msg/update",
         data: {msgId: msgId},
         success: function(response) {
             // 更新成功后，将消息行的样式改变，以标识消息已读

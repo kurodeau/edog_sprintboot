@@ -149,11 +149,13 @@ public class MultiSecurityConfiguration {
 		http.authorizeRequests(authorize -> authorize
 				.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
 				.antMatchers("/front/seller/**").hasRole("SELLER")
-
-				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login")
-				.permitAll().antMatchers("/back/api/v1/auth/authenticate").permitAll()
+				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login").permitAll()
+				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
 				.antMatchers("/back/seller/list").hasRole("MANAGERJWT")
-				.antMatchers("/back/**").hasRole("MANAGER"))
+
+        .antMatchers("/back/**").hasRole("MANAGER"))
+				.antMatchers("/front/forum/**").hasRole("BUYER"))
+
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
