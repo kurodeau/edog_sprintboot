@@ -1,80 +1,117 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <th:block th:insert="~{/fragment-head}"></th:block>
-  </head>
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
 
-  <body>
-    <!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+<body>
+	<!-- ======= Header ======= -->
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
-    <!-- ======= Sidebar ======= -->
-    <!-- start帳戶管理 -->
-    <aside th:replace="back-end/aside-back.html"></aside>
+	<!-- ======= Sidebar ======= -->
+	<!-- start帳戶管理 -->
+	<aside th:replace="back-end/aside-back.html"></aside>
 
-    <!-- ======= Main ======= -->
-    <main class="main main-layout-seller">
-      <main class="main main-layout-seller">
-        <div class="special-text-container">
-          <h1>
-            歡迎回來<br />
-            讓我們一起
-            <mark class="green">
-              <span
-                id="typewrite-text"
-                class="d-inline-block changecontent"
-              ></span>
-            </mark>
-          </h1>
-        </div>
-      </main>
-    </main>
-    <!-- End Main -->
-    <div th:if="${updateSuccess}">
-      <!-- 這裡放置你的 Modal 代碼 -->
-      <div
-        class="modal fade"
-        id="updateSuccessModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="updateSuccessModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!-- 這裡可以放置更新成功的提示信息 -->
-              賣家資料已成功更新！
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                確定
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ======= Footer, 後臺應該不需要footer ======= -->
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<main class="main main-layout-seller">
+			<div class="special-text-container">
+				<h1>
+					歡迎回來<br /> 讓我們一起
+					<mark class="green">
+						<span id="typewrite-text" class="d-inline-block changecontent"></span>
+					</mark>
+				</h1>
+			</div>
+		</main>
+	</main>
+	<!-- End Main -->
+	<div th:if="${updateSuccess}">
+		<!-- 這裡放置你的 Modal 代碼 -->
+		<div class="modal fade" id="updateSuccessModal" tabindex="-1"
+			role="dialog" aria-labelledby="updateSuccessModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="updateSuccessModalLabel">更新成功</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<!-- 這裡可以放置更新成功的提示信息 -->
+						賣家資料已成功更新！
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">確定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Vendor & Main JS Files -->
-    <div th:replace="fragment-js"></div>
-  </body>
+
+
+	<!-- 這裡放置你的 Modal 代碼 -->
+
+
+
+
+
+	<div class="modal fade" id="errorMessageModal" tabindex="-1"
+		aria-labelledby="updateSuccessModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="errorMessageModalBody">修改成功🎉🎉🎉🎉🎉</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+	<!-- Vendor & Main JS Files -->
+	<div th:replace="fragment-js"></div>
+
+	<script>
+		window.onload = function() {
+			// 从 URL 中解码参数
+			const urlParams = new URLSearchParams(window.location.search);
+			const errorMessage = urlParams.get('error');
+
+			if (errorMessage === "AccessDeniedError") {
+				// 显示模态框
+				document.getElementById("errorMessageModalBody").innerHTML = errorMessage;
+
+				// 检查是否已经显示了模态框
+				const modalShown = sessionStorage.getItem('modalShown');
+				console.log(modalShown);
+				if (!modalShown) {
+					$("#errorMessageModal").modal("show");
+					// 设置模态框已显示的标志
+					sessionStorage.setItem('modalShown', true);
+				} else {
+					sessionStorage.removeItem('modalShown');
+					// 清除 URL 参数以防止刷新时重复显示
+					window.history.replaceState({}, document.title,
+							window.location.pathname);
+				}
+				
+			}
+		};
+	</script>
+
+</body>
 </html>

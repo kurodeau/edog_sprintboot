@@ -53,12 +53,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-//		System.out.println(request.getRequestURL());
+		System.out.println(request.getRequestURL());
+
+
 		if (!requestMatcher.matches(request)) {
 			// 如果请求不匹配你的条件，直接放行
 			filterChain.doFilter(request, response);
 			return;
 		}
+		
+		System.out.println(requestMatcher.matches(request));
+
 
 		 String authHeader = request.getHeader("Authorization");
 		 String jwt;
@@ -71,6 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 
+		
+		
 		jwt = authHeader.substring(7);
 		userEmailFromJwt =null;
 		try {
@@ -78,7 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			userIdFromJwt = jwtService.extractId(jwt);
 			userRoles = jwtService.extractRoles(jwt);
 		}catch (ExpiredJwtException e) {
-			HttpResult<String> result = new HttpResult<>(400, "", "Token已經過期，請重新登入");
+			HttpResult<String> result = new HttpResult<>(400, "OUTDATED", "Token已經過期，請重新登入");
 			response.getWriter().write(result.toJsonString());
 			filterChain.doFilter(request, response);
 			return;
@@ -88,9 +95,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String requestPath = request.getRequestURI();
 
 		for (String role : userRoles) {
-			System.out.println(role);
 			List<String> allowedPaths = JwtRolesControl.getApiAccessPaths(JwtRolesControl.valueOf(role));
-			
 			for (String allowedPath : allowedPaths) {
 				if(requestPath.contains(allowedPath)) {
 					hasAccess = true;
@@ -99,10 +104,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 		}
 		
+		System.out.println(hasAccess);
+		
 		if (!hasAccess) {
 			response.setCharacterEncoding("UTF-8");
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			HttpResult<String> result = new HttpResult<>(400, "", "該權限無法請求此API");
+			HttpResult<String> result = new HttpResult<>(403, "ACCESS_ERR", "該權限無法請求此API");
 			response.getWriter().write(result.toJsonString());
 			filterChain.doFilter(request, response);
 			return;
@@ -114,31 +121,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			// Redis 找不到或過期了
 			if (tokenDtoOpt.isEmpty()) {
-				HttpResult<String> result = new HttpResult<>(400, "", "Redis找不到該Token");
+				HttpResult<String> result = new HttpResult<>(400, "NOT_FOUNDTOKEN", "Redis找不到該Token");
 				response.getWriter().write(result.toJsonString());
 				filterChain.doFilter(request, response);
 				return;
 			}
 
 			TokenDTO tokenDto = tokenDtoOpt.get();
-			System.out.println(managerSvc);
 			ManagerVO managerVO = managerSvc.getOneManager(tokenDto.getId());
 			if (userEmailFromJwt.equals(tokenDto.getSub())) {
 
 				List<GrantedAuthority> authorities = tokenDto.getAuthorities().stream().map(SimpleGrantedAuthority::new)
 						.collect(Collectors.toList());
 
+				String url = request.getContextPath() + "/back/seller/list";
+				HttpResult<String> result = new HttpResult<>(200, url, "success");
+				
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(managerVO, null,
 						authorities);
 
 				SecurityContextHolder.getContext().setAuthentication(authToken);
+				response.getWriter().write(result.toJsonString());
 				response.setStatus(HttpServletResponse.SC_OK);
 				doFilter(request, response, filterChain);
 				return;
 
 			}
 			
-			HttpResult<String> result = new HttpResult<>(400, "", "帳號有誤");
+			HttpResult<String> result = new HttpResult<>(400, "ACCOUNT_ERR", "帳號有誤");
 		    response.getWriter().write(result.toJsonString());
 		    // 如果ROLES本身包含ROLE_JWT，确保在这里调用doFilter
 		    doFilter(request, response, filterChain);
@@ -160,7 +170,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 		
 		
-	    HttpResult<String> result = new HttpResult<>(500, "", "unknown error");
+	    HttpResult<String> result = new HttpResult<>(500, "INTERNAL", "unknown error");
 	    response.getWriter().write(result.toJsonString());
 	    doFilter(request, response, filterChain);
 		return;

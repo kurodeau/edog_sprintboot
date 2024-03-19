@@ -101,9 +101,16 @@
 											contentType: 'application/json', // 设置请求头
 											data: jsonData, // 将数据转换为 JSON 格式, 改用String
 											success: function (responseData) {
-												console.log(JSON.parse(responseData));
+												// console.log(JSON.parse(responseData));
 												console.log(responseData);
 												console.log('POST 请求成功');
+
+												// 更新對應商品數量+1
+												var cartQtyElement = $(button).closest('.item-row-custom').find('.cart-qty');
+												console.log("測試訊息:cartQtyElement=" + cartQtyElement);
+												var currentQty = parseInt(cartQtyElement.text());
+												cartQtyElement.text(currentQty + 1);
+
 											},
 											error: function (xhr, status,
 												error) {
@@ -134,9 +141,21 @@
 											contentType: 'application/json', // 设置请求头
 											data: jsonData, // 将数据转换为 JSON 格式, 改用String
 											success: function (responseData) {
-												console.log(JSON.parse(responseData));
 												console.log(responseData);
 												console.log('POST 请求成功');
+
+												// 更新對應商品數量+1
+												var cartQtyElement = $(button).closest('.item-row-custom').find('.cart-qty');
+												console.log("測試訊息:cartQtyElement=" + cartQtyElement);
+												var currentQty = parseInt(cartQtyElement.text());
+												cartQtyElement.text(currentQty - 1);
+
+												// 檢查商品數量是否為0，如果是則隱藏該商品
+												var itemRowElement = $(button).closest('.item-row-custom');
+												if (currentQty - 1 <= 0) {
+													itemRowElement.hide();
+												}
+
 											},
 											error: function (xhr, status,
 												error) {
@@ -178,7 +197,6 @@
 											contentType: 'application/json', // 设置请求头
 											data: jsonData, // 将数据转换为 JSON 格式, 改用String
 											success: function (responseData) {
-												console.log(JSON.parse(responseData));
 												console.log(responseData);
 												console.log('POST 请求成功');
 											},

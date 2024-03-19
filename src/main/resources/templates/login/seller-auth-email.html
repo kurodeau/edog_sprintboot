@@ -60,7 +60,10 @@
         }
         console.log(sellerEmail);
         // Send a POST request to the /auth/email/check endpoint
-        fetch("/auth/email/check", {
+
+        let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/seller/auth/email/check";
+
+        fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
