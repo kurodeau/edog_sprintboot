@@ -153,7 +153,7 @@ public class MultiSecurityConfiguration {
 				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
 				.antMatchers("/back/seller/list").hasRole("MANAGERJWT")
 
-        .antMatchers("/back/**").hasRole("MANAGER"))
+        .antMatchers("/back/**").hasRole("MANAGER")
 				.antMatchers("/front/forum/**").hasRole("BUYER"))
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
