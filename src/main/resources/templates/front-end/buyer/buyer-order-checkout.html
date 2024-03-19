@@ -155,34 +155,34 @@
 											id="exampleCheck2"> <label class="form-check-label"
 											for="exampleCheck2">同會員資訊</label>
 									</div> -->
-									<div class="row mb-3">
-										<label th:for="${'receiver-name-' + sellerStat.index}"
-											class="col-sm-2 col-form-label">*姓名:</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control receiver-input"
-												style="width: 30%;" value="Peter"
-												th:id="${'receiver-name-' + sellerStat.index}">
-
-											<span class="error-message" style="color: red;"
-												id="name-error"></span>
-
-										</div>
+								<div class="row mb-3">
+									<label th:for="${'receiver-name-' + sellerStat.index}" class="col-sm-2 col-form-label">*姓名:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control receiver-input"
+											 style="width: 30%;"  placeholder="請輸入取貨人姓名，如：Peter"
+											 th:id="${'receiver-name-' + sellerStat.index}"
+											 >
+											
+											 <span class="error-message" style="color: red;" id="name-error"></span>
+										
 									</div>
+								</div>
+								
+								<div class="row mb-3">
+									<label  th:for="${'receiver-mobile-' + sellerStat.index}" class="col-sm-2 col-form-label ">*手機:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control mobile-input"
+											 placeholder="09+末8碼"
+											 style="width: 30%;" 
+											 th:id="${'receiver-mobile-' + sellerStat.index}"
+											 
+											 
+											 >
+											 <span class="error-message" style="color: red;" id="mobile-error"></span>
+											
+											
+											
 
-									<div class="row mb-3">
-										<label th:for="${'receiver-mobile-' + sellerStat.index}"
-											class="col-sm-2 col-form-label ">*手機:</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control mobile-input"
-												placeholder="09xxxxxxxx" style="width: 30%;"
-												value="0911222333"
-												th:id="${'receiver-mobile-' + sellerStat.index}">
-											<span class="error-message" style="color: red;"
-												id="mobile-error"></span>
-
-
-
-										</div>
 									</div>
 									<!-- <div class="row mb-3">
 											<label for="inputPassword3" class="col-sm-2 col-form-label">*電子信箱:</label>
@@ -191,16 +191,20 @@
 													style="width: 30%;" value="edog666@gmail.com">
 											</div> -->
 
-									<div class="row mb-3">
-										<label th:for="${'receiver-address-' + sellerStat.index}"
-											class="col-sm-2 col-form-label ">*地址:</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control address-input"
-												style="width: 30%;" value="台北市中山區南京東路三段219號4樓403號教室"
-												th:id="${'receiver-address-' + sellerStat.index}">
-
-											<span class="error-message" style="color: red;"
-												id="address-error"></span>
+										
+										<div class="row mb-3">
+											<label th:for="${'receiver-address-' + sellerStat.index}" class="col-sm-2 col-form-label ">*地址:</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control address-input"
+													 style="width: 30%;" 
+													  placeholder="如：南京東路三段219號4樓403教室"
+													  th:id="${'receiver-address-' + sellerStat.index}"
+													 >
+													
+													 <span class="error-message" style="color: red;" id="address-error"></span>
+													
+											</div>
+										</div>
 
 										</div>
 									</div>
@@ -317,6 +321,44 @@
 
 			</form>
 		</div>
+		
+		
+		<!-- 燈箱 -->
+                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">通知</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        付款成功，訂單成立<br>詳情請見：買家中心 - 訂單管理
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="/">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">了解</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		<!-- 	<section class="cart-pay-sticky px-5 mt-5">
 
@@ -349,9 +391,8 @@
 
 
 
-		<script>
-							
-							
+
+				<!-- <script>
 				    $(document).ready(function() {
 				        // 綁定提交按鈕事件
 				        $('#checkout-btn').click(function(event) {
@@ -433,6 +474,7 @@
 				            }else {
 				                console.log('資料驗證失敗，停止提交。');
 				            }
+				            
 				            
 				        });
 				        
@@ -518,7 +560,161 @@
 				        
 				        
 				    });
-				</script>
+				</script> -->
+				
+				
+				
+				
+				
+				
+				<script>
+    $(document).ready(function() {
+        $('#checkout-btn').click(function(event) {
+            event.preventDefault();
+
+            if (validateInput()) {
+                console.log('資料驗證通過，準備發送請求。');
+
+                // 初始化購物車數據對象
+	            let shoppingCartDTO = {
+	                carts: []
+	            };
+	
+	            // 假設你已經有了一種方式來區分不同的賣家和它們的產品信息
+	            // 以下是一個示例過程，你需要根據自己的HTML結構進行調整
+	            
+	            // 遍歷每個賣家
+	            $('.cart-seller').each(function() {
+	                let sellerId = $(this).find('.get_sellerId').text(); // 賣家ID儲存在這裡
+	                let receiver = $(this).find('.receiver-input').val(); // 收件人姓名輸入框的class
+	                let mobile = $(this).find('.mobile-input').val(); // 收件人手機輸入框的class
+	                let contactAddress = $(this).find('.address-input').val(); // 收件地址輸入框的class
+	                
+	              /*   alert(receiver);
+	                alert(mobile); */
+	               /*  alert(contactAddress); */
+	                
+	                // 組裝每個賣家的產品信息
+	                let products = [];
+	                $(this).find('.item-row-custom').each(function() {
+	                    let productId = $(this).find('.cart-productId').text();
+	                    let quantity = $(this).find('.cart-qty').text();
+	                    products.push({
+	                        productId: parseInt(productId),
+	                        quantity: parseInt(quantity)
+	                    });
+	                });
+	
+	                // 將賣家信息添加到購物車數據對象
+	                shoppingCartDTO.carts.push({
+	                    sellerId: parseInt(sellerId),
+	                    receiverInfo: {
+	                        receiver: receiver,
+	                        mobile: mobile,
+	                        contactAddress: contactAddress
+	                    },
+	                    products: products
+	                });
+	            });
+	            
+	         // 在发送 POST 请求之前打印 shoppingCartDTO 的 JSON 字符串
+	           /*  console.log(JSON.stringify(shoppingCartDTO)); */
+
+                fetch('create_orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(shoppingCartDTO)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+
+                    // 顯示模態框代替直接跳轉
+                    $('#myModal').modal('show');
+                    
+                    // 在模態框關閉後進行頁面跳轉
+                    $('#myModal').on('hidden.bs.modal', function (e) {
+                        window.location.href = '/';
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                console.log('資料驗證失敗，停止提交。');
+            }
+        });
+
+        function validateInput() {
+            let isValid = true;
+            
+         // 遍歷每個賣家的收貨信息
+            $('.cart-seller').each(function() {
+                // 使用 .find() 來獲取當前賣家區塊內的輸入元素
+                const name = $(this).find('.receiver-input').val();
+                const mobile = $(this).find('.mobile-input').val();
+                const address = $(this).find('.address-input').val();
+
+                // 驗證姓名
+                if (!/^[a-zA-Z\u4e00-\u9fa5]{1,10}$/.test(name)) {
+                    $(this).find('#name-error').text('請輸入有效的姓名（最多10個字符，不含特殊字符）');
+                    isValid = false;
+                } else {
+                    $(this).find('#name-error').text('');
+                }
+
+                // 驗證手機
+                if (!/^09\d{8}$/.test(mobile)) {
+                    $(this).find('#mobile-error').text('請輸入有效的手機號碼（09開頭的10位數字）');
+                    isValid = false;
+                } else {
+                    $(this).find('#mobile-error').text('');
+                }
+
+                // 驗證地址
+                if (!address.trim().length) {
+                    $(this).find('#address-error').text('請輸入有效的地址');
+                    isValid = false;
+                } else {
+                    $(this).find('#address-error').text('');
+                }
+            });
+
+            return isValid;
+            
+            
+            
+            
+            
+            
+            
+        }
+    });
+</script>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 
 
 
@@ -692,7 +888,6 @@
 								
 							});
 				</script>
-
 
 	<!-- <script>
 function validateInput() {

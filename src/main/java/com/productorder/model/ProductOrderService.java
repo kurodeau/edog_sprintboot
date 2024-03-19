@@ -273,7 +273,8 @@ public class ProductOrderService {
 
 		List<ProductOrderVO> list = buyerProductOrders.stream()
 				.filter(productOrder -> "2".equals(productOrder.getOrderStatus().toString())
-						|| "3".equals(productOrder.getOrderStatus().toString()))
+						|| "3".equals(productOrder.getOrderStatus().toString())
+						|| "10".equals(productOrder.getOrderStatus().toString()))
 				.collect(Collectors.toList());
 		return list;
 	}
@@ -378,7 +379,18 @@ public class ProductOrderService {
 
 		        Set<OrderDetailsVO> orderDetailsSet = new HashSet<>(); //建立訂單裡的訂單明細Set
 		        for (ProductInfoDTO productInfo : cart.getProducts()) {
+		        	
+		        	//扣除商品庫存與新增商品已售數量
 		            ProductVO productVO = productSvc.getOneProduct(productInfo.getProductId());
+		           int productStockQuantity = productVO.getProductStockQuantity();
+		           int soldQuantity = productVO.getProductSoldQuantity();
+		           int buyingQuantity = productInfo.getQuantity();
+		           int remainingQuantity = productStockQuantity - buyingQuantity;
+		           productVO.setProductSoldQuantity(soldQuantity+buyingQuantity);
+		           productVO.setProductStockQuantity(remainingQuantity);
+		           productSvc.updateProduct(productVO);
+		           
+		           
 		            OrderDetailsVO orderDetails = new OrderDetailsVO(); //依據每個訂單Id新增每筆訂單明細
 		            
 		          //設定訂單明細的內容

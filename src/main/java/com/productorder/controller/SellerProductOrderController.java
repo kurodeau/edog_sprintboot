@@ -1,8 +1,7 @@
 package com.productorder.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -42,7 +41,7 @@ public class SellerProductOrderController {
 		public String confirmProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			productOrderVO.setOrderStatus(5);
-			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+			productOrderSvc.updateProductOrder(productOrderVO); //將修改的資料存進資料庫
 			
 //			List<ProductOrderVO> list = productOrderSvc.getAll();
 //			model.addAttribute("productOrderList",list);
@@ -55,7 +54,14 @@ public class SellerProductOrderController {
 		public String shippingProduct(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			productOrderVO.setOrderStatus(6);
-			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+			
+			long currentTimeMillis = System.currentTimeMillis();
+			   // 使用当前时间的毫秒数创建 Timestamp 对象
+			   Timestamp currentTimestamp = new Timestamp(currentTimeMillis);
+			   Timestamp crCreateDate = currentTimestamp;
+			   
+			productOrderVO.setShippingTime(crCreateDate);
+			productOrderSvc.updateProductOrder(productOrderVO); //將修改的資料存進資料庫
 			
 //			List<ProductOrderVO> list = productOrderSvc.getAll();
 //			model.addAttribute("productOrderList",list);
@@ -68,7 +74,7 @@ public class SellerProductOrderController {
 		public String cancelProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			productOrderVO.setOrderStatus(3);
-			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+			productOrderSvc.updateProductOrder(productOrderVO); //將修改的資料存進資料庫
 //			List<ProductOrderVO> list = productOrderSvc.getAll();
 //			model.addAttribute("productOrderList",list);
 			model.addAttribute("success" , "-(接受訂單成功)");
