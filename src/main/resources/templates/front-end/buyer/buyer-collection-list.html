@@ -98,92 +98,95 @@
 							</script>
 
 
-							<a id="productLink" th:href="'/product/' + ${productVO.productId}" style="text-decoration: none; color: black" hover="color: red;">查看商品</a>
-<!-- 							<button class="btn-func check-product" th:data-memberId="9" -->
-<!-- 								th:data-productId="${productVO.productId}" -->
-<!-- 								onclick="checkProduct(this)">查看商品</button> -->
+							<a id="productLink"
+								th:href="'/product/' + ${productVO.productId}"
+								style="text-decoration: none; color: black" hover="color: red;">查看商品</a>
+							<!-- 							<button class="btn-func check-product" th:data-memberId="9" -->
+							<!-- 								th:data-productId="${productVO.productId}" -->
+							<!-- 								onclick="checkProduct(this)">查看商品</button> -->
 							<script>
-							    function checkProduct(button) {
-							        // 获取产品链接的<a>标签
-							        var productLink = document.getElementById('productLink');
-							        if (productLink) {
-							            // 模拟点击<a>标签
-							            productLink.click();
-							        }
-							    }
-							
-// 								function checkProduct(button) {
-// 									var memberId = button
-// 											.getAttribute('data-memberId');
-// 									console.log("memberId:" + memberId);
+								function checkProduct(button) {
+									// 获取产品链接的<a>标签
+									var productLink = document
+											.getElementById('productLink');
+									if (productLink) {
+										// 模拟点击<a>标签
+										productLink.click();
+									}
+								}
 
-// 									var productId = button
-// 											.getAttribute('data-productId');
-// 									console.log("productId:" + productId);
+								// 								function checkProduct(button) {
+								// 									var memberId = button
+								// 											.getAttribute('data-memberId');
+								// 									console.log("memberId:" + memberId);
 
-// 									var urlStr = "/front/buyer/collection/product/"
-// 											+ button
-// 													.getAttribute('data-productId');
-// 									console.log("urlStr:" + urlStr);
+								// 									var productId = button
+								// 											.getAttribute('data-productId');
+								// 									console.log("productId:" + productId);
 
-// 									var data = {
-// 										memberId : memberId,
-// 										productId : productId
-// 									}
+								// 									var urlStr = "/front/buyer/collection/product/"
+								// 											+ button
+								// 													.getAttribute('data-productId');
+								// 									console.log("urlStr:" + urlStr);
 
-// 									const formData = new FormData();
-// 									for ( const key in data) {
-// 										formData.append(key, data[key]);
-// 									}
-// 									console.log("AJAX門前");
-// 									$
-// 											.ajax({
-// 												url : urlStr,
-// 												type : 'GET',
-// 												data : formData,
-// 												contentType : false,
-// 												processData : false,
-// 												success : function(responseData) {
-													
-// 													const pathname = location.pathname;
-// 													const b = pathname.split('/')
-// 													b.pop();
-													
-// 													const productId = 123;
-// 													const targetUrl = b.join('/') + `/product/${productId}`
-													
-// 													let scheme = responseData.scheme;
-// 													let port = responseData.port;
-// 													let domainName = responseData.domainName;
+								// 									var data = {
+								// 										memberId : memberId,
+								// 										productId : productId
+								// 									}
 
-// 													// 組合 URL
-// 													let redirectUrl = scheme
-// 															+ "://"
-// 															+ domainName;
-// 													if (port) {
-// 														redirectUrl += ":"
-// 																+ port
-// 																+ "/front-end/buyer/buyer-commidity"
-// 																+ "?productVO=productVO&&sellerVO=sellerVO";
-// 													}
-// 													// 這裡可以添加具體的路徑，如果有的話
-// 													// redirectUrl += "/path";
+								// 									const formData = new FormData();
+								// 									for ( const key in data) {
+								// 										formData.append(key, data[key]);
+								// 									}
+								// 									console.log("AJAX門前");
+								// 									$
+								// 											.ajax({
+								// 												url : urlStr,
+								// 												type : 'GET',
+								// 												data : formData,
+								// 												contentType : false,
+								// 												processData : false,
+								// 												success : function(responseData) {
 
-// 													// 跳轉至組合後的 URL
-// 													window.location.href = targetUrl;
-// 												},
-// 												error : function(xhr, status,
-// 														error) {
-// 													console.error('Error:',
-// 															error);
-// 													console.log('Status:',
-// 															status);
-// 													console.log(
-// 															'Response Text:',
-// 															xhr.responseText);
-// 												}
-// 											});
-// 								}
+								// 													const pathname = location.pathname;
+								// 													const b = pathname.split('/')
+								// 													b.pop();
+
+								// 													const productId = 123;
+								// 													const targetUrl = b.join('/') + `/product/${productId}`
+
+								// 													let scheme = responseData.scheme;
+								// 													let port = responseData.port;
+								// 													let domainName = responseData.domainName;
+
+								// 													// 組合 URL
+								// 													let redirectUrl = scheme
+								// 															+ "://"
+								// 															+ domainName;
+								// 													if (port) {
+								// 														redirectUrl += ":"
+								// 																+ port
+								// 																+ "/front-end/buyer/buyer-commidity"
+								// 																+ "?productVO=productVO&&sellerVO=sellerVO";
+								// 													}
+								// 													// 這裡可以添加具體的路徑，如果有的話
+								// 													// redirectUrl += "/path";
+
+								// 													// 跳轉至組合後的 URL
+								// 													window.location.href = targetUrl;
+								// 												},
+								// 												error : function(xhr, status,
+								// 														error) {
+								// 													console.error('Error:',
+								// 															error);
+								// 													console.log('Status:',
+								// 															status);
+								// 													console.log(
+								// 															'Response Text:',
+								// 															xhr.responseText);
+								// 												}
+								// 											});
+								// 								}
 							</script>
 
 
@@ -246,112 +249,77 @@
 	<!-- End Main -->
 
 	<!-- ======= Footer ======= -->
-	<footer class="footer footer-layout">
-		<div
-			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
-			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
 
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">關於我們</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">人才招募</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
-				</ul>
-			</div>
-
-			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
-				<h5 class="mb-3">常見問題</h5>
-				<ul class="nav flex-column">
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
-					<li class="nav-item mb-2"><a href="#"
-						class="nav-link p-0 text-body-secondary">Q&A</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="row footer-container-custom">
-			<div class="col-3"></div>
-
-			<div class="col-auto">
-				<a href="/"
-					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
-				</a>
-				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
-					© 2023 CatTom.版權所有。</p>
-			</div>
-		</div>
-	</footer>
 	<!-- End Footer -->
-	<div th:replace="fragment-js"></div>
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer}"></div>
 
 
 	<!-- Local JS File -->
 
 	<script>
-// 		document
-// 				.addEventListener(
-// 						"DOMContentLoaded",
-// 						function() {
-// 							function handleItemDelete(event) {
-// 								event.stopPropagation();
+		// 		document
+		// 				.addEventListener(
+		// 						"DOMContentLoaded",
+		// 						function() {
+		// 							function handleItemDelete(event) {
+		// 								event.stopPropagation();
 
-// 								const rowItem = this
-// 										.closest(".item-row-custom");
+		// 								const rowItem = this
+		// 										.closest(".item-row-custom");
 
-// 								if (!rowItem)
-// 									return;
+		// 								if (!rowItem)
+		// 									return;
 
-// 								const secCart = rowItem.parentElement;
+		// 								const secCart = rowItem.parentElement;
 
-// 								rowItem.remove();
+		// 								rowItem.remove();
 
-// 								if (secCart
-// 										&& secCart
-// 												.querySelectorAll(".item-row-custom").length === 0) {
-// 									secCart.remove();
-// 								}
+		// 								if (secCart
+		// 										&& secCart
+		// 												.querySelectorAll(".item-row-custom").length === 0) {
+		// 									secCart.remove();
+		// 								}
 
-// 								updateCheckoutAmount();
-// 							}
+		// 								updateCheckoutAmount();
+		// 							}
 
-// 							const itemDeleteEls = document
-// 									.querySelectorAll(".cart-item-delete");
+		// 							const itemDeleteEls = document
+		// 									.querySelectorAll(".cart-item-delete");
 
-// 							itemDeleteEls.forEach(function(itemDeleteEl) {
-// 								itemDeleteEl.addEventListener("click",
-// 										handleItemDelete);
-// 							});
+		// 							itemDeleteEls.forEach(function(itemDeleteEl) {
+		// 								itemDeleteEl.addEventListener("click",
+		// 										handleItemDelete);
+		// 							});
 
-// 							function updateCheckoutAmount() {
-// 								let totalAmount = 0;
+		// 							function updateCheckoutAmount() {
+		// 								let totalAmount = 0;
 
-// 								// Iterate over all checked items
-// 								document
-// 										.querySelectorAll(
-// 												".cart-item-click:checked")
-// 										.forEach(
-// 												function(item) {
-// 													const rowItem = item
-// 															.closest(".item-row-custom");
-// 													console.log(rowItem);
+		// 								// Iterate over all checked items
+		// 								document
+		// 										.querySelectorAll(
+		// 												".cart-item-click:checked")
+		// 										.forEach(
+		// 												function(item) {
+		// 													const rowItem = item
+		// 															.closest(".item-row-custom");
+		// 													console.log(rowItem);
 
-// 													if (rowItem) {
-// 														const priceElement = rowItem
-// 																.querySelector(".cart-price");
-// 														const price = parseFloat(priceElement.textContent);
-// 														totalAmount += price;
-// 													}
-// 												});
+		// 													if (rowItem) {
+		// 														const priceElement = rowItem
+		// 																.querySelector(".cart-price");
+		// 														const price = parseFloat(priceElement.textContent);
+		// 														totalAmount += price;
+		// 													}
+		// 												});
 
-// 								// Update the displayed total amount
-// 								const totalAmountElement = document
-// 										.querySelector(".cart-payment .payment");
-// 								totalAmountElement.textContent = totalAmount
-// 										.toFixed(2); // Assuming you want to display with 2 decimal places
-// 							}
-// 						});
+		// 								// Update the displayed total amount
+		// 								const totalAmountElement = document
+		// 										.querySelector(".cart-payment .payment");
+		// 								totalAmountElement.textContent = totalAmount
+		// 										.toFixed(2); // Assuming you want to display with 2 decimal places
+		// 							}
+		// 						});
 	</script>
 </body>
 </html>

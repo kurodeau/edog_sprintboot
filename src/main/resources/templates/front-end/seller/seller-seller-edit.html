@@ -42,8 +42,7 @@
 					<div class="col-md-2">
 						<select class="form-select" name="sellerLvId" id="sellerLvId"
 							th:value="${sellerVO.sellerLvId != null ? sellerVO.sellerLvId.getSellerLvId() : ''}">
-							<option 
-								th:each="sellerLv : ${sellerLvListData}"
+							<option th:each="sellerLv : ${sellerLvListData}"
 								th:value="${sellerLv.getSellerLvId()}"
 								th:text="${sellerLv.getLvName()}"
 								th:selected="${sellerLv.getSellerLvId() == sellerVO.sellerLvId.getSellerLvId()}"></option>
@@ -64,8 +63,8 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputsellerContact" class="form-label">公司負責人</label>
-					<input type="text" class="form-control" id="inputsellerContact"
+					<label for="inputsellerContact" class="form-label">公司負責人</label> <input
+						type="text" class="form-control" id="inputsellerContact"
 						name="sellerContact" th:value="${sellerVO.sellerContact}"
 						aria-describedby="sellerContactFeedback"
 						th:classappend="${#fields.hasErrors('sellerContact')} ? 'is-invalid' : ''" />
@@ -158,8 +157,8 @@
 
 				<input type="hidden" id="sellerCountyValue" name="sellerCounty"
 					th:value="${sellerVO.sellerCounty ?: ''}"
-					aria-describedby="sellerCountyFeedback" /> <input
-					type="hidden" id="sellerDistrictValue" name="sellerDistrict"
+					aria-describedby="sellerCountyFeedback" /> <input type="hidden"
+					id="sellerDistrictValue" name="sellerDistrict"
 					th:value="${sellerVO.sellerDistrict ?: ''}"
 					aria-describedby="sellerDistrictFeedback" />
 
@@ -216,8 +215,8 @@
 				</div>
 
 				<div class="col-md-2">
-					<label for="inputsellerBankCode" class="form-label">銀行代碼
-					</label> <input type="text" class="form-control" id="inputsellerBankCode"
+					<label for="inputsellerBankCode" class="form-label">銀行代碼 </label> <input
+						type="text" class="form-control" id="inputsellerBankCode"
 						name="sellerBankCode" th:value="${sellerVO.sellerBankCode}"
 						aria-describedby="sellerBankCodeFeedback"
 						th:classappend="${#fields.hasErrors('sellerBankCode')} ? 'is-invalid' : ''" />
@@ -294,6 +293,7 @@
 	</div>
 	<!-- End Main -->
 	<div th:replace="fragment-js"></div>
+	<div th:replace="~{/fragment-footer}"></div>
 
 	<script>
       document.addEventListener("DOMContentLoaded", function () {
