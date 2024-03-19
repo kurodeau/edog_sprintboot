@@ -40,31 +40,6 @@ public class ProductImgDBGifReaderController {
 			res.setContentType("image/gif");
 			
 			
-//			List<ProductImgVO> productImgVOs = pdiSvc.getAllProductImg(productVO);
-			
-//			List<ProductImgVO> productImgVOs = pdiSvc.getProductImgs(Integer.valueOf(productId));
-					
-//			for(ProductImgVO productImgVOs : productImgVO) {
-//			    out.write(productImgVOs.getProductImg());
-//			     System.out.println(productImgVOs.getProductImg());
-//			}		
-			
-			
-//			Integer producMaintId = Integer.valueOf(productId);
-//			System.out.println(producMaintId);
-//			System.out.println(productSvc.getOneProduct(producMaintId));
-
-			
-//			ProductVO productTargetVO = productSvc.getOneProduct(producMaintId);
-//			System.out.println(pdiSvc.getOneProductImg(productTargetVO.getProductId()));
-//			List<ProductImgVO>  productImgVOs= pdiSvc.getProductImgs(productTargetVO.getProductId());
-//			System.out.println(productImgVOs.size());
-//			
-//			for(ProductImgVO productImgVO : productImgVOs) {
-//				out.write(productImgVO.getProductImg());
-//			}
-
-			// System.out.println(productImgVO);
 			out.write(productImgVO.getProductImg());
 
 		} catch (Exception e) {

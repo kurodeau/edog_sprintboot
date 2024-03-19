@@ -72,13 +72,16 @@ public class ProductController {
 	}
 
 	@PostMapping("insert")
-	public String insert(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
-			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
+	public String insert(@Valid ProductVO productVO, BindingResult result, Model model,
+			@RequestParam("mainImage") MultipartFile[] parts, 
+			@RequestParam("subImages") MultipartFile[] partsSec,
 			@RequestParam("productSortNo") String productSortNo) throws IOException {
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		
 		result = removeFieldError(productVO, result, "mainImage");
-		result = removeFieldError1(productImgVO, result, "subImages");
+		result = removeFieldError(productVO, result, "subImages");
+
 
 		if (parts[0].isEmpty()) {
 			model.addAttribute("errorMessage", "商品照片:請上傳照片");
@@ -88,10 +91,16 @@ public class ProductController {
 				productVO.setProductCoverImg(buf);
 			}
 		}
+		
+		
+		if (partsSec[0].isEmpty()) {
+			model.addAttribute("errorMessage", "商品照片:請上傳其他照片");
+		}
+		
 
-		if (result.hasErrors() || parts[0].isEmpty()) {
-			System.out.println(result);
-			return "front-end/seller/seller-product-all";
+		if (result.hasErrors() || parts[0].isEmpty() || partsSec[0].isEmpty()) {
+			System.out.println("XXXXXXXX"+result);
+			return "front-end/seller/seller-product-add";
 		}
 
 		/*************************** 2.開始新增資料 *****************************************/
@@ -144,21 +153,30 @@ public class ProductController {
 		/*************************** 2.開始查詢資料 *****************************************/
 		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
 
+		Integer productSortVO = productVO.getProductSortVO().getProductSortNo();
+		
 		List<ProductImgVO> productImgVOs = productImgSvc.getProductImgs(Integer.valueOf(productId));
 
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("productVO", productVO);
+		model.addAttribute("productSortVO", productSortVO);
 		model.addAttribute("productImageList", productImgVOs);
 		return "front-end/seller/seller-product-update_product";
 	}
 
 	@PostMapping("update")
-	public String update(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
-			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
-			@RequestParam("productSortNo") String productSortNo, @RequestParam("productId") String productId)
+	public String update(@Valid ProductVO productVO,BindingResult result, Model model,
+			@RequestParam("mainImage") MultipartFile[] parts, 
+			@RequestParam("subImages") MultipartFile[] partsSec,
+			@RequestParam("productSortNo") String productSortNo, 
+			@RequestParam("productId") String productId)
 			throws IOException {
+		
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		
+		
 
+		
 		if (parts[0].isEmpty()) {
 
 			byte[] upFiles = productSvc.getOneProduct(productVO.getProductId()).getProductCoverImg();
@@ -173,15 +191,32 @@ public class ProductController {
 				productVO.setProductCoverImg(upFiles);
 			}
 		}
+		
+		
+		if(result.hasErrors()) {
+			
+			
+			ProductVO productVO1 = productSvc.getOneProduct(Integer.valueOf(productId));
+
+			Integer productSortVO = productVO1.getProductSortVO().getProductSortNo();
+			
+			model.addAttribute("productSortVO", productSortVO);
+			
+			return "front-end/seller/seller-product-update_product";
+		}
+		
+		
+		
 
 		/*************************** 2.開始新增資料 *****************************************/
 
-		SellerVO sellerVO = srSvc.getById(5);
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();	
 		productVO.setSellerVO(sellerVO);
 
-		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
-		productVO.setProductSortVO(productSortVO);
-
+	
+		
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
 
@@ -195,12 +230,20 @@ public class ProductController {
 		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
 		productVO.setIsEnabled(true);
 
+		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
+		productVO.setProductSortVO(productSortVO);
+		
+		
 		productSvc.updateProduct(productVO);
+		
+		
 
 		if(partsSec.length ==1 && partsSec[0].getBytes().length==0) {
 			
 			List<ProductImgVO> originalImgs = productImgSvc.getProductImgs(Integer.valueOf(productId));
-
+				
+			ProductImgVO productImgVO = new ProductImgVO();
+			
 			for(ProductImgVO previousImgs : originalImgs) {
 			
 				byte[] upFiles = productImgSvc.getOneProductImg(previousImgs.getProductImgId()).getProductImg();
