@@ -79,10 +79,9 @@ public class SellerServiceImpl implements SellerService {
 		return repo.findByOnlyPhone(phone);
 	}
 
-	public Boolean isDuplcateEmail(String email) {
-		SellerVO sellerVO = repo.findByOnlyOneEmail(email);
-
-		return sellerVO == null || !sellerVO.getSellerEmail().equals(email);
+	public Boolean isUniqueEmail(String email) {
+		
+		return this.findByOnlyOneEmail(email) == null;
 	}
 
 	public void saveUserDetails(SellerVO sellerVO) {
