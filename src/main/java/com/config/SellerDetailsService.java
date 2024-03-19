@@ -41,7 +41,7 @@ public class SellerDetailsService  implements UserDetailsService, UserDetailsMan
 		sellerVO.setSellerEmail(user.getUsername());
 		
 		sellerVO.setSellerPassword(sellerPasswordEncoder.encode(user.getPassword()));
-		sellerVO.setIsConfirm(true);
+//		sellerVO.setIsConfirm(true);
 
 		
 		sellerRepo.save(sellerVO);
