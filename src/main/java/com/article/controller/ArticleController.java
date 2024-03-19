@@ -370,6 +370,7 @@ public class ArticleController {
 			articleLikeSvc.addArticleLike(articleLikeVO);
 			articleVO.setArticleLike(articleVO.getArticleLike() + 1);
 			articleSvc.updateArticle(articleVO);
+			
 			MsgVO msgVO = new MsgVO();
 			msgVO.setArticleVO(articleVO);
 			msgVO.setSenderMember(buyerVO);
