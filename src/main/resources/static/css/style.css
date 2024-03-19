@@ -817,7 +817,9 @@ mark.green {
     left: -300px;
   }
 }
-
+/*--------------------------------------------------------------
+# petdraw
+--------------------------------------------------------------*/
 .modern-button {
 	background: linear-gradient(to right, #6DD5FA, #FF758C); /* 藍色到粉紅色的漸變 */
 	color: white;
@@ -850,7 +852,7 @@ to {
             animation-duration: 2s;
         }
 
- .countdown {
+.countdown {
             font-size: 20px;
             font-family: Arial, sans-serif;
             color: #333;

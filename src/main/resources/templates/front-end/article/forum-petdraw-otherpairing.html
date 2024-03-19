@@ -10,7 +10,6 @@
 	display: none;
 }
 </style>
-<link rel="stylesheet" href="/css/style.css">
 
 </head>
 
@@ -101,27 +100,35 @@
 			<div class="pagetitle">
 
 				<div th:each="pairResponse : ${pairResponses}">
-					<form th:action="@{/front/forum/petdraw/otherpairing/update}+ '?memberpairId=' + *{memberVO.memberId}"
+					<form th:action="@{/front/forum/petdraw/otherpairing/update}"
 						method="post" th:object="${pairResponse}"
 						enctype="multipart/form-data">
 
 						<img
 							th:src="@{/front/forum/petdraw/PetDrawReader} + '?memberpairId=' + *{memberVO.memberId}"
-							width="100px" />
+							width="200px" />
 						<div>
 							<label>配對的會員編號:</label> <span th:text="*{memberVO.memberId}"
 								style="font-weight: bold;"></span><br />
 						</div>
 
 						<div>
-							<label>是否喜歡:</label> 
-								<input type="radio" name="memberLike"th:value="true"  th:checked="${pairResponse.petDraw.isMemberLike}" /> 是
-								<input type="radio" name="memberLike" th:value="false"  th:checked="${!pairResponse.petDraw.isMemberLike}" /> 否
-								
-							
-						</div>
 
-						<button type="submit">確認</button>
+						
+							
+							<label>
+							
+							是否喜歡: <input type="hidden" name="memberId"
+								th:value="*{memberVO.memberId}" />
+
+							</label> <label> <input type="radio" name="memberLike"
+								th:value="true" /> Yes
+							</label> <label> <input type="radio" name="memberLike"
+								th:value="false" /> No
+							</label>
+							<br>
+							<button type="submit">Submit</button>
+						</div>
 					</form>
 				</div>
 
@@ -187,7 +194,7 @@
 			console.log('Preference set to:', preference);
 			// Here you might want to send this preference to the server or handle it in some other way.
 		}
-		
+
 		function setLike(ispairLike) {
 			if (ispairLike) {
 				document.getElementById("likeHiddenInput").value = "true";

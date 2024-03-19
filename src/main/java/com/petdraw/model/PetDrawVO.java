@@ -36,11 +36,11 @@ public class PetDrawVO implements java.io.Serializable {
 	@Id
 	@Column(name = "petDrawId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public Integer getpetDrawId() {
+	public Integer getPetDrawId() {
 		return this.petDrawId;
 	}
 
-	public void setpetDrawId(Integer petDrawId) {
+	public void setPetDrawId(Integer petDrawId) {
 		this.petDrawId = petDrawId;
 	}
 

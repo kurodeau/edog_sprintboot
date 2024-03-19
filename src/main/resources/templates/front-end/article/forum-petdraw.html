@@ -97,34 +97,50 @@
 
 
 				<form method="get" th:action="@{/front/forum/petdraw/checkpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
+					style="margin-bottom: 0px;" class="mt-5">
 					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="配對結果" >
+						type="submit" class="modern-button" value="配對結果">
 				</form>
 
 
-				
+
 				<form method="post" th:action="@{/front/forum/petdraw/startpairing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
+					style="margin-bottom: 0px;" class="mt-5">
 					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="開始抽卡" >
+						type="submit" class="modern-button" value="開始抽卡">
 				</form>
 
-				
+
 				<form method="post" th:action="@{/front/forum/petdraw/othersparing}"
-					style="margin-bottom: 0px;"
-					class="mt-5">
+					style="margin-bottom: 0px;" class="mt-5">
 					<input type="hidden" name="memberId" value="2"> <input
-						type="submit" class="modern-button" value="有人想跟你配對" >
+						type="submit" class="modern-button" value="有人想跟你配對">
 				</form>
 
 			</div>
-			
+
 		</div>
 	</main>
 	<!-- End Main -->
+
+
+	<div class="modal fade" id="errorMessageModal" tabindex="-1"
+		aria-labelledby="updateSuccessModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="updateSuccessModalLabel">狀態消息</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="errorMessageModalBody">修改成功🎉🎉🎉🎉🎉</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- ======= Footer ======= -->
 	<footer class="footer footer-layout">
@@ -211,6 +227,35 @@
 	    updateTimer();
 	});
     </script>
+    
+    
+    <script>
+		window.onload = function() {
+			// 从 URL 中解码参数
+			const urlParams = new URLSearchParams(window.location.search);
+			const errorMessage = urlParams.get('error');
+
+			if (errorMessage === "hasDrawn") {
+				// 显示模态框
+				document.getElementById("errorMessageModalBody").innerHTML = errorMessage;
+
+				// 检查是否已经显示了模态框
+				const modalShown = sessionStorage.getItem('modalShown');
+				console.log(modalShown);
+				if (!modalShown) {
+					$("#errorMessageModal").modal("show");
+					// 设置模态框已显示的标志
+					sessionStorage.setItem('modalShown', true);
+				} else {
+					sessionStorage.removeItem('modalShown');
+					// 清除 URL 参数以防止刷新时重复显示
+					window.history.replaceState({}, document.title,
+							window.location.pathname);
+				}
+				
+			}
+		};
+	</script>
 
 </body>
 
