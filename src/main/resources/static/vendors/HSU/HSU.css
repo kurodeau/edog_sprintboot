@@ -135,19 +135,13 @@ display:flex;
 .bi-suit-heart-fill{
 	color: red;
 }
-/* 喜欢状态样式 */
-.like-btn.liked {
-    color: red; /* 喜欢状态 */
-}
+
+
 .reply-like-btn {
     color: black; /* 未喜欢状态 */
     cursor: pointer;
 }
 
-/* 喜欢状态样式 */
-.reply-like-btn.liked {
-    color: red; /* 喜欢状态 */
-}
 
 /*--------------------------------------------------------------
   # 頁籤

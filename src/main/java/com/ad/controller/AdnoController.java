@@ -1,5 +1,6 @@
 package com.ad.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ad.model.AdService;
 import com.ad.model.AdVO;
 import com.seller.entity.SellerVO;
+import com.sellerLv.entity.SellerLvVO;
+import com.sellerLv.service.SellerLvService;
 
 @Controller
 @RequestMapping("/front/seller/ad")
@@ -33,6 +36,9 @@ import com.seller.entity.SellerVO;
 public class AdnoController {
 	@Autowired
 	AdService adSvc;
+	
+	@Autowired
+	SellerLvService sellerLvSvc;
 
 	@GetMapping("adlist") /// front/seller/ad/adadlist
 	public String selleradlist(Model model) {
@@ -71,9 +77,9 @@ public class AdnoController {
 		SecurityContext secCtx = SecurityContextHolder.getContext();
 		Authentication authentication = secCtx.getAuthentication();
 		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
-
+		
 		Integer sellerId = sellerVO.getSellerId();
-
+		
 		List<AdVO> list = adSvc.getSellerAdAll(sellerId);
 		return list;
 	}
@@ -117,10 +123,17 @@ public class AdnoController {
 		
 		
 		List<AdVO> list = adSvc.getLaunchAd(sellerId);
-		
+				
 		
 		return list;
 	}
+	
+	
+	
+	
+	
+
+	
 
 	@ExceptionHandler(value = { ConstraintViolationException.class })
 	// @ResponseStatus(value = HttpStatus.BAD_REQUEST)

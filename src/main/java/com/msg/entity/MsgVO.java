@@ -48,7 +48,8 @@ public class MsgVO implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
     
     private Integer msgId;
-    private BuyerVO buyerVO;
+    private BuyerVO senderMember;
+    private BuyerVO receiverMember;
     private ArticleVO articleVO;
     private ReplyVO replyVO;
     private ReportVO reportVO;
@@ -122,13 +123,23 @@ public class MsgVO implements java.io.Serializable {
     	this.replyVO = replyVO;
     }
     @ManyToOne
-    @JoinColumn(name = "memberId", referencedColumnName = "memberId")
-    public BuyerVO getBuyerVO() {
-    	return this.buyerVO;
+    @JoinColumn(name = "senderMemberId", referencedColumnName = "memberId")
+    public BuyerVO getSenderMember() {
+    	return this.senderMember;
     }
     
-    public void setBuyerVO(BuyerVO buyerVO) {
-    	this.buyerVO = buyerVO;
+    public void setSenderMember(BuyerVO senderMember) {
+    	this.senderMember = senderMember;
+    }
+    
+    @ManyToOne
+    @JoinColumn(name = "receiverMemberId", referencedColumnName = "memberId")
+    public BuyerVO getReceiverMember() {
+    	return this.receiverMember;
+    }
+    
+    public void setReceiverMember(BuyerVO receiverMember) {
+    	this.receiverMember = receiverMember;
     }
 
     

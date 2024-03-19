@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+<!-- <th:block th:insert="~{/fragment-datatableCss}"></th:block> -->
+<style type="text/css">
+ .hide {
+		display: none;
+	}
+	</style>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+	        <header class="fixed-top">
+	      <th:block th:insert="~{/front-end/article/header-article}"></th:block>
+	    </header>
+	<!-- ======= Sidebar ======= -->
+	<aside th:replace="front-end/article/aside-forum.html"></aside>
+	<!-- ======= Main ======= -->
+	<main class="main main-layout-seller">
+		<div class="seller-container article-container">
+			<div class="pagetitle"></div>
+			<div style="margin-top: 30px;" th:fragment="listOneArticle-div">
+								<span class=hide th:text="${articleVO.articleId}"></span><br/>
+				<div class="article-info-container">
+				    <span class="avatar-name" th:text="${articleVO.buyerVO.memberName}"></span><br/>
+				    
+				    <hr>
+				    
+				    <span class="title-category"> 
+				        <span class="article-title" th:text="${articleVO.articleTitle}"></span> 
+				        <span class="category-name articleType" th:text="${articleVO.articleTypeVO.articleTypeName}"th:onclick="'redirectToUpdatePage(\'' + @{/article/TypeList(id=${articleVO.articleTypeVO.articleTypeId})} + '\')'"></span>
+				    </span> 
+				    
+				    <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
+				    <span><img th:if="${articleVO.upFiles != null}"
+				        th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
+				        width="100px"></span><br/>
+				
+				    <div class="interaction-section">
+				        <i class="bi bi-suit-heart like-btn" data-article-id="articleId"></i>
+				        <span class="article-like" th:text="${articleVO.articleLike}"></span>
+				        <i class="bi bi-chat-dots" id="commentIcon"></i>
+				        <span class="article-comment" th:text="${articleVO.articleComment}"></span>
+				        <i class="bi bi-exclamation-triangle report-article-button" th:id="${articleVO.articleId}"></i>
+				        <span class="post-time time" th:if="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artUpdateTime, 'yyyy-MM-dd HH:mm:ss')} + ' 更新'"></span>
+						<span class="post-time time" th:unless="${articleVO.artUpdateTime != null}" th:text="${#dates.format(articleVO.artCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				    </div>
+				</div>
+
+<hr style="margin-top: 10px; width: 600px;">
+				<table id="example" class="display" style="width: 100%">
+    <tbody>
+        <th:block th:each="replyVO:${replyVOList}">
+            <tr th:if="${replyVO.isEnabled}">
+                <td>
+                        <div>
+                            <span class="avatar-name" th:text="${replyVO.buyerVO.memberName}"></span>
+                        </div>
+                        <div class="message-container">
+                            <span th:text="${replyVO.replyContent}"></span>
+                        </div>
+                    <div class="interaction-section">
+                        <span class="floor-count" th:text="${replyVOStat.count + '樓'}"></span>
+                        <i class="bi bi-suit-heart reply-like-btn" data-article-id="replyId" th:id="${replyVO.replyId}"></i>
+                        <span class="reply-like" th:text="${replyVO.replyLike}"></span> 
+                        <i class="bi bi-exclamation-triangle report-reply-button" th:id="${replyVO.replyId}"></i>
+                        <span class="reply-time" th:text="${#dates.format(replyVO.replyTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+    </tbody>
+</table>
+
+
+				
+			<div class="comment-input-container" style="margin-top: 20px;">
+			    <div id="commentInput" style="position: relative;">
+			        <textarea id="commentInputtext" required placeholder="留言..." style="flex: 1; resize: none;"></textarea>
+			       <i class="bi bi-send" id="sendCommentBtn" style="cursor: not-allowed; position: absolute; bottom: 5px; right: 5px;"></i>
+			    </div>
+			</div>
+
+			</div>
+		</div>
+		
+		<!-- 檢舉 -->
+		<div id="articleReportModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">檢舉文章-請選擇檢舉原因</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" align="center">
+					<form id="article-report-form" th:action="@{insert-article-report}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
+						<div class="hide">
+					        <label>文章編號:</label>
+					        <input type="text" id="articleIdField" readonly /><br/>
+					        <input type="hidden" id="report-articleId" th:field="*{articleVO.articleId}" />
+				    	</div>
+				    	<div>
+							<select class="form-select" th:field="*{reportTypeVO.reportTypeId}" style="width: 300px;">
+								<option th:each="reportTypeVO : ${reportTypeListData}"
+									th:value="${reportTypeVO.reportTypeId}"
+									th:text="${reportTypeVO.reportTypeSort}" />
+							</select>
+						</div>
+					</form>
+					</div>
+					<div class="modal-footer" >
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">關閉</button>
+						<button type="button" id="submit-article-report" class="btn btn-primary">提交檢舉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="commentReportModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">檢舉留言-請選擇檢舉原因</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body" align="center">
+					<form id="reply-report-form" th:action="@{insert-reply-report}" method="post" th:object="${reportVO}" enctype="multipart/form-data">
+						
+						<div class="hide">
+					        <label>回復編號:</label>
+					        <input type="text" id="commentIdField" readonly /><br/>
+					        <input type="hidden" id="report-replyId" th:field="*{replyVO.replyId}" />
+				    	</div>
+				    	
+				    	<div>
+							<select class="form-select" th:field="*{reportTypeVO.reportTypeId}" style="width: 300px;">
+								<option th:each="reportTypeVO : ${reportTypeListData}"
+									th:value="${reportTypeVO.reportTypeId}"
+									th:text="${reportTypeVO.reportTypeSort}" />
+							</select>
+						</div>
+					</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">關閉</button>
+						<button type="button" id="submit-reply-report" class="btn btn-primary">提交檢舉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- 送出檢舉燈箱 -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportModalLabel">檢舉已送出</h5>
+
+      </div>
+      <div class="modal-body">
+        感謝您的檢舉，我們會盡快處理。
+        </br>
+        頁面將自動跳轉，請稍後。
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+	</main>
+	<!-- End Main -->
+
+	<!-- ======= Footer ======= -->
+	<footer class="footer footer-layout">
+		<div
+			class="row row-cols-1 row-cols-sm-2 row-cols-md-4 pt-5 border-top footer-container-custom text-white">
+			<div class="col d-none d-sm-block p-sm-2 px-5 px-sm-5 px-md-0"></div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">關於我們</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">人才招募</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">E狗簡介</a></li>
+				</ul>
+			</div>
+
+			<div class="col p-sm-2 px-5 px-sm-5 px-md-0">
+				<h5 class="mb-3">常見問題</h5>
+				<ul class="nav flex-column">
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">聯絡E狗</a></li>
+					<li class="nav-item mb-2"><a href="#"
+						class="nav-link p-0 text-body-secondary">Q&A</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row footer-container-custom">
+			<div class="col-3"></div>
+
+			<div class="col-auto">
+				<a href="/"
+					class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+					<svg class="bi" width="32" height="32" fill="currentColor">
+              <use xlink:href="bootstrap-icons.svg#heart-fill" />
+            </svg>
+				</a>
+				<p class="text-body-secondary">新加坡商CatTom有限公司台灣分公司 統一編號：00000000
+					© 2023 CatTom.版權所有。</p>
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer -->
+
+	<!-- Vendor JS Files -->
+	<div th:replace="~{/fragment-js}"></div>
+	<div th:replace="~{/fragment-datatableJs}"></div>
+	<script>
+		$("a.tab").on("click", function(e) {
+			e.preventDefault();
+			console.log("aaa");
+			/* 將頁籤列表移除所有 -on，再將指定的加上 -on */
+			$(this).closest("ul").find("a.tab").removeClass("-on");
+			$(this).addClass("-on");
+
+			/* 找到對應的頁籤內容，加上 -on 來顯示 */
+			$("div.tab").removeClass("-on");
+			$("div.tab." + $(this).attr("data-target")).addClass("-on");
+		});
+		function redirectToUpdatePage(url) {
+			window.location.href = url;
+		}
+		
+		// 文章檢舉按鈕点击事件
+	    $("i.report-article-button").on('click', function() {
+	    	var id = $(this).attr('id');
+	    	 $('#articleIdField').val(id);
+	    	
+	        $('#articleReportModal').modal('show');
+	    });
+	    $("#submit-article-report").on('click', function() {
+	        $('#report-articleId').val($('#articleIdField').val());
+	     // 关闭旧模态框
+	        $('#articleReportModal').modal('hide');
+
+	        // 打开新模态框
+	        $('#reportModal').modal('show');
+	        
+	        // 延迟3秒后跳转页面
+	        setTimeout(function() {
+	            document.getElementById("article-report-form").submit();
+	        }, 3000); // 3000毫秒等于3秒
+	    });
+
+	    // 留言檢舉按鈕点击事件
+	    $("i.report-reply-button").on('click', function() {
+	    	var id = $(this).attr('id');
+	    	 $('#commentIdField').val(id);
+	    	
+	        $('#commentReportModal').modal('show');
+	    });
+	    $("#submit-reply-report").on('click', function() {
+	        $('#report-replyId').val($('#commentIdField').val());
+	     // 关闭旧模态框
+	        $('#commentReportModal').modal('hide');
+
+	        // 打开新模态框
+	        $('#reportModal').modal('show');
+	        
+	        // 延迟3秒后跳转页面
+	        setTimeout(function() {
+	            document.getElementById("reply-report-form").submit();
+	        }, 3000); // 3000毫秒等于3秒
+	    });
+
+//文章喜歡	    
+$('.like-btn').click(function() {
+    var likeCountElement = $(this).siblings('.article-like');
+    
+    // 获取当前喜欢数和喜欢状态
+    var currentLikeCount = parseInt(likeCountElement.text());
+    var isLiked = $(this).hasClass('liked');
+    
+    // 获取文章ID
+    var articleId = $('.report-article-button').attr('id');
+    
+    if (isLiked) {
+        // 如果已经喜欢，取消喜欢
+        $(this).removeClass('liked');
+        likeCountElement.text(currentLikeCount - 1);
+        
+        // 向后端发送POST请求，喜欢数减一
+        $.ajax({
+            url: '/article/unlike',
+            type: 'POST',
+            data: { articleId: articleId }, // 包含 articleId 参数
+            success: function(response) {
+                // 如果请求成功，不需要执行任何操作
+            },
+            error: function(xhr, status, error) {
+                // 处理请求错误，恢复喜欢数显示
+                $(this).addClass('liked');
+                likeCountElement.text(currentLikeCount);
+                console.error(error);
+            }
+        });
+    } else {
+        // 如果未喜欢，增加喜欢数并标记为已喜欢
+        $(this).addClass('liked');
+        likeCountElement.text(currentLikeCount + 1);
+        
+        // 向后端发送POST请求，喜欢数加一
+        $.ajax({
+            url: '/article/like',
+            type: 'POST',
+            data: { articleId: articleId }, // 包含 articleId 参数
+            success: function(response) {
+                // 如果请求成功，不需要执行任何操作
+            },
+            error: function(xhr, status, error) {
+                // 处理请求错误，恢复喜欢数显示
+                $(this).removeClass('liked');
+                likeCountElement.text(currentLikeCount);
+                console.error(error);
+            }
+        });
+    }
+    
+    // 打印文章ID到控制台
+    console.log('Article ID:', articleId);
+});
+
+
+
+
+
+//留言喜歡
+$('.reply-like-btn').click(function() {
+    var likeCountElement = $(this).siblings('.reply-like');
+    
+    // 获取当前喜欢数和喜欢状态
+    var currentLikeCount = parseInt(likeCountElement.text());
+    var isLiked = $(this).hasClass('liked');
+    
+    // 获取文章ID
+    var replyId = $(this).attr('id');
+    
+    if (isLiked) {
+        // 如果已经喜欢，取消喜欢
+        $(this).removeClass('liked');
+        likeCountElement.text(currentLikeCount - 1);
+        
+        // 向后端发送POST请求，喜欢数减一
+        $.ajax({
+            url: '/reply/unlike',
+            type: 'POST',
+            data: { replyId: replyId }, // 包含 articleId 参数
+            success: function(response) {
+                // 如果请求成功，不需要执行任何操作
+            },
+            error: function(xhr, status, error) {
+                // 处理请求错误，恢复喜欢数显示
+                $(this).addClass('liked');
+                likeCountElement.text(currentLikeCount);
+                console.error(error);
+            }
+        });
+    } else {
+        // 如果未喜欢，增加喜欢数并标记为已喜欢
+        $(this).addClass('liked');
+        likeCountElement.text(currentLikeCount + 1);
+        
+        // 向后端发送POST请求，喜欢数加一
+        $.ajax({
+            url: '/reply/like',
+            type: 'POST',
+            data: { replyId: replyId }, // 包含 articleId 参数
+            success: function(response) {
+                // 如果请求成功，不需要执行任何操作
+            },
+            error: function(xhr, status, error) {
+                // 处理请求错误，恢复喜欢数显示
+                $(this).removeClass('liked');
+                likeCountElement.text(currentLikeCount);
+                console.error(error);
+            }
+        });
+    }
+
+    // 打印文章ID到控制台
+    console.log('reply ID:', replyId);
+});
+
+var commentIcon = document.getElementById('commentIcon');
+var commentInput = document.getElementById('commentInput');
+
+commentIcon.addEventListener('click', function() {
+    commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('commentInputtext').focus();
+});
+
+//获取 textarea 元素
+var commentInput = document.getElementById("commentInputtext");
+
+// 获取发送按钮元素
+var sendButton = document.getElementById("sendCommentBtn");
+
+// 检查 textarea 内容是否为空
+function checkTextarea() {
+    if (commentInput.value.trim() !== "") {
+        // 如果 textarea 中有内容，则启用发送按钮
+        sendButton.style.cursor = "pointer";
+        sendButton.addEventListener("click", sendComment);
+    } else {
+        // 如果 textarea 中没有内容，则禁用发送按钮
+        sendButton.style.cursor = "not-allowed";
+        sendButton.removeEventListener("click", sendComment);
+    }
+}
+
+// 检查 textarea 内容是否为空
+commentInput.addEventListener("input", checkTextarea);
+
+// 发送评论的函数
+function sendComment() {
+    // 在这里编写发送评论的代码
+    console.log("Sending comment...");
+}
+
+$('#sendCommentBtn').on('click', function() {
+    var commentContent = $('#commentInputtext').val();
+    var articleId = $('.report-article-button').attr('id');
+    
+    // 构建要发送的数据对象
+    var data = {
+        commentContent: commentContent,
+        articleId: articleId
+    };
+    
+    // 发送 POST 请求
+    $.post('/reply/insert', data)
+    .done(function(response) {
+        // 请求成功的处理逻辑
+        window.location.reload();
+    })
+
+});
+
+const likeBtn = document.querySelector('.like-btn');
+
+//定义变量来跟踪按钮的喜爱状态
+let isLiked = false;
+
+//添加点击事件监听器
+likeBtn.addEventListener('click', function() {
+ // 切换填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ } else {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+ // 切换喜爱状态
+ isLiked = !isLiked;
+});
+
+//添加鼠标移入事件监听器
+likeBtn.addEventListener('mouseover', function() {
+ // 如果按钮处于喜爱状态，则保持填充状态
+ if (isLiked) {
+     likeBtn.classList.remove('bi-suit-heart');
+     likeBtn.classList.add('bi-suit-heart-fill');
+ }
+});
+
+//添加鼠标移出事件监听器
+likeBtn.addEventListener('mouseout', function() {
+ // 如果按钮处于非喜爱状态，则恢复为空心
+ if (!isLiked) {
+     likeBtn.classList.remove('bi-suit-heart-fill');
+     likeBtn.classList.add('bi-suit-heart');
+ }
+});
+
+	// 获取所有留言的 tr 元素
+	const replyRows = document.querySelectorAll('#example tbody tr');
+
+// 遍历每个留言的 tr 元素
+replyRows.forEach(function(replyRow) {
+    // 获取当前留言的愛心图标元素
+    const replylikeBtn = replyRow.querySelector('.reply-like-btn');
+
+    // 定义变量来跟踪愛心状态
+    let isLiked = false;
+
+    // 为愛心图标添加点击事件监听器
+    replylikeBtn.addEventListener('click', function() {
+        // 根据愛心状态切换填充状态
+        if (isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        } else {
+        	replylikeBtn.classList.remove('bi-suit-heart');
+        	replylikeBtn.classList.add('bi-suit-heart-fill');
+        }
+        // 切换愛心状态
+        isLiked = !isLiked;
+    });
+
+    // 为愛心图标添加鼠标移入事件监听器
+    replylikeBtn.addEventListener('mouseover', function() {
+        // 将愛心图标变为实心
+        replylikeBtn.classList.remove('bi-suit-heart');
+        replylikeBtn.classList.add('bi-suit-heart-fill');
+    });
+
+    // 为愛心图标添加鼠标移出事件监听器
+    replylikeBtn.addEventListener('mouseout', function() {
+        // 如果愛心处于空心状态则恢复为空心
+        if (!isLiked) {
+        	replylikeBtn.classList.remove('bi-suit-heart-fill');
+        	replylikeBtn.classList.add('bi-suit-heart');
+        }
+    });
+});
+
+
+
+	</script>
+</body>
+</html>

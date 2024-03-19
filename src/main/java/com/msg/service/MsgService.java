@@ -47,7 +47,7 @@ public class MsgService {
 		return repository.findAll();
 	}
 	public List<MsgVO> getByMemberId(BuyerVO buyerVO){
-		List<MsgVO> myMsg=repository.findByBuyerVO(buyerVO);
+		List<MsgVO> myMsg=repository.findByReceiverMember(buyerVO);
 		System.out.println("MemberId="+buyerVO.getMemberId());
 		return myMsg;
 	}
@@ -59,7 +59,7 @@ public class MsgService {
         System.out.println(memberId);
         System.out.println(articleId);
         System.out.println(MsgTypeId);
-        MsgVO Msg = repository.findByBuyerVOAndArticleVOAndMsgTypeVO(buyerVO, articleVO,msgTypeVO);
+        MsgVO Msg = repository.findBySenderMemberAndArticleVOAndMsgTypeVO(buyerVO, articleVO,msgTypeVO);
         if (Msg != null) {
             return Msg.getMsgId();
         } else {
@@ -73,7 +73,7 @@ public class MsgService {
 		System.out.println(memberId);
 		System.out.println(replyId);
 		System.out.println(MsgTypeId);
-		MsgVO Msg = repository.findByBuyerVOAndReplyVOAndMsgTypeVO(buyerVO, replyVO,msgTypeVO);
+		MsgVO Msg = repository.findBySenderMemberAndReplyVOAndMsgTypeVO(buyerVO, replyVO,msgTypeVO);
 		if (Msg != null) {
 			return Msg.getMsgId();
 		} else {

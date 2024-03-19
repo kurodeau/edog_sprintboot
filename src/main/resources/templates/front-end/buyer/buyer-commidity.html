@@ -6,12 +6,7 @@
 </head>
 
 <body>
-
-	<!-- ======= Header ======= -->
-	<header class="fixed-top">
-		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
-	</header>
-
+	<header th:replace="~{/fragment-headerV2}"></header>
 
 	<!-- 	這個Script產品專用 -->
 	<script type="text/javascript"
@@ -72,10 +67,7 @@
 						</h5>
 					</section>
 
-					<section class="commidity-details-custom d-flex">
-						<h5 class="fw-bold col-5">結帳方式</h5>
-						<h5 class="fw-bold col-7" id="orderNum">信用卡</h5>
-					</section>
+				
 
 					<section class="commidity-details-custom d-flex">
 						<h5 class="fw-bold col-5">運費</h5>

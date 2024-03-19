@@ -75,7 +75,7 @@ public class CartnoController extends HttpServlet {
 		JSONObject jsonObject = new JSONObject(jsonData);
         System.out.println(jsonData);
         if(jsonData==null || jsonData.equals("{}")){
-            HttpResult<String> result = new HttpResult<>(400, "", "FUCKU");
+            HttpResult<String> result = new HttpResult<>(400, "", "至少要選擇一項要結帳的商品");
             return ResponseEntity.badRequest().body(result);
         }
               
@@ -180,7 +180,7 @@ public class CartnoController extends HttpServlet {
             return ResponseEntity.badRequest().body(result);
         }
         String productId = jsonObject.getString("productId");
-        String productNum = jsonObject.getString("productNum");
+        String productNum = jsonObject.getString("productQty");
 //        System.out.println("測試訊息:productId="+productId+" ,productNum="+productNum);
         
         String memberId = "9"; //測試有登入, 預設值
