@@ -121,7 +121,6 @@ public class AuthenticationService {
 		     jwtToken = jwtService.generateShortToken(extraClaims, userDetails);
 	    } else {
 		     jwtToken = jwtService.generateToken(extraClaims, userDetails);
-
 	    }
 	    
 	    

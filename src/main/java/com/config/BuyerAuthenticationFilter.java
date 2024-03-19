@@ -97,12 +97,18 @@ public class BuyerAuthenticationFilter extends AbstractAuthenticationProcessingF
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 
-		List<String> roles = authResult.getAuthorities().stream().map(authority -> authority.getAuthority())
-				.collect(Collectors.toList());
+//		List<String> roles = authResult.getAuthorities().stream().map(authority -> authority.getAuthority())
+//				.collect(Collectors.toList());
 		
+		// 直接把email存入
 		HttpSession session = request.getSession();
-		session.setAttribute("username", obtainUsername(request));
 		
+		session.setAttribute("username", obtainUsername(request));
+		String username =  obtainUsername(request);
+		
+		BuyerVO buyerVO =buyerSvc.findByOnlyOneEmail(username);
+		session.setAttribute("buyerVO",buyerVO );
+
 		
 		chain.doFilter(request, response);
 	}

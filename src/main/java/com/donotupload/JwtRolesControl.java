@@ -8,7 +8,7 @@ import org.openxmlformats.schemas.spreadsheetml.x2006.main.STSourceType;
 public enum JwtRolesControl {
 	ROLE_MANAGERJWTV2(Arrays.asList("/back/api/nouse")),
 	ROLE_MANAGERJWT(Arrays.asList("/back/api/seller")),
-	ROLE_MANAGER(Arrays.asList("/back/api/seller")),
+	ROLE_MANAGER(Arrays.asList("/back/api/general")),
     ROLE_BUYER(Arrays.asList("/api/buyer", "/api/buyer/users"));
 
     private final List<String> apiPaths;

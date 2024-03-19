@@ -7,7 +7,7 @@
 	<!-- ======= Header ======= -->
 
 	<header class="fixed-top">
-		<th:block th:insert="~{/front-end/seller/header-seller}"></th:block>
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
 	</header>
 
 	<main class="main-nosidebar on">
@@ -35,8 +35,7 @@
 								</div>
 
 								<button type="button" class="my-5 btn btn-primary"
-									id="sendVerificationCodeBtn">
-									發送信箱驗證</button>
+									id="sendVerificationCodeBtn">發送信箱驗證</button>
 							</form>
 						</div>
 					</div>
@@ -62,12 +61,15 @@
         }
         console.log(sellerEmail);
         // Send a POST request to the /auth/email/check endpoint
-        fetch("/auth/email/check", {
+
+        let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/buyer/auth/email/check";
+
+        fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ sellerEmail: sellerEmail }),
+          body: JSON.stringify({ buyerEmail: sellerEmail }),
         })
           .then((response) => {
             return response.text(); // 将响应转换为文本
