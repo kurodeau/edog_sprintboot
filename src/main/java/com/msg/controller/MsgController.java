@@ -44,7 +44,7 @@ import com.reportType.service.ReportTypeService;
 
 @Controller
 @ComponentScan(basePackages = {"com.msg"})
-@RequestMapping("/msg")
+@RequestMapping("/front/forum/msg")
 public class MsgController {
 
 	@Autowired
@@ -162,6 +162,9 @@ public class MsgController {
 		            model.addAttribute("msgVO", msgVO);
 		            return "front-end/article/reply-report"; // 返回到檢舉留言页面
 		        }
+		    }else if (msgVO.getPetDrawVO() != null) {
+		    	
+		    	return "front-end/article/forum-petdraw-otherpairing";
 		    }
 			 return "error-page"; 
 		}

@@ -83,15 +83,15 @@
 
                     <div class="col mt-5">
                       <div class="col d-flex gap-5 justify-content-center">
-                        <a
-                          th:href="@{/auth/phonebuyer}"
-                          class="forgot-password-link"
-                          style="color: grey"
-                          >忘記密碼-手機認證</a
-                        >
+<!--                         <a -->
+<!--                           th:href="@{/auth/phonebuyer}" -->
+<!--                           class="forgot-password-link" -->
+<!--                           style="color: grey" -->
+<!--                           >忘記密碼-手機認證</a -->
+<!--                         > -->
 
                         <a
-                          th:href="@{/auth/emailbuyer}"
+                          th:href="@{/buyer/auth/email}"
                           class="forgot-password-link"
                           style="color: grey"
                           >忘記密碼-信箱認證</a
@@ -108,8 +108,7 @@
     </main>
 
     <!-- End Footer -->
-    <div th:replace="@{/fragment-footer-noaside}"></div>
+    <div th:replace="~{/fragment-footer-noaside}"></div>
 
-    <div th:replace="@{/fragment-js}"></div>
-  </body>
+    <div th:replace="~{/fragment-js}"></div>  </body>
 </html>

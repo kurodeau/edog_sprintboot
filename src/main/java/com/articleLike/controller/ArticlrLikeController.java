@@ -40,7 +40,7 @@ import com.reportType.service.ReportTypeService;
 
 @Controller
 @ComponentScan(basePackages = {"com.articleLike"})
-@RequestMapping("/articleLike")
+@RequestMapping("/front/forum/articleLike")
 public class ArticlrLikeController {
 
 	@Autowired

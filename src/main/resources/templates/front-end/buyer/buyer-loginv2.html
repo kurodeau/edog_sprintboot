@@ -27,17 +27,17 @@
 							<form class="row needs-validation" novalidate
 								th:action="@{/seller/login}" method="post">
 								<div class="col-12">
-									<label for="validationCustom01" class="form-label">帳號</label>
-									<input name="usernameinhtml" type="email" class="form-control"
+									<label for="validationCustom01" class="form-label">帳號</label> <input
+										name="usernameinhtml" type="email" class="form-control"
 										id="validationCustom01" placeholder="xxxx@email.com" required />
 									<div class="valid-feedback">Looks good!</div>
 									<div class="invalid-feedback">請輸入信箱</div>
 								</div>
 
 								<div class="col-12 mt-3">
-									<label for="validationCustom02" class="form-label">密碼</label>
-									<input name="passwordinhtml" type="password"
-										class="form-control" id="validationCustom02" required />
+									<label for="validationCustom02" class="form-label">密碼</label> <input
+										name="passwordinhtml" type="password" class="form-control"
+										id="validationCustom02" required />
 									<div class="valid-feedback">Looks good!</div>
 									<div class="invalid-feedback">請輸入密碼</div>
 								</div>
@@ -57,11 +57,10 @@
 
 									<div class="col mt-5">
 										<div class="col d-flex gap-5 justify-content-center">
-											<a th:href="@{/auth/phone}" class="forgot-password-link"
-												style="color: grey">忘記密碼-手機認證</a>
+<!-- 											<a th:href="@{/auth/phone}" class="forgot-password-link" -->
+<!-- 												style="color: grey">忘記密碼-手機認證</a> -->
 
-											<a th:href="@{/auth/email}" class="forgot-password-link"
-												style="color: grey">忘記密碼-信箱認證</a>
+											<a th:href="@{/buyer/auth/email}" class="forgot-password-link"												style="color: grey">忘記密碼-信箱認證</a>
 										</div>
 									</div>
 								</div>
@@ -74,9 +73,8 @@
 	</main>
 
 	<!-- End Footer -->
-	<div th:replace="@{/fragment-footer-noaside}"></div>
-
-	<div th:replace="@{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer-noaside}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
 	<script>
       function manipulateFormDataAndSubmit() {

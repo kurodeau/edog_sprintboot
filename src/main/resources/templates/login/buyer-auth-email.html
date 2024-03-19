@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:insert="~{/fragment-head}"></th:block>
+</head>
+<body>
+	<!-- ======= Header ======= -->
+
+	<header class="fixed-top">
+		<th:block th:insert="~{/front-end/buyer/header-buyer}"></th:block>
+	</header>
+
+	<main class="main-nosidebar on">
+		<div class="container">
+			<section
+				class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div
+							class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+							<h1>信箱驗證</h1>
+							<!-- End Logo -->
+							<form class="row needs-validation" novalidate
+								th:action="@{/auth/email/check}" method="post">
+								<div class="col-md-12">
+									<label for="sellerEmail" class="form-label">信箱</label> <input
+										type="text" class="form-control" id="sellerEmail"
+										name="sellerEmail"
+										th:value="${sellerEmail!=null} ? ${sellerEmail} :''"
+										aria-describedby="sellerEmailFeedback" />
+									<div id="sellerEmailFeedbackValid" class="is-valid"></div>
+									<div id="sellerEmailFeedback" class="invalid-feedback">
+										<p>欄位有誤</p>
+									</div>
+								</div>
+
+								<button type="button" class="my-5 btn btn-primary"
+									id="sendVerificationCodeBtn">發送信箱驗證</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<!-- End Footer -->
+	<div th:replace="@{/fragment-footer-noaside}"></div>
+
+	<div th:replace="@{/fragment-js}"></div>
+
+	<script>
+      function sendVerificationCode() {
+        // Get the seller mobile number from the input field
+        var sellerEmail = document.getElementById("sellerEmail").value;
+        console.log(sellerEmail);
+        console.log(document.getElementById("sellerEmail"));
+
+        if (!sellerEmail.trim()) {
+          sellerEmail = "NODATA";
+        }
+        console.log(sellerEmail);
+        // Send a POST request to the /auth/email/check endpoint
+
+        let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/buyer/auth/email/check";
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ buyerEmail: sellerEmail }),
+        })
+          .then((response) => {
+            return response.text(); // 将响应转换为文本
+          })
+          .then((dataBeforeParsed) => {
+            // 检查状态码
+            let data = JSON.parse(dataBeforeParsed);
+            if (data.status !== 200) {
+              document
+                .querySelector("#sellerEmail")
+                .classList.add("is-invalid");
+              document
+                .querySelector("#sellerEmail")
+                .classList.remove("is-valid");
+              document.querySelector("#sellerEmailFeedback").textContent =
+                data.msg;
+
+              alert(data.msg);
+            } else {
+              document
+                .querySelector("#sellerEmail")
+                .classList.remove("is-invalid");
+              document.querySelector("#sellerEmail").classList.add("is-valid");
+              document.querySelector("#sellerEmailFeedbackValid").textContent =
+                data.msg;
+
+              // sellerEmailFeedbackValid
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add an event listener to the button click
+        document
+          .getElementById("sendVerificationCodeBtn")
+          .addEventListener("click", function (event) {
+            event.preventDefault();
+            sendVerificationCode();
+          });
+      });
+    </script>
+</body>
+</html>

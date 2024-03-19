@@ -145,11 +145,17 @@ public class MultiSecurityConfiguration {
 				.createBuyerAuthenticationFilter(authenticationManager(http));
 		JwtAuthenticationFilter jwtAuthenticationFilter = multiFilterConfig
 				.createJwtAuthenticationFilter(authenticationManager(http));
-		http.authorizeRequests(authorize -> authorize.antMatchers("/front/seller/report")
-				.hasAnyRole("SELLERLV2", "SELLERLV3").antMatchers("/front/seller/**").hasRole("SELLER")
-				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login")
-				.permitAll().antMatchers("/back/api/v1/auth/authenticate").permitAll()
-				.antMatchers("/back/newsTicker/**").hasRole("MANAGERJWT").antMatchers("/back/main").hasRole("MANAGER"))
+
+		http.authorizeRequests(authorize -> authorize
+				.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+				.antMatchers("/front/seller/**").hasRole("SELLER")
+				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login").permitAll()
+				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
+				.antMatchers("/back/seller/list").hasRole("MANAGERJWT")
+
+        .antMatchers("/back/**").hasRole("MANAGER")
+				.antMatchers("/front/forum/**").hasRole("BUYER"))
+
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

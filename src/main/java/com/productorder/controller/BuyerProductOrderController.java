@@ -75,8 +75,16 @@ public class BuyerProductOrderController {
 		@GetMapping("order_checkout111") //GoToCheckoutPage
 		public String cartlist(Model model,HttpSession session) {
 //			Integer memberId = session.getAttribute(memberId);
-			Integer memberId = 8;
-			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(memberId)); 
+//			Integer memberId = 8;
+			
+			SecurityContext secCtx = SecurityContextHolder.getContext();
+	        Authentication authentication = secCtx.getAuthentication();
+	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+			
+			
+			
+			
+			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(buyerVO.getMemberId())); 
 			return "front-end/buyer/buyer-order-checkout";
 		}
 		
@@ -115,7 +123,7 @@ public class BuyerProductOrderController {
 		@PostMapping("confirm")
 		public String confirmProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
-			productOrderVO.setOrderStatus(5);
+			productOrderVO.setOrderStatus(7);
 			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
 			
 			List<ProductOrderVO> list = productOrderSvc.getAll();
@@ -125,18 +133,18 @@ public class BuyerProductOrderController {
 
 		}
 		
-		@PostMapping("shipping")
-		public String shippingProduct(@RequestParam("orderId") String orderId ,ModelMap model) {
-			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
-			productOrderVO.setOrderStatus(6);
-			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
-			
-			List<ProductOrderVO> list = productOrderSvc.getAll();
-			model.addAttribute("productOrderList",list);
-			model.addAttribute("success" , "-(接受訂單成功)");
-			return "redirect:/front/seller/productorder/sellerproductorderlistall";
-
-		}
+//		@PostMapping("shipping")
+//		public String shippingProduct(@RequestParam("orderId") String orderId ,ModelMap model) {
+//			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+//			productOrderVO.setOrderStatus(6);
+//			productOrderSvc.addProductOrder(productOrderVO); //將修改的資料存進資料庫
+//			
+//			List<ProductOrderVO> list = productOrderSvc.getAll();
+//			model.addAttribute("productOrderList",list);
+//			model.addAttribute("success" , "-(接受訂單成功)");
+//			return "redirect:/front/seller/productorder/sellerproductorderlistall";
+//
+//		}
 
 		@PostMapping("cancel")
 		public String cancelProductOrder(@RequestParam("orderId") String orderId ,ModelMap model) {
@@ -158,56 +166,56 @@ public class BuyerProductOrderController {
 		/*
 		 * This method will be called on addEmp.html form submission, handling POST request It also validates the user input
 		 */
-		@PostMapping("insert")
-		public String insert(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model) throws IOException {
-			
-			
-			if (result.hasErrors() ) {
-					return "back-end/productOrder/addProductOrder";
-				}
-				
-			/*************************** 2.開始新增資料 *****************************************/
-			// EmpService productOrderSvc = new EmpService();
-			productOrderSvc.addProductOrder(productOrderVO);
-			/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
-			List<ProductOrderVO> list = productOrderSvc.getAll();
-			model.addAttribute("productOrderListData", list);
-			model.addAttribute("success", "- (新增成功)");
-			return "redirect:/productOrder/listAllProductOrder"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
-		}
+//		@PostMapping("insert")
+//		public String insert(@Valid ProductOrderVO productOrderVO, BindingResult result, ModelMap model) throws IOException {
+//			
+//			
+//			if (result.hasErrors() ) {
+//					return "back-end/productOrder/addProductOrder";
+//				}
+//				
+//			/*************************** 2.開始新增資料 *****************************************/
+//			// EmpService productOrderSvc = new EmpService();
+//			productOrderSvc.addProductOrder(productOrderVO);
+//			/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
+//			List<ProductOrderVO> list = productOrderSvc.getAll();
+//			model.addAttribute("productOrderListData", list);
+//			model.addAttribute("success", "- (新增成功)");
+//			return "redirect:/productOrder/listAllProductOrder"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
+//		}
 
 		/*
 		 * This method will be called on listAllEmp.html form submission, handling POST request
 		 */
-		@PostMapping("getOne_For_Update")
-		public String getOne_For_Update(@RequestParam("orderId") String orderId, ModelMap model) {
-			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-			/*************************** 2.開始查詢資料 *****************************************/
-			// EmpService productOrderSvc = new EmpService();
-			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
-
-			/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
-			model.addAttribute("productOrderVO", productOrderVO);
-			return "back-end/productOrder/update_productOrder_input"; // 查詢完成後轉交update_emp_input.html
-		}
+//		@PostMapping("getOne_For_Update")
+//		public String getOne_For_Update(@RequestParam("orderId") String orderId, ModelMap model) {
+//			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+//			/*************************** 2.開始查詢資料 *****************************************/
+//			// EmpService productOrderSvc = new EmpService();
+//			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
+//
+//			/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+//			model.addAttribute("productOrderVO", productOrderVO);
+//			return "back-end/productOrder/update_productOrder_input"; // 查詢完成後轉交update_emp_input.html
+//		}
 
 		
 
 		/*
 		 * This method will be called on listAllEmp.html form submission, handling POST request
 		 */
-		@PostMapping("delete")
-		public String delete(@RequestParam("sellerId") String sellerId, ModelMap model) {
-			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-			/*************************** 2.開始刪除資料 *****************************************/
-			// EmpService productOrderSvc = new EmpService();
-			productOrderSvc.deleteProductOrder(Integer.valueOf(sellerId));
-			/*************************** 3.刪除完成,準備轉交(Send the Success view) **************/
-			List<ProductOrderVO> list = productOrderSvc.getAll();
-			model.addAttribute("productOrderListData", list);
-			model.addAttribute("success", "- (刪除成功)");
-			return "back-end/productOrder/listAllProductOrder"; // 刪除完成後轉交listAllEmp.html
-		}
+//		@PostMapping("delete")
+//		public String delete(@RequestParam("sellerId") String sellerId, ModelMap model) {
+//			/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+//			/*************************** 2.開始刪除資料 *****************************************/
+//			// EmpService productOrderSvc = new EmpService();
+//			productOrderSvc.deleteProductOrder(Integer.valueOf(sellerId));
+//			/*************************** 3.刪除完成,準備轉交(Send the Success view) **************/
+//			List<ProductOrderVO> list = productOrderSvc.getAll();
+//			model.addAttribute("productOrderListData", list);
+//			model.addAttribute("success", "- (刪除成功)");
+//			return "back-end/productOrder/listAllProductOrder"; // 刪除完成後轉交listAllEmp.html
+//		}
 		
 		
 		

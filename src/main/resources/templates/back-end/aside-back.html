@@ -91,10 +91,14 @@
     <!-- End訂單管理 -->
 
     <!-- Strat優惠券管理 -->
-    <!-- <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#service-nav" data-bs-toggle="collapse" th:href="@{#}">
-        <i class="bi bi-ticket"></i><span>優惠券管理</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
+      <a
+        class="nav-link collapsed"
+        data-bs-target="#service-nav"
+        data-bs-toggle="collapse"
+        th:href="@{#}"
+      >
+        <i class="bi bi-ticket"></i><span>優惠券管理</span
+        ><i class="bi bi-chevron-down ms-auto"></i>      </a>
       <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
           <a th:href="@{/back/coupon/list}">
@@ -111,7 +115,7 @@
     <!-- End優惠券管理 -->
 
     <!-- Strat匯款資訊 -->
-    <li class="nav-item">
+   <!--  <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#export-nav" data-bs-toggle="collapse" th:href="@{#}">
         <i class="bi bi-ticket"></i><span>匯款管理</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
@@ -127,7 +131,7 @@
           </a>
         </li>
       </ul>
-    </li>
+    </li> -->
     <!-- End匯款資訊 -->
 
     <!-- Start廣告管理 -->
@@ -209,14 +213,40 @@
           .then((data) => {
             console.log(data);
 
-            let data = JSON.parse(data);
-            console.log(parseInt(data.status));
+            let dataAfterParsed = JSON.parse(data);
+            console.log(parseInt(dataAfterParsed.status));
+            let targetUrl =
+              window.location.protocol +
+              "//" +
+              window.location.hostname +
+              ":" +
+              window.location.port +
+              "/back/seller/list";
+            alert(targetUrl);
             // 处理从服务器返回的数据
-            if (parseInt(data.status) !== 200) {
-              alert(data.msg);
+            if (parseInt(dataAfterParsed.status) !== 200) {
+              alert(dataAfterParsed.msg);
+
+              switch (dataAfterParsed.data) {
+                case "OUTDATED":
+                  alert("OUTDATED");
+                case "NOT_FOUNDTOKEN":
+                  alert("NOT_FOUNDTOKEN");
+                  break;
+                case "ACCOUNT_ERR":
+                  alert("ACCOUNT_ERR");
+                  break;
+                case "ACCESS_ERR":
+                  alert("ACCESS_ERR");
+                  break;
+                default:
+                  alert("UNCAUGHT ERROR from backend");
+                  break;
+              }
+            } else {
+              alert("PASS");
             }
-            window.location.href
-            console.log(data);
+            window.location.href = targetUrl;
           })
           .catch((error) => {
             // 处理请求错误

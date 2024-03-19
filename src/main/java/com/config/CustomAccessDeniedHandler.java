@@ -44,7 +44,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	           
 		   Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		    if (auth instanceof AnonymousAuthenticationToken) {
-		        // 匿名用户(下面是錯的，永遠不會執行因為EntryPoint是專門處理，未登入用戶的)
+		        // 匿名用户
 		    	if(requestUri.contains("/front/seller")) {
 		    		res.sendRedirect(req.getContextPath() + "/seller/login"); 
 		    	} else if (requestUri.contains("/front/buyer")) {
@@ -70,12 +70,17 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		        else {
 		            res.sendRedirect(req.getContextPath() +"front/seller/main"); 
 		        }
-		    } else {
+		    } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MANAGER"))) {
+		    	
+		    	System.out.println(req.getContextPath());
+		    	res.sendRedirect(req.getContextPath() +"/back/main?error=AccessDeniedError"); 
+		    } else 
+		    {
 		        res.sendRedirect("/"); 
 		    }
-//		    
-//		    
-//		    
+		    
+		    
+		    
 //	        res.setContentType("application/json;charset=UTF-8");
 //		   	res.setStatus(403);
 //	        String msg = "請考慮升級";

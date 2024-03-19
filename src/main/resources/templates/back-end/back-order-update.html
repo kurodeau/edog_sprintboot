@@ -94,10 +94,35 @@
 
 
 				<div class="col-md-12">
-					<label for="orderStatus" class="form-label">訂單狀態</label> <input
-						type="text" class="form-control" id="orderStatus"
-						name="orderStatus" th:field="*{orderStatus}" readonly />
+					<label for="orderStatus" class="form-label">訂單狀態</label> 
+					
+					 <input
+						type="hidden" class="form-control" id="orderStatus"
+						name="orderStatus" th:field="*{orderStatus}"  /> 
+						
+						  <span class="form-control" th:switch="${productOrderVO.orderStatus}">
+								            <span th:case="1">賣家待確認</span>
+								            <span th:case="2">訂單不成立（買家取消）</span>
+								            <span th:case="3">訂單不成立（賣家取消）</span>
+								            <span th:case="4">訂單成立</span>
+								            <span th:case="5">賣家理貨中</span>
+								            <span th:case="6">商品已出貨</span>
+								            <span th:case="7">訂單完成</span>
+								            <span th:case="8">付款成功</span>
+								            <span th:case="9">付款失敗</span>
+								            <span th:case="10">退貨</span>
+								           <!--  You can add more cases here if there are more statuses -->
+								            <span th:case="*">未知</span> <!-- This is the default case if none of the above match -->
+								        </span> 
+						
+						
+						
+						
+						
 				</div>
+				
+				
+				
 
 				<!-- 優化訂單狀態用選單 -->
 				<!-- <div class="col-md-12">
@@ -115,39 +140,18 @@
 						name="invoiceNumber" th:field="*{invoiceNumber}" readonly />
 				</div>
 
-				<div class="col-md-12">
+				 <div class="col-md-12">
 					<label for="receiver" class="form-label">收貨者姓名</label> <input
 						type="text" class="form-control" id="receiver" name="receiver"
 						th:field="*{receiver}" />
-				</div>
-
-
-				<!-- 沒有格式化的收貨時間 -->
-				<!--  <div class="col-md-12">
-					<label for="receiveTime" class="form-label">收貨時間</label> <input
-						type="text" class="form-control" id="receiveTime"
-						name="receiveTime" th:field="*{receiveTime}" disabled />
-				</div>  -->
-
-
-
-
-
-				<!-- 格式化的收貨時間 -->
-				<!-- 隱藏的輸入欄位，用於保持與後端模型的綁定 -->
-				<!-- <input type="hidden" th:field="*{receiveTime}" /> -->
-
-				<!-- 用於顯示的格式化日期 -->
-				<!-- 	<div class="col-md-12">
-					<label for="formattedReceiveTime" class="form-label">收貨時間</label> <input
-						type="text" class="form-control" id="formattedReceiveTime"
-						th:field="*{receiveTime}"
-						readonly />
-				</div> -->
-				<!-- #dates.format(productOrderVO.receiveTime, 'yyyy-MM-dd HH:mm:ss') -->
-
-
-
+						<small class="text-danger" th:if="${#fields.hasErrors('receiver')}" th:errors="*{receiver}"></small>
+						<!-- <br> -->
+						<!-- <span  th:if="${#fields.hasErrors('receiver')}" th:errors="*{receiver}" class="error" id="receiver.errors"></span> -->
+						
+						
+				</div> 
+				
+			
 
 
 
@@ -155,23 +159,24 @@
 					<label for="mobile" class="form-label">收貨者手機</label> <input
 						type="text" class="form-control" id="mobile" name="mobile"
 						th:field="*{mobile}" />
+						<small class="text-danger" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></small>
 				</div>
 
 				<div class="col-md-12">
 					<label for="contactAddress" class="form-label">收貨地址</label> <input
 						type="text" class="form-control" id="contactAddress"
 						name="contactAddress" th:field="*{contactAddress}" />
+				<small class="text-danger" th:if="${#fields.hasErrors('contactAddress')}" th:errors="*{contactAddress}"></small>
 				</div>
 
-
-					<input
+					<!-- <input
 						type="text" class="form-control" id="isDelivered"
-						name="isDelivered" th:field="*{isDelivered}" />
+						name="isDelivered" th:field="*{isDelivered}" /> -->
 
 				<div class="col-md-12">
 					<label for="isDelivered" class="form-label">出貨狀態</label> <input
 						type="text" class="form-control" id="isDelivered"
-						name="isDelivered" th:value="${isDelivered}? '已出貨' : '未出貨'" readonly/>
+						 th:value="${isDelivered}? '已出貨' : '未出貨'" readonly/>
 				</div>
 				
 				
@@ -201,7 +206,7 @@
 				</div>
 
 
-
+				<div style="margin-top:30px;"></div>
 
 
 
@@ -225,6 +230,17 @@
 	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
 		type="text/javascript"></script>
 	<script>
+	
+	
+	//清除提示信息
+	function hideContent(d) {
+	     document.getElementById(d).style.display = "none";
+	}
+	
+	
+	
+	
+	
 		//============ 取消按鈕的跳轉事件設定 start =============
 		document
 				.getElementById("cancel-btn")
