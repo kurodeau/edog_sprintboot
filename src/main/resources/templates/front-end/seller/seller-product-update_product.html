@@ -33,14 +33,14 @@
 
 
 					<div class="upload__btn-box">
-						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
+						<label for="mainImage" class="btn btn-sellerdark">*請選擇主要圖片</label>
 						<input type="file" data-max_length="1"
 							class="form-control upload__inputfile" id="mainImage"
 							name="mainImage" onclick="previewImage()"
-							onchange="hideContent('upFiles.errors');" />
-						<div class="valid-feedback">Looks Good!</div>
-						<div id="mainImageFeedback" class="invalid-feedback">Please
-							provide a valid Picture.</div>
+							onchange="hideContent('upFiles.errors');" required />
+						<!-- 						<div class="valid-feedback">Looks Good!</div> -->
+						<!-- 						<div id="mainImageFeedback" class="invalid-feedback">Please -->
+						<!-- 							provide a valid Picture.</div> -->
 						<div id="mainImage_blob_holder">
 							<img
 								th:src="@{/seller/product/DBGifReader} + '?productId=' + ${productVO.productId}"
@@ -52,14 +52,14 @@
 
 				<div class="upload__box">
 					<div class="upload__btn-box">
-						<label for="subImages" class="btn btn-sellerdark"> 請選擇其他圖片</label>
-						<input type="file" multiple="" data-max_length="5"
+						<label for="subImages" class="btn btn-sellerdark">
+							*請選擇其他圖片</label> <input type="file" multiple="" data-max_length="5"
 							class="form-control upload__inputfile" id="subImages"
 							name="subImages" onclick="previewImage1()"
-							onchange="hideContent('upFiles.errors');" />
-						<div class="valid-feedback">Looks Good!</div>
-						<div id="subImagesFeedback" class="invalid-feedback">Please
-							provide a valid Picture.</div>
+							onchange="hideContent('upFiles.errors');" required />
+						<!-- 						<div class="valid-feedback">Looks Good!</div> -->
+						<!-- 						<div id="subImagesFeedback" class="invalid-feedback">Please -->
+						<!-- 							provide a valid Picture.</div> -->
 						<div id="subImages_blob_holder">
 							<div th:each="productImgVO, iterStat : ${productImageList}">
 								<img
@@ -72,75 +72,105 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="productName" class="form-label">商品名稱</label> <input
-						type="text" th:field="*{productName}" class="form-control"
-						id="productName" name="productName" />
-					<div id="productNameFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<label for="productName" class="form-label">*商品名稱</label> <input
+						type="text" th:field="*{productName}"
+						onclick="hideContent('productName.errors');" class="form-control"
+						id="productName" name="productName" required />
+
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productName')}"
+							th:errors="*{productName}" class="error" id="productName.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productSort" class="form-label">商品分類</label> <select
-						class="form-select"
-						th:selected="${productVO.productSortVO.productSortNo}"
-						id="productSort" name="productSortNo">
-						<option value="-1" disabled selected>請選擇商品</option>
-						<option value="0"
-							th:selected="${productVO.productSortVO.productSortNo == 0} ">食品</option>
-						<option value="1"
-							th:selected="${productVO.productSortVO.productSortNo == 1}">玩具</option>
-						<option value="2"
-							th:selected="${productVO.productSortVO.productSortNo == 2}">寢具</option>
-						<option value="3"
-							th:selected="${productVO.productSortVO.productSortNo == 3}">美容清潔</option>
-						<option value="4"
-							th:selected="${productVO.productSortVO.productSortNo == 4}">攜帶袋</option>
-						<option value="5"
-							th:selected="${productVO.productSortVO.productSortNo == 5}">服飾</option>
-						<option value="6"
-							th:selected="${productVO.productSortVO.productSortNo == 6}">健康保健</option>
-						<option value="7"
-							th:selected="${productVO.productSortVO.productSortNo == 7}">配件</option>
+					<label for="productSort" class="form-label">*商品分類</label> <select
+						class="form-select" th:selected="${productSortVO}"
+						id="productSort" name="productSortNo" required>
+						<option value="" disabled selected>請選擇商品</option>
+						<option value="0" th:selected="${productSortVO == 0} ">食品</option>
+						<option value="1" th:selected="${productSortVO == 1}">玩具</option>
+						<option value="2" th:selected="${productSortVO == 2}">寢具</option>
+						<option value="3" th:selected="${productSortVO == 3}">美容清潔</option>
+						<option value="4" th:selected="${productSortVO == 4}">攜帶袋</option>
+						<option value="5" th:selected="${productSortVO == 5}">服飾</option>
+						<option value="6" th:selected="${productSortVO == 6}">健康保健</option>
+						<option value="7" th:selected="${productSortVO == 7}">配件</option>
 					</select>
-					<div id="productSortFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productSortVO')}"
+							th:errors="*{productSortVO}" class="error"
+							id="productSortVO.errors"></div>
+					</div>
+				</div>
+
+
+				<div class="col-md-12">
+					<label for="productSort" class="form-label">*寵物分類</label> <select
+						class="form-select" th:field="*{animalType}" id="animalType"
+						name="animalType" required>
+						<option value="" disabled selected>請選擇寵物分類</option>
+						<option value="dog" th:selected="${animalType == 'dog'}">犬</option>
+						<option value="cat" th:selected="${animalType == 'cat'}">貓</option>
+						<option value="bird" th:selected="${animalType == 'bird'}">鳥</option>
+					</select>
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('animalType')}"
+							th:errors="*{animalType}" class="error" id="animalType.errors"></div>
+					</div>
+				</div>
+
+
+
+
+				<div class="col-md-12">
+					<label for="productPrice" class="form-label">*商品價格</label> <input
+						type="text" th:field="${productVO.price}"
+						onclick="hideContent('price.errors');" class="form-control"
+						id="pPrice" name="price" required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+							class="error" id="price.errors"></div>
+					</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productPrice" class="form-label">商品價格</label> <input
-						type="text" th:field="${productVO.price}" class="form-control"
-						id="productPrice" name="productPrice" />
-					<div id="productPriceFeedback" class="invalid-feedback">
-						Please provide a valid inputProductPrice.</div>
-					<div class="valid-feedback">Looks Good!</div>
-				</div>
-
-				<div class="col-md-12">
-					<label for="productStockQuantity" class="form-label">商品庫存</label> <input
-						type="text" th:field="${productVO.productStockQuantity}"
+					<label for="productStockQuantity" class="form-label">*商品庫存</label>
+					<input type="text" th:field="${productVO.productStockQuantity}"
+						onclick="hideContent('productStockQuantity.errors');"
 						class="form-control" id="productStockQuantity"
-						name="productStockQuantity" />
-					<div id="productStockQuantityFeedback" class="invalid-feedback">
-						Please provide a valid inputStockQuantity.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						name="productStockQuantity" required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productStockQuantity')}"
+							th:errors="*{productStockQuantity}" class="error"
+							id="productStockQuantity.errors"></div>
+					</div>
 				</div>
 
+
+
 				<div class="col-md-12">
-					<label for="productDetails" class="form-label">商品描述</label> <input
+					<label for="productDetails" class="form-label">*商品描述</label> <input
 						type="text" th:field="${productVO.productDetails}"
-						class="form-control" id="productDetails" name="productDetails" />
-					<div id="productDetailsFeedback" class="invalid-feedback">
-						Please provide a valid inputProductDetails.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						onclick="hideContent('productDetails.errors');"
+						class="form-control" id="productDetails" name="productDetails"
+						required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('productDetails')}"
+							th:errors="*{productDetails}" class="error"
+							id="productDetails.errors"></div>
+					</div>
 				</div>
+
+
+
+
 
 				<div
 					class="text-center d-flex flex-row gap-5 justify-content-center">
 					<button type="reset" class="btn btn-secondary">重設</button>
 					<button type="submit" id="submitButton" class="btn btn-primary">
-						提交2張表</button>
+						送出</button>
 				</div>
 			</form>
 		</div>

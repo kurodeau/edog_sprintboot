@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -51,7 +52,7 @@ public class ProductVO implements Serializable {
 	private String animalType;
 
 	@Column(name = "animalType")
-	@NotNull(message = "請選擇寵物種類")
+	@NotNull(message = "請選擇寵物分類")
 	public String getAnimalType() {
 		return animalType;
 	}
@@ -103,7 +104,7 @@ public class ProductVO implements Serializable {
 
 	@Column(name = "productName")
 	@NotEmpty(message="請填寫產品名稱")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{1,30}$", message = "廣告名稱: 只能是中、英文字母、數字和_ , 且長度必需在1到20之間")	
+	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{1,30}$", message = "產品名稱: 只能是中、英文字母、數字和_ , 且長度必需在1到20之間")	
 	public String getProductName() {
 		return productName;
 	}
@@ -133,7 +134,7 @@ public class ProductVO implements Serializable {
 	}
 
 	@Column(name = "productDetails")
-	@NotNull(message = "請輸入產品描述")
+	@NotBlank(message = "請輸入產品描述")
 	public String getProductDetails() {
 		return productDetails;
 	}
@@ -180,7 +181,6 @@ public class ProductVO implements Serializable {
 
 	@JsonIgnore
 	@ManyToOne
-	@NotNull(message = "請選擇產品種類")
 	@JoinColumn(name = "productsortNo", referencedColumnName = "productsortNo")
 	public ProductSortVO getProductSortVO() {
 		return productSortVO;

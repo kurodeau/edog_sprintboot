@@ -33,10 +33,11 @@
 				    </span> 
 				    
 				    <span class="article-content" th:text="${articleVO.articleContent}"></span><br/>
+				    <br/>
 				    <span><img th:if="${articleVO.upFiles != null}"
 				        th:src="@{/article/DBGifReader} + '?articleId=' + ${articleVO.articleId}"
-				        width="100px"></span><br/>
-				
+				        width="300px"></span><br/>
+					<br/>
 				    <div class="interaction-section">
 				     <span th:if="${articleLikeVO != null}">
 				            <i class="bi bi-suit-heart-fill islike-btn" data-article-id="articleId"></i>

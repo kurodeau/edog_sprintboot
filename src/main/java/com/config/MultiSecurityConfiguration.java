@@ -235,7 +235,7 @@ public class MultiSecurityConfiguration {
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
-						throw new BadCredentialsException("帳戶尚未被啟用，請於信箱收信");
+						throw new BadCredentialsException("帳戶尚未被啟用，請靜待平台審核");
 					}
 
 					if (sellerPasswordEncoder.matches(password, sellerVO.getSellerPassword())) {

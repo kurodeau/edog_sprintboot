@@ -55,6 +55,7 @@
 						type="text" th:field="*{adName}"
 						onclick="hideContent('adName.errors');" class="form-control"
 						id="adName" name="adName" required />
+						
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('adName')}" th:errors="*{adName}"
 							class="error" id="adName.errors"></div>

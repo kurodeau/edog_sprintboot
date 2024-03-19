@@ -125,8 +125,8 @@ public class IndexControllerSeller {
 				model.addAttribute("verificationCodeError", errorCode);
 			}
 
-			if (sellerVO != null && !sellerSvc.isDuplcateEmail(sellerVO.getSellerEmail())) {
-				System.out.println("AAAAAAAAA");
+			
+			if (sellerVO != null && !sellerSvc.isUniqueEmail(sellerVO.getSellerEmail())) {
 				result.rejectValue("sellerEmail", "duplicate.email", "信箱已經存在");
 			}
 
