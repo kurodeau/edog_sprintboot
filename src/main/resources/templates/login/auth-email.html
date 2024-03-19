@@ -35,8 +35,7 @@
 								</div>
 
 								<button type="button" class="my-5 btn btn-primary"
-									id="sendVerificationCodeBtn">
-									發送信箱驗證</button>
+									id="sendVerificationCodeBtn">發送信箱驗證</button>
 							</form>
 						</div>
 					</div>
@@ -46,9 +45,8 @@
 	</main>
 
 	<!-- End Footer -->
-	<div th:replace="@{/fragment-footer-noaside}"></div>
-
-	<div th:replace="@{/fragment-js}"></div>
+	<div th:replace="~{/fragment-footer-noaside}"></div>
+	<div th:replace="~{/fragment-js}"></div>
 
 	<script>
       function sendVerificationCode() {

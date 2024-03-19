@@ -11,7 +11,7 @@ public class HTMLSearch {
 	
 	 public static void main(String[] args) {
 	        String packagePath = "src/main/resources/templates"; // 指定要搜索的包路径
-	        String targetCode = "@{/fragment-footer-noaside}"; // 要搜索的目标代码
+	        String targetCode = "@{/fragment-footer}"; // 要搜索的目标代码
 
 	        List<File> filesWithTargetCode = findFilesWithCode(new File(packagePath), targetCode);
 	        if (filesWithTargetCode.isEmpty()) {
