@@ -30,6 +30,8 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.validator.MyZeroValidator;
+
 /*
  * 註1: classpath必須有javax.persistence-api-x.x.jar 
  * 註2: Annotation可以添加在屬性上，也可以添加在getXxx()方法之上
@@ -71,6 +73,7 @@ public class NewsTickerVO implements java.io.Serializable {
 		this.newsTickerContent = newsTickerContent;
 	}
 	
+	@MyZeroValidator(message = "顯示權重必須是正整數")
 	@Column(name = "sort")
 	public Integer getSort() {
 		return sort;

@@ -1,5 +1,7 @@
 package com.newsticker.controller;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -26,15 +28,8 @@ import com.newsticker.model.NewsTickerService;
 
 @Controller
 @RequestMapping("/back/newsTicker")
-public class NewsTickerController {
-	
-	
-//	@GetMapping(newsTickerListData)
-//	public String newsTickerListData(Model model) {
-//		return 
-//	}
-
-	
+public class NewsTickerController extends HttpServlet{
+		
 	@Autowired
 	NewsTickerService newsTickerSvc;
 
@@ -130,31 +125,19 @@ public class NewsTickerController {
 	@PostMapping("updateNewsTicker")
 //	public String update(@Valid NewsTickerVO newsTickerVO, BindingResult result, ModelMap model,
 //			@RequestParam("upFiles") MultipartFile[] parts) throws IOException {
-	public String update(@Valid NewsTickerVO newsTickerVO, BindingResult result, ModelMap model){
+	public String update(@Valid NewsTickerVO newsTickerVO, BindingResult result, ModelMap model, HttpSession session)throws IOException{
 
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中upFiles欄位的FieldError紀錄 --> 見第172行
-//		result = removeFieldError(empVO, result, "upFiles");
-//
-//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
-//			// EmpService empSvc = new EmpService();
-//			byte[] upFiles = empSvc.getOneEmp(empVO.getEmpno()).getUpFiles();
-//			empVO.setUpFiles(upFiles);
-//		} else {
-//			for (MultipartFile multipartFile : parts) {
-//				byte[] upFiles = multipartFile.getBytes();
-//				empVO.setUpFiles(upFiles);
-//			}
-//		}
-//		if (result.hasErrors()) {
-//			return "back-end/emp/update_emp_input";
-//		}
+		if (result.hasErrors()) {
+			return "back/newsTicker/listAllGet";
+		}
 		/*************************** 2.開始修改資料 *****************************************/
 //		NewsTickerService newsTickerSvc = new NewsTickerService();
 		newsTickerSvc.updateNewsTicker(newsTickerVO);
 
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
-//		model.addAttribute("success", "- (修改成功)");
+		model.addAttribute("success", "- (修改成功)");
 		List<NewsTickerVO> list = newsTickerSvc.getAll();
 //		newsTickerVO = newsTickerSvc.getOneNewsTicker(Integer.valueOf(newsTickerVO.getNewsTickerId()));
 //		model.addAttribute("newsTickerVO", newsTickerVO);

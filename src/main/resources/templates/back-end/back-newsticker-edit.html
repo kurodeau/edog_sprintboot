@@ -1,147 +1,135 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-<th:block th:insert="~{/fragment-datatableCss}"></th:block>
-<!-- 引入 Bootstrap DateTimePicker 的相關 CSS 和 JS 文件 -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"
-	rel="stylesheet">
-<script
-	src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
+  <th:block th:insert="~{/fragment-head}"></th:block>
+  <th:block th:insert="~{/fragment-datatableCss}"></th:block>
+  <!-- 引入 Bootstrap DateTimePicker 的相關 CSS 和 JS 文件 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
 
 
-<link rel="stylesheet" type="text/css"
-	href="datetimepicker/jquery.datetimepicker.css" />
+  <link rel="stylesheet" type="text/css" href="datetimepicker/jquery.datetimepicker.css" />
 
-<style>
-.xdsoft_datetimepicker .xdsoft_datepicker {
-	width: 300px; /* width:  300px; */
-}
+  <style>
+    .xdsoft_datetimepicker .xdsoft_datepicker {
+      width: 300px;
+      /* width:  300px; */
+    }
 
-.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box {
-	height: 151px; /* height:  151px; */
-}
-</style>
+    .xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_time_box {
+      height: 151px;
+      /* height:  151px; */
+    }
+  </style>
 
-<!-- 日曆套件, 但是目前專案中沒有, 要找出來放 -->
-<script src="datetimepicker/jquery.js"></script>
-<script src="datetimepicker/jquery.datetimepicker.full.js"></script>
+  <!-- 日曆套件, 但是目前專案中沒有, 要找出來放 -->
+  <script src="datetimepicker/jquery.js"></script>
+  <script src="datetimepicker/jquery.datetimepicker.full.js"></script>
 </head>
 
 <body>
-	<!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+  <!-- ======= Header ======= -->
+  <header class="fixed-top">
+    <th:block th:insert="~{/back-end/header-back}"></th:block>
+  </header>
 
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
-	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
-		<div class="container-fluid seller-container">
-			<h1>編輯走馬燈資料</h1>
+  <!-- ======= Sidebar ======= -->
+  <aside th:replace="back-end/aside-back.html"></aside>
+  <!-- ======= Main ======= -->
+  <main class="main main-layout-seller">
+    <div class="container-fluid seller-container">
+      <h1>編輯走馬燈資料</h1>
 
-			<form class="row g-3" id="myForm" th:action="@{updateNewsTicker}" 
-				method="post" enctype="multipart/form-data">
+      <form class="row g-3" id="myForm" th:action="@{updateNewsTicker}" method="post" enctype="multipart/form-data">
 
-				<div class="col-md-12">
-					<label for="inputNewsTickerId" class="form-label">走馬燈編號</label> 
-					<input type="text" class="form-control" id="inputNewsTickerId"
-						name="newsTickerId" th:value=${newsTickerVO.newsTickerId} readonly />
-				</div>
+        <div class="col-md-12">
+          <label for="inputNewsTickerId" class="form-label">走馬燈編號</label>
+          <input type="text" class="form-control" id="inputNewsTickerId" name="newsTickerId"
+            th:value=${newsTickerVO.newsTickerId} readonly />
+        </div>
 
-				<div class="col-md-12">
-					<label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
-					<input type="text" class="form-control" id="inputNewsTickerContent"
-						name="newsTickerContent"
-						th:value="${newsTickerVO.newsTickerContent}" />
-				</div>
+        <div class="col-md-12">
+          <label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
+          <input type="text" class="form-control" id="inputNewsTickerContent" name="newsTickerContent"
+            th:value="${newsTickerVO.newsTickerContent}" />
+        </div>
 
-				<div class="col-md-12">
-					<label for="inputSort" class="form-label">顯示排序</label> <input
-						type="text" class="form-control" id="inputSort" name="sort"
-						th:value="${newsTickerVO.sort}" />
-				</div>
+        <div class="col-md-12">
+          <label for="inputSort" class="form-label">顯示排序</label> <input type="text" class="form-control" id="inputSort"
+            name="sort" th:value="${newsTickerVO.sort}" />
+        </div>
 
-				<!-- 				<div class="col mb-12"> -->
-				<!-- 					<label id="inputStartTime" for="inputStartTime" -->
-				<!-- 						class="col-sm-2 col-form-label">開始顯示時間</label> -->
-				<!-- 					<div class="col-sm-3"> -->
-				<!-- 						<input type="text" class="form-control" name="startTime" -->
-				<!-- 							id="startTime" -->
-				<!-- 							th:value="${#dates.format(newsTickerVO.startTime, 'yyyy/MM/dd')}"> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
+        <!-- 				<div class="col mb-12"> -->
+        <!-- 					<label id="inputStartTime" for="inputStartTime" -->
+        <!-- 						class="col-sm-2 col-form-label">開始顯示時間</label> -->
+        <!-- 					<div class="col-sm-3"> -->
+        <!-- 						<input type="text" class="form-control" name="startTime" -->
+        <!-- 							id="startTime" -->
+        <!-- 							th:value="${#dates.format(newsTickerVO.startTime, 'yyyy/MM/dd')}"> -->
+        <!-- 					</div> -->
+        <!-- 				</div> -->
 
-				<!-- 				<div class="col mb-12"> -->
-				<!-- 					<label for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label> -->
-				<!-- 					<div class="col-sm-3"> -->
-				<!-- 						<input type="date" class="form-control" name="endTime" -->
-				<!-- 							th:value="${newsTickerVO.endTime}"> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
+        <!-- 				<div class="col mb-12"> -->
+        <!-- 					<label for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label> -->
+        <!-- 					<div class="col-sm-3"> -->
+        <!-- 						<input type="date" class="form-control" name="endTime" -->
+        <!-- 							th:value="${newsTickerVO.endTime}"> -->
+        <!-- 					</div> -->
+        <!-- 				</div> -->
 
 
-				<div class="col mb-12">
-					<label id="inputStartTime" for="inputStartTime"
-						class="col-sm-2 col-form-label">開始顯示時間</label>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" name="startTime"
-							id="startTime" th:value="${newsTickerVO.startTime}">
-					</div>
-				</div>
+        <div class="col mb-12">
+          <label id="inputStartTime" for="inputStartTime" class="col-sm-2 col-form-label">開始顯示時間</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="startTime" id="startTime"
+              th:value="${newsTickerVO.startTime}">
+          </div>
+        </div>
 
-				<div class="col mb-12">
-					<label id="inputEndTime" for="inputEndTime"
-						class="col-sm-2 col-form-label">結束顯示時間</label>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" name="endTime"
-							th:value="${newsTickerVO.endTime}">
-					</div>
-				</div>
+        <div class="col mb-12">
+          <label id="inputEndTime" for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="endTime" th:value="${newsTickerVO.endTime}">
+          </div>
+        </div>
 
-				<!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
-				<div class="col-md-3">
-					<label for="inputIsDisplay" class="form-label">是否顯示</label> <select
-						class="form-select" name="isDisplay" id="inputIsDisplay">
-						<option value="true" th:selected="${newsTickerVO.isDisplay}">Yes</option>
-						<option value="false" th:selected="${!newsTickerVO.isDisplay}">No</option>
-					</select>
-				</div>
+        <!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
+        <div class="col-md-3">
+          <label for="inputIsDisplay" class="form-label">是否顯示</label> <select class="form-select" name="isDisplay"
+            id="inputIsDisplay">
+            <option value="true" th:selected="${newsTickerVO.isDisplay}">Yes</option>
+            <option value="false" th:selected="${!newsTickerVO.isDisplay}">No</option>
+          </select>
+        </div>
 
-				<div
-					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
-					<button type="submit" class="btn btn-primary">提交修改</button>
-				</div>
-			</form>
-		</div>
-	</main>
-	<!-- End Main -->
+        <div class="text-center d-flex flex-row gap-5 justify-content-center">
+          <button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
+          <button type="submit" class="btn btn-primary">提交修改</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <!-- End Main -->
 
-	<!-- ======= Footer, 後臺應該不需要footer ======= -->
+  <!-- ======= Footer, 後臺應該不需要footer ======= -->
 
-	<!-- Vendor & Main JS Files -->
-	<div th:replace="fragment-js"></div>
+  <!-- Vendor & Main JS Files -->
+  <div th:replace="fragment-js"></div>
 
-	<!-- Local JS File -->
-	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
-		type="text/javascript"></script>
-	<script>
-	
+  <!-- Local JS File -->
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+  <script>
+
     //取消按鈕的跳轉事件設定
-    document.getElementById("cancel-btn").addEventListener("click", function() {
-  	  window.location.href = "/back/newsTicker/listAllGet"; // 將網頁重定向到指定的 URL
-  	  });
+    document.getElementById("cancel-btn").addEventListener("click", function () {
+      window.location.href = "/back/newsTicker/listAllGet"; // 將網頁重定向到指定的 URL
+    });
 
     // 定義一個自定義事件，用於通知 TwCitySelector 腳本
     var loadjsCompletedEvent = new Event("loadjsCompleted");
@@ -495,71 +483,71 @@
         return result;
       }
     });
-          
-    document.addEventListener('DOMContentLoaded', function() {
-    	  const startTimeInput = document.getElementById('inputStartTime');
-    	  const endTimeInput = document.getElementById('inputEndTime');
-          console.log("0" , document.getElementById , document.getElementById, "999");
 
-    	  // 獲取後端回傳的日期字符串
-    	  const startTimeValue = '${newsTickerVO.startTime}';
-    	  const endTimeValue = '${newsTickerVO.endTime}';
+    document.addEventListener('DOMContentLoaded', function () {
+      const startTimeInput = document.getElementById('inputStartTime');
+      const endTimeInput = document.getElementById('inputEndTime');
+      console.log("0", document.getElementById, document.getElementById, "999");
 
-    	  // 將日期格式從 'YYYY/MM/DD' 轉換為 'YYYY-MM-DD'
-    	  const formattedStartTime = formatDate(startTimeValue);
-    	  const formattedEndTime = formatDate(endTimeValue);
-    	  
-    	  // 將格式化後的日期設置到日期選擇器的值中
-    	  startTimeInput.value = formattedStartTime;
-     	  endTimeInput.value = formattedEndTime;
+      // 獲取後端回傳的日期字符串
+      const startTimeValue = '${newsTickerVO.startTime}';
+      const endTimeValue = '${newsTickerVO.endTime}';
+
+      // 將日期格式從 'YYYY/MM/DD' 轉換為 'YYYY-MM-DD'
+      const formattedStartTime = formatDate(startTimeValue);
+      const formattedEndTime = formatDate(endTimeValue);
+
+      // 將格式化後的日期設置到日期選擇器的值中
+      startTimeInput.value = formattedStartTime;
+      endTimeInput.value = formattedEndTime;
     });
 
-    	// 將日期格式從 'YYYY/MM/DD' 轉換為 'YYYY-MM-DD'
-//     	function formatDate(dateString) {
-//     	  // 使用 split 函數分割字符串，然後重新組合成 'YYYY-MM-DD' 格式
-//     	  const parts = dateString.split('/');
-//     	  return `${parts[0]}-${parts[1]}-${parts[2]}`;
-//     	}
-    	
-    	
-    	//引用日曆套件
-    	$.datetimepicker.setLocale('zh'); // kr ko ja en
-    	$(function(){
-	 $('#startTime').datetimepicker({
-		 format:'Y-m-d H:i:s',
-		 onShow:function(){
-			 this.setOptions({
-				 maxDate:$('#endTime').val()?$('#endTime').val():false
-						 })
-	  },
-	  timepicker:false
-	 });
-	 
-	 $('#endTime').datetimepicker({
-	  format:'Y-m-d H:i:s',
-	  onShow:function(){
-	   this.setOptions({
-	    minDate:$('#startTime').val()?$('#startTime').val():false
-	   })
-	  },
-	  timepicker:false
-	 });
-	 });
-    	
-//     	$.datetimepicker.setLocale('zh'); // kr ko ja en
-//         $('#startTime').datetimepicker({
-//            theme: 'dark',          //theme: 'dark',
-//            timepicker: false,   //timepicker: false, false狀態只能選取日期
-//            step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
-// 	       format: 'Y-m-d H:i:s',
-// 	       value: new Date(),
-//            //disabledDates:    ['2022/06/08','2022/06/09','2022/06/10'], // 去除特定不含
-//            //startDate:	        '2022/07/10',  // 起始日
-//            //minDate:           '-1970-01-01', // 去除今日(不含)之前
-//            //maxDate:           '+1970-01-01'  // 去除今日(不含)之後
-//         });
+    // 將日期格式從 'YYYY/MM/DD' 轉換為 'YYYY-MM-DD'
+    //     	function formatDate(dateString) {
+    //     	  // 使用 split 函數分割字符串，然後重新組合成 'YYYY-MM-DD' 格式
+    //     	  const parts = dateString.split('/');
+    //     	  return `${parts[0]}-${parts[1]}-${parts[2]}`;
+    //     	}
 
-    	
+
+    //引用日曆套件
+    $.datetimepicker.setLocale('zh'); // kr ko ja en
+    $(function () {
+      $('#startTime').datetimepicker({
+        format: 'Y-m-d H:i:s',
+        onShow: function () {
+          this.setOptions({
+            maxDate: $('#endTime').val() ? $('#endTime').val() : false
+          })
+        },
+        timepicker: false
+      });
+
+      $('#endTime').datetimepicker({
+        format: 'Y-m-d H:i:s',
+        onShow: function () {
+          this.setOptions({
+            minDate: $('#startTime').val() ? $('#startTime').val() : false
+          })
+        },
+        timepicker: false
+      });
+    });
+
+    //     	$.datetimepicker.setLocale('zh'); // kr ko ja en
+    //         $('#startTime').datetimepicker({
+    //            theme: 'dark',          //theme: 'dark',
+    //            timepicker: false,   //timepicker: false, false狀態只能選取日期
+    //            step: 15,            //step: 60 (這是timepicker的預設間隔60分鐘)
+    // 	       format: 'Y-m-d H:i:s',
+    // 	       value: new Date(),
+    //            //disabledDates:    ['2022/06/08','2022/06/09','2022/06/10'], // 去除特定不含
+    //            //startDate:	        '2022/07/10',  // 起始日
+    //            //minDate:           '-1970-01-01', // 去除今日(不含)之前
+    //            //maxDate:           '+1970-01-01'  // 去除今日(不含)之後
+    //         });
+
+
   </script>
 </body>
 
