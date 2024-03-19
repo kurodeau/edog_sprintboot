@@ -44,7 +44,7 @@ import com.reportType.service.ReportTypeService;
 
 @Controller
 @ComponentScan(basePackages = {"com.msg"})
-@RequestMapping("/msg")
+@RequestMapping("/front/forum/msg")
 public class MsgController {
 
 	@Autowired
