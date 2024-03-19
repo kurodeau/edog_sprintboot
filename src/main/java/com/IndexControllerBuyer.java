@@ -1,41 +1,35 @@
 package com;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.buyer.service.*;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.buyer.entity.BuyerVO;
+import com.buyer.service.BuyerService;
+import com.config.BuyerPasswordEncoder;
 import com.login.PasswordForm;
-import com.seller.entity.SellerVO;
-import com.buyer.entity.*;
-import com.buyer.service.*;
-//import com.sellerLv.entity.SellerLvVO;
-//import com.sellerLv.service.SellerLvService;
-import com.user.model.UserService;
 import com.util.HttpResult;
 import com.util.JedisUtil;
 import com.util.MailService;
@@ -51,6 +45,8 @@ import redis.clients.jedis.Jedis;
 @Controller
 public class IndexControllerBuyer {
 	
+	@Autowired
+	BuyerPasswordEncoder buyerPasswordEncoder;
 	
 	@Autowired
 	BuyerService buyerSvc;
@@ -97,26 +93,45 @@ public class IndexControllerBuyer {
 	
 	@PostMapping({"/buyer/login/check"})
 	public String loginCheckBuyer(ModelMap model) throws IOException {
+		
 		return "redirect:/front/buyer/main";
 	}
 	
 	
 	@PostMapping("/buyer/register/check")
-	public String checkregisterBuyer(@Valid @NonNull BuyerVO buyerVO, BindingResult result, ModelMap model) 
-			throws IOException {
-		System.out.println("有進入buyer/register/check");
+	public String checkregisterBuyer(@Valid BuyerVO buyerVO,  BindingResult result , ModelMap model 
+	 ,@RequestParam("petImg") MultipartFile[] parts ,@RequestParam("checkMemberPassword") String dupPassword) throws IOException{
+
+		buyerVO.setMemberRegistrationTime(new Date());
+// checkMemberPassword
+		result = removeFieldError(buyerVO, result, "petImg");
+
+		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
+			model.addAttribute("errorMessage", "請上傳PET圖片");
+
+		} 
 		
-		// 方便註冊測試, 先把錯誤驗證關閉, 之後要補
-//		if (result.hasErrors()) {
-//	        return "/front-end/buyer/buyer-register";
-//		}
+		System.out.println(dupPassword);
+		System.out.println(buyerVO.getMemberPassword());
+
+		
+		if (!dupPassword.equals(buyerVO.getMemberPassword())) {
+			model.addAttribute("duplicateError", "密碼不一致");
+		}
+		
+		System.out.println(result);
+		if (result.hasErrors()|| parts[0].isEmpty()) {
+			return "/front-end/buyer/buyer-register";
+		}
+		
+		
+		for (MultipartFile multipartFile : parts) {
+			byte[] petImg = multipartFile.getBytes();
+			buyerVO.setPetImg(petImg);
+		}
+		
 		buyerSvc.saveUserDetails(buyerVO);
-//		model.addAttribute("success", "買家用戶註冊成功");
-//
-//		// TESTING 註冊登入後保存sellerVO狀態
-//		session.setAttribute("buyerVO", buyerVO);
-//		
-		System.out.println("重導回/front/buyer/login");
+	
 		return "redirect:/buyer/login";
 	}
 
@@ -140,7 +155,6 @@ public class IndexControllerBuyer {
 	@PostMapping({ "/buyer/login", "/buyer/login/errors" })
 	public String loginBuyer(ModelMap model, HttpServletRequest req) throws IOException {
 
-		System.out.println("=======OOOOOOOO");
 		String error = (String) req.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION.message");
 		if (error != null) {
 			model.addAttribute("error", error);
@@ -211,17 +225,17 @@ public class IndexControllerBuyer {
 		return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "請於300秒輸入驗證碼"));
 	}
 
-	@GetMapping({ "/auth/emailbuyer" })
-	public String authInputEmail(ModelMap model) throws IOException {
+	@GetMapping({ "/buyer/auth/email" })
+	public String authInputBuyerEmail(ModelMap model) throws IOException {
 		if (!model.containsAttribute("memberEmail")) {
 			model.addAttribute("memberEmail", "");
 		}
 
-		return "/login/auth-email";
+		return "/login/buyer-auth-email";
 	}
 
-	@PostMapping({ "/auth/email/checkbuyer" })
-	public ResponseEntity<?> authInputEmailCheck(@RequestBody String json, ModelMap model, BindingResult bindingResult,
+	@PostMapping({ "/buyer/auth/email/check" })
+	public ResponseEntity<?> authInputEmailBuyerCheck(@RequestBody String json, ModelMap model, BindingResult bindingResult,
 			HttpServletRequest req) throws IOException {
 		JSONObject jsonObj = new JSONObject(json);
 		String buyerEmail = (String) jsonObj.get("buyerEmail");
@@ -245,7 +259,7 @@ public class IndexControllerBuyer {
 			String servletName = req.getServerName();
 			String port = String.valueOf(req.getServerPort());
 			String path = req.getRequestURI();
-			String url = String.format("activate/buyer/%s/%s", buyerVO.getMemberId(), urlUUID);
+			String url = String.format("buyer/activate/%s/%s", buyerVO.getMemberId(), urlUUID);
 			String ctxPath = req.getContextPath();
 			String authPath = scheme + "://" + servletName + ":" + port + ctxPath + "/" + url + "/add";
 
@@ -253,6 +267,7 @@ public class IndexControllerBuyer {
 
 			MailService mailSvc = new MailService();
 
+			System.out.println(url);
 			mailSvc.sendMail(buyerVO.getMemberEmail(), "驗證信件", "驗證碼網址:" + authPath);
 			mailSvc = null;
 
@@ -263,10 +278,39 @@ public class IndexControllerBuyer {
 
 		return ResponseEntity.ok().body(new HttpResult<>(200, null, "傳送成功"));
 	}
+
+
+	@GetMapping("/buyer/activate/{buyerId}/{tokenId}/add")
+	public String authenticationUser(@PathVariable Integer buyerId, @PathVariable String tokenId, ModelMap model)
+			throws IOException {
+
+		PasswordForm passwordForm = new PasswordForm();
+		model.addAttribute("passwordForm", passwordForm);
+
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+			String authKey = "FORGOT:BUYER:" + buyerId;
+			String storedToken = jedis.get(authKey);
+			if (storedToken == null) {
+				model.addAttribute("error", "驗證信已經過期");
+				return "/login/authentication-failure";
+			}
+			if (storedToken.equals(tokenId)) {
+				return "/login/reset-password";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "/login/authentication-failure";
+		}
+
+		return "/login/authentication-failure";
+	}
 	
-	@PostMapping("/activate/buyer/{memberId}/{tokenId}/check")
+	
+	@PostMapping("/buyer/activate/{buyerId}/{tokenId}/check")
 	public String authenticationCheckUser(@Valid PasswordForm form, BindingResult bindingResult,
-			@PathVariable Integer memberId, @PathVariable String tokenId) {
+			@PathVariable Integer buyerId, @PathVariable String tokenId) {
 		// System.out.println(bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "/login/reset-password";
@@ -279,21 +323,31 @@ public class IndexControllerBuyer {
 
 		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
 			jedis.select(15);
-			String authKey = "FORGOT:BUYER:" + memberId;
+			String authKey = "FORGOT:BUYER:" + buyerId;
 			if (jedis.get(authKey) != null) {
 				jedis.del(authKey);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		BuyerVO buyerVO = buyerSvc.getOneBuyer(memberId);
-		buyerVO.setMemberPassword(form.getPassword());
-		buyerSvc.updateUserDetails(buyerVO);
-
+		BuyerVO buyerVO = buyerSvc.getOneBuyer(buyerId);
+		buyerVO.setMemberPassword(buyerPasswordEncoder.encode(form.getPassword()));
+		buyerSvc.updateBuyer(buyerVO);
+		
 		return "redirect:/buyer/login";
 	}
+
 	
+	
+	public BindingResult removeFieldError(BuyerVO buyerVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname)).collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(buyerVO, "buyerVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
 }
 
 

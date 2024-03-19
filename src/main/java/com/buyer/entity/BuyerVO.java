@@ -1,7 +1,7 @@
 package com.buyer.entity;
 
-import java.sql.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,9 +12,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -50,6 +57,7 @@ public class BuyerVO implements java.io.Serializable{
 	private Boolean isMemberEmail; 
 	private Date memberRegistrationTime; 
 	private String petName; 
+	
 	private byte[] petImg; 
 	private Date petImgUploadTime; 
 	private String petVaccName1; 
@@ -144,6 +152,7 @@ public class BuyerVO implements java.io.Serializable{
 		this.memberId = memberId;
 	}
 
+	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "輸入正確的信箱格式")
 	@Column(name = "memberEmail")
 	public String getMemberEmail() {
 		return memberEmail;
@@ -162,6 +171,7 @@ public class BuyerVO implements java.io.Serializable{
 		this.thirdFrom = thirdFrom;
 	}
 
+	@NotBlank(message = "成員名稱不得為空")
 	@Column(name = "memberName")
 	public String getMemberName() {
 		return memberName;
@@ -189,9 +199,9 @@ public class BuyerVO implements java.io.Serializable{
 		this.memberMobile = memberMobile;
 	}
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "memberBirthday")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getMemberBirthday() {
 		return memberBirthday;
 	}
@@ -200,6 +210,11 @@ public class BuyerVO implements java.io.Serializable{
 		this.memberBirthday = memberBirthday;
 	}
 
+	@NotBlank(message = "密碼不得為空")
+	@Size(min = 8, message = "密碼長度至少為8位")
+	@Pattern(regexp = ".*[A-Z].*", message = "密碼需包含至少一個大寫字母")
+	@Pattern(regexp = ".*[a-z].*", message = "密碼需包含至少一個小寫字母")
+	@Pattern(regexp = ".*\\d.*", message = "密碼需包含至少一個數字")
 	@Column(name = "memberPassword")
 	public String getMemberPassword() {
 		return memberPassword;
@@ -228,8 +243,8 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "memberRegistrationTime")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern= "yyyy-MM-dd")
 	public Date getMemberRegistrationTime() {
 		return memberRegistrationTime;
 	}
@@ -248,17 +263,22 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petImg", columnDefinition = "LONGBLOB" )
+	@Lob
 	public byte[] getPetImg() {
 		return petImg;
 	}
+	
+	
 
 	public void setPetImg(byte[] petImg) {
 		this.petImg = petImg;
 	}
+	
+
+	
 
 	@Column(name = "petImgUploadTime")
 //	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	public Date getPetImgUploadTime() {
 		return petImgUploadTime;
 	}
@@ -277,8 +297,9 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petVaccTime1")
-//	@Temporal(TemporalType.TIMESTAMP) //改成sql型別試試看
-//	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern= "yyyy-MM-dd")
+	@NotNull(message = "疫苗時間為空")
 	public Date getPetVaccTime1() {
 		return petVaccTime1;
 	}
@@ -297,7 +318,8 @@ public class BuyerVO implements java.io.Serializable{
 	}
 
 	@Column(name = "petVaccTime2")
-//	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern= "yyyy-MM-dd")
 	public Date getPetVaccTime2() {
 		return petVaccTime2;
 	}

@@ -56,9 +56,18 @@
 					<label for="productSort" class="form-label">廣告類型</label> <select
 						class="form-select" id="adLv" name="adLv">
 						<option value="-1" disabled selected>請選擇廣告版型</option>
-						<option value="0">BaseType</option>
-						<option value="1">PremiumType</option>
+
+						<!-- 						<option th:each="adType, index : ${adTypeSelectList}" -->
+						<!-- 							th:value="${index}" th:text="${adType}"></option> -->
+
+						<option th:if="${sellerLvId == 2}" value="0">BaseType</option>
+						<!-- 如果 sellerLvId 的值为 3，显示 BaseType 和 PremiumType 选项 -->
+						<option th:if="${sellerLvId == 3}" value="0">BaseType</option>
+						<option th:if="${sellerLvId == 3}" value="1">PremiumType</option>
+
+
 					</select>
+
 					<div id="productSortFeedback" class="invalid-feedback">
 						Please provide a valid city.</div>
 					<div class="valid-feedback">Looks Good!</div>

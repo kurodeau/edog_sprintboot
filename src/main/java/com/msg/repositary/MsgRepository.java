@@ -24,9 +24,9 @@ public interface MsgRepository extends JpaRepository<MsgVO, Integer> {
 	void deleteByMsgId(int msgId);
 	
 	
-	List<MsgVO> findByBuyerVO(BuyerVO buyerVO);
+	List<MsgVO> findByReceiverMember(BuyerVO buyerVO);
 	
-	MsgVO findByBuyerVOAndArticleVOAndMsgTypeVO(BuyerVO buyerVO, ArticleVO articleVO,MsgTypeVO msgTypeVO);
+	MsgVO findBySenderMemberAndArticleVOAndMsgTypeVO(BuyerVO buyerVO, ArticleVO articleVO,MsgTypeVO msgTypeVO);
 	
-	MsgVO findByBuyerVOAndReplyVOAndMsgTypeVO(BuyerVO buyerVO, ReplyVO replyVO,MsgTypeVO msgTypeVO);
+	MsgVO findBySenderMemberAndReplyVOAndMsgTypeVO(BuyerVO buyerVO, ReplyVO replyVO,MsgTypeVO msgTypeVO);
 }
