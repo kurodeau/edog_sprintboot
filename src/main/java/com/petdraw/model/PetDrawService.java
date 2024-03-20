@@ -25,7 +25,7 @@ public class PetDrawService {
 
 	public Integer addPetDraw(PetDrawVO petDrawVO) {
 		PetDrawVO savedPetDraw = petDrawRepository.save(petDrawVO);
-		return savedPetDraw.getpetDrawId();
+		return savedPetDraw.getPetDrawId();
 	}
 
 	public void updatePetDraw(PetDrawVO petDrawVO) {
@@ -43,6 +43,14 @@ public class PetDrawService {
 		List<PetDrawVO> buyerList = new ArrayList<>();
 
 		buyerList = petDrawRepository.findByMemberIdAndAfterPetDrawTime(buyerId, afterDate);
+		return buyerList;
+	}
+	
+	
+	public List<PetDrawVO> getByMemberIdAndAfterMemberResponseTime(Integer buyerId, LocalDateTime afterDate) {
+		List<PetDrawVO> buyerList = new ArrayList<>();
+
+		buyerList = petDrawRepository.findByMemberIdAndAfterMemberResponseTime(buyerId, afterDate);
 		return buyerList;
 	}
 
@@ -67,6 +75,8 @@ public class PetDrawService {
 
 		return pairInvitations;
 	}
+	
+	
 
 	public PetDrawVO getOnePetDraw(Integer petDrawId) {
 		Optional<PetDrawVO> optional = petDrawRepository.findById(petDrawId);
