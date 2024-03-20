@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,7 +177,7 @@ public class SellerOrderReportController {
 	private ResourceLoader resourceLoader;
 
 	@PostMapping("/report/download")
-	public ResponseEntity<?> downloadReport(Model model, @RequestBody String jsonStr) throws IOException {
+	public ResponseEntity<?> downloadReport(Model model, @RequestBody String jsonStr , HttpServletRequest req) throws IOException {
 
 		String startTimeStr = null;
 		String endTimeStr = null;
@@ -192,7 +195,11 @@ public class SellerOrderReportController {
 		LocalDate endTimeDate = LocalDate.parse(endTimeStr, formatter);
 		System.out.println(jsonStr);
 
-		String filename = fileSvc.generateFiles(startTimeDate, endTimeDate, 1);
+		
+		HttpSession session = req.getSession();
+		SellerVO  sellerVO = (SellerVO) session.getAttribute("sellerVO");
+		String filename = fileSvc.generateFiles(startTimeDate, endTimeDate, sellerVO.getSellerId());
+		
 		System.out.println(filename);
 		System.out.println(jsonStr);
 
