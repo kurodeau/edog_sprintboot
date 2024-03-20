@@ -62,7 +62,8 @@ public class AdService {
 
 		List<AdVO> list = allAds.stream() // for each
 				.filter(ad -> "審核中".equals(ad.getAdStatus())
-						|| "審核失敗".equals(ad.getAdStatus()) && Boolean.TRUE.equals(ad.getIsEnabled()))
+						|| "審核失敗".equals(ad.getAdStatus()) 
+						&& Boolean.TRUE.equals(ad.getIsEnabled()))
 				.collect(Collectors.toList());
 
 		return list;

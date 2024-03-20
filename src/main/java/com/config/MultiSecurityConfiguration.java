@@ -148,6 +148,7 @@ public class MultiSecurityConfiguration {
 
 		http.authorizeRequests(authorize -> authorize
 				.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+				.antMatchers("/front/seller/ad/**").hasAnyRole("SELLERLV2", "SELLERLV3")
 				.antMatchers("/front/seller/**").hasRole("SELLER")
 				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login").permitAll()
 				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
