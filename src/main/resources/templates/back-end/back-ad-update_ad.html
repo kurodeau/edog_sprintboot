@@ -9,10 +9,10 @@
 	<header class="fixed-top">
 		<th:block th:insert="~{/back-end/header-back}"></th:block>
 	</header>
-	
-	
-	
-	
+
+
+
+
 	<!-- ======= Sidebar ======= -->
 	<!-- start帳戶管理 -->
 	<aside th:replace="back-end/aside-back.html"></aside>
@@ -20,7 +20,7 @@
 
 	<!-- ======= Main ======= -->
 
-		<main class="main main-layout-seller">
+	<main class="main main-layout-seller">
 		<div class="container-fluid seller-container">
 			<h1>修改廣告資料</h1>
 			<nav class="mt-5 mb-4">
@@ -60,38 +60,40 @@
 						type="text" th:field="*{adName}"
 						onclick="hideContent('adName.errors');" class="form-control"
 						id="adName" name="adName" required />
-						
+
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('adName')}" th:errors="*{adName}"
 							class="error" id="adName.errors"></div>
 					</div>
 				</div>
 
-				<div class="col-md-12" style="margin-bottom: 20px;">
-					<label for="productSort" class="form-label">廣告類型</label> <select
-						class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
-						<option value="-1" disabled selected>請選擇廣告版型</option>
-						<option th:if="${sellerLvId == 2}" value="0">BaseType</option>
-						<option th:if="${sellerLvId == 3}" value="0">BaseType</option>
-						<option th:if="${sellerLvId == 3}" value="1">PremiumType</option>
-					</select>
-					<div style="color: red; font-size: 14px;">
-						<div th:if="${#fields.hasErrors('adLv')}" th:errors="*{adLv}"
-							class="error" id="adLv.errors"></div>
+				<div class="col-md-12" style="margin-bottom: 20px;"
+					th:unless="${sellerLvId == 1}">
+					<div>
+						<label for="productSort" class="form-label">廣告類型</label> <select
+							class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
+							<option value="-1" disabled selected>請選擇廣告版型</option>
+							<option th:if="${sellerLvId == 2}" value="0">BaseType</option>
+							<option th:if="${sellerLvId == 3}" value="0">BaseType</option>
+							<option th:if="${sellerLvId == 3}" value="1">PremiumType</option>
+						</select>
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adLv')}" th:errors="*{adLv}"
+								class="error" id="adLv.errors"></div>
+						</div>
 					</div>
 				</div>
 
-
-				<div class="col-md-12" style="margin-bottom: 20px;">
-					<label for="productStockQuantity" class="form-label">廣告商品網址</label>
-					<input type="text" th:field="*{adUrl}"
-						onclick="hideContent('adUrl.errors');" class="form-control"
-						id="adUrl" name="adUrl" required placeholder="請輸入產品的網址" />
-					<div style="color: red; font-size: 14px;">
-						<div th:if="${#fields.hasErrors('adUrl')}" th:errors="*{adUrl}"
-							class="error" id="adUrl.errors"></div>
-					</div>
-				</div>
+				<!-- 				<div class="col-md-12" style="margin-bottom: 20px;"> -->
+				<!-- 					<label for="productStockQuantity" class="form-label">廣告商品網址</label> -->
+				<!-- 					<input type="text" th:field="*{adUrl}" -->
+				<!-- 						onclick="hideContent('adUrl.errors');" class="form-control" -->
+				<!-- 						id="adUrl" name="adUrl" required placeholder="請輸入產品的網址" /> -->
+				<!-- 					<div style="color: red; font-size: 14px;"> -->
+				<!-- 						<div th:if="${#fields.hasErrors('adUrl')}" th:errors="*{adUrl}" -->
+				<!-- 							class="error" id="adUrl.errors"></div> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productDetails" class="form-label">廣告備註</label> <input
