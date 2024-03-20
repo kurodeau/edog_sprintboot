@@ -66,6 +66,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 		            res.sendRedirect(req.getContextPath() + "/error/seller/sellerAuthError403"); 
 		        } else if (requestUri.contains("/front/seller/report")){
 		            res.sendRedirect(req.getContextPath() + "/error/seller/sellerLvError403"); 
+		        }  else if (requestUri.contains("/front/seller/ad")){
+		            res.sendRedirect(req.getContextPath() + "/error/seller/sellerLvError403"); 
 		        }
 		        else {
 		            res.sendRedirect(req.getContextPath() +"front/seller/main"); 
