@@ -38,7 +38,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/getOne_For_Update");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/product/getOne_For_Update");
 
-		
 		// 買家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/main"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer"); 

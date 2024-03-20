@@ -145,6 +145,7 @@ public class AdVO implements Serializable {
 
 
 	
+	
 	@Column(name = "adName")
 	@NotEmpty(message="請填寫廣告名稱")
 	@Pattern(regexp = "^.{1,20}$", message = "產品名稱長度必需在1到20之間")
