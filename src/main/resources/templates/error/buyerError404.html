@@ -8,7 +8,7 @@
     <style>
       @import url(https://fonts.googleapis.com/css?family=opensans:500);
       body {
-        background: #d3ddb7;
+        background: #ead28d;
         color: #fff;
         font-family: "Open Sans", sans-serif;
         max-height: 700px;
@@ -65,7 +65,7 @@
         z-index: 5;
         font-size: 25px;
         margin: 0 auto;
-        color: #d3ddb7;
+        color: #ead28d;
         text-decoration: none;
         margin-right: 10px;
       }
@@ -93,7 +93,7 @@
         top: -0.75em;
         font-size: 2em;
         padding: 0 0.2em;
-        background: #d3ddb7;
+        background: #ead28d;
       }
 
       .cloud {
@@ -260,13 +260,23 @@
       <div class="cloud x4"></div>
       <div class="cloud x5"></div>
     </div>
+
     <div class="c">
-      <div class="_404">404</div>
-      <hr />
-      <div class="_1">您訪問的頁面不存在(買家身分)</div>
-      <div class="_2"></div>
-      <a class="btn" th:href="@{/front/buyer/main}">返回買家首頁</a>
+      <div class="_404" style="color: #8a6801">404</div>
+      <div class="_1" style="color: #8a6801">您訪問的頁面不存在</div>
+      <div class="_1" style="color: #8a6801; margin-top: 50px">(買家身分)</div>
+
+      <div class="_2" style="margin-top: 50px">
+        <a
+          th:href="@{/front/buyer/main}"
+          class="btn"
+          style="background-color: #8a6801; color: white; cursor: pointer"
+        >
+          返回買家中心首頁
+        </a>
+      </div>
     </div>
+
     <!-- partial -->
   </body>
 </html>

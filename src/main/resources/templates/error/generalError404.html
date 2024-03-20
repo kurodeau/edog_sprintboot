@@ -261,11 +261,19 @@
       <div class="cloud x5"></div>
     </div>
     <div class="c">
-      <div class="_404">404</div>
-      <hr />
-      <div class="_1">您訪問的頁面不存在(全部身分)</div>
-      <div class="_2"></div>
-      <a class="btn" th:href="@{/}">返回電子商城首頁</a>
+      <div class="_404" style="color: green">404</div>
+      <div class="_1" style="color: green">您訪問的頁面不存在</div>
+      <div class="_1" style="color: green; margin-top: 50px">(全部身分)</div>
+
+      <div class="_2" style="margin-top: 50px">
+        <a
+          th:href="@{/}"
+          class="btn"
+          style="background-color: green; color: white; cursor: pointer"
+        >
+          返回電子商城首頁
+        </a>
+      </div>
     </div>
     <!-- partial -->
   </body>
