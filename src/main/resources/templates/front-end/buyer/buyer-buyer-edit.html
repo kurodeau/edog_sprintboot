@@ -98,23 +98,12 @@
 					<label for="inputMemberBirthday" class="col-sm-2 col-form-label">生日</label>
 					<div class="col-sm-12">
 						<input type="date" class="form-control" name="memberBirthday"
-							th:value="${buyerVO.memberBirthday}" />
+							th:value="${#dates.format(buyerVO.memberBirthday, 'yyyy-MM-dd')}">
 					</div>
 				</div>
 
 				<div class="col-md-12">
 					<label for="inputMemberAddress" class="form-label">地址</label>
-					<!-- <div class="city-selector-set col-md-12 d-flex flex-row">
-            <div class="col-md-2">
-              <select class="county form-select" name="county"></select>
-            </div>
-            <div class="col-md-2">
-              <select class="district form-select" name="district"></select>
-            </div>
-            <div class="col-md-2">
-              <input class="zipcode form-control" type="text" size="3" readonly placeholder="郵遞區號" name="zipcode" />
-            </div>
-          </div> -->
 					<input type="text" class="form-control mt-2" id="inputMemberAddress" name="memberAddress"
 						placeholder="請輸入地址" th:value="${buyerVO.memberAddress}" />
 					<div id="memberAddressFeedback" class="invalid-feedback">
@@ -157,9 +146,9 @@
 					<div class="col-sm-12">
 						<div class="upload__box">
 							<label for="inputPetImg" class="btn btn-sellerdark">請選擇寵物圖片</label>
-							<input type="file" data-max_length="1" class="form-control upload__inputfile"
-								id="inputPetImg" name="petImg" onclick="previewImage()" onchange="previewImage();"
-								aria-describedby="petImgFeedback"
+							<input type="file" th:field="*{petImg}" data-max_length="1"
+								class="form-control upload__inputfile" id="inputPetImg" name="petImg"
+								onclick="previewImage()" onchange="previewImage();" aria-describedby="petImgFeedback"
 								th:classappend="${errorMessage != null} ? 'is-invalid' : ''" />
 							<div class="valid-feedback">Looks Good!</div>
 							<div id="petImgFeedback" class="invalid-feedback" th:text="${errorMessage}">XXX</div>
@@ -174,7 +163,8 @@
 
 				<div class="col-md-12">
 					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input type="text"
-						class="form-control" id="inputPetVaccName1" name="petVaccName1" placeholder="輸入疫苗名稱" />
+						class="form-control" id="inputPetVaccName1" name="petVaccName1"
+						th:value="${buyerVO.petVaccName1}" placeholder="請輸入疫苗名稱" />
 					<div id="petVaccName1Feedback" class="invalid-feedback">
 						"輸入施打疫苗1錯誤提示訊息"</div>
 					<div class="valid-feedback">Looks Good!</div>
@@ -182,9 +172,10 @@
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
-					<div class="col-sm-12">
+					<div class="col-sm-3">
 						<input type="date" class="form-control" id="inputPetVaccTime1" name="petVaccTime1"
 							aria-describedby="petVaccTime1Feedback"
+							th:value="${#dates.format(buyerVO.petVaccTime1, 'yyyy-MM-dd')}"
 							th:classappend="${#fields.hasErrors('petVaccTime1')} ? 'is-invalid' : ''" />
 						<div id="petVaccTime1Feedback" class="invalid-feedback">
 							<p th:if="${#fields.hasErrors('petVaccTime1')}" th:errors="*{petVaccTime1}">施打時間1錯誤提示訊息</p>
@@ -196,13 +187,15 @@
 
 				<div class="col-md-12">
 					<label for="inputPetVaccName2" class="form-label">施打疫苗2</label> <input type="text"
-						class="form-control" id="inputPetVaccName2" name="petVaccName2" placeholder="輸入疫苗名稱" />
+						class="form-control" id="inputPetVaccName2" name="petVaccName2"
+						th:value="${buyerVO.petVaccName2}" placeholder="請輸入疫苗名稱" />
 				</div>
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime2" class="col-sm-2 col-form-label">施打時間2</label>
 					<div class="col-sm-12">
-						<input type="date" class="form-control" name="petVaccTime2">
+						<input type="date" class="form-control" name="petVaccTime2"
+							th:value="${#dates.format(buyerVO.petVaccTime2, 'yyyy-MM-dd')}">
 					</div>
 				</div>
 
