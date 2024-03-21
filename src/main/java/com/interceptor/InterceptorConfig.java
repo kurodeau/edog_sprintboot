@@ -57,7 +57,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		// 後台部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/"+loginPath+"/login"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/main");
-		
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/**");
+
 		
 		// 論壇部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/listAll");

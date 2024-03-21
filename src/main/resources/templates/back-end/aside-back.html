@@ -1,147 +1,86 @@
 <aside class="sidebar sidebar-layout-seller">
-  <ul class="sidebar-nav" id="sidebar-nav">
-    <li class="nav-item">
-      <a class="nav-link nav-seller-entry" th:href="@{/back/main}">
-        <i class="bi bi-grid"></i> <span>後台中心(只有這才能登出)</span>
-      </a>
-    </li>
+	<ul class="sidebar-nav" id="sidebar-nav">
+		<li class="nav-item"><a class="nav-link nav-seller-entry"
+			th:href="@{/back/main}"> <i class="bi bi-grid"></i> <span>後台中心</span>
+		</a></li>
 
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#seller-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-person"></i> <span>賣家管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="seller-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/seller/list}" id="sellerLink">
-            <i class="bi bi-circle"></i><span>所有賣家</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/back/seller/query}">
-            <i class="bi bi-circle"></i><span>查詢賣家</span>
-          </a>
-        </li>
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#seller-nav" data-bs-toggle="collapse" th:href="@{#}">
+				<i class="bi bi-person"></i> <span>賣家管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="seller-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/seller/list}" id="sellerLink"> <i
+						class="bi bi-circle"></i><span>所有賣家</span>
+				</a></li>
+				<li><a th:href="@{/back/seller/query}"> <i
+						class="bi bi-circle"></i><span>查詢賣家</span>
+				</a></li>
 
-        <!-- 新增賣家請串到自己頁面 -->
-        <!-- 編輯賣家藏在操作 選項卡 -->
-        <!-- 刪除賣家視個人決定要不要做 -->
-      </ul>
-    </li>
-    <!-- End帳戶管理 -->
+				<!-- 新增賣家請串到自己頁面 -->
+				<!-- 編輯賣家藏在操作 選項卡 -->
+				<!-- 刪除賣家視個人決定要不要做 -->
+			</ul></li>
+		<!-- End帳戶管理 -->
 
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#sellerlv-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-person"></i> <span>賣家等級管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="sellerlv-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/sellerLv/list}">
-            <i class="bi bi-circle"></i><span>所有賣家等級</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/back/sellerLv/new}">
-            <i class="bi bi-circle"></i><span>新增賣家等級</span>
-          </a>
-        </li>
-      </ul>
-    </li>
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#sellerlv-nav" data-bs-toggle="collapse"
+			th:href="@{#}"> <i class="bi bi-person"></i> <span>賣家等級管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="sellerlv-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/sellerLv/list}"> <i
+						class="bi bi-circle"></i><span>所有賣家等級</span>
+				</a></li>
+				<li><a th:href="@{/back/sellerLv/new}"> <i
+						class="bi bi-circle"></i><span>新增賣家等級</span>
+				</a></li>
+			</ul></li>
 
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#buyer-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-person"></i> <span>買家資料管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="buyer-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/buyer/listAllGet}">
-            <i class="bi bi-circle"></i><span>所有買家</span>
-          </a>
-        </li>
-      </ul>
-    </li>
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#buyer-nav" data-bs-toggle="collapse" th:href="@{#}">
+				<i class="bi bi-person"></i> <span>買家資料管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="buyer-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/buyer/listAllGet}"> <i
+						class="bi bi-circle"></i><span>所有買家</span>
+				</a></li>
+			</ul></li>
 
-    <!-- Start商品管理 -->
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#product-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-bag"></i> <span>商品管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="product-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/product/list}">
-            <i class="bi bi-circle"></i><span>所有商品</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <!-- End商品管理 -->
+		<!-- Start商品管理 -->
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#product-nav" data-bs-toggle="collapse"
+			th:href="@{#}"> <i class="bi bi-bag"></i> <span>商品管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="product-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/product/list}"> <i
+						class="bi bi-circle"></i><span>所有商品</span>
+				</a></li>
+			</ul></li>
+		<!-- End商品管理 -->
 
-    <!-- Start訂單管理 -->
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#productorder-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-bag"></i> <span>訂單管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="productorder-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/productorder/productordersearch}">
-            <i class="bi bi-circle"></i><span>所有訂單</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <!-- End訂單管理 -->
+		<!-- Start訂單管理 -->
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#productorder-nav" data-bs-toggle="collapse"
+			th:href="@{#}"> <i class="bi bi-bag"></i> <span>訂單管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="productorder-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/productorder/productordersearch}">
+						<i class="bi bi-circle"></i><span>所有訂單</span>
+				</a></li>
+			</ul></li>
+		<!-- End訂單管理 -->
 
-    <!-- Strat優惠券管理 -->
-  <!--   <li class="nav-item">
+		<!-- Strat優惠券管理 -->
+		<!--   <li class="nav-item">
       <a
         class="nav-link collapsed"
         data-bs-target="#service-nav"
@@ -168,10 +107,10 @@
         </li>
       </ul>
     </li> -->
-    <!-- End優惠券管理 -->
+		<!-- End優惠券管理 -->
 
-    <!-- Strat匯款資訊 -->
-   <!--  <li class="nav-item">
+		<!-- Strat匯款資訊 -->
+		<!--  <li class="nav-item">
       <a
         class="nav-link collapsed"
         data-bs-target="#export-nav"
@@ -198,85 +137,56 @@
         </li>
       </ul>
     </li> -->
-    <!-- End匯款資訊 -->
+		<!-- End匯款資訊 -->
 
-    <!-- Start廣告管理 -->
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#ad-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-bag"></i> <span>廣告管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="ad-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/ad/list}">
-            <i class="bi bi-circle"></i><span>所有廣告</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <!-- End廣告管理 -->
+		<!-- Start廣告管理 -->
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#ad-nav" data-bs-toggle="collapse" th:href="@{#}">
+				<i class="bi bi-bag"></i> <span>廣告管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="ad-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/ad/list}"> <i class="bi bi-circle"></i><span>所有廣告</span>
+				</a></li>
+			</ul></li>
+		<!-- End廣告管理 -->
 
-    <!-- Start論壇管理 -->
-    <li class="nav-item">
-      <a
-        class="nav-link collapsed"
-        data-bs-target="#forum-nav"
-        data-bs-toggle="collapse"
-        th:href="@{#}"
-      >
-        <i class="bi bi-file-text"></i> <span>論壇檢舉管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="forum-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
-        <li>
-          <a th:href="@{/back/report/listartAll}">
-            <i class="bi bi-circle"></i><span>文章檢舉管理</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/back/report/listreplyAll}">
-            <i class="bi bi-circle"></i><span>留言檢舉管理</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <!-- End論壇管理 -->
+		<!-- Start論壇管理 -->
+		<li class="nav-item"><a class="nav-link collapsed"
+			data-bs-target="#forum-nav" data-bs-toggle="collapse" th:href="@{#}">
+				<i class="bi bi-file-text"></i> <span>論壇檢舉管理</span><i
+				class="bi bi-chevron-down ms-auto"></i>
+		</a>
+			<ul id="forum-nav" class="nav-content collapse"
+				data-bs-parent="#sidebar-nav">
+				<li><a th:href="@{/back/report/listartAll}"> <i
+						class="bi bi-circle"></i><span>文章檢舉管理</span>
+				</a></li>
+				<li><a th:href="@{/back/report/listreplyAll}"> <i
+						class="bi bi-circle"></i><span>留言檢舉管理</span>
+				</a></li>
+			</ul></li>
+		<!-- End論壇管理 -->
 
-    <!-- Start搜尋關鍵字管理 -->
-    <li class="nav-item">
-      <!-- 請依自身需求改變網址 -->
-      <a class="nav-link nav-seller-entry" th:href="@{#}">
-        <i class="bi bi-pin"></i> <span>搜尋關鍵字管理</span>
-      </a>
-    </li>
-    <!-- End搜尋關鍵字管理 -->
+		<!-- Start搜尋關鍵字管理 -->
+		<li class="nav-item">
+			<!-- 請依自身需求改變網址 --> <a class="nav-link nav-seller-entry"
+			th:href="@{#}"> <i class="bi bi-pin"></i> <span>搜尋關鍵字管理</span>
+		</a>
+		</li>
+		<!-- End搜尋關鍵字管理 -->
 
-    <!-- Start走馬燈管理 -->
-    <li class="nav-item">
-      <!-- 請依自身需求改變網址 -->
-      <a
-        id="newsTickerLink"
-        class="nav-link nav-seller-entry"
-        th:href="@{/back/newsTicker/listAllGet}"
-      >
-        <i class="bi bi-lightning"></i> <span>走馬燈管理</span>
-      </a>
-    </li>
-    <!-- End走馬燈管理 -->
-  </ul>
+		<!-- Start走馬燈管理 -->
+		<li class="nav-item">
+			<!-- 請依自身需求改變網址 --> <a id="newsTickerLink"
+			class="nav-link nav-seller-entry"
+			th:href="@{/back/newsTicker/listAllGet}"> <i
+				class="bi bi-lightning"></i> <span>走馬燈管理</span>
+		</a>
+		</li>
+		<!-- End走馬燈管理 -->
+	</ul>
 </aside>
 
 <script>
@@ -329,18 +239,29 @@
               switch (dataAfterParsed.data) {
                 case "OUTDATED":
                   alert("OUTDATED");
+                  var logoutLink = document.querySelector('.nav-link[href="/logout/jwt"]');
+                  logoutLink.click();
+                  
+                  break;
+
                 case "NOT_FOUNDTOKEN":
                   alert("NOT_FOUNDTOKEN");
                   break;
+                  
                 case "ACCOUNT_ERR":
                   alert("ACCOUNT_ERR");
                   break;
+                  
                 case "ACCESS_ERR":
                   alert("ACCESS_ERR");
+                  
+                  window.location.href = "";
                   break;
+                  
                 default:
                   alert("UNCAUGHT ERROR from backend");
                   break;
+                  
               }
             } else {
               alert("PASS");
@@ -353,4 +274,7 @@
           });
       });
   });
+  
+  
+	
 </script>
