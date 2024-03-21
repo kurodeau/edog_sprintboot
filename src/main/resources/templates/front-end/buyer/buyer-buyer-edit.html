@@ -19,14 +19,19 @@
 		<div class="container-fluid seller-container">
 			<h1>修改個人資料</h1>
 
-			<form class="row g-3" id="myForm" th:action="@{submitUpdateBuyer}" th:object="${buyerVO}" method="post"
-				enctype="multipart/form-data" onsubmit="return updateHiddenFields();">
+			<form class="row g-3" id="myForm" th:action="@{/front/buyer/updateBuyer/check}" th:object="${buyerVO}"
+				method="post" enctype="multipart/form-data" onsubmit="return updateHiddenFields();">
 
-
+				<div class="col-md-12" style="display: none;">
+					<label for="inputMemberId" class="form-label">用戶Id</label> <input type="Text" class="form-control"
+						id="inputMemberId" name="MemberId" th:value="${buyerVO.MemberId}"
+						aria-describedby="memberEmailFeedback"
+						th:classappend="${#fields.hasErrors('memberEmail')} ? 'is-invalid' : ''" />
+				</div>
 
 				<div class="col-md-12">
 					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input type="email"
-						class="form-control" id="inputMemberEmail" name="memberEmail" placeholder="請輸入電子信箱,將做為您登入的帳號"
+						class="form-control" id="inputMemberEmail" name="memberEmail" placeholder="信箱視同帳戶不可修改"
 						th:value="${buyerVO.memberEmail}" aria-describedby="memberEmailFeedback"
 						th:classappend="${#fields.hasErrors('memberEmail')} ? 'is-invalid' : ''" readonly />
 
@@ -46,6 +51,16 @@
 
 					<div id="memberPasswordFeedback" class="invalid-feedback">
 						<p th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}">輸入密碼錯誤提示訊息</p>
+					</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputChecKMemberPassword" class="form-label">確認密碼</label>
+					<input type="text" class="form-control" id="inputChecKMemberPassword" name="checkMemberPassword"
+						placeholder="請輸入相同密碼" th:classappend="${duplicateError} ? 'is-invalid' : ''" />
+					<div id="checKMemberPasswordFeedback" class="invalid-feedback" th:if="${duplicateError}">
+						<span th:text="${duplicateError}"></span>
 					</div>
 					<div class="valid-feedback">Looks Good!</div>
 				</div>
@@ -202,7 +217,7 @@
 				<br> <br>
 
 				<div class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button type="reset" class="btn btn-secondary">取消並離開</button>
+					<button type="reset" id="cancel-btn" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
 			</form>
@@ -219,25 +234,92 @@
 				window.location.href = "/front/buyer/main"; // 將網頁重定向到指定的 URL
 			});
 
-		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
-		// var loadjsCompletedEvent = new Event("loadjsCompleted");
 
-		// window.onload = function () {
-		// 	// 監聽自定義事件，當 loadjs 完成時觸發
-		// 	document.addEventListener("loadjsCompleted", function () {
-		// 		new TwCitySelector({
-		// 			el: ".city-selector-set",
-		// 			elCounty: ".county",
-		// 			elDistrict: ".district",
-		// 			elZipcode: ".zipcode",
-		// 		});
-		// 	});
+		document.addEventListener("DOMContentLoaded", function () {
+			var countyValue = document
+				.querySelector(".county")
+				.getAttribute("data-countyValue");
+			console.log(countyValue); // 將印出 "台北市"
+		});
 
-		// 	// 手動觸發事件，告知 TwCitySelector 可以初始化了
-		// 	document.dispatchEvent(loadjsCompletedEvent);
-		// };
+		window.onload = function () {
+			// 監聽自定義事件，當 loadjs 完成時觸發
+
+			new TwCitySelector({
+				el: ".city-selector-set",
+				elCounty: ".county",
+				elDistrict: ".district",
+				elZipcode: ".zipcode",
+				countyValue: document.querySelector("#sellerCountyValue").value,
+				districtValue: document.querySelector("#sellerDistrictValue").value,
+			});
+		};
+
+		function updateHiddenFields() {
+			// 取得選擇的縣市和區域的值
+			var selectedCounty = document.querySelector(".county").value;
+			var selectedDistrict = document.querySelector(".district").value;
+
+			// 更新隱藏欄位的值
+			document.getElementById("sellerCountyValue").value = selectedCounty;
+			document.getElementById("sellerDistrictValue").value = selectedDistrict;
+
+			// 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+			return checkFormBeforeSubmit();
+		}
+
+		function checkFormBeforeSubmit() {
+			// 取得表單元素
+			var form = document.getElementById("myForm");
+
+			// 檢視表單內容
+			var formData = new FormData(form);
+			var formContent = "";
+
+			for (var pair of formData.entries()) {
+				formContent += pair[0] + ": " + pair[1] + "\n";
+			}
+
+			// 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+			alert("表單內容：\n" + formContent);
+
+			// 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+			return true;
+		}
 
 
+
+
+		window.onload = function () {
+			// 監聽自定義事件，當 loadjs 完成時觸發
+			document.addEventListener("loadjsCompleted", function () {
+				new TwCitySelector({
+					el: ".city-selector-set",
+					elCounty: ".county",
+					elDistrict: ".district",
+					elZipcode: ".zipcode",
+				});
+			});
+
+			// 自動觸發預覽圖片
+			previewImage();
+
+			// 手動觸發事件，告知 TwCitySelector 可以初始化了
+			// document.dispatchEvent(loadjsCompletedEvent);
+		};
+
+		//============ 照片上傳-預覽用 start =============
+		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
+		var filereader_support = typeof FileReader != 'undefined';
+		if (!filereader_support) {
+			alert("No FileReader support");
+		}
+		acceptedTypes = {
+			'image/png': true,
+			'image/jpeg': true,
+			'image/gif': true
+		};
+		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
 		function previewImage() {
 			var preview = document.getElementById('imagePreview');
 			var fileInput = document.getElementById('inputPetImg');
@@ -260,30 +342,7 @@
 			}
 		}
 
-
-		//============ 照片上傳-預覽用 start =============
-		檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
-		var filereader_support = typeof FileReader != 'undefined';
-		if (!filereader_support) {
-			alert("No FileReader support");
-		}
-		acceptedTypes = {
-			'image/png': true,
-			'image/jpeg': true,
-			'image/gif': true
-		};
-		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
-		function previewImage() {
-			var upfile1 = document.getElementById("inputPetImg");
-			upfile1.addEventListener("change", function (event) {
-				var files = event.target.files || event.dataTransfer.files;
-				for (var i = 0; i < files.length; i++) {
-					previewfile(files[i])
-				}
-				// 				previewfile(files[files.length-1])
-			}, false);
-		}
-		// //檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
+		//檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
 		function previewfile(file) {
 			if (filereader_support === true
 				&& acceptedTypes[file.type] === true) {
@@ -317,7 +376,7 @@
 						}
 						blob_holder.appendChild(image);
 
-						// 				// 移除多顯示的圖片
+						// 移除多顯示的圖片
 						clearChildNodesExceptLast();
 					};
 				};
@@ -340,16 +399,18 @@
 				document.getElementById('submit').disabled = true;
 			}
 
-		// 	//清除<div id="blob_holder">子元素多的顯示圖片
-		// 	function clearChildNodesExceptLast() {
-		// 		var blobHolder = document.getElementById("blob_holder");
-		// 		var childNodes = blobHolder.children;
-		// 		// 從第一個子元素開始到倒數第二個子元素移除
-		// 		for (var i = childNodes.length - 2; i >= 0; i--) {
-		// 			blobHolder.removeChild(childNodes[i]);
-		// 		}
-		// 	}
-		// }
+			//清除<div id="blob_holder">子元素多的顯示圖片
+			function clearChildNodesExceptLast() {
+				var blobHolder = document.getElementById("blob_holder");
+				var childNodes = blobHolder.children;
+				// 從第一個子元素開始到倒數第二個子元素移除
+				for (var i = childNodes.length - 2; i >= 0; i--) {
+					blobHolder.removeChild(childNodes[i]);
+				}
+			}
+		}
+
+
 	</script>
 </body>
 
