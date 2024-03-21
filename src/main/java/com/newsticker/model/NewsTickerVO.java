@@ -22,6 +22,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
 
 //import org.hibernate.validator.constraints.NotEmpty;
@@ -29,6 +30,8 @@ import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.validator.MyZeroValidator;
 
 /*
  * 註1: classpath必須有javax.persistence-api-x.x.jar 
@@ -71,6 +74,8 @@ public class NewsTickerVO implements java.io.Serializable {
 		this.newsTickerContent = newsTickerContent;
 	}
 	
+	@NotNull(message = "顯示權重不能空白")
+	@Min(value = 1, message = "顯示權重不能小於0")
 	@Column(name = "sort")
 	public Integer getSort() {
 		return sort;
