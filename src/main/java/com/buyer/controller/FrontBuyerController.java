@@ -62,13 +62,36 @@ public class FrontBuyerController extends HttpServlet{
 	
 	
 	@PostMapping("submitUpdateBuyer")
-	public String submitUpdateBuyer(@Valid BuyerVO buyerVO,  BindingResult bindingResult, ModelMap model  ,@RequestParam("petImg") MultipartFile[] parts ) throws IOException{
-        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		
+	public String submitUpdateBuyer(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
+			@RequestParam("petImg") MultipartFile[] parts) throws IOException{
+				
+		// 從登入狀態抓取用戶ID對應的資料
+		String memberId = "9"; //測試有登入, 預設值
+		SecurityContext secCtx = SecurityContextHolder.getContext();
+        Authentication authentication = secCtx.getAuthentication();
+        buyerVO = (BuyerVO) authentication.getPrincipal();
+        memberId = String.valueOf(buyerVO.getMemberId());
+        
+        System.out.println("送交修改的會員資料是memberId=" + memberId);
 
-		System.out.println("SSSSSSSSSSSSSSSSSSS"+bindingResult);
+        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+	
+		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
+			// BuyerService buyerSvc = new BuyerService();
+			byte[] petImg = buyerSvc.getOneBuyer(buyerVO.getMemberId()).getPetImg();
+			buyerVO.setPetImg(petImg);
+		} else {
+			for (MultipartFile multipartFile : parts) {
+				byte[] petImg = multipartFile.getBytes();
+				buyerVO.setPetImg(petImg);
+			}
+		}
 		
-		if (bindingResult.hasErrors()) {
+		if (result.hasErrors()) {
+			// 修改成進行修改資料的PAGE
+			System.out.println("測試訊息:圖片的判斷有問題, 提早返回edit");
+//			System.out.println("測試訊息:" + result.);
+
 			return "front-end/buyer/buyer-buyer-edit";
 		}
 

@@ -78,13 +78,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		jwt = authHeader.substring(7);
 		userEmailFromJwt =null;
+
+
 		try {
 			userEmailFromJwt =jwtService.extractUsername(jwt);
 			userIdFromJwt = jwtService.extractId(jwt);
 			userRoles = jwtService.extractRoles(jwt);
 		}catch (ExpiredJwtException e) {
-			HttpResult<String> result = new HttpResult<>(400, "OUTDATED", "Token已經過期，請重新登入");
+			
+		    List<String> authorities = e.getClaims().get("authorities", List.class);
+			
+		    Integer userId =  e.getClaims().get("id", Integer.class);
+		    
+		    
+		    
+		    HttpResult<String> result = new HttpResult<>(400, "OUTDATED", "Token已經過期，請重新登入");
+			
 			response.getWriter().write(result.toJsonString());
+			
+//			String ctxPath = request.getContextPath();
+//			response.sendRedirect(ctxPath+"/back/main");	
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -101,8 +114,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				}
 			}
 		}
-		
-		System.out.println(hasAccess);
 		
 		if (!hasAccess) {
 			response.setCharacterEncoding("UTF-8");
