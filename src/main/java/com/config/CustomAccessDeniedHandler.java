@@ -27,6 +27,15 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		// 特殊情況
+		// 原本是ROLE_MANAGERJWT2 (小權限)，JWT解析過期後
+		// Server回傳 Token過期通知到前端
+		// 前端自動按下登出
+		// 登出後auth為null，但此時不會進去CustomAuthenticationEntryPoint
+		if (auth ==null) {
+			res.sendRedirect(req.getContextPath() + "/");
+		}
+		
 		if (auth instanceof AnonymousAuthenticationToken) {
 			// 匿名用户
 			if (requestUri.contains("/front/seller")) {

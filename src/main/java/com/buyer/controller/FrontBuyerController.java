@@ -73,7 +73,7 @@ public class FrontBuyerController {
 		return "/front-end/buyer/buyer-buyer-edit";
 	}
 
-	
+
 	// 編輯葉面送交按鈕
 	@PostMapping("/updateBuyer/check")
 	public String checkregisterBuyer(@Valid BuyerVO buyerVO,  BindingResult result , ModelMap model ,HttpSession session

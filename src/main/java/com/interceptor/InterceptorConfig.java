@@ -41,13 +41,15 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		// 買家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/main"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer"); 
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/submitUpdateBuyer"); 
 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/collection/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/cart/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/productorder/buyerproductorderlistall");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/order_checkout111");
-		    
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/productorder/contactus"); 
+
     
 
 
@@ -55,7 +57,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		// 後台部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/"+loginPath+"/login"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/main");
-		
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/**");
+
 		
 		// 論壇部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/listAll");

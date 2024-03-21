@@ -122,6 +122,7 @@ public class JwtService {
 		// 使用 Jwts 建構 JWT
 		String a = Jwts.builder()
 				// 設置 JWT 的聲明，包括額外的聲明、主體、發行時間和到期時間
+				.setId(secretKey)
 				// 設置額外的聲明，這些聲明可以包含除了預設聲明之外的其他信息
 				.setClaims(extraClaims)
 				// 設置 JWT 的主體，通常是使用者名稱

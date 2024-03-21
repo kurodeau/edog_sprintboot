@@ -25,7 +25,7 @@ public class CustomErrorController implements ErrorController {
 
 		Object status = request.getAttribute("javax.servlet.error.status_code");
 
-		System.out.println();
+		System.out.println("in CustomErrorController " + status.toString());
 		
 		// 屬於404 Error 
 		if (status != null && Integer.parseInt(status.toString()) == HttpStatus.NOT_FOUND.value()) {
@@ -47,7 +47,6 @@ public class CustomErrorController implements ErrorController {
 				
 			} 
 			// 根據用戶權限分別處理404錯誤
-
 			else if (auth.isAuthenticated() && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SELLER"))) {
 				response.sendRedirect(ctxPath + "/error/sellerError404");
 				return "";
