@@ -130,7 +130,7 @@ public class FrontBuyerController extends HttpServlet{
 	@PostMapping("submitUpdateBuyer")
 	public String submitUpdateBuyer(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException{
-		
+				
 		// 從登入狀態抓取用戶ID對應的資料
 		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
@@ -154,6 +154,7 @@ public class FrontBuyerController extends HttpServlet{
 				buyerVO.setPetImg(petImg);
 			}
 		}
+		
 		if (result.hasErrors()) {
 			// 修改成進行修改資料的PAGE
 			System.out.println("測試訊息:圖片的判斷有問題, 提早返回edit");
