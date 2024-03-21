@@ -22,6 +22,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Past;
 
 //import org.hibernate.validator.constraints.NotEmpty;
@@ -73,7 +74,8 @@ public class NewsTickerVO implements java.io.Serializable {
 		this.newsTickerContent = newsTickerContent;
 	}
 	
-	@MyZeroValidator(message = "顯示權重必須是正整數")
+	@NotNull(message = "顯示權重不能空白")
+	@Min(value = 1, message = "顯示權重不能小於0")
 	@Column(name = "sort")
 	public Integer getSort() {
 		return sort;

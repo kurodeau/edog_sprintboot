@@ -46,56 +46,71 @@
     <div class="container-fluid seller-container">
       <h1>編輯走馬燈資料</h1>
 
-      <form class="row g-3" id="myForm" th:action="@{updateNewsTicker}" method="post" enctype="multipart/form-data">
+      <form class="row g-3" id="myForm" th:action="@{updateNewsTicker}" th:object="${newsTickerVO}" method="post"
+        enctype="multipart/form-data">
 
         <div class="col-md-12">
           <label for="inputNewsTickerId" class="form-label">走馬燈編號</label>
-          <input type="text" class="form-control" id="inputNewsTickerId" name="newsTickerId"
+          <input type="text" class="form-control" id="inputNewsTickerId" name="newsTickerId" th:field="*{newsTickerId}"
+            aria-describedby="newsTickerIdFeedback"
+            th:classappend="${#fields.hasErrors('newsTickerId')} ? 'is-invalid' : ''"
             th:value=${newsTickerVO.newsTickerId} readonly />
+          <div id="newsTickerIdFeedback" class="invalid-feedback">
+            <p th:if="${#fields.hasErrors('newsTickerId')}" th:errors="*{newsTickerId}">
+              欄位有誤
+            </p>
+          </div>
         </div>
 
         <div class="col-md-12">
           <label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
           <input type="text" class="form-control" id="inputNewsTickerContent" name="newsTickerContent"
-            th:value="${newsTickerVO.newsTickerContent}" />
+            th:field="*{newsTickerContent}" aria-describedby="newsTickerContentFeedback"
+            th:classappend="${#fields.hasErrors('newsTickerContent')} ? 'is-invalid' : ''" />
+          <div id="newsTickerContentFeedback" class="invalid-feedback">
+            <p th:if="${#fields.hasErrors('newsTickerContent')}" th:errors="*{newsTickerContent}"></p>
+          </div>
         </div>
 
         <div class="col-md-12">
-          <label for="inputSort" class="form-label">顯示排序</label> <input type="text" class="form-control" id="inputSort"
-            name="sort" th:value="${newsTickerVO.sort}" />
+          <label for="inputSort" class="form-label">顯示排序</label>
+          <input type="text" class="form-control" id="inputSort" name="sort" th:value="${newsTickerVO.sort}"
+            aria-describedby="sortFeedback" th:classappend="${#fields.hasErrors('sort')} ? 'is-invalid' : ''" />
+
+          <div id="sortFeedback" class="invalid-feedback">
+            <p th:if="${#fields.hasErrors('sort')}" th:errors="*{sort}">
+              欄位有誤
+            </p>
+          </div>
         </div>
-
-        <!-- 				<div class="col mb-12"> -->
-        <!-- 					<label id="inputStartTime" for="inputStartTime" -->
-        <!-- 						class="col-sm-2 col-form-label">開始顯示時間</label> -->
-        <!-- 					<div class="col-sm-3"> -->
-        <!-- 						<input type="text" class="form-control" name="startTime" -->
-        <!-- 							id="startTime" -->
-        <!-- 							th:value="${#dates.format(newsTickerVO.startTime, 'yyyy/MM/dd')}"> -->
-        <!-- 					</div> -->
-        <!-- 				</div> -->
-
-        <!-- 				<div class="col mb-12"> -->
-        <!-- 					<label for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label> -->
-        <!-- 					<div class="col-sm-3"> -->
-        <!-- 						<input type="date" class="form-control" name="endTime" -->
-        <!-- 							th:value="${newsTickerVO.endTime}"> -->
-        <!-- 					</div> -->
-        <!-- 				</div> -->
-
 
         <div class="col mb-12">
           <label id="inputStartTime" for="inputStartTime" class="col-sm-2 col-form-label">開始顯示時間</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="startTime" id="startTime"
-              th:value="${newsTickerVO.startTime}">
+            <input type="date" class="form-control" name="startTime"
+              th:value="${#dates.format(newsTickerVO.startTime, 'yyyy-MM-dd')}" aria-describedby="startTimeFeedback"
+              th:classappend="${#fields.hasErrors('startTime')} ? 'is-invalid' : ''" />
+
+            <div id="startTimeFeedback" class="invalid-feedback">
+              <p th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}">
+                欄位有誤
+              </p>
+            </div>
           </div>
         </div>
 
         <div class="col mb-12">
           <label id="inputEndTime" for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label>
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="endTime" th:value="${newsTickerVO.endTime}">
+            <input type="date" class="form-control" name="endTime"
+              th:value="${#dates.format(newsTickerVO.endTime, 'yyyy-MM-dd')}" aria-describedby="endTimeFeedback"
+              th:classappend="${#fields.hasErrors('endTime')} ? 'is-invalid' : ''" />
+
+            <div id="endTimeFeedback" class="invalid-feedback">
+              <p th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}">
+                欄位有誤
+              </p>
+            </div>
           </div>
         </div>
 
