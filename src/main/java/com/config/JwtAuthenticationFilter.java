@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
+		
 		System.out.println(request.getRequestURL());
 
 
@@ -61,9 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		
-		System.out.println(requestMatcher.matches(request));
-
 
 		 String authHeader = request.getHeader("Authorization");
 		 String jwt;
@@ -153,7 +151,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		    // 如果ROLES本身包含ROLE_JWT，确保在这里调用doFilter
 		    doFilter(request, response, filterChain);
 			return;
-		} 
+		}
 		
 		if (SecurityContextHolder.getContext().getAuthentication() != null 
 		        && SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
@@ -166,7 +164,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		    // 如果ROLES本身包含ROLE_JWT，确保在这里调用doFilter
 		    doFilter(request, response, filterChain);
 			return;
-
 		}
 		
 		
