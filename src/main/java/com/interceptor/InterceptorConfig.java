@@ -35,21 +35,21 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/adlist"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/productorder/sellerproductorderlistall"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/productorder/sellerproductordersearch");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/ad/getOne_For_Update");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/seller/product/getOne_For_Update");
 
-		
 		// 買家部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/main"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer"); 
 
-    registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/collection/list");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/collection/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/cart/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/productorder/buyerproductorderlistall");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/order_checkout111");
 		    
     
-		// 論壇部分
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/listAll"); 
+
 
     
 		// 後台部分
@@ -57,19 +57,15 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/main");
 		
 		
-		// 論壇必分
+		// 論壇部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/listAll");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=1");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=2");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=3");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=4");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=5");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/TypeList?id=6");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/article/{id}");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/article/add");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/article/MyArticle?id=1");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/articleLike/MyArticleLike?id=1");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/msg/MyMsg?id=1");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/article/{id}");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/articleLike/{id}");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/msg/{id}");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/petdraw");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/forum/petdraw/{id}");
 
 	
 

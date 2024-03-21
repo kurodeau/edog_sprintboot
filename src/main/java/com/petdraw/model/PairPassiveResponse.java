@@ -4,18 +4,18 @@ import com.buyer.entity.BuyerVO;
 
 public class PairPassiveResponse {
 
-	private PetDrawVO petDraw;
+	private PetDrawVO petDrawVO;
 	
 	private BuyerVO memberVO;
 	
 	private BuyerVO memberPairVO;
 
-	public PetDrawVO getPetDraw() {
-		return petDraw;
+	public PetDrawVO getPetDrawVO() {
+		return petDrawVO;
 	}
 
-	public void setPetDraw(PetDrawVO petDraw) {
-		this.petDraw = petDraw;
+	public void setPetDraw(PetDrawVO petDrawVO) {
+		this.petDrawVO = petDrawVO;
 	}
 
 	public BuyerVO getMemberVO() {

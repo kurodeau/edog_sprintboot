@@ -42,6 +42,12 @@ public class BuyerProductOrderManageMentController {
 		return "front-end/buyer/buyer-order-overall";
 	}
 	
+	
+	@GetMapping("contactus")
+	public String contactus(Model model) {
+		return "front-end/buyer/buyer-service-center";
+	}
+	
 
 	//查看詳情按鈕
 		@GetMapping("getOrderdetails") 
