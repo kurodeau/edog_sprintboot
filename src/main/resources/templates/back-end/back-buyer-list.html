@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-<th:block th:insert="~{/fragment-datatableCss}"></th:block>
+	<th:block th:insert="~{/fragment-head}"></th:block>
+	<th:block th:insert="~{/fragment-datatableCss}"></th:block>
 
 </head>
 
 <body>
 	<!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+	<header class="fixed-top">
+		<th:block th:insert="~{/back-end/header-back}"></th:block>
+	</header>
 
 	<!-- ======= Sidebar ======= -->
 	<aside th:replace="back-end/aside-back.html"></aside>
@@ -22,8 +23,8 @@
 				<h1>買家用戶清單</h1>
 				<a class="btn" th:href="@{addBuyer}">新增買家資料</a>
 			</div>
-			<table id="example" class="table table-striped table-bordered"
-				style="width: 100%" enctype="multipart/form-data">
+			<table id="example" class="table table-striped table-bordered" style="width: 100%"
+				enctype="multipart/form-data">
 				<thead>
 					<tr>
 						<th>編號</th>
@@ -35,11 +36,11 @@
 						<th>生日</th>
 						<th>密碼</th>
 						<th>地址</th>
-						<th>信箱驗證</th>
 						<th>創帳號時間</th>
+						<th>信箱驗證</th>
 						<th>寵物名稱</th>
 						<th>寵物圖片</th>
-						<th>寵物圖片更新時間</th>
+						<!-- <th>寵物圖片更新時間</th> -->
 						<th>施打疫苗一</th>
 						<th>施打時間</th>
 						<th>施打疫苗二</th>
@@ -56,31 +57,33 @@
 							<td th:text="${#strings.isEmpty(buyerVO.thirdFrom) ? '無' : buyerVO.thirdFrom}"></td>
 							<td th:text="${buyerVO.memberName}"></td>
 							<td th:text="${buyerVO.memberPhone}"></td>
-							<td th:text="${buyerVO.memberMobile}"></td>	
-							<td	th:text="${#dates.format(buyerVO.memberBirthday, 'yyyy/MM/dd')}"></td>
+							<td th:text="${buyerVO.memberMobile}"></td>
+							<td th:text="${#dates.format(buyerVO.memberBirthday, 'yyyy/MM/dd')}"></td>
 							<td th:text="${buyerVO.memberPassword}"></td>
-							<td th:text="${#strings.isEmpty(buyerVO.memberAddress) ? '無' : buyerVO.memberAddress}" 
-							    style="max-width: 265px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></td>
-							<td	th:text="${#dates.format(buyerVO.memberRegistrationTime, 'yyyy/MM/dd')}"></td>
-							<td th:text="${buyerVO.isMemberEmail}"></td>								
+							<td th:text="${#strings.isEmpty(buyerVO.memberAddress) ? '無' : buyerVO.memberAddress}"
+								style="max-width: 265px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							</td>
+							<td th:text="${#dates.format(buyerVO.memberRegistrationTime, 'yyyy/MM/dd')}"></td>
+							<td th:text="${buyerVO.isMemberEmail}"></td>
 							<td th:text="${#strings.isEmpty(buyerVO.petName) ? '無' : buyerVO.petName}"></td>
-<!-- 							<td th:text="${buyerVO.petImg}"></td> -->
-<!-- 							<td><img th:src="${data:image/png;base64, buyerVO.petImg }" alt="寵物圖片"></td> -->
+							<!-- 							<td th:text="${buyerVO.petImg}"></td> -->
+							<!-- 							<td><img th:src="${data:image/png;base64, buyerVO.petImg }" alt="寵物圖片"></td> -->
 
-							<td><img th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}" width="100px" height="auto"></td>
-							
-							
-							<td	th:text="${#dates.format(buyerVO.petImgUploadTime, 'yyyy/MM/dd')}"></td>
-							<td th:text="${#strings.isEmpty(buyerVO.petVaccName1) ? '無' : buyerVO.petVaccName1}"></td>						
-							<td	th:text="${#dates.format(buyerVO.petVaccTime1, 'yyyy/MM/dd')}"></td>							
-							<td th:text="${#strings.isEmpty(buyerVO.petVaccName2) ? '無' : buyerVO.petVaccName2}"></td>						
-							<td	th:text="${#dates.format(buyerVO.petVaccTime2, 'yyyy/MM/dd')}"></td>							
+							<td><img th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}"
+									width="100px" height="auto"></td>
+
+
+							<!-- <td th:text="${#dates.format(buyerVO.petImgUploadTime, 'yyyy/MM/dd')}"></td> -->
+							<td th:text="${#strings.isEmpty(buyerVO.petVaccName1) ? '無' : buyerVO.petVaccName1}"></td>
+							<td th:text="${#dates.format(buyerVO.petVaccTime1, 'yyyy/MM/dd')}"></td>
+							<td th:text="${#strings.isEmpty(buyerVO.petVaccName2) ? '無' : buyerVO.petVaccName2}"></td>
+							<td th:text="${#dates.format(buyerVO.petVaccTime2, 'yyyy/MM/dd')}"></td>
 							<td th:text="${buyerVO.isConfirm} ? 'Yes' : 'No'"></td>
 							<td><a class="btn" th:href="@{getOne_For_Update(memberId=${buyerVO.memberId})}">編輯</a>
-<!-- 				不應有刪除動作	<button type="button" class="btn" -->
-<!-- 									th:attr="data-delete-id=${buyerVO.newsTickerId}" -->
-<!-- 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button> -->
-<!-- 							</td> -->
+								<!-- 				不應有刪除動作	<button type="button" class="btn" -->
+								<!-- 									th:attr="data-delete-id=${buyerVO.newsTickerId}" -->
+								<!-- 									data-bs-toggle="modal" data-bs-target="#deleteModal">刪除</button> -->
+								<!-- 							</td> -->
 						</tr>
 					</th:block>
 
@@ -121,45 +124,45 @@
 
 	<!-- Your custom script to initialize the DataTable with fixed columns -->
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
+		document.addEventListener("DOMContentLoaded", function () {
 			// 初始化 DataTables
 
 			let table = $("#example").DataTable(
-					{
-						columnDefs : [ {
-							targets : -1,
-							width : 150
-						}, // 調整最後一列寬度
-						],
-						fixedColumns : true,
-						paging : true,
-						lengthMenu : [ 5, 10 ],
-						language : {
-							lengthMenu : "顯示 _MENU_ 筆資料",
-						},
-						pageLength : 5,
-						scrollCollapse : true,
-						scrollX : true,
-						scrollY : 600,
-						pagingType : "full_numbers",
-						drawCallback : function() {
-							var api = this.api();
-							var rowCount = api.rows({
-								page : "current"
-							}).count();
+				{
+					columnDefs: [{
+						targets: -1,
+						width: 150
+					}, // 調整最後一列寬度
+					],
+					fixedColumns: true,
+					paging: true,
+					lengthMenu: [5, 10],
+					language: {
+						lengthMenu: "顯示 _MENU_ 筆資料",
+					},
+					pageLength: 5,
+					scrollCollapse: true,
+					scrollX: true,
+					scrollY: 600,
+					pagingType: "full_numbers",
+					drawCallback: function () {
+						var api = this.api();
+						var rowCount = api.rows({
+							page: "current"
+						}).count();
 
-							// Loop to add empty rows if needed
-							for (var i = 0; i < api.page.len()
-									- (rowCount === 0 ? 1 : rowCount); i++) {
-								var emptyRow = $("<tr><td>&nbsp;</td></tr>")
-										.addClass("empty"); // 添加 'white-bg' 類別
-								$("#example tbody").append(emptyRow);
-							}
-						},
-					});
+						// Loop to add empty rows if needed
+						for (var i = 0; i < api.page.len()
+							- (rowCount === 0 ? 1 : rowCount); i++) {
+							var emptyRow = $("<tr><td>&nbsp;</td></tr>")
+								.addClass("empty"); // 添加 'white-bg' 類別
+							$("#example tbody").append(emptyRow);
+						}
+					},
+				});
 
 			// 設定 DataTables 寬度為 100%
-			window.onload = function() {
+			window.onload = function () {
 				table.columns.adjust().draw();
 			};
 
@@ -167,14 +170,14 @@
 				table.clear().draw();
 			}
 
-			$(".btn-func").on("click", function() {
+			$(".btn-func").on("click", function () {
 				let deleteId = $(this).data("delete-id");
 				console.log("deleteId in Btn: " + deleteId);
 				$("#confirmDeleteBtn").attr("data-delete-id", deleteId);
 			});
 
 			// Listen to the confirmDeleteBtn click event
-			$("#confirmDeleteBtn").on("click", function() {
+			$("#confirmDeleteBtn").on("click", function () {
 				// Retrieve the deleteId from data-delete-id attribute
 				let deleteId = $(this).data("delete-id");
 				console.log("deleteId in Modal: " + deleteId);
@@ -184,9 +187,9 @@
 
 				// Your AJAX request for deletion
 				$.ajax({
-					url : "/back-seller-list?id=" + deleteId,
-					method : "DELETE",
-					success : function(response) {
+					url: "/back-seller-list?id=" + deleteId,
+					method: "DELETE",
+					success: function (response) {
 						if (response.success) {
 							alert("刪除成功");
 							// true 表示強制從伺服器重新加載頁面，忽略緩存
@@ -196,10 +199,10 @@
 							alert("刪除失敗");
 						}
 					},
-					error : function() {
+					error: function () {
 						alert("請求失敗");
 					},
-					complete : function() {
+					complete: function () {
 						// This will be called regardless of success or error
 						// Close the modal after the AJAX request is completed
 						// Reload the DataTable
