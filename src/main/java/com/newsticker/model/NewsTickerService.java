@@ -44,7 +44,7 @@ public class NewsTickerService {
 	}
 	
 	public List<NewsTickerVO> findAllByIsDisplayTrueOrderBySortDesc() {
-		System.out.println("測試訊息:有進入findByIsDisplayTrue()");
+//		System.out.println("測試訊息:有進入findByIsDisplayTrue()");
 		return repository.findAllByIsDisplayTrueAndTimeRangeOrderBySortDesc();
 	}
 	
@@ -58,7 +58,7 @@ public class NewsTickerService {
 			newsTickersStrBlu.append("    ");
 		}		
 		String newsTickersStr = newsTickersStrBlu.toString();
-		System.out.println( "測試訊息:newsTickersStr= " + newsTickersStr );
+//		System.out.println( "測試訊息:newsTickersStr= " + newsTickersStr );
 		
 		return newsTickersStr;
 	}

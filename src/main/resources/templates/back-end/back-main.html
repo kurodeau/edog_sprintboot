@@ -95,22 +95,22 @@
 				// 显示模态框
 				document.getElementById("errorMessageModalBody").innerHTML = errorMessage;
 
-				// 检查是否已经显示了模态框
-				const modalShown = sessionStorage.getItem('modalShown');
-				console.log(modalShown);
-				if (!modalShown) {
-					$("#errorMessageModal").modal("show");
-					// 设置模态框已显示的标志
-					sessionStorage.setItem('modalShown', true);
-				} else {
-					sessionStorage.removeItem('modalShown');
-					// 清除 URL 参数以防止刷新时重复显示
-					window.history.replaceState({}, document.title,
-							window.location.pathname);
-				}
+				$("#errorMessageModal").modal("show");
+
 				
 			}
 		};
+		
+		
+		  $(document).ready(function() {
+		        // 监听模态框关闭事件
+		        $('#errorMessageModal').on('hidden.bs.modal', function () {
+		            // 移除 URL 中的错误参数
+		            var url = window.location.href;
+		            var newUrl = url.split('?')[0]; // 移除查询参数部分
+		            window.history.replaceState({}, document.title, newUrl);
+		        });
+		    });
 	</script>
 
 </body>

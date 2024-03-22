@@ -1,183 +1,304 @@
 package com.buyer.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-//import java.sql.Timestamp;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.buyer.entity.*;
-import com.buyer.model.*;
-import com.buyer.service.*;
+import com.buyer.entity.BuyerVO;
+import com.buyer.service.BuyerService;
+import com.config.BuyerPasswordEncoder;
+import com.login.PasswordForm;
+import com.util.HttpResult;
+import com.util.JedisUtil;
+import com.util.MailService;
+
+import redis.clients.jedis.Jedis;
+
+//@PropertySource("classpath:application.properties") 
+// 於https://start.spring.io 建立Spring Boot專案時
+// (1) @SpringBootApplication 註解包含了 @ComponentScan，預設會掃描與主應用程式相同套件及其子套件中的組件
+// (2) @Controller 註解標註的類別放在主應用程式套件及其子套件中
+// (3) src/main/java / src/main/{language} /  src/main/webapp / src/main/resources
 
 @Controller
 @RequestMapping("/front/buyer")
-public class FrontBuyerController extends HttpServlet{
-
+public class FrontBuyerController {
+	
+	@Autowired
+	BuyerPasswordEncoder buyerPasswordEncoder;
+	
 	@Autowired
 	BuyerService buyerSvc;
-
-    // 買家註冊可以考慮移到這裡
-//	@GetMapping("addBuyer")
-//	public String addBuyer(ModelMap model) {
-//		BuyerVO buyerVO = new BuyerVO();
-//		model.addAttribute("BuyerVO", buyerVO);
-//		return "back-end/back-buyer-add"; // 應該改成創帳號PAGE
-//	}
-
-
-	// 前台新增買家帳號, 應該跟買家註冊重複, 待確認現在註冊是不是用這個?
-    // /front/buyer/insertBuyer
-	@PostMapping("insertBuyer")
-	public String insert(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
-			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
-
-		//塞入當下時間
-//		long currentTime = System.currentTimeMillis();
-//		Date date = new Date(currentTime);
-//		buyerVO.setMemberRegistrationTime(date);		
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-		buyerVO.setMemberRegistrationTime(sqlDate);
+	
+	
+	// asidebar 進入編輯葉面
+	@GetMapping("/updateBuyer")
+	public String updateBuyer(ModelMap model) throws IOException {
 		
-		//圖片轉成byte[]
-		byte[] buf = parts[0].getBytes();
-		buyerVO.setPetImg(buf);
-//		System.out.println("VO:" + buyerVO.toString() );
-
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
-//		System.out.println("test我有進這個insertBuyer");
-//		result = removeFieldError(buyerVO, result, "petImg");
-
-		// 這段是當圖片必須存在時的, 追加條件的檢查檢查
-//		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的圖片時
-//			model.addAttribute("errorMessage", "寵物照片: 請上傳照片");
-//		} else {
-//			for (MultipartFile multipartFile : parts) {
-//				byte[] buf = multipartFile.getBytes();
-//				buyerVO.setPetImg(buf);
-//			}
-//		}
-//		if (result.hasErrors() || parts[0].isEmpty()) {
-//			System.out.println("test進了錯誤檢查?");
-//			return "back-end/back-buyer-add"; //看從哪裡創帳號就回到哪裡
-//		}
-		//檢查有沒有錯誤訊息
-//		if (result.hasErrors()) {
-//			System.out.println("test進了錯誤檢查?");
-//			System.out.println(result);
-//			return "back-end/back-buyer-add"; // 看從哪裡創帳號就回到哪裡
-//		}
-
-		/*************************** 2.開始新增資料 *****************************************/
-		// BuyerService buyerSvc = new BuyerService();
-		System.out.println("test新增資料之前??");
-		buyerSvc.addBuyer(buyerVO);
-		/*************************** 3.新增完成,準備轉交(Send the Success view) **************/
-		List<BuyerVO> list = buyerSvc.getAll();
-		model.addAttribute("buyerListData", list);
-		model.addAttribute("success", "- (新增成功)");
-		// 這之後要重禱回買家登入頁面
-		System.out.println("test重導之前???");
-		return "back-end/back-buyer-list"; // 新增成功後重導至IndexController_inSpringBoot.java的第50行@GetMapping("/emp/listAllEmp")
-	}               
-
-
-	//從sidebar進入修改會員資料  /buyer/buyer/updateBuyer
-	@GetMapping("updateBuyer")
-	public String updateBuyer(ModelMap model) {
-		
-		// 從登入狀態抓取用戶ID
+		// 取得登入資訊
 		String memberId = "9"; //測試有登入, 預設值
 		SecurityContext secCtx = SecurityContextHolder.getContext();
         Authentication authentication = secCtx.getAuthentication();
         BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
-
-        memberId = String.valueOf(buyerVO.getMemberId());
         
-        System.out.println("進入修改的會員資料是memberId=" + memberId);
-        
-        // 獲得buyerVO, 渲染到前端讓用戶修改		
 		model.addAttribute("buyerVO", buyerVO);
-		return "front-end/buyer/buyer-buyer-edit"; // 查詢完成後轉交update_emp_input.html
+		return "/front-end/buyer/buyer-buyer-edit";
 	}
-	
-	
-	@PostMapping("submitUpdateBuyer")
-	public String submitUpdateBuyer(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
-			@RequestParam("petImg") MultipartFile[] parts) throws IOException{
-		
-		// 從登入狀態抓取用戶ID對應的資料
-		String memberId = "9"; //測試有登入, 預設值
-		SecurityContext secCtx = SecurityContextHolder.getContext();
-        Authentication authentication = secCtx.getAuthentication();
-        buyerVO = (BuyerVO) authentication.getPrincipal();
-        memberId = String.valueOf(buyerVO.getMemberId());
-        
-        System.out.println("送交修改的會員資料是memberId=" + memberId);
 
-        /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
+
+	// 編輯葉面送交按鈕
+	@PostMapping("/updateBuyer/check")
+	public String checkregisterBuyer(@Valid BuyerVO buyerVO,  BindingResult result , ModelMap model ,HttpSession session
+	 ,@RequestParam("petImg") MultipartFile[] parts ,@RequestParam("checkMemberPassword") String dupPassword) throws IOException{
+
+		buyerVO.setMemberRegistrationTime(new Date());
 		result = removeFieldError(buyerVO, result, "petImg");
 
-		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
-			// BuyerService buyerSvc = new BuyerService();
-			byte[] petImg = buyerSvc.getOneBuyer(buyerVO.getMemberId()).getPetImg();
+		if (parts[0].isEmpty()) { 
+			model.addAttribute("errorMessage", "請上傳PET圖片");
+		} 
+		
+		System.out.println(dupPassword);
+		System.out.println(buyerVO.getMemberPassword());
+
+		
+		if (!dupPassword.equals(buyerVO.getMemberPassword())) {
+			model.addAttribute("duplicateError", "密碼不一致");
+			System.out.println("測試訊息:333333333333");
+		}
+		
+		System.out.println(result);
+		if (result.hasErrors()|| parts[0].isEmpty()) {
+			System.out.println("測試訊息:result= "+result);
+			return "/front-end/buyer/buyer-buyer-edit";
+		}
+		
+		
+		for (MultipartFile multipartFile : parts) {
+			byte[] petImg = multipartFile.getBytes();
 			buyerVO.setPetImg(petImg);
-		} else {
-			for (MultipartFile multipartFile : parts) {
-				byte[] petImg = multipartFile.getBytes();
-				buyerVO.setPetImg(petImg);
-			}
-		}
-		if (result.hasErrors()) {
-			// 修改成進行修改資料的PAGE
-			System.out.println("測試訊息:圖片的判斷有問題, 提早返回edit");
-//			System.out.println("測試訊息:" + result.);
-			return "front-end/buyer/buyer-buyer-edit";
 		}
 		
-		/*************************** 2.開始修改資料 *****************************************/
-		// BuyerService buyerSvc = new BuyerService();
-		buyerSvc.updateBuyer(buyerVO);
-		System.out.println("有走道updateBuyer方法");
+		// 更新的同時, 登入暫存的資訊
+//		SecurityContextHolder.getContext()
+//		.setAuthentication(new UsernamePasswordAuthenticationToken(buyerVO, null));
+
+		Boolean updateSuccessShown = (Boolean) session.getAttribute("buyerEditSuccess");
+
 		
-		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
-		model.addAttribute("success", "- (修改成功)");
-		buyerVO = buyerSvc.getOneBuyer(Integer.valueOf(buyerVO.getMemberId()));
-		model.addAttribute("buyerVO", buyerVO);
-		System.out.println("有走道return之前");
-        
-		return "front-end/buyer/buyer-main"; // 
+		
+		buyerSvc.saveUserDetails(buyerVO);
+		return "redirect:/front/buyer/main";
 	}
 	
+/**
+	@PostMapping("/buyer/register/checkVerificationCode")
+	public ResponseEntity<?> checkVerificationCode(@RequestBody String json) {
+		
+		
+		JSONObject jsonObj = new JSONObject(json);
+		String email = (String) jsonObj.get("email");
+		String verifyCode = (String) jsonObj.get("code");
 
-	// 去除BindingResult中某個欄位的FieldError紀錄
-	// 目前不知道用途是甚麼, 應該是資料驗證用的
+		
+		
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+			String code = jedis.get("email:" + email);
+
+			
+			
+			
+			if (code != null && (verifyCode.equals(code) || "ok".equals(code))) {
+				jedis.set("email:" + email, "ok");
+				return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(HttpStatus.OK.value(), null, "驗證成功"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.badRequest().body("輸入有誤");
+	}
+
+	
+	@PostMapping("/buyer/register/sendVerificationCode")
+	public ResponseEntity<?> sendVerificationCode(@RequestBody String emailJson) {
+
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+
+			char[] random6 = new char[6];
+			for (int i = 0; i < 6; i++) {
+				int randomValue = (int) (Math.random() * 26);
+				random6[i] = (char) (randomValue + 65);
+			}
+
+			JSONObject jsonObj = new JSONObject(emailJson);
+			String email = jsonObj.getString("email");
+
+			
+			if (jedis.exists("email:" + email)) {
+				
+				return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "稍後再試"));
+			}
+
+			jedis.setex("email:" + email, 300, String.valueOf(random6));
+
+		
+			MailService mailSvc = new MailService();
+			mailSvc.sendMail(email, "驗證信件", "您的驗證碼是" + String.valueOf(random6));
+			mailSvc = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "信箱格式錯誤"));
+		}
+		// 返回成功或其他適當的回應
+		return ResponseEntity.status(HttpStatus.OK).body(new HttpResult<>(HttpStatus.CONFLICT.value(), null, "請於300秒輸入驗證碼"));
+	}
+
+	
+	@GetMapping({ "/buyer/auth/email" })
+	public String authInputBuyerEmail(ModelMap model) throws IOException {
+		if (!model.containsAttribute("memberEmail")) {
+			model.addAttribute("memberEmail", "");
+		}
+
+		return "/login/buyer-auth-email";
+	}
+
+	
+	@PostMapping({ "/buyer/auth/email/check" })
+	public ResponseEntity<?> authInputEmailBuyerCheck(@RequestBody String json, ModelMap model, BindingResult bindingResult,
+			HttpServletRequest req) throws IOException {
+		JSONObject jsonObj = new JSONObject(json);
+		String buyerEmail = (String) jsonObj.get("buyerEmail");
+
+		if (buyerEmail == null || !buyerEmail.matches("[\\w+_-]*\\@\\w+\\.\\w+")) {
+			// System.out.println("輸入格式錯誤");
+			return ResponseEntity.badRequest().body(new HttpResult<>(400, null, "輸入格式錯誤"));
+		}
+
+		BuyerVO buyerVO = buyerSvc.findByOnlyOneEmail(buyerEmail);
+		if (buyerVO == null) {
+			// System.out.println("找不到信箱");
+			return ResponseEntity.badRequest().body(new HttpResult<>(404, null, "找不到信箱"));
+		}
+
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+
+			String urlUUID = UUID.randomUUID().toString();
+			String scheme = req.getScheme();
+			String servletName = req.getServerName();
+			String port = String.valueOf(req.getServerPort());
+			String path = req.getRequestURI();
+			String url = String.format("buyer/activate/%s/%s", buyerVO.getMemberId(), urlUUID);
+			String ctxPath = req.getContextPath();
+			String authPath = scheme + "://" + servletName + ":" + port + ctxPath + "/" + url + "/add";
+
+			jedis.setex("FORGOT:BUYER:" + buyerVO.getMemberId(), 1 * 60 * 60, urlUUID);
+
+			MailService mailSvc = new MailService();
+
+			System.out.println(url);
+			mailSvc.sendMail(buyerVO.getMemberEmail(), "驗證信件", "驗證碼網址:" + authPath);
+			mailSvc = null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(new HttpResult<>(500, null, "系統忙線中，稍後"));
+		}
+
+		return ResponseEntity.ok().body(new HttpResult<>(200, null, "傳送成功"));
+	}
+
+
+	@GetMapping("/buyer/activate/{buyerId}/{tokenId}/add")
+	public String authenticationUser(@PathVariable Integer buyerId, @PathVariable String tokenId, ModelMap model)
+			throws IOException {
+
+		PasswordForm passwordForm = new PasswordForm();
+		model.addAttribute("passwordForm", passwordForm);
+
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+			String authKey = "FORGOT:BUYER:" + buyerId;
+			String storedToken = jedis.get(authKey);
+			if (storedToken == null) {
+				model.addAttribute("error", "驗證信已經過期");
+				return "/login/authentication-failure";
+			}
+			if (storedToken.equals(tokenId)) {
+				return "/login/reset-password";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "/login/authentication-failure";
+		}
+
+		return "/login/authentication-failure";
+	}
+	
+	
+	@PostMapping("/buyer/activate/{buyerId}/{tokenId}/check")
+	public String authenticationCheckUser(@Valid PasswordForm form, BindingResult bindingResult,
+			@PathVariable Integer buyerId, @PathVariable String tokenId) {
+		// System.out.println(bindingResult);
+		if (bindingResult.hasErrors()) {
+			return "/login/reset-password";
+		}
+
+		if (form != null && !form.getConfirmPassword().equals(form.getPassword())) {
+			bindingResult.rejectValue("password", "password.not.match", "密碼和確認密碼不匹配");
+			return "/login/reset-password";
+		}
+
+		try (Jedis jedis = JedisUtil.getJedisPool().getResource()) {
+			jedis.select(15);
+			String authKey = "FORGOT:BUYER:" + buyerId;
+			if (jedis.get(authKey) != null) {
+				jedis.del(authKey);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		BuyerVO buyerVO = buyerSvc.getOneBuyer(buyerId);
+		buyerVO.setMemberPassword(buyerPasswordEncoder.encode(form.getPassword()));
+		buyerSvc.updateBuyer(buyerVO);
+		
+		return "redirect:/buyer/login";
+	}
+
+**/	
+	
 	public BindingResult removeFieldError(BuyerVO buyerVO, BindingResult result, String removedFieldname) {
 		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
 				.filter(fieldname -> !fieldname.getField().equals(removedFieldname)).collect(Collectors.toList());
@@ -187,9 +308,7 @@ public class FrontBuyerController extends HttpServlet{
 		}
 		return result;
 	}
-	
-	
-	
-	
-
 }
+
+
+

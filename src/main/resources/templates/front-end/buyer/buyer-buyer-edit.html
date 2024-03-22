@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
+	<th:block th:insert="~{/fragment-head}"></th:block>
 </head>
 
 <body>
@@ -19,119 +19,205 @@
 		<div class="container-fluid seller-container">
 			<h1>修改個人資料</h1>
 
-			<form id="myForm" method="POST" th:action="@{submitUpdateBuyer}"
-				enctype="multipart/form-data">
+			<form class="row g-3" id="myForm" th:action="@{/front/buyer/updateBuyer/check}" th:object="${buyerVO}"
+				method="post" enctype="multipart/form-data" onsubmit="return updateHiddenFields();">
 
 				<div class="col-md-12" style="display: none;">
-					<label for="inputMemberId" class="form-label">買家編號</label> <input
-						type="text" class="form-control" id="inputMemberId"
-						name="memberId" th:value="${buyerVO.memberId}" readonly />
+					<label for="inputMemberId" class="form-label">用戶Id</label> <input type="Text" class="form-control"
+						id="inputMemberId" name="MemberId" th:value="${buyerVO.MemberId}"
+						aria-describedby="memberEmailFeedback"
+						th:classappend="${#fields.hasErrors('memberEmail')} ? 'is-invalid' : ''" />
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputMemberEmail" class="form-label">電子信箱<span
-						style="color: red; font-size: small;">*不可修改</span></label> <input
-						type="text" class="form-control" id="inputMemberEmail"
-						name="memberEmail" th:value="${buyerVO.memberEmail}" readonly />
-				</div>
+					<label for="inputMemberEmail" class="form-label">電子信箱</label> <input type="email"
+						class="form-control" id="inputMemberEmail" name="memberEmail" placeholder="信箱視同帳戶不可修改"
+						th:value="${buyerVO.memberEmail}" aria-describedby="memberEmailFeedback"
+						th:classappend="${#fields.hasErrors('memberEmail')} ? 'is-invalid' : ''" readonly />
 
-				<div class="col-md-12">
-					<label for="inputMemberPassword" class="form-label">密碼</label> <input
-						type="text" class="form-control" id="inputMemberPassword"
-						name="memberPassword" th:value="${buyerVO.memberPassword}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberName" class="form-label">用戶名稱</label> <input
-						type="text" class="form-control" id="inputMemberName"
-						name="memberName" th:value="${buyerVO.memberName}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberPhone" class="form-label">會員電話</label> <input
-						type="text" class="form-control" id="inputMemberPhone"
-						name="memberPhone" th:value="${buyerVO.memberPhone}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberMobile" class="form-label">手機號碼</label> <input
-						type="text" class="form-control" id="inputMemberMobile"
-						name="memberMobile" th:value="${buyerVO.memberMobile}" />
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputMemberAddress" class="form-label">地址</label> <input
-						type="text" class="form-control mt-2" id="inputMemberAddress"
-						name="memberAddress" th:value="${buyerVO.memberAddress}"
-						placeholder="請輸入地址" />
-				</div>
-
-				<div class="col-md-3">
-					<label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
-					<select class="isMemberEmail form-select" id="inputIsMemberEmail"
-						name="isMemberEmail" th:value="${buyerVO.isMemberEmail}">
-						<option value="true">已審核</option>
-						<option value="false">未審核</option>
-					</select>
-				</div>
-
-				<div class="col-md-12">
-					<label for="inputPetName" class="form-label">寵物名稱</label> <input
-						type="text" class="form-control" id="inputPetName" name="petName"
-						th:value="${buyerVO.petName}" />
-				</div>
-
-				<div class="upload__box">
-					<label for="inputPetImg" class="btn btn-sellerdark">請選擇寵物圖片</label>
-					<input type="file" data-max_length="1"
-						class="form-control upload__inputfile" id="inputPetImg"
-						name="petImg" onclick="previewImage()"
-						onchange="hideContent('upFiles.errors');" />
-					<div class="valid-feedback">Looks Good!</div>
-					<div id="adImgFeedback" class="invalid-feedback">Please
-						provide a valid Picture.</div>
-					<div id="blob_holder">
-						<img
-							th:src="@{/back/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}"
-							width="200px" height="auto" />
+					<div id="memberEmailFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('memberEmail')}" th:errors="*{memberEmail}">輸入電子信箱錯誤提示訊息</p>
 					</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
 
 
-					<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
-					<div class="upload__img--wrap"></div>
+				<div class="col-md-12">
+					<label for="inputMemberPassword" class="form-label">密碼</label> <input type="text"
+						class="form-control" id="inputMemberPassword" name="memberPassword"
+						placeholder="請輸入包含英文與數字6~8字之間的密碼" th:value="${buyerVO.memberPassword}"
+						aria-describedby="memberPasswordFeedback"
+						th:classappend="${#fields.hasErrors('memberPassword')} ? 'is-invalid' : ''" />
+
+					<div id="memberPasswordFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}">輸入密碼錯誤提示訊息</p>
+					</div>
+					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input
-						type="text" class="form-control" id="inputPetVaccName1"
-						name="petVaccName1" th:value="${buyerVO.petVaccName1}" />
+					<label for="inputChecKMemberPassword" class="form-label">確認密碼</label>
+					<input type="text" class="form-control" id="inputChecKMemberPassword" name="checkMemberPassword"
+						placeholder="請輸入相同密碼" th:classappend="${duplicateError} ? 'is-invalid' : ''" />
+					<div id="checKMemberPasswordFeedback" class="invalid-feedback" th:if="${duplicateError}">
+						<span th:text="${duplicateError}"></span>
+					</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+
+
+
+				<div class="col-md-12">
+					<label for="inputMemberName" class="form-label">用戶名稱</label> <input type="text" class="form-control"
+						id="inputMemberName" name="memberName" placeholder="請輸入您的稱呼" th:value="${buyerVO.memberName}" />
+					<div id="memberNameFeedback" class="invalid-feedback">
+						"輸入用戶名稱錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputMemberPhone" class="form-label">會員電話</label> <input type="text"
+						class="form-control" id="inputMemberPhone" name="memberPhone" placeholder="請輸入市區號碼"
+						th:value="${buyerVO.memberPhone}" />
+					<div id="memberPhoneFeedback" class="invalid-feedback">
+						"輸入市話錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputMemberMobile" class="form-label">手機號碼</label> <input type="text"
+						class="form-control" id="inputMemberMobile" name="memberMobile" placeholder="請輸入手機號碼"
+						th:value="${buyerVO.memberMobile}" />
+					<div id="memberMobileFeedback" class="invalid-feedback">
+						"輸入手機錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-mb-3">
+					<label for="inputMemberBirthday" class="col-sm-2 col-form-label">生日</label>
+					<div class="col-sm-12">
+						<input type="date" class="form-control" name="memberBirthday"
+							th:value="${buyerVO.memberBirthday}" />
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputMemberAddress" class="form-label">地址</label>
+					<!-- <div class="city-selector-set col-md-12 d-flex flex-row">
+            <div class="col-md-2">
+              <select class="county form-select" name="county"></select>
+            </div>
+            <div class="col-md-2">
+              <select class="district form-select" name="district"></select>
+            </div>
+            <div class="col-md-2">
+              <input class="zipcode form-control" type="text" size="3" readonly placeholder="郵遞區號" name="zipcode" />
+            </div>
+          </div> -->
+					<input type="text" class="form-control mt-2" id="inputMemberAddress" name="memberAddress"
+						placeholder="請輸入地址" th:value="${buyerVO.memberAddress}" />
+					<div id="memberAddressFeedback" class="invalid-feedback">
+						"輸入地址錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-md-3" style="display: none;">
+					<label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
+					<select class="isMemberEmail form-select" name="isMemberEmail" id="inputIsMemberEmail">
+						<option value="true">已審核</option>
+						<option value="false" selected>未審核</option>
+					</select>
+					<div id="isMemberEmailFeedback" class="invalid-feedback">
+						"電子信箱審核驗證錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col mb-3" style="display: none;">
+					<label for="inputDate" class="col-sm-2 col-form-label">帳號創立時間</label>
+					<div class="col-sm-3">
+						<input type="date" class="form-controlf" name="memberRegistrationTime" readonly
+							th:value="${buyerVO.memberRegistrationTime}">
+					</div>
+					<div id="memberRegistrationTimeFeedback" class="invalid-feedback">
+						"創建帳號時間錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-md-12">
+					<label for="inputPetName" class="form-label">寵物名稱</label> <input type="text" class="form-control"
+						id="inputPetName" name="petName" placeholder="請輸入寵物名稱" th:value="${buyerVO.petName}" />
+					<div id="petNameFeedback" class="invalid-feedback">
+						"輸入寵物名稱錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
+				</div>
+
+				<div class="col-mb-3">
+					<label for="inputPetImg" class="col-sm-2 col-form-label">寵物圖片</label>
+					<div class="col-sm-12">
+						<div class="upload__box">
+							<label for="inputPetImg" class="btn btn-sellerdark">請選擇寵物圖片</label>
+							<input type="file" data-max_length="1" class="form-control upload__inputfile"
+								id="inputPetImg" name="petImg" onclick="previewImage()" onchange="previewImage();"
+								aria-describedby="petImgFeedback"
+								th:classappend="${errorMessage != null} ? 'is-invalid' : ''" />
+							<div class="valid-feedback">Looks Good!</div>
+							<div id="petImgFeedback" class="invalid-feedback" th:text="${errorMessage}">XXX</div>
+							<!-- 判斷 errorMessage 是否存在，存在則顯示 -->
+							<div id="imagePreview" class="upload__img--wrap"></div>
+						</div>
+					</div>
+				</div>
+
+
+
+
+				<div class="col-md-12">
+					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input type="text"
+						class="form-control" id="inputPetVaccName1" name="petVaccName1" placeholder="輸入疫苗名稱" />
+					<div id="petVaccName1Feedback" class="invalid-feedback">
+						"輸入施打疫苗1錯誤提示訊息"</div>
+					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime1"
-							th:value="${buyerVO.petVaccTime1}">
+					<div class="col-sm-12">
+						<input type="date" class="form-control" id="inputPetVaccTime1" name="petVaccTime1"
+							aria-describedby="petVaccTime1Feedback"
+							th:classappend="${#fields.hasErrors('petVaccTime1')} ? 'is-invalid' : ''" />
+						<div id="petVaccTime1Feedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('petVaccTime1')}" th:errors="*{petVaccTime1}">施打時間1錯誤提示訊息</p>
+						</div>
+						<div class="valid-feedback">Looks Good!</div>
 					</div>
 				</div>
 
+
 				<div class="col-md-12">
-					<label for="inputPetVaccName2" class="form-label">施打疫苗2</label> <input
-						type="text" class="form-control" id="inputPetVaccName2"
-						name="petVaccName2" th:value="${buyerVO.petVaccName2}" />
+					<label for="inputPetVaccName2" class="form-label">施打疫苗2</label> <input type="text"
+						class="form-control" id="inputPetVaccName2" name="petVaccName2" placeholder="輸入疫苗名稱" />
 				</div>
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime2" class="col-sm-2 col-form-label">施打時間2</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime2"
-							th:value="${buyerVO.petVaccTime2}">
+					<div class="col-sm-12">
+						<input type="date" class="form-control" name="petVaccTime2">
 					</div>
 				</div>
 
-				<div
-					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
+				<div class="col-md-3" style="display: none;">
+					<label for="inputIsConfirm" class="form-label">用戶資料是否生效</label> <select
+						class="isConfirm form-select" name="isConfirm" id="inputIsConfirm">
+						<option value="true" selected>有效</option>
+						<option value="false">停權</option>
+					</select>
+				</div>
+
+				<br> <br>
+
+				<div class="text-center d-flex flex-row gap-5 justify-content-center">
+					<button type="reset" id="cancel-btn" class="btn btn-secondary">取消並離開</button>
 					<button type="submit" class="btn btn-primary">提交修改</button>
 				</div>
 			</form>
@@ -144,27 +230,83 @@
 	<script>
 		//============ 取消按鈕的跳轉事件設定 start =============
 		document.getElementById("cancel-btn").addEventListener("click",
-				function() {
-					window.location.href = "/front/buyer/main"; // 將網頁重定向到指定的 URL
+			function () {
+				window.location.href = "/front/buyer/main"; // 將網頁重定向到指定的 URL
+			});
+
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var countyValue = document
+				.querySelector(".county")
+				.getAttribute("data-countyValue");
+			console.log(countyValue); // 將印出 "台北市"
+		});
+
+		window.onload = function () {
+			// 監聽自定義事件，當 loadjs 完成時觸發
+
+			new TwCitySelector({
+				el: ".city-selector-set",
+				elCounty: ".county",
+				elDistrict: ".district",
+				elZipcode: ".zipcode",
+				countyValue: document.querySelector("#sellerCountyValue").value,
+				districtValue: document.querySelector("#sellerDistrictValue").value,
+			});
+		};
+
+		function updateHiddenFields() {
+			// 取得選擇的縣市和區域的值
+			var selectedCounty = document.querySelector(".county").value;
+			var selectedDistrict = document.querySelector(".district").value;
+
+			// 更新隱藏欄位的值
+			document.getElementById("sellerCountyValue").value = selectedCounty;
+			document.getElementById("sellerDistrictValue").value = selectedDistrict;
+
+			// 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+			return checkFormBeforeSubmit();
+		}
+
+		function checkFormBeforeSubmit() {
+			// 取得表單元素
+			var form = document.getElementById("myForm");
+
+			// 檢視表單內容
+			var formData = new FormData(form);
+			var formContent = "";
+
+			for (var pair of formData.entries()) {
+				formContent += pair[0] + ": " + pair[1] + "\n";
+			}
+
+			// 顯示表單內容，這裡使用 alert 作為示例，你可以根據需求進行更複雜的處理
+			alert("表單內容：\n" + formContent);
+
+			// 返回 true 允許表單繼續提交，或者返回 false 阻止表單提交
+			return true;
+		}
+
+
+
+
+		window.onload = function () {
+			// 監聽自定義事件，當 loadjs 完成時觸發
+			document.addEventListener("loadjsCompleted", function () {
+				new TwCitySelector({
+					el: ".city-selector-set",
+					elCounty: ".county",
+					elDistrict: ".district",
+					elZipcode: ".zipcode",
 				});
+			});
 
-		// 定義一個自定義事件，用於通知 TwCitySelector 腳本
-		// var loadjsCompletedEvent = new Event("loadjsCompleted");
+			// 自動觸發預覽圖片
+			previewImage();
 
-		// window.onload = function () {
-		// 	// 監聽自定義事件，當 loadjs 完成時觸發
-		// 	document.addEventListener("loadjsCompleted", function () {
-		// 		new TwCitySelector({
-		// 			el: ".city-selector-set",
-		// 			elCounty: ".county",
-		// 			elDistrict: ".district",
-		// 			elZipcode: ".zipcode",
-		// 		});
-		// 	});
-
-		// 	// 手動觸發事件，告知 TwCitySelector 可以初始化了
-		// 	document.dispatchEvent(loadjsCompletedEvent);
-		// };
+			// 手動觸發事件，告知 TwCitySelector 可以初始化了
+			// document.dispatchEvent(loadjsCompletedEvent);
+		};
 
 		//============ 照片上傳-預覽用 start =============
 		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
@@ -173,34 +315,46 @@
 			alert("No FileReader support");
 		}
 		acceptedTypes = {
-			'image/png' : true,
-			'image/jpeg' : true,
-			'image/gif' : true
+			'image/png': true,
+			'image/jpeg': true,
+			'image/gif': true
 		};
 		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
 		function previewImage() {
-			var upfile1 = document.getElementById("inputPetImg");
-			upfile1.addEventListener("change", function(event) {
-				var files = event.target.files || event.dataTransfer.files;
-				for (var i = 0; i < files.length; i++) {
-					previewfile(files[i])
+			var preview = document.getElementById('imagePreview');
+			var fileInput = document.getElementById('inputPetImg');
+			var file = fileInput.files[0];
+
+			preview.innerHTML = ''; // 清空預覽區域
+
+			if (file) {
+				var reader = new FileReader(); // 使用 FileReader 來讀取文件
+
+				reader.onload = function (e) {
+					var img = document.createElement('img'); // 創建一個圖片元素
+					img.src = e.target.result; // 將讀取的文件內容賦值給圖片的 src 屬性
+					img.className = 'img-fluid'; // 添加一個 CSS 類，用於設置圖片的大小
+
+					preview.appendChild(img); // 將圖片添加到預覽區域
 				}
-				// 				previewfile(files[files.length-1])
-			}, false);
+
+				reader.readAsDataURL(file); // 讀取文件內容
+			}
 		}
+
 		//檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
 		function previewfile(file) {
 			if (filereader_support === true
-					&& acceptedTypes[file.type] === true) {
+				&& acceptedTypes[file.type] === true) {
 				var reader = new FileReader();
-				reader.onload = function(event) {
+				reader.onload = function (event) {
 
 					var image = new Image();
 					image.src = event.target.result;
 					// 設定圖片的寬度上限
 					var maxWidth = 250;
 
-					image.onload = function() {
+					image.onload = function () {
 						// 原始圖片的寬高比
 						var aspectRatio = this.height / this.width;
 						// 計算相應的高度
@@ -231,17 +385,17 @@
 			} else {
 				console.log("你執行幾次?");
 				blob_holder.innerHTML = "<div  style='text-align: left;'>"
-						+ "● filename: "
-						+ file.name
-						+ "<br>"
-						+ "● ContentTyp: "
-						+ file.type
-						+ "<br>"
-						+ "● size: "
-						+ file.size
-						+ "bytes"
-						+ "<br>"
-						+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
+					+ "● filename: "
+					+ file.name
+					+ "<br>"
+					+ "● ContentTyp: "
+					+ file.type
+					+ "<br>"
+					+ "● size: "
+					+ file.size
+					+ "bytes"
+					+ "<br>"
+					+ "● 上傳ContentType限制: <b> <font color=red>image/png、image/jpeg、image/gif </font></b></div>";
 				document.getElementById('submit').disabled = true;
 			}
 
@@ -255,6 +409,8 @@
 				}
 			}
 		}
+
+
 	</script>
 </body>
 

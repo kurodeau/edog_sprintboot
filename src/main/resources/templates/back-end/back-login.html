@@ -127,7 +127,6 @@
             window.location.port +
             "/back/api/v1/auth/authenticate";
 
-          alert(url);
           let email = document.getElementById("yourUsername").value;
           let password = document.getElementById("yourPassword").value;
           formData = { email: email, password: password };
@@ -147,6 +146,15 @@
             .then((data) => {
               localStorage.setItem("access_token", data.access_token);
               localStorage.setItem("refresh_token", data.refresh_token);
+              let backMain =
+                  window.location.protocol +
+                  "//" +
+                  window.location.hostname +
+                  ":" +
+                  window.location.port +
+                  "/back/main";              
+              
+               window.location.href = backMain;
             })
             .catch((error) => {
               console.error("Error:", error);

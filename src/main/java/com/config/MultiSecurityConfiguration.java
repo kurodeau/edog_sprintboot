@@ -198,7 +198,7 @@ public class MultiSecurityConfiguration {
 									SecurityContextHolder.clearContext();
 
 								}
-								finalPath = "/buyer/login";
+								finalPath = "/";
 							}
 							
 							// 這個處理器將應用於所有的登出請求

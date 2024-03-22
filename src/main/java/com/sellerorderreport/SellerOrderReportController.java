@@ -68,7 +68,6 @@ public class SellerOrderReportController {
 			sellerTargetId = sellerVO.getSellerId();
 		}
 
-		System.out.println(sellerTargetId);
 
 		try {
 
@@ -145,32 +144,6 @@ public class SellerOrderReportController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HttpResult<>(500, null, "內部錯誤"));
 		}
 
-//		try {
-//			
-//			SecurityContext secCtx = SecurityContextHolder.getContext();
-//			Authentication authentication = secCtx.getAuthentication();
-//			if (authentication != null && authentication.getPrincipal() instanceof SellerVO) {
-//				SellerVO sellerTargetVO = (SellerVO) authentication.getPrincipal();
-//
-//				Integer sellerTargetId = Integer.valueOf(sellerIdstr); 
-//				
-//				List<ProductOrderVO> productOrderVOs = productOrderService.getAll();
-//
-//				
-//				List<ProductOrderVO> filteredOrders = productOrderVOs.stream()
-//						.filter(order -> order.getSellerId() ==sellerTargetId)
-//						.collect(Collectors.toList());
-//				for (ProductOrderVO filteredOrder : filteredOrders) {
-//					System.out.println(filteredOrder);
-//				}
-//
-//				return ResponseEntity.ok().body(new HttpResult<>(200, null, "正常"));
-//			} else {
-//				return ResponseEntity.badRequest().body(new HttpResult<>(400, null, "請求格式不對"));
-//			}
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HttpResult<>(500, null, "內部錯誤"));
-//		}
 	}
 
 	@Autowired
