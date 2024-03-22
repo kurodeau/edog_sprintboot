@@ -155,9 +155,11 @@ public class BuyerController {
 	public String update(@Valid BuyerVO buyerVO, BindingResult result, ModelMap model,
 			@RequestParam("petImg") MultipartFile[] parts) throws IOException {
 
+		System.out.println("測試訊息:有進入Controller_updateBuyer");
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		// 去除BindingResult中petImg欄位的FieldError紀錄 --> 見第172行
 		result = removeFieldError(buyerVO, result, "petImg");
+		System.out.println("測試訊息:111111111111111");
 
 		if (parts[0].isEmpty()) { // 使用者未選擇要上傳的新圖片時
 			// BuyerService buyerSvc = new BuyerService();
@@ -169,13 +171,20 @@ public class BuyerController {
 				buyerVO.setPetImg(petImg);
 			}
 		}
+		System.out.println("測試訊息:2222222222222222222222");
+
 		if (result.hasErrors()) {
-			// 修改成進行修改資料的PAGE
+			System.out.println("測試訊息:==============XXXXXXXXXXXXXX");
+			System.out.println("測試訊息:updateSeller");
+			System.out.println("測試訊息:result= " + result);
 			return "back-end/back-buyer-edit";
 		}
+		System.out.println("測試訊息:333333333333");
+
 		/*************************** 2.開始修改資料 *****************************************/
 		// BuyerService buyerSvc = new BuyerService();
 		buyerSvc.updateBuyer(buyerVO);
+		System.out.println("測試訊息:4444444444444444444");
 
 		/*************************** 3.修改完成,準備轉交(Send the Success view) **************/
 		model.addAttribute("success", "- (修改成功)");
@@ -201,32 +210,6 @@ public class BuyerController {
 		return "back-end/back-buyer"; // 刪除完成後轉交listAllEmp.html
 	}
 
-	/*
-	 * 第一種作法 Method used to populate the List Data in view. 如 : <form:select
-	 * path="deptno" id="deptno" items="${deptListData}" itemValue="deptno"
-	 * itemLabel="dname" />
-	 */
-//	@ModelAttribute("deptListData")
-//	protected List<DeptVO> referenceListData() {
-//		// DeptService deptSvc = new DeptService();
-//		List<DeptVO> list = deptSvc.getAll();
-//		return list;
-//	}
-
-	/*
-	 * 【 第二種作法 】 Method used to populate the Map Data in view. 如 : <form:select
-	 * path="deptno" id="deptno" items="${depMapData}" />
-	 */
-	// 配合前端設定再開來套用
-//	@ModelAttribute("deptMapData") //
-//	protected Map<Integer, String> referenceMapData() {
-//		Map<Integer, String> map = new LinkedHashMap<Integer, String>();
-//		map.put(10, "財務部");
-//		map.put(20, "研發部");
-//		map.put(30, "業務部");
-//		map.put(40, "生管部");
-//		return map;
-//	}
 
 	// 去除BindingResult中某個欄位的FieldError紀錄
 	public BindingResult removeFieldError(BuyerVO buyerVO, BindingResult result, String removedFieldname) {

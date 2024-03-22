@@ -4,6 +4,7 @@
 			th:href="@{/back/main}"> <i class="bi bi-grid"></i> <span>後台中心</span>
 		</a></li>
 
+
 		<li class="nav-item"><a class="nav-link collapsed"
 			data-bs-target="#seller-nav" data-bs-toggle="collapse" th:href="@{#}">
 				<i class="bi bi-person"></i> <span>賣家管理</span><i
@@ -18,11 +19,13 @@
 						class="bi bi-circle"></i><span>查詢賣家</span>
 				</a></li>
 
+
 				<!-- 新增賣家請串到自己頁面 -->
 				<!-- 編輯賣家藏在操作 選項卡 -->
 				<!-- 刪除賣家視個人決定要不要做 -->
 			</ul></li>
 		<!-- End帳戶管理 -->
+
 
 		<li class="nav-item"><a class="nav-link collapsed"
 			data-bs-target="#sellerlv-nav" data-bs-toggle="collapse"
@@ -82,19 +85,15 @@
 		<!-- Strat優惠券管理 -->
 		<!--   <li class="nav-item">
       <a
+
         class="nav-link collapsed"
         data-bs-target="#service-nav"
         data-bs-toggle="collapse"
         th:href="@{#}"
       >
         <i class="bi bi-ticket"></i><span>優惠券管理</span
-        ><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul
-        id="service-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
+        ><i class="bi bi-chevron-down ms-auto"></i>      </a>
+      <ul id="service-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
           <a th:href="@{/back/coupon/list}">
             <i class="bi bi-circle"></i><span>所有優惠券</span>
@@ -119,12 +118,9 @@
       >
         <i class="bi bi-ticket"></i><span>匯款管理</span
         ><i class="bi bi-chevron-down ms-auto"></i>
+
       </a>
-      <ul
-        id="export-nav"
-        class="nav-content collapse"
-        data-bs-parent="#sidebar-nav"
-      >
+      <ul id="export-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
           <a th:href="@{/back/export/list}">
             <i class="bi bi-circle"></i><span>所有匯款</span>
@@ -138,6 +134,7 @@
       </ul>
     </li> -->
 		<!-- End匯款資訊 -->
+
 
 		<!-- Start廣告管理 -->
 		<li class="nav-item"><a class="nav-link collapsed"
@@ -187,6 +184,7 @@
 		</li>
 		<!-- End走馬燈管理 -->
 	</ul>
+
 </aside>
 
 <script>
@@ -274,7 +272,5 @@
           });
       });
   });
-  
-  
-	
 </script>
+

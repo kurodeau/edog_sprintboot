@@ -1,81 +1,98 @@
 <!DOCTYPE html>
 <html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<th:block th:insert="~{/fragment-head}"></th:block>
-<th:block th:insert="~{/fragment-datatableCss}"></th:block>
+  <th:block th:insert="~{/fragment-head}"></th:block>
+  <th:block th:insert="~{/fragment-datatableCss}"></th:block>
 
 </head>
 
 <body>
-	<!-- ======= Header ======= -->
-    <header class="fixed-top">
-      <th:block th:insert="~{/back-end/header-back}"></th:block>
-    </header>
+  <!-- ======= Header ======= -->
+  <header class="fixed-top">
+    <th:block th:insert="~{/back-end/header-back}"></th:block>
+  </header>
 
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="back-end/aside-back.html"></aside>
+  <!-- ======= Sidebar ======= -->
+  <aside th:replace="back-end/aside-back.html"></aside>
 
-	<!-- ======= Main ======= -->
-	<main class="main main-layout-seller">
-		<div class="container-fluid seller-container">
-			<h1>新增走馬燈資料</h1>
+  <!-- ======= Main ======= -->
+  <main class="main main-layout-seller">
+    <div class="container-fluid seller-container">
+      <h1>新增走馬燈資料</h1>
 
-			<form class="row g-3" id="myForm" th:action="@{insertNewsTicker}"
-				method="post" enctype="multipart/form-data">
+      <form class="row g-3" id="myForm" th:action="@{insertNewsTicker}" th:object="${newsTickerVO}" method="post"
+        enctype="multipart/form-data">
 
-				<div class="col-md-12">
-					<label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
-					<input type="text" class="form-control" id="inputNewsTickerContent"
-						name="newsTickerContent" />
-				</div>
+        <div class="col-md-12">
+          <label for="inputNewsTickerContent" class="form-label">走馬燈內容</label>
+          <input type="text" class="form-control" id="inputNewsTickerContent" name="newsTickerContent"
+            th:field="*{newsTickerContent}" aria-describedby="newsTickerContentFeedback"
+            th:classappend="${#fields.hasErrors('newsTickerContent')} ? 'is-invalid' : ''" />
+          <div id="newsTickerContentFeedback" class="invalid-feedback">
+            <p th:if="${#fields.hasErrors('newsTickerContent')}" th:errors="*{newsTickerContent}"></p>
+          </div>
+        </div>
 
-				<div class="col-md-12">
-					<label for="inputSort" class="form-label">顯示排序</label> <input
-						type="text" class="form-control" id="inputSort" name="sort" />
-				</div>
+        <div class="col-md-12">
+          <label for="inputSort" class="form-label">顯示排序</label>
+          <input type="text" class="form-control" id="inputSort" name="sort" th:value="${newsTickerVO.sort}"
+            aria-describedby="sortFeedback" th:classappend="${#fields.hasErrors('sort')} ? 'is-invalid' : ''" />
 
-				<div class="col mb-12">
-					<label for="inputStartTime" class="col-sm-2 col-form-label">開始顯示時間</label>
-					<div class="col-sm-3">
-						<input type="date" class="form-control" name="startTime">
-					</div>
-				</div>
+          <div id="sortFeedback" class="invalid-feedback">
+            <p th:if="${#fields.hasErrors('sort')}" th:errors="*{sort}">
+              欄位有誤
+            </p>
+          </div>
+        </div>
 
-				<div class="col mb-12">
-					<label for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label>
-					<div class="col-sm-3">
-						<input type="date" class="form-control" name="endTime">
-					</div>
-				</div>
+        <div class="col mb-12">
+          <label id="inputStartTime" for="inputStartTime" class="col-sm-2 col-form-label">開始顯示時間</label>
+          <div class="col-sm-3">
+            <input type="date" class="form-control" name="startTime"
+              th:value="${#dates.format(newsTickerVO.startTime, 'yyyy-MM-dd')}" aria-describedby="startTimeFeedback"
+              th:classappend="${#fields.hasErrors('startTime')} ? 'is-invalid' : ''" />
 
-				<!-- 
-				<div class="col-md-3">
-					<label for="inputIsDisplay" class="form-label">是否顯示</label> <select
-						class="isDisplay form-select" name="isDisplay" id="inputIsDisplay">
-						<option value="No"></option>
-					</select>
-				</div>
- -->
+            <div id="startTimeFeedback" class="invalid-feedback">
+              <p th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}">
+                欄位有誤
+              </p>
+            </div>
+          </div>
+        </div>
 
-				<div
-					class="text-center d-flex flex-row gap-5 justify-content-center">
-					<button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
-					<button type="submit" class="btn btn-primary">提交修改</button>
-				</div>
-			</form>
-		</div>
-	</main>
-	<!-- End Main -->
+        <div class="col mb-12">
+          <label id="inputEndTime" for="inputEndTime" class="col-sm-2 col-form-label">結束顯示時間</label>
+          <div class="col-sm-3">
+            <input type="date" class="form-control" name="endTime"
+              th:value="${#dates.format(newsTickerVO.endTime, 'yyyy-MM-dd')}" aria-describedby="endTimeFeedback"
+              th:classappend="${#fields.hasErrors('endTime')} ? 'is-invalid' : ''" />
 
-	<!-- ======= Footer, 後臺應該不需要footer ======= -->
+            <div id="endTimeFeedback" class="invalid-feedback">
+              <p th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}">
+                欄位有誤
+              </p>
+            </div>
+          </div>
+        </div>
 
-	<!-- Vendor & Main JS Files -->
-	<div th:replace="fragment-js"></div>
+        <div class="text-center d-flex flex-row gap-5 justify-content-center">
+          <button id="cancel-btn" type="button" class="btn btn-secondary">取消並離開</button>
+          <button type="submit" class="btn btn-primary">提交修改</button>
+        </div>
+      </form>
+    </div>
+  </main>
+  <!-- End Main -->
 
-	<!-- Local JS File -->
-	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
-		type="text/javascript"></script>
-	<script>
+  <!-- ======= Footer, 後臺應該不需要footer ======= -->
+
+  <!-- Vendor & Main JS Files -->
+  <div th:replace="fragment-js"></div>
+
+  <!-- Local JS File -->
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+  <script>
 
     // 定義一個自定義事件，用於通知 TwCitySelector 腳本
     var loadjsCompletedEvent = new Event("loadjsCompleted");
@@ -429,12 +446,12 @@
         return result;
       }
     });
-          //取消按鈕的跳轉事件設定
-          document.getElementById("cancel-btn").addEventListener("click", function() {
-        	  window.location.href = "/back/newsTicker/listAllGet"; // 將網頁重定向到指定的 URL
-        	  });
-          
-          
+    //取消按鈕的跳轉事件設定
+    document.getElementById("cancel-btn").addEventListener("click", function () {
+      window.location.href = "/back/newsTicker/listAllGet"; // 將網頁重定向到指定的 URL
+    });
+
+
   </script>
 </body>
 

@@ -19,7 +19,8 @@
 		<div class="container-fluid seller-container">
 			<h1>編輯買家資料</h1>
 
-			<form id="myForm" method="POST" th:action="@{updateBuyer}" enctype="multipart/form-data">
+			<form id="myForm" method="POST" th:object="${buyerVO}" th:action="@{updateBuyer}"
+				enctype="multipart/form-data">
 
 				<div class="col-md-12">
 					<label for="inputMemberId" class="form-label">買家編號</label> <input type="text" class="form-control"
@@ -40,14 +41,26 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputMemberPassword" class="form-label">密碼</label> <input type="text"
-						class="form-control" id="inputMemberPassword" name="memberPassword"
-						th:value="${buyerVO.memberPassword}" />
+					<label for="inputMemberPassword" class="form-label">密碼</label>
+					<input type="text" class="form-control" id="inputMemberPassword" name="memberPassword"
+						th:value="${buyerVO.memberPassword}" aria-describedby="memberPasswordFeedback"
+						th:classappend="${#fields.hasErrors('memberPassword')} ? 'is-invalid' : ''" />
+
+					<div id="memberPasswordFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}">
+							欄位有誤
+						</p>
+					</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="inputMemberName" class="form-label">用戶名稱</label> <input type="text" class="form-control"
-						id="inputMemberName" name="memberName" th:value="${buyerVO.memberName}" />
+					<label for="inputMemberName" class="form-label">用戶名稱</label>
+					<input type="text" class="form-control" id="inputMemberName" name="memberName"
+						th:field="*{memberName}" aria-describedby="memberNameFeedback"
+						th:classappend="${#fields.hasErrors('memberName')} ? 'is-invalid' : ''" />
+					<div id="memberNameFeedback" class="invalid-feedback">
+						<p th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}"></p>
+					</div>
 				</div>
 
 				<div class="col-md-12">
@@ -62,13 +75,29 @@
 						th:value="${buyerVO.memberMobile}" />
 				</div>
 
+				<div class="col-mb-3">
+					<label for="inputMemberBirthday" class="col-sm-2 col-form-label">生日</label>
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="memberBirthday"
+							th:value="${#dates.format(buyerVO.memberBirthday, 'yyyy-MM-dd')}"
+							aria-describedby="memberBirthdayFeedback"
+							th:classappend="${#fields.hasErrors('memberBirthday')} ? 'is-invalid' : ''" />
+
+						<div id="memberBirthdayFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('memberBirthday')}" th:errors="*{memberBirthday}">
+								欄位有誤
+							</p>
+						</div>
+					</div>
+				</div>
+
 				<div class="col-md-12">
 					<label for="inputMemberAddress" class="form-label">地址</label> <input type="text"
 						class="form-control mt-2" id="inputMemberAddress" name="memberAddress"
 						th:value="${buyerVO.memberAddress}" placeholder="請輸入地址" />
 				</div>
 
-				<div class="col-md-3">
+				<div class="col-md-3" style="display: none;">
 					<label for="inputIsMemberEmail" class="form-label">信箱是否已經審核</label>
 					<select class="isMemberEmail form-select" id="inputIsMemberEmail" name="isMemberEmail"
 						th:value="${buyerVO.isMemberEmail}">
@@ -103,12 +132,22 @@
 					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input type="text"
 						class="form-control" id="inputPetVaccName1" name="petVaccName1"
 						th:value="${buyerVO.petVaccName1}" />
+
 				</div>
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime1" class="col-sm-2 col-form-label">施打時間1</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime1" th:value="${buyerVO.petVaccTime1}">
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="petVaccTime1"
+							th:value="${#dates.format(buyerVO.petVaccTime1, 'yyyy-MM-dd')}"
+							aria-describedby="petVaccTime1Feedback"
+							th:classappend="${#fields.hasErrors('petVaccTime1')} ? 'is-invalid' : ''" />
+
+						<div id="petVaccTime1Feedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('petVaccTime1')}" th:errors="*{petVaccTime1}">
+								欄位有誤
+							</p>
+						</div>
 					</div>
 				</div>
 
@@ -120,12 +159,37 @@
 
 				<div class="col-mb-3">
 					<label for="inputPetVaccTime2" class="col-sm-2 col-form-label">施打時間2</label>
-					<div class="col-sm-2">
-						<input type="date" class="form-control" name="petVaccTime2" th:value="${buyerVO.petVaccTime2}">
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="petVaccTime2"
+							th:value="${#dates.format(buyerVO.petVaccTime2, 'yyyy-MM-dd')}"
+							aria-describedby="petVaccTime2Feedback"
+							th:classappend="${#fields.hasErrors('petVaccTime2')} ? 'is-invalid' : ''" />
+
+						<div id="petVaccTime2Feedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('petVaccTime2')}" th:errors="*{petVaccTime2}">
+								欄位有誤
+							</p>
+						</div>
 					</div>
 				</div>
 
-				<!-- 判斷 newsTickerVO.isDisplay 的值，設定 label 的文字內容 -->
+				<div class="col-mb-3">
+					<label for="inputMemberRegistrationTime" class="col-sm-2 col-form-label">會員註冊時間</label>
+					<div class="col-sm-3">
+						<input type="date" class="form-control" name="memberRegistrationTime"
+							th:value="${#dates.format(buyerVO.memberRegistrationTime, 'yyyy-MM-dd')}"
+							aria-describedby="memberRegistrationTimeFeedback"
+							th:classappend="${#fields.hasErrors('memberRegistrationTime')} ? 'is-invalid' : ''" />
+
+						<div id="memberRegistrationTimeFeedback" class="invalid-feedback">
+							<p th:if="${#fields.hasErrors('memberRegistrationTime')}"
+								th:errors="*{memberRegistrationTime}">
+								欄位有誤
+							</p>
+						</div>
+					</div>
+				</div>
+
 				<div class="col-md-3">
 					<label for="inputIsConfirm" class="form-label">是否是有效用戶</label> <select class="form-select"
 						name="isConfirm" id="inputIsConfirm">
