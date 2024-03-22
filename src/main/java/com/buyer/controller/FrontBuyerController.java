@@ -88,9 +88,9 @@ public class FrontBuyerController {
 		
 		authorities.add(new SimpleGrantedAuthority("ROLE_BUYER"));
 		
-		if (parts[0].isEmpty()) { 
-			model.addAttribute("errorMessage", "請上傳PET圖片");
-		} 
+//		if (parts[0].isEmpty()) { 
+//			model.addAttribute("errorMessage", "請上傳PET圖片");
+//		} 
 		
 		System.out.println(dupPassword);
 		System.out.println(buyerVO.getMemberPassword());
@@ -118,9 +118,9 @@ public class FrontBuyerController {
 		.setAuthentication(new UsernamePasswordAuthenticationToken(buyerVO, null, authorities));
 
 		Boolean updateSuccessShown = (Boolean) session.getAttribute("buyerEditSuccess");
-		System.out.println("測試訊息:有更新到buyerVO");
+//		System.out.println("測試訊息:有更新到buyerVO");
 
-		System.out.println("AXSAXAXAAXXAXA");
+//		System.out.println("AXSAXAXAAXXAXA");
 		
 		buyerSvc.saveUserDetails(buyerVO);
 		return "redirect:/front/buyer/main";

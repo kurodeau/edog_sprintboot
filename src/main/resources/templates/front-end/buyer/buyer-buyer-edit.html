@@ -43,7 +43,7 @@
 
 
 				<div class="col-md-12">
-					<label for="inputMemberPassword" class="form-label">密碼</label> <input type="text"
+					<label for="inputMemberPassword" class="form-label">密碼</label> <input type="password"
 						class="form-control" id="inputMemberPassword" name="memberPassword"
 						placeholder="請輸入包含英文與數字6~8字之間的密碼" th:value="${buyerVO.memberPassword}"
 						aria-describedby="memberPasswordFeedback"
@@ -147,7 +147,7 @@
 							th:field="*{petImg}" data-max_length="1" class="form-control upload__inputfile" id="petImg"
 							name="petImg" onclick="previewImage()" onchange="hideContent('upFiles.errors');" />
 						<div class="valid-feedback">Looks Good!</div>
-						<div id="petImgFeedback" class="invalid-feedback">Please
+						<div id="petImgF	eedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
 						<div id="blob_holder">
 							<img th:src="@{/front/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}" width="200px"
