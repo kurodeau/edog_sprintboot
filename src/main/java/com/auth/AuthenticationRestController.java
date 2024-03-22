@@ -23,11 +23,7 @@ public class AuthenticationRestController {
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request , HttpServletRequest req) {		
-		
-		// 為了AuthProvider(因為要區分各種用戶)
-		String fullUrl =req.getRequestURL().toString();
-		request.setEmail(request.getEmail()+"-"+fullUrl);
-		
+
 		
 		return ResponseEntity.ok(authSvc.authenticate(request));
 	}

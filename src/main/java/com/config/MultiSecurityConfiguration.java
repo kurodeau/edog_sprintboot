@@ -3,6 +3,8 @@ package com.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +27,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.buyer.entity.BuyerVO;
+import com.config.RecapService.Event;
 import com.manager.ManagerPasswordEncoder;
 import com.manager.ManagerService;
 import com.manager.ManagerVO;
@@ -94,7 +102,21 @@ public class MultiSecurityConfiguration {
 		return (web) -> web.ignoring().antMatchers("/auth/phone", "/auth/phone/check", "/image/**", "/css/**",
 				"/vendors/**", "/mainjs/**", "/icons/**");
 	}
+	
+	/////////////////// RecapService 配置///////////////////////////
 
+	
+	@Autowired
+	RecapService recapSvc;
+	
+	/////////////////// OAuth 配置///////////////////////////
+
+
+	@Autowired
+	OAuthAuthenticationSuccessHandler oauthAuthenticationSuccessHandler;
+	
+
+	
 	/////////////////// MANAGER 配置///////////////////////////
 	@Autowired
 	private ManagerService managerSvc;
@@ -105,7 +127,7 @@ public class MultiSecurityConfiguration {
 
 	@Autowired
 	private TokenRepository tokenRepository;
-	
+
 	@Autowired
 	private JwtService jwtSvc;
 
@@ -146,40 +168,45 @@ public class MultiSecurityConfiguration {
 		JwtAuthenticationFilter jwtAuthenticationFilter = multiFilterConfig
 				.createJwtAuthenticationFilter(authenticationManager(http));
 
-		http.authorizeRequests(authorize -> authorize
-				.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
-				.antMatchers("/front/seller/ad/**").hasAnyRole("SELLERLV2", "SELLERLV3")
-				.antMatchers("/front/seller/**").hasRole("SELLER")
-				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login").permitAll()
-				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
-				.antMatchers("/back/seller/list").hasRole("MANAGERJWT")
+		http.authorizeRequests(authorize -> authorize.antMatchers("/front/seller/report")
+				.hasAnyRole("SELLERLV2", "SELLERLV3").antMatchers("/front/seller/ad/**")
+				.hasAnyRole("SELLERLV2", "SELLERLV3").antMatchers("/front/seller/**").hasRole("SELLER")
+				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login")
+				.permitAll().antMatchers("/back/api/v1/auth/authenticate").permitAll().antMatchers("/back/seller/list")
+				.hasRole("MANAGERJWT")
 
-        .antMatchers("/back/**").hasRole("MANAGER")
-				.antMatchers("/front/forum/**").hasRole("BUYER"))
+				.antMatchers("/back/**").hasRole("MANAGER").antMatchers("/front/forum/**").hasRole("BUYER"))
 
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+		
+		
+		http.oauth2Login();
+		
+//		usersuccessHandler(oauthAuthenticationSuccessHandler).defaultSuccessUrl("/seller/login");
+
+		
 		http.formLogin(form -> form.loginPage("/seller/login").loginProcessingUrl("/seller/login")
 				.usernameParameter("usernameinhtml").passwordParameter("passwordinhtml")
 				.successHandler(sellerAuthenticationSuccessHandler))
 				.exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler)
 						.authenticationEntryPoint(customAuthenticationEntryPoint))
 				.csrf().disable().authenticationManager(authenticationManager(http))
-					.logout(logout -> logout.logoutUrl("/logout") // 配置登出 URL
+				.logout(logout -> logout.logoutUrl("/logout") // 配置登出 URL
 						.logoutSuccessHandler((request, response, authentication) -> {
-							if (authentication==null) {return;}
+							if (authentication == null) {
+								return;
+							}
 							Object targetVO = authentication.getPrincipal();
-						
+
 							final String authHeader = request.getHeader("Authorization");
 							final String jwt;
 							String finalPath = "/";
-							
-							
-							System.out.println("authHeader"+authHeader);
-							
-							
+
+							System.out.println("authHeader" + authHeader);
+
 							if (targetVO != null && targetVO instanceof BuyerVO) {
 								SecurityContextHolder.clearContext();
 								finalPath = "/buyer/login";
@@ -200,7 +227,7 @@ public class MultiSecurityConfiguration {
 								}
 								finalPath = "/";
 							}
-							
+
 							// 這個處理器將應用於所有的登出請求
 							response.sendRedirect(request.getContextPath() + finalPath);
 
@@ -211,30 +238,47 @@ public class MultiSecurityConfiguration {
 
 	private class GossipAuthenticationProvider implements AuthenticationProvider {
 
-		public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
+		public Authentication authenticate(Authentication authentication) throws AuthenticationException {			
+			
+			
 			if (authentication != null && authentication.isAuthenticated()) {
 				// 如果已存在secCtx(買家) 返回
 				return authentication;
 			}
-
-			String name = authentication.getName();
+			
+			String trueName = authentication.getName();
 			String password = authentication.getCredentials().toString();
+			
+			// 從請求中獲取recaptcha_token
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes()).getRequest();
 
-			// Split the name using "-http"
-			String[] parts = name.split("-http");
-			// Check if there is a second part
-			if (parts.length < 2) {
-				throw new UsernameNotFoundException("Invalid Input");
-			}
+			
+			String path =request.getRequestURL().toString();
 
-			// The second part is the true name
-			String trueName = parts[0];
+			if (path.contains("seller/login")) {
+				String recaptchaToken =  request.getParameter("g-recaptcha-response");
 
-			if (parts[1].contains("seller")) {
+				Event e =recapSvc.buildJsonRequestBody(recaptchaToken, "LOGIN");
+				String jsonResponse =recapSvc.sendPostRequest(e);
+
+				Double score =recapSvc.parseScore(jsonResponse);
+				System.out.println("================");
+				System.out.println("score" + score);
+				System.out.println("================");
+
+				if (score <0.7) {
+					throw new BadCredentialsException("🤖🤖🤖🤖🤖🤖");
+				}
+				
 				// Fetch seller details by email
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
 				if (sellerVO != null) {
+					
+					
+					
+					
+					
 					if (!sellerVO.getIsConfirm()) {
 						throw new BadCredentialsException("帳戶尚未被啟用，請靜待平台審核");
 					}
@@ -265,10 +309,15 @@ public class MultiSecurityConfiguration {
 					throw new UsernameNotFoundException("沒有此帳戶");
 				}
 			}
+			
 
-			if (parts[1].contains("back") && parts[1].contains("auth/authenticate")) {
+
+			System.out.println(path.contains("/back/api/v1/auth/authenticate"));
+			
+			if (path.contains("/back/api/v1/auth/authenticate")) {
 				ManagerVO managerVO = managerSvc.findByOnlyOneEmail(trueName);
 
+								
 				if (managerVO == null) {
 					throw new UsernameNotFoundException("沒有此帳戶");
 				}
