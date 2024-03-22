@@ -1,6 +1,7 @@
 package com.buyer.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -81,7 +84,10 @@ public class FrontBuyerController {
 
 		buyerVO.setMemberRegistrationTime(new Date());
 		result = removeFieldError(buyerVO, result, "petImg");
-
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		
+		authorities.add(new SimpleGrantedAuthority("ROLE_BUYER"));
+		
 		if (parts[0].isEmpty()) { 
 			model.addAttribute("errorMessage", "請上傳PET圖片");
 		} 
@@ -108,12 +114,13 @@ public class FrontBuyerController {
 		}
 		
 		// 更新的同時, 登入暫存的資訊
-//		SecurityContextHolder.getContext()
-//		.setAuthentication(new UsernamePasswordAuthenticationToken(buyerVO, null));
+		SecurityContextHolder.getContext()
+		.setAuthentication(new UsernamePasswordAuthenticationToken(buyerVO, null, authorities));
 
 		Boolean updateSuccessShown = (Boolean) session.getAttribute("buyerEditSuccess");
+		System.out.println("測試訊息:有更新到buyerVO");
 
-		
+		System.out.println("AXSAXAXAAXXAXA");
 		
 		buyerSvc.saveUserDetails(buyerVO);
 		return "redirect:/front/buyer/main";

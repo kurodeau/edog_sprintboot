@@ -141,25 +141,22 @@
 					<div class="valid-feedback">Looks Good!</div>
 				</div>
 
-				<div class="col-mb-3">
-					<label for="inputPetImg" class="col-sm-2 col-form-label">寵物圖片</label>
-					<div class="col-sm-12">
-						<div class="upload__box">
-							<label for="inputPetImg" class="btn btn-sellerdark">請選擇寵物圖片</label>
-							<input type="file" th:field="*{petImg}" data-max_length="1"
-								class="form-control upload__inputfile" id="inputPetImg" name="petImg"
-								onclick="previewImage()" onchange="previewImage();" aria-describedby="petImgFeedback"
-								th:classappend="${errorMessage != null} ? 'is-invalid' : ''" />
-							<div class="valid-feedback">Looks Good!</div>
-							<div id="petImgFeedback" class="invalid-feedback" th:text="${errorMessage}">XXX</div>
-							<!-- 判斷 errorMessage 是否存在，存在則顯示 -->
-							<div id="imagePreview" class="upload__img--wrap"></div>
+				<div class="upload__box">
+					<div class="upload__btn-box">
+						<label for="petImg" class="btn btn-sellerdark">請選擇寵物圖片</label> <input type="file"
+							th:field="*{petImg}" data-max_length="1" class="form-control upload__inputfile" id="petImg"
+							name="petImg" onclick="previewImage()" onchange="hideContent('upFiles.errors');" />
+						<div class="valid-feedback">Looks Good!</div>
+						<div id="petImgFeedback" class="invalid-feedback">Please
+							provide a valid Picture.</div>
+						<div id="blob_holder">
+							<img th:src="@{/front/buyer/DBGifReader} + '?memberId=' + ${buyerVO.memberId}" width="200px"
+								height="150px" />
 						</div>
+						<span class="error" th:text="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
 					</div>
+					<div class="upload__img--wrap"></div>
 				</div>
-
-
-
 
 				<div class="col-md-12">
 					<label for="inputPetVaccName1" class="form-label">施打疫苗1</label> <input type="text"
@@ -294,12 +291,31 @@
 				});
 			});
 
-			// 自動觸發預覽圖片
-			previewImage();
 
 			// 手動觸發事件，告知 TwCitySelector 可以初始化了
 			// document.dispatchEvent(loadjsCompletedEvent);
 		};
+
+		window.onload = function () {
+			var petImgData = /*[[${petImg}]]*/ null; // 抓取buyerVO中的圖片
+			if (petImgData) {
+				displayImage(petImgData); // 如果 petImgData 存在則顯示片
+			}
+		};
+
+		function displayImage(imageData) {
+			var preview = document.getElementById('imagePreview');
+			preview.innerHTML = ''; // 清空预览区域
+
+			var img = document.createElement('img');
+			img.src = 'data:image/jpeg;base64,' + btoa(new Uint8Array(imageData).reduce(function (data, byte) {
+				console.log("測試訊息:img.src= " + img.src);
+				return data + String.fromCharCode(byte);
+			}, '')); // 将 byte[] 数据转换为 base64 编码的图片数据
+
+			img.className = 'img-fluid'; // 添加一個 CSS 類，用於設置圖片的大小
+			preview.appendChild(img); // 将图片添加到预览区域
+		}
 
 		//============ 照片上傳-預覽用 start =============
 		//檢查環境可支援FileReader, 不支援則跳出彈窗提示無法使用該功能
@@ -313,26 +329,36 @@
 			'image/gif': true
 		};
 		//監控上傳圖片的按鈕元素, 是否有更新, 有則觸發指定顯示檔案縮圖previewfile(file)
+		// function previewImage() {
+		// 	var preview = document.getElementById('imagePreview');
+		// 	var fileInput = document.getElementById('inputPetImg');
+		// 	var file = fileInput.files[0];
+
+		// 	preview.innerHTML = ''; // 清空預覽區域
+
+		// 	if (file) {
+		// 		var reader = new FileReader(); // 使用 FileReader 來讀取文件
+
+		// 		reader.onload = function (e) {
+		// 			var img = document.createElement('img'); // 創建一個圖片元素
+		// 			img.src = e.target.result; // 將讀取的文件內容賦值給圖片的 src 屬性
+		// 			img.className = 'img-fluid'; // 添加一個 CSS 類，用於設置圖片的大小
+
+		// 			preview.appendChild(img); // 將圖片添加到預覽區域
+		// 		}
+
+		// 		reader.readAsDataURL(file); // 讀取文件內容
+		// 	}
+		// }
 		function previewImage() {
-			var preview = document.getElementById('imagePreview');
-			var fileInput = document.getElementById('inputPetImg');
-			var file = fileInput.files[0];
-
-			preview.innerHTML = ''; // 清空預覽區域
-
-			if (file) {
-				var reader = new FileReader(); // 使用 FileReader 來讀取文件
-
-				reader.onload = function (e) {
-					var img = document.createElement('img'); // 創建一個圖片元素
-					img.src = e.target.result; // 將讀取的文件內容賦值給圖片的 src 屬性
-					img.className = 'img-fluid'; // 添加一個 CSS 類，用於設置圖片的大小
-
-					preview.appendChild(img); // 將圖片添加到預覽區域
+			var upfile1 = document.getElementById("petImg");
+			upfile1.addEventListener("change", function (event) {
+				var files = event.target.files || event.dataTransfer.files;
+				for (var i = 0; i < files.length; i++) {
+					previewfile(files[i])
+					consle.log("啊啊啊啊啊啊");
 				}
-
-				reader.readAsDataURL(file); // 讀取文件內容
-			}
+			}, false);
 		}
 
 		//檢查檔案符合標準後顯示於畫面上, 先建立一個圖片檔案再將上傳的圖片套入
