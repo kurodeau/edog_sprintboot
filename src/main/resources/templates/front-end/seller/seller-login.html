@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:insert="~{/fragment-head}"></th:block>
+<script
+	src="https://www.google.com/recaptcha/enterprise.js?render=6LeS6J8pAAAAABV5hvfIwhFZSQI_QPRiZwoOOH-H"></script>
+
 </head>
 <body>
 	<!-- ======= Header ======= -->
@@ -25,7 +28,10 @@
 							<p style="color: red" th:if="${param.error}"
 								th:text="${session.customErrorMessage}"></p>
 							<form class="row needs-validation" novalidate
-								th:action="@{/seller/login}" method="post">
+								th:action="@{/seller/login}" method="post" id="myForm">
+
+								<input type="hidden" name="type" value="seller" />
+
 								<div class="col-12">
 									<label for="validationCustom01" class="form-label">帳號</label> <input
 										name="usernameinhtml" type="email" class="form-control"
@@ -49,22 +55,30 @@
 											class="btn btn-primary btn-lg">註&nbsp;&nbsp;&nbsp;冊</a>
 									</div>
 
+
+
+
 									<!-- 第二个列 -->
 									<div class="col-6 d-flex justify-content-center">
-										<button class="btn btn-primary btn-lg" type="submit">
+										<button type="submit"
+											class="g-recaptcha btn btn-primary btn-lg"
+											data-sitekey="6LeS6J8pAAAAABV5hvfIwhFZSQI_QPRiZwoOOH-H"
+											data-callback="onSubmit" data-action="submit">
 											登&nbsp;&nbsp;&nbsp;入</button>
 									</div>
 
+
 									<div class="col mt-5">
 										<div class="col d-flex gap-5 justify-content-center">
-											 <a
-                          th:href="@{/seller/auth/email}"
-                          class="forgot-password-link"
-                          style="color: grey"
-                          >忘記密碼-信箱認證</a>
+											<a th:href="@{/seller/auth/email}"
+												class="forgot-password-link" style="color: grey">忘記密碼-信箱認證</a>
 										</div>
 									</div>
 								</div>
+
+
+								<a href="/oauth2/authorization/google"
+									style="color: transparent; text-decoration: none;">Google</a>
 							</form>
 						</div>
 					</div>
@@ -78,52 +92,9 @@
 	<div th:replace="~{/fragment-js}"></div>
 
 	<script>
-      function manipulateFormDataAndSubmit() {
-        // Get form data
-        var formData = new FormData(
-          document.querySelector("form.needs-validation")
-        );
-
-        // Modify the data as needed
-        formData.append("additionalField", "additionalValue");
-        formData.set(
-          "usernameinhtml",
-          formData.get("usernameinhtml") + "-" + window.location.href
-        );
-
-        // You can add more manipulation logic here...
-
-        // Create a new form element to submit the modified data
-        var newForm = document.createElement("form");
-        newForm.method = "post";
-        newForm.action = "/seller/login";
-
-        // Append the manipulated form data to the new form
-        for (var pair of formData.entries()) {
-          var input = document.createElement("input");
-          input.type = "hidden";
-          input.name = pair[0];
-          input.value = pair[1];
-          newForm.appendChild(input);
-        }
-
-        // Append the new form to the document body
-        document.body.appendChild(newForm);
-
-        // Submit the new form
-        newForm.submit();
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        // Add an event listener to the form submission
-        document
-          .querySelector("form.needs-validation")
-          .addEventListener("submit", function (event) {
-            event.preventDefault();
-            // Execute the function before the form is submitted
-            manipulateFormDataAndSubmit();
-          });
-      });
-    </script>
+		function onSubmit(token) {
+			document.getElementById("myForm").submit();
+		}
+	</script>
 </body>
 </html>
