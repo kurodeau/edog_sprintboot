@@ -44,8 +44,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
     registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/collection/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/cart/list");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/productorder/buyerproductorderlistall");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/productorder/getOrderdetails");
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/updateBuyer");
-		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/order_checkout111");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/front/buyer/order_checkout");
 		    
     
 		// 論壇部分
@@ -55,6 +56,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		// 後台部分
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/"+loginPath+"/login"); 
 		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/main");
+		registry.addInterceptor(changeHeaderInfoInterceptor).addPathPatterns("/back/productorder");
 		
 		
 		// 論壇必分
