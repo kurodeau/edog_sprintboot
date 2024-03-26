@@ -145,9 +145,10 @@ public class AdVO implements Serializable {
 
 
 	
+	
 	@Column(name = "adName")
 	@NotEmpty(message="請填寫廣告名稱")
-	@Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{1,30}$", message = "廣告名稱: 只能是中、英文字母、數字和_ , 且長度必需在1到20之間")	
+	@Pattern(regexp = "^.{1,20}$", message = "產品名稱長度必需在1到20之間")
 	public String getAdName() {
 		return adName;
 	}
@@ -161,19 +162,19 @@ public class AdVO implements Serializable {
 
 
 
-	@Column(name = "adUrl")
-	@NotEmpty(message="請填寫廣告產品的網址")
-	@URL
-	public String getAdUrl() {
-		return adUrl;
-	}
-
-
-
-
-	public void setAdUrl(String adUrl) {
-		this.adUrl = adUrl;
-	}
+//	@Column(name = "adUrl")
+//	@NotEmpty(message="請填寫廣告產品的網址")
+//	@URL
+//	public String getAdUrl() {
+//		return adUrl;
+//	}
+//
+//
+//
+//
+//	public void setAdUrl(String adUrl) {
+//		this.adUrl = adUrl;
+//	}
 
 
 	

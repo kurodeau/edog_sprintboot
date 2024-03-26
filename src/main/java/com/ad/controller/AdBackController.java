@@ -11,6 +11,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -29,6 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ad.model.AdService;
 import com.ad.model.AdVO;
 import com.allenum.AdStatusEnum;
+import com.seller.entity.SellerVO;
+import com.sellerLv.entity.SellerLvVO;
 
 @Controller
 @RequestMapping("/back/ad")
@@ -52,18 +57,31 @@ public class AdBackController {
 	@PostMapping("getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("adId") String adId, ModelMap model) {
 
-		System.out.println(adId);
-
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		/*************************** 2.開始查詢資料 *****************************************/
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//		Authentication authentication = secCtx.getAuthentication();
+//		SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+//
+//		SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+		SellerLvVO sellerLv = adVO.getSellerVO().getSellerLvId();
+
+		Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+
+		System.out.println(sellerLvId);
+
 		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("sellerLvId", sellerLvId);
 		model.addAttribute("adVO", adVO);
 		return "back-end/back-ad-update_ad";
-
 	}
 
 	@PostMapping("update")
 	public String update(@Valid AdVO adVO, BindingResult result, ModelMap model,
-			@RequestParam("adImg") MultipartFile[] parts) throws IOException {
+			@RequestParam("adImg") MultipartFile[] parts, @RequestParam("adId") String adId
+			) throws IOException {
 		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 		result = removeFieldError(adVO, result, "adImg");
 
@@ -77,12 +95,44 @@ public class AdBackController {
 			}
 		}
 		if (result.hasErrors()) {
+
+			AdVO adVO1 = adSvc.getOneAd(Integer.valueOf(adId));
+//			SecurityContext secCtx = SecurityContextHolder.getContext();
+//			Authentication authentication = secCtx.getAuthentication();
+//			SellerVO sellerVO = (SellerVO) authentication.getPrincipal();
+			//
+//			SellerLvVO sellerLv = sellerVO.getSellerLvId();
+
+			SellerLvVO sellerLv = adVO1.getSellerVO().getSellerLvId();
+
+			Integer sellerLvId = Integer.valueOf(sellerLv.getSellerLvId());
+
+			model.addAttribute("sellerLvId", sellerLvId);
+
 			return "back-end/back-ad-update_ad";
 		}
 		/*************************** 2.開始修改資料 *****************************************/
+		
+		
+		
 
-		AdVO orginalSellerId = adSvc.getOneAd(adVO.getAdId());
-		adVO.setSellerVO(orginalSellerId.getSellerVO());
+		AdVO adInfo = adSvc.getOneAd(adVO.getAdId());
+		SellerVO sellerId = adInfo.getSellerVO();	
+		adVO.setSellerVO(sellerId);
+		
+		SellerLvVO sellerLvVO = adVO.getSellerVO().getSellerLvId();
+		
+		Integer sellerLv = Integer.valueOf(sellerLvVO.getSellerLvId());
+		
+		System.out.println(sellerLv);
+		
+		if(sellerLv == 0 ) {
+			adVO.setAdLv(adInfo.getAdLv());
+		}
+		
+		
+		
+		
 
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
@@ -95,46 +145,40 @@ public class AdBackController {
 		model.addAttribute("success", "-(修改成功)");
 		adVO = adSvc.getOneAd(Integer.valueOf(adVO.getAdId()));
 		model.addAttribute("adVO", adVO);
-//		return "redirect:/back-end/back-ad-list";
 		return "redirect:/back/ad/list";
 	}
 
-	
 	@PostMapping("deleteStatus")
-	public String deleteStatus(@RequestParam("adId") String adId ,Model model) {
-		
+	public String deleteStatus(@RequestParam("adId") String adId, Model model) {
+
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		adVO.setIsEnabled(false);
 		adSvc.updateAd(adVO);
-		
-		
+
 		return "redirect:/back/ad/list";
-		
+
 	}
-	
-	
+
 	@PostMapping("reviewConfirm")
-	public String reviewConfirm(@RequestParam("adId") String adId , Model model) {
-		
+	public String reviewConfirm(@RequestParam("adId") String adId, Model model) {
+
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		adVO.setAdStatus(AdStatusEnum.DISABLED.getStatus());
 		adSvc.updateAd(adVO);
-		
+
 		return "redirect:/back/ad/list";
 	}
-	
+
 	@PostMapping("reviewFail")
-	public String reviewFail(@RequestParam("adId") String adId , Model model) {
-		
+	public String reviewFail(@RequestParam("adId") String adId, Model model) {
+
 		AdVO adVO = adSvc.getOneAd(Integer.valueOf(adId));
 		adVO.setAdStatus(AdStatusEnum.REVIEWFAIL.getStatus());
-		adSvc.updateAd(adVO);		
-		
+		adSvc.updateAd(adVO);
+
 		return "redirect:/back/ad/list";
 	}
-	
-	
-	
+
 	// 去除BindingResult中某個欄位的FieldError紀錄
 	public BindingResult removeFieldError(AdVO adVO, BindingResult result, String removedFieldname) {
 		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()

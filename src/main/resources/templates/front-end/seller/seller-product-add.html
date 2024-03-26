@@ -26,17 +26,17 @@
 			<!-- 假的表單imageForm，實際上是動態生成表單再送出去 -->
 			<form class="row g-3" id="imageForm" method="post"
 				th:object="${productVO}" th:action="@{insert}"
-				enctype="multipart/form-data">
+				enctype="multipart/form-data" >
 				<div class="upload__box">
 					<div class="upload__btn-box">
-						<label for="mainImage" class="btn btn-sellerdark">請選擇主要圖片</label>
+						<label for="mainImage" class="btn btn-sellerdark">*請選擇主要圖片</label>
 						<input type="file" data-max_length="1"
 							class="form-control upload__inputfile" id="mainImage"
-							name="mainImage" onclick="previewImage()"
-							onchange="hideContent('upFiles.errors');" />
-						<div class="valid-feedback">Looks Good!</div>
-						<div id="mainImageFeedback" class="invalid-feedback">Please
-							provide a valid Picture.</div>
+							name="mainImage" onclick="previewImage() "
+							onchange="hideContent('upFiles.errors');" required/>
+<!-- 						<div class="valid-feedback">Looks Good!</div> -->
+<!-- 						<div id="mainImageFeedback" class="invalid-feedback">Please -->
+<!-- 							provide a valid Picture.</div> -->
 						<div id="mainImage_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
@@ -44,24 +44,24 @@
 
 				<div class="upload__box">
 					<div class="upload__btn-box">
-						<label for="subImages" class="btn btn-sellerdark"> 請選擇其他圖片</label>
+						<label for="subImages" class="btn btn-sellerdark"> *請選擇其他圖片</label>
 						<input type="file" multiple="" data-max_length="5"
 							class="form-control upload__inputfile" id="subImages"
 							name="subImages" onclick="previewImage1()"
-							onchange="hideContent('upFiles.errors');" />
-						<div class="valid-feedback">Looks Good!</div>
-						<div id="subImagesFeedback" class="invalid-feedback">Please
-							provide a valid Picture.</div>
+							onchange="hideContent('upFiles.errors');" required/>
+<!-- 						<div class="valid-feedback">Looks Good!</div> -->
+<!-- 						<div id="subImagesFeedback" class="invalid-feedback">Please -->
+<!-- 							provide a valid Picture.</div> -->
 						<div id="subImages_blob_holder"></div>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productName" class="form-label">商品名稱</label> <input
+					<label for="productName" class="form-label">*商品名稱</label> <input
 						type="text" th:field="*{productName}"
 						onclick="hideContent('productName.errors');" class="form-control"
-						id="productName" name="productName" />
+						id="productName" name="productName" required/>
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('productName')}"
 							th:errors="*{productName}" class="error" id="adName.errors"></div>
@@ -69,9 +69,9 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="productSort" class="form-label">商品分類</label> <select
-						class="form-select" id="productSortNo" name="productSortNo">
-						<option value="-1" disabled selected>請選擇商品</option>
+					<label for="productSort" class="form-label">*商品分類</label> <select
+						class="form-select" id="productSortNo" name="productSortNo" required>
+						<option value=""  selected>請選擇商品</option>
 						<option value="0">食品</option>
 						<option value="1">玩具</option>
 						<option value="2">寢具</option>
@@ -89,9 +89,9 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="productSort" class="form-label">寵物分類</label> <select
-						class="form-select" id="animalType" name="animalType">
-						<option value="-1" disabled selected>請選擇寵物分類</option>
+					<label for="productSort" class="form-label">*寵物分類</label> <select
+						class="form-select" id="animalType" name="animalType" required>
+						<option value=""  selected>請選擇寵物分類</option>
 						<option value="dog">犬</option>
 						<option value="cat">貓</option>
 						<option value="bird">鳥</option>
@@ -105,23 +105,23 @@
 
 
 				<div class="col-md-12">
-					<label for="productPrice" class="form-label">商品價格</label> <input
+					<label for="productPrice" class="form-label">*商品價格</label> <input
 						type="text" th:field="*{price}"
 						onclick="hideContent('price.errors');" class="form-control"
-						id="productPrice" name="Price" />
+						id="productPrice" name="price" required/>
 					<div style="color: red; font-size: 14px;">
-						<div th:if="${#fields.hasErrors('Price')}"
-							th:errors="*{Price}" class="error"
-							id="Price.errors"></div>
+						<div th:if="${#fields.hasErrors('price')}"
+							th:errors="*{price}" class="error"
+							id="price.errors"></div>
 					</div>
 				</div>
 
 				<div class="col-md-12">
-					<label for="productStockQuantity" class="form-label">商品庫存</label> <input
+					<label for="productStockQuantity" class="form-label">*商品庫存</label> <input
 						type="text" th:field="*{productStockQuantity}"
 						onclick="hideContent('productStockQuantity.errors');"
 						class="form-control" id="productStockQuantity"
-						name="productStockQuantity" />
+						name="productStockQuantity" required/>
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('productStockQuantity')}"
 							th:errors="*{productStockQuantity}" class="error"
@@ -130,10 +130,10 @@
 				</div>
 
 				<div class="col-md-12">
-					<label for="productDetails" class="form-label">商品描述</label> <input
+					<label for="productDetails" class="form-label">*商品描述</label> <input
 						type="text" th:field="*{productDetails}"
 						onclick="hideContent('productDetails.errors');"
-						class="form-control" id="productDetails" name="productDetails" />
+						class="form-control" id="productDetails" name="productDetails" required />
 					<div style="color: red; font-size: 14px;">
 						<div th:if="${#fields.hasErrors('productDetails')}"
 							th:errors="*{productDetails}" class="error"

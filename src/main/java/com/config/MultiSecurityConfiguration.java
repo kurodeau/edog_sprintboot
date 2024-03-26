@@ -148,12 +148,15 @@ public class MultiSecurityConfiguration {
 
 		http.authorizeRequests(authorize -> authorize
 				.antMatchers("/front/seller/report").hasAnyRole("SELLERLV2", "SELLERLV3")
+				.antMatchers("/front/seller/ad/**").hasAnyRole("SELLERLV2", "SELLERLV3")
 				.antMatchers("/front/seller/**").hasRole("SELLER")
-
-				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login")
-				.permitAll().antMatchers("/back/api/v1/auth/authenticate").permitAll()
+				.antMatchers("/front/buyer/**").hasRole("BUYER").antMatchers("/back/" + backEntryPoint + "/login").permitAll()
+				.antMatchers("/back/api/v1/auth/authenticate").permitAll()
 				.antMatchers("/back/seller/list").hasRole("MANAGERJWT")
-				.antMatchers("/back/**").hasRole("MANAGER"))
+
+        .antMatchers("/back/**").hasRole("MANAGER")
+				.antMatchers("/front/forum/**").hasRole("BUYER"))
+
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
 				.addFilterBefore(buyerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -195,7 +198,7 @@ public class MultiSecurityConfiguration {
 									SecurityContextHolder.clearContext();
 
 								}
-								finalPath = "/buyer/login";
+								finalPath = "/";
 							}
 							
 							// 這個處理器將應用於所有的登出請求
@@ -233,7 +236,7 @@ public class MultiSecurityConfiguration {
 				SellerVO sellerVO = sellerSvc.findByOnlyOneEmail(trueName);
 				if (sellerVO != null) {
 					if (!sellerVO.getIsConfirm()) {
-						throw new BadCredentialsException("帳戶尚未被啟用，請於信箱收信");
+						throw new BadCredentialsException("帳戶尚未被啟用，請靜待平台審核");
 					}
 
 					if (sellerPasswordEncoder.matches(password, sellerVO.getSellerPassword())) {

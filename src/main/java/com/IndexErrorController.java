@@ -41,25 +41,48 @@ import redis.clients.jedis.Jedis;
 @Controller
 public class IndexErrorController {
 
+	// Seller click other pages required other identiy
 	@GetMapping("/error/seller/sellerAuthError403")
 	public String errorSellerAuth403(Model model) {
 		return "/error/sellerAuthError403";
 	}
+	
 	
 	@GetMapping("/error/seller/sellerLvError403")
 	public String errorSellerLv403(Model model) {
 		return "/error/sellerLvError403";
 	}
 	
+	
+	// Buyer click other pages required other identiy
 	@GetMapping("/error/buyer/buyerAuthError403")
 	public String errorBuyerLv403(Model model) {
 		return "/error/buyerAuthError403";
 	}
 	
 	
+	
+	@GetMapping("/error/sellerError404")
+	public String errorSellerError404(Model model) {
+		return "/error/sellerError404";
+	}
+	
+	
+	
+	@GetMapping("/error/buyerError404")
+	public String errorBuyerError404(Model model) {
+		return "/error/buyerError404";
+	}
+	
 	@GetMapping("/error/generalError404")
 	public String errorGeneralError404(Model model) {
 		return "/error/generalError404";
+	}
+	
+	
+	@GetMapping("/error/managerError404")
+	public String errorManagerError404(Model model) {
+		return "/error/managerError404";
 	}
 	
 

@@ -9,15 +9,14 @@
 	<header class="fixed-top">
 		<th:block th:insert="~{/back-end/header-back}"></th:block>
 	</header>
-	
-	
-	
-	
+
+
+
+
 	<!-- ======= Sidebar ======= -->
 	<!-- start帳戶管理 -->
 	<aside th:replace="back-end/aside-back.html"></aside>
-	<!-- ======= Sidebar ======= -->
-	<aside th:replace="@{front-end/seller/aside-seller}"></aside>
+
 
 	<!-- ======= Main ======= -->
 
@@ -47,11 +46,10 @@
 						<div id="adImgFeedback" class="invalid-feedback">Please
 							provide a valid Picture.</div>
 						<div id="blob_holder">
-							<img
-								th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
+							<img th:src="@{/seller/ad/DBGifReader} + '?adId=' + ${adVO.adId}"
 								width="200px" height="150px" />
 						</div>
-						<span class="error" th:utext="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
+						<span class="error" th:text="${errorMessage}" id="upFiles.errors">${errorMessage}</span>
 					</div>
 					<div class="upload__img--wrap"></div>
 				</div>
@@ -59,42 +57,53 @@
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productName" class="form-label">廣告名稱</label> <input
-						type="text" th:field="*{adName}" class="form-control" id="adName"
-						name="adName" />
-					<div id="productNameFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{adName}"
+						onclick="hideContent('adName.errors');" class="form-control"
+						id="adName" name="adName" required />
+
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adName')}" th:errors="*{adName}"
+							class="error" id="adName.errors"></div>
+					</div>
 				</div>
 
-				<div class="col-md-12" style="margin-bottom: 20px;">
-					<label for="productSort" class="form-label">廣告類型</label> <select
-						class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
-						<option value="-1" disabled selected>請選擇廣告版型</option>
-						<option value="0">BaseType</option>
-						<option value="1">PremiumType</option>
-					</select>
-					<div id="productSortFeedback" class="invalid-feedback">
-						Please provide a valid city.</div>
-					<div class="valid-feedback">Looks Good!</div>
+				<div class="col-md-12" style="margin-bottom: 20px;"
+					th:unless="${sellerLvId == 1}">
+					<div>
+						<label for="productSort" class="form-label">廣告類型</label> <select
+							class="form-select" th:field="*{adLv}" id="adLv" name="adLv">
+							<option value="-1" disabled selected>請選擇廣告版型</option>
+							<option th:if="${sellerLvId == 2}" value="0">BaseType</option>
+							<option th:if="${sellerLvId == 3}" value="0">BaseType</option>
+							<option th:if="${sellerLvId == 3}" value="1">PremiumType</option>
+						</select>
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adLv')}" th:errors="*{adLv}"
+								class="error" id="adLv.errors"></div>
+						</div>
+					</div>
 				</div>
 
-
-				<div class="col-md-12" style="margin-bottom: 20px;">
-					<label for="productStockQuantity" class="form-label">廣告商品網址</label>
-					<input type="text" th:field="*{adUrl}" class="form-control"
-						id="adUrl" name="adUrl" />
-					<div id="productStockQuantityFeedback" class="invalid-feedback">
-						Please provide a valid inputStockQuantity.</div>
-					<div class="valid-feedback">Looks Good!</div>
-				</div>
+				<!-- 				<div class="col-md-12" style="margin-bottom: 20px;"> -->
+				<!-- 					<label for="productStockQuantity" class="form-label">廣告商品網址</label> -->
+				<!-- 					<input type="text" th:field="*{adUrl}" -->
+				<!-- 						onclick="hideContent('adUrl.errors');" class="form-control" -->
+				<!-- 						id="adUrl" name="adUrl" required placeholder="請輸入產品的網址" /> -->
+				<!-- 					<div style="color: red; font-size: 14px;"> -->
+				<!-- 						<div th:if="${#fields.hasErrors('adUrl')}" th:errors="*{adUrl}" -->
+				<!-- 							class="error" id="adUrl.errors"></div> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
 
 				<div class="col-md-12" style="margin-bottom: 20px;">
 					<label for="productDetails" class="form-label">廣告備註</label> <input
-						type="text" th:field="*{adMemo}" class="form-control" id="adMemo"
-						name="adMemo" />
-					<div id="productDetailsFeedback" class="invalid-feedback">
-						Please provide a valid inputProductDetails.</div>
-					<div class="valid-feedback">Looks Good!</div>
+						type="text" th:field="*{adMemo}"
+						onclick="hideContent('adMemo.errors');" class="form-control"
+						id="adMemo" name="adMemo" required />
+					<div style="color: red; font-size: 14px;">
+						<div th:if="${#fields.hasErrors('adMemo')}" th:errors="*{adMemo}"
+							class="error" id="adMemo.errors"></div>
+					</div>
 				</div>
 
 				<div class="row">
@@ -102,12 +111,22 @@
 						<label for="f_date1" class="form-label">廣告起始日期</label> <input
 							type="date" th:field="*{adStartTime}" class="form-control"
 							id="f_date1" name="adStartTime" />
+
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adStartTime')}"
+								th:errors="*{adStartTime}" class="error"></div>
+						</div>
 					</div>
 
 					<div class="col-md-6" style="margin-bottom: 20px;">
 						<label for="end-date" class="form-label">廣告結束日期</label> <input
 							type="date" th:field="*{adEndTime}" class="form-control"
 							id="f_date2" name="adEndTime" />
+
+						<div style="color: red; font-size: 14px;">
+							<div th:if="${#fields.hasErrors('adEndTime')}"
+								th:errors="*{adEndTime}" class="error"></div>
+						</div>
 					</div>
 				</div>
 
