@@ -72,21 +72,21 @@ public class BuyerProductOrderController {
 		}
 		
 	//訂單結帳測試用臨時入口
-		@GetMapping("order_checkout111") //GoToCheckoutPage
-		public String cartlist(Model model,HttpSession session) {
-//			Integer memberId = session.getAttribute(memberId);
-//			Integer memberId = 8;
-			
-			SecurityContext secCtx = SecurityContextHolder.getContext();
-	        Authentication authentication = secCtx.getAuthentication();
-	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
-			
-			
-			
-			
-			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(buyerVO.getMemberId())); 
-			return "front-end/buyer/buyer-order-checkout";
-		}
+//		@GetMapping("order_checkout111") //GoToCheckoutPage
+//		public String cartlist(Model model,HttpSession session) {
+////			Integer memberId = session.getAttribute(memberId);
+////			Integer memberId = 8;
+//			
+//			SecurityContext secCtx = SecurityContextHolder.getContext();
+//	        Authentication authentication = secCtx.getAuthentication();
+//	        BuyerVO buyerVO = (BuyerVO) authentication.getPrincipal();
+//			
+//			
+//			
+//			
+//			model.addAttribute("cartClassfi", productOrderSvc.getAllByMemberId(buyerVO.getMemberId())); 
+//			return "front-end/buyer/buyer-order-checkout";
+//		}
 		
 		
 		

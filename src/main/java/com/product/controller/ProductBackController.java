@@ -3,14 +3,20 @@ package com.product.controller;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ad.model.AdVO;
 import com.allenum.ProductStatus;
 import com.product.model.ProductImgService;
 import com.product.model.ProductImgVO;
@@ -60,26 +67,35 @@ public class ProductBackController {
 	
 	
 	@PostMapping("getOne_For_Update")
-	public String getOne_For_Update(@RequestParam("productId") String productId , Model model) {
-	
+	public String getOne_For_Update(@RequestParam("productId") String productId, ModelMap model) {
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		/*************************** 2.開始查詢資料 *****************************************/
 		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
+
+		Integer productSortVO = productVO.getProductSortVO().getProductSortNo();
 		
 		List<ProductImgVO> productImgVOs = productImgSvc.getProductImgs(Integer.valueOf(productId));
-		
-		model.addAttribute("productVO" , productVO);
-		model.addAttribute("productImageList" , productImgVOs);
-		return "back-end/back-product-update_product";	
-		
-	}
-	
-	
-	@PostMapping("update")
-	public String update(@Valid ProductVO productVO, ProductImgVO productImgVO, BindingResult result, Model model,
-			@RequestParam("mainImage") MultipartFile[] parts, @RequestParam("subImages") MultipartFile[] partsSec,
-			@RequestParam("productSortNo") String productSortNo, @RequestParam("productId") String productId)
-			throws IOException {
-		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
 
+		/*************************** 3.查詢完成,準備轉交(Send the Success view) **************/
+		model.addAttribute("productVO", productVO);
+		model.addAttribute("productSortVO", productSortVO);
+		model.addAttribute("productImageList", productImgVOs);
+		return "back-end/back-product-update_product";
+	}
+
+	@PostMapping("update")
+	public String update(@Valid ProductVO productVO,BindingResult result, Model model,
+			@RequestParam("mainImage") MultipartFile[] parts, 
+			@RequestParam("subImages") MultipartFile[] partsSec,
+			@RequestParam("productSortNo") String productSortNo, 
+			@RequestParam("productId") String productId)
+			throws IOException {
+		
+		/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
+		
+		System.out.println(result);
+
+		
 		if (parts[0].isEmpty()) {
 
 			byte[] upFiles = productSvc.getOneProduct(productVO.getProductId()).getProductCoverImg();
@@ -94,20 +110,38 @@ public class ProductBackController {
 				productVO.setProductCoverImg(upFiles);
 			}
 		}
+		
+		
+		if(result.hasErrors()) {
+			
+			
+			ProductVO productVO1 = productSvc.getOneProduct(Integer.valueOf(productId));
+
+			Integer productSortVO = productVO1.getProductSortVO().getProductSortNo();
+			
+			model.addAttribute("productSortVO", productSortVO);
+			
+			return "front-end/seller/seller-product-update_product";
+		}
+		
+		
+		
 
 		/*************************** 2.開始新增資料 *****************************************/
 
-		SellerVO sellerVO = srSvc.getById(5);
-		productVO.setSellerVO(sellerVO);
+//		SecurityContext secCtx = SecurityContextHolder.getContext();
+//        Authentication authentication = secCtx.getAuthentication();
+//        SellerVO sellerVO = (SellerVO) authentication.getPrincipal();	
+//		productVO.setSellerVO(sellerVO);
 
-		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
-		productVO.setProductSortVO(productSortVO);
 
+	
 		long currentTime = System.currentTimeMillis();
 		Timestamp timestamp = new Timestamp(currentTime);
 
 		// 取出原本的售出數量，在更新時存入數字
 		ProductVO productInfo = productSvc.getOneProduct(Integer.valueOf(productId));
+		productVO.setSellerVO(productInfo.getSellerVO());
 		productVO.setProductSoldQuantity(productInfo.getProductSoldQuantity());
 		productVO.setRatings(productInfo.getRatings());
 		productVO.setTotalReviews(productInfo.getTotalReviews());
@@ -116,22 +150,32 @@ public class ProductBackController {
 		productVO.setProductStatus(ProductStatus.DISABLED.getStatus());
 		productVO.setIsEnabled(true);
 
+		ProductSortVO productSortVO = pdstSvc.getOneProductSortNo(Integer.valueOf(productSortNo));
+		productVO.setProductSortVO(productSortVO);
+		
+		
 		productSvc.updateProduct(productVO);
+		
+		
 
 		if(partsSec.length ==1 && partsSec[0].getBytes().length==0) {
 			
 			List<ProductImgVO> originalImgs = productImgSvc.getProductImgs(Integer.valueOf(productId));
-
-			for(ProductImgVO previousImgs : originalImgs) {
 				
+			ProductImgVO productImgVO = new ProductImgVO();
+			
+			for(ProductImgVO previousImgs : originalImgs) {
 			
 				byte[] upFiles = productImgSvc.getOneProductImg(previousImgs.getProductImgId()).getProductImg();
 				productImgVO.setProductImg(upFiles);
-				productImgSvc.updateProductImg(previousImgs);					
+				productImgSvc.updateProductImg(previousImgs);	
+				
 			}
 			
 			
 		}else {
+			
+		
 			
 			productImgSvc.deleteProductImgs(Integer.valueOf(productId));
 
@@ -159,7 +203,34 @@ public class ProductBackController {
 		return "redirect:/back/product/list";
 	}
 
+
 	
+	
+	@PostMapping("deleteStatus")
+	public String deleteStatus(@RequestParam("productId") String productId ,Model model) {
+		
+		ProductVO productVO = productSvc.getOneProduct(Integer.valueOf(productId));
+		productVO.setIsEnabled(false);
+		productSvc.updateProduct(productVO);
+		
+		
+		return "redirect:/back/product/list";
+		
+	}
+	
+	
+	
+	
+	// 去除BindingResult中某個欄位的FieldError紀錄
+	public BindingResult removeFieldError(ProductVO productVO, BindingResult result, String removedFieldname) {
+		List<FieldError> errorsListToKeep = result.getFieldErrors().stream()
+				.filter(fieldname -> !fieldname.getField().equals(removedFieldname)).collect(Collectors.toList());
+		result = new BeanPropertyBindingResult(productVO, "productVO");
+		for (FieldError fieldError : errorsListToKeep) {
+			result.addError(fieldError);
+		}
+		return result;
+	}
 	
 	
 

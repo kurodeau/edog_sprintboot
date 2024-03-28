@@ -44,7 +44,7 @@ public class FrontNewsTickerController {
 	@PostMapping(value = "showNewsTicker", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> showNewsTicker(@RequestBody String jsonData) throws IOException {
-		System.out.println("測試訊息:有進入showIsdisplay()");
+//		System.out.println("測試訊息:有進入showIsdisplay()");
 
 		// 將接到的 JSON 資料做初步的驗證, 之後轉為 Date 型別
 		JSONObject jsonObject = new JSONObject(jsonData);
@@ -57,7 +57,7 @@ public class FrontNewsTickerController {
 		
         JSONObject jsonNewsTickers = new JSONObject();
 		jsonNewsTickers.put( "data", newsTickerSvc.showNewsTicker(currentTime) );
-		System.out.println( "測試資料:印出要回傳的內容=" + jsonNewsTickers );
+//		System.out.println( "測試資料:印出要回傳的內容=" + jsonNewsTickers );
 //        String newsTickersStr = newsTickerSvc.showNewsTicker(currentTime);
 //        System.out.println( newsTickersStr );
 		// 這個不是正規作法

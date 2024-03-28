@@ -37,9 +37,9 @@
   --admin-red_tint: #f8d3c4;
 }
 
-.main-nosidebar{
- 	  margin-top: 50px;
-	padding:100px;
+.main-nosidebar {
+  margin-top: 50px;
+  padding: 100px;
 }
 
 
@@ -74,12 +74,15 @@
 }
 
 .custom-mt-6 {
-  margin-top: 6rem; /* 自定义更大的上边距，可以根据需要调整数值 */
+  margin-top: 6rem;
+  /* 自定义更大的上边距，可以根据需要调整数值 */
 }
 
 .item-seller-custom:active {
-  background-color: var(--seller-green_dark); /* 設置選擇到的項目的背景顏色 */
-  color: white; /* 設置選擇到的項目的文字顏色 */
+  background-color: var(--seller-green_dark);
+  /* 設置選擇到的項目的背景顏色 */
+  color: white;
+  /* 設置選擇到的項目的文字顏色 */
 }
 
 /*--------------------------------------------------------------
@@ -118,7 +121,8 @@
 }
 
 .commidity-rate-custom {
-  border-bottom: 1px solid var(--sec-section-outline); /* Change the color and style as needed */
+  border-bottom: 1px solid var(--sec-section-outline);
+  /* Change the color and style as needed */
 }
 
 .commidity-details-custom {
@@ -137,10 +141,12 @@
   min-height: 400px;
   height: auto;
 }
+
 .user-icon {
   width: 70px;
   height: 70px;
 }
+
 .user-icon i {
   font-size: 36px;
 }
@@ -157,7 +163,8 @@
   padding: 10px;
   position: sticky;
   bottom: 0px;
-  z-index: 500; /* Adjust z-index if needed */
+  z-index: 500;
+  /* Adjust z-index if needed */
   background-color: #ffffff;
   border: 1px solid var(--user-yellow_dark);
 }
@@ -173,6 +180,7 @@
 .toggle-sidebar-btn {
   cursor: pointer;
 }
+
 .sidebar-layout {
   position: fixed;
   top: 159px;
@@ -208,8 +216,7 @@
   padding: 50px 20px;
 }
 
-.footer-layout {
-}
+.footer-layout {}
 
 .sidebar-layout-seller.off {
   transform: translateX(-100%);
@@ -222,6 +229,7 @@
 .footer-layout.on {
   margin-left: 0;
 }
+
 /*--------------------------------------------------------------
 # Items
 --------------------------------------------------------------*/
@@ -245,6 +253,7 @@
 .footer-container-custom a {
   color: var(--text-light);
 }
+
 .footer-container-custom a:hover {
   color: var(--user-yellow_normal);
 }
@@ -391,6 +400,7 @@
 .container .filter-section:first-child {
   margin-bottom: 0px;
 }
+
 .header-filter-custom {
   padding-left: 16px;
   font-size: 24px;
@@ -410,7 +420,8 @@
 .container-buyerorder-custom {
   margin-left: 0;
   padding: 0px 0px;
-  box-sizing: border-box; /* 確保邊框不會增加容器的寬度和高度 */
+  box-sizing: border-box;
+  /* 確保邊框不會增加容器的寬度和高度 */
   border: 1px solid var(--seller-green_dark);
   overflow-x: auto;
 }
@@ -435,6 +446,7 @@
   color: var(--user-yellow_dark);
   border-bottom: 2px solid var(--user-yellow_dark);
 }
+
 /*--------------------------------------------------------------
 # nav-tabs-bordered
 --------------------------------------------------------------*/
@@ -490,10 +502,14 @@
 }
 
 .item-showdetail-custom {
-  max-height: 120px; /* 設置最大高度，超過將出現滾動條 */
-  overflow-y: auto; /* 允許垂直滾動 */
-  white-space: wrap; /* 防止文字折行 */
-  overflow-x: hidden; /* 禁止水平滾動 */
+  max-height: 120px;
+  /* 設置最大高度，超過將出現滾動條 */
+  overflow-y: auto;
+  /* 允許垂直滾動 */
+  white-space: wrap;
+  /* 防止文字折行 */
+  overflow-x: hidden;
+  /* 禁止水平滾動 */
 }
 
 .btn-func {
@@ -502,6 +518,7 @@
   border: 0px transparent;
   background-color: transparent;
 }
+
 .btn-func:hover {
   padding-left: 0;
   padding-right: 0;
@@ -554,6 +571,7 @@
 .search-input-custom {
   border: none;
 }
+
 .search-row-custom {
   background-color: white;
 }
@@ -595,6 +613,7 @@
 .seller-container h1 {
   margin-bottom: 20px;
 }
+
 .seller-container .btn-current {
   border: 0px;
   background-color: transparent;
@@ -602,11 +621,13 @@
 }
 
 .seller-container .pricing-table-text {
-  font-size: 24px; /* 設置字體大小 */
+  font-size: 24px;
+  /* 設置字體大小 */
 }
 
 .ri-check-line {
-  font-size: 24px; /* 設置所需的大小 */
+  font-size: 24px;
+  /* 設置所需的大小 */
 }
 
 /*--------------------------------------------------------------
@@ -670,6 +691,7 @@
   position: relative;
   padding-bottom: 100%;
 }
+
 /*--------------------------------------------------------------
 # Seller Export
 --------------------------------------------------------------*/
@@ -679,7 +701,8 @@
 
 .pagination-container {
   position: relative;
-  margin-top: 2%; /* Adjust as needed */
+  margin-top: 2%;
+  /* Adjust as needed */
 }
 
 .page-item .page-link {
@@ -688,12 +711,14 @@
 
 .page-item .page-link:hover,
 .page-item .page-link:focus {
-  color: #fff; /* 文字顏色變成白色 */
+  color: #fff;
+  /* 文字顏色變成白色 */
   background-color: var(--seller-green_active);
 }
 
 .page-active-custom .page-link {
-  color: #fff; /* 文字顏色變成白色 */
+  color: #fff;
+  /* 文字顏色變成白色 */
   background-color: var(--seller-green_active);
 }
 
@@ -712,28 +737,30 @@
   content: " ";
   animation: changetext 5s infinite linear;
 }
+
 @keyframes changetext {
   0% {
-    content: "發大財";
+    content: "祝您有愉快的一天";
   }
+
   33% {
-    content: "一夜暴富";
+    content: "祝您有愉快的一天";
   }
+
   66% {
-    content: "寫JAVA";
+    content: "edog關心您";
   }
+
   100% {
-    content: "經營品牌";
+    content: "edog關心您";
   }
 }
 
 mark.green {
-  background: linear-gradient(
-    transparent 40%,
-    rgba(255, 255, 255, 0) 40%,
-    #d8e887 50%,
-    transparent 70%
-  );
+  background: linear-gradient(transparent 40%,
+      rgba(255, 255, 255, 0) 40%,
+      #d8e887 50%,
+      transparent 70%);
   padding: 2px 1px;
 }
 
@@ -742,15 +769,15 @@ mark.green {
 }
 
 .preview-image {
- max-width: 200px;
- max-height: 150px;
- margin-right: 10px;
-  }
+  max-width: 200px;
+  max-height: 150px;
+  margin-right: 10px;
+}
 
 #subImages_blob_holder {
- display: flex;
- flex-wrap:wrap;
-  }
+  display: flex;
+  flex-wrap: wrap;
+}
 
 
 /*--------------------------------------------------------------
@@ -760,30 +787,39 @@ mark.green {
 /* Small screens and up (576px and above) */
 @media (min-width: 576px) {
   .img-md-main {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
+
   .img-md-sub {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
 }
 
 /* Medium screens and up (768px and above) */
 @media (min-width: 768px) {
   .img-md-main {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
+
   .img-md-sub {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
 }
 
 /* Large screens and up (992px and above) */
 @media (min-width: 992px) {
   .img-md-main {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
+
   .img-md-sub {
-    max-width: 100%; /* Adjust as needed */
+    max-width: 100%;
+    /* Adjust as needed */
   }
 }
 
@@ -799,6 +835,7 @@ mark.green {
 }
 
 @media (min-width: 1200px) {
+
   .main,
   .footer {
     margin-left: 300px;
@@ -818,42 +855,54 @@ mark.green {
   }
 }
 
+/*--------------------------------------------------------------
+# petdraw
+--------------------------------------------------------------*/
 .modern-button {
-	background: linear-gradient(to right, #6DD5FA, #FF758C); /* 藍色到粉紅色的漸變 */
-	color: white;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 30px; /* 圓角邊框 */
-	font-size: 16px;
-	cursor: pointer;
-	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
-	transition: transform 0.2s, box-shadow 0.2s; /* 過渡效果 */
+  background: linear-gradient(to right, #6DD5FA, #FF758C);
+  /* 藍色到粉紅色的漸變 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  /* 圓角邊框 */
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  /* 添加陰影效果 */
+  transition: transform 0.2s, box-shadow 0.2s;
+  /* 過渡效果 */
 }
 
 .modern-button:hover {
-	transform: translateY(-2px); /* 懸停時向上移動 */
-	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* 懸停時增加陰影 */
+  transform: translateY(-2px);
+  /* 懸停時向上移動 */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  /* 懸停時增加陰影 */
 }
 
 /* 动画效果 */
 
-@keyframes fadeIn {from { opacity:0;
-	
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
-to {
-	opacity: 1; }
-        }
+.fade-in {
+  animation-name: fadeIn;
+  animation-duration: 2s;
+}
 
-        .fade-in {
-            animation-name: fadeIn;
-            animation-duration: 2s;
-        }
-
- .countdown {
-            font-size: 20px;
-            font-family: Arial, sans-serif;
-            color: #333;
-            text-align: center;
-            margin-top: 20px;
-        }
+.countdown {
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}

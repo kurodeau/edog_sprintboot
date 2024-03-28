@@ -30,7 +30,7 @@ public interface SellerService {
 
      void saveUserDetails(SellerVO sellerVO);
      
-     Boolean isDuplcateEmail(String email);
+     Boolean isUniqueEmail(String email);
      
      void updateSecureContext(SellerVO sellerVO);
 }

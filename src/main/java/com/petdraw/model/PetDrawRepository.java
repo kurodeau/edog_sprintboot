@@ -21,6 +21,9 @@ public interface PetDrawRepository extends JpaRepository<PetDrawVO, Integer> {
 	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND petdrawtime >= :petDrawTime", nativeQuery = true)
 	List<PetDrawVO> findByMemberIdAndAfterPetDrawTime(@Param("memberId") Integer buyerId, @Param("petDrawTime") LocalDateTime afterDate);
 
+	@Query(value = "SELECT * FROM petdraw WHERE memberId = :memberId AND memberrestime >= :memberrestime", nativeQuery = true)
+	List<PetDrawVO> findByMemberIdAndAfterMemberResponseTime(@Param("memberId") Integer buyerId, @Param("memberrestime") LocalDateTime afterDate);
+	
 	// 根據 memberPair 和 memberPairResTime 查詢
 	@Query(value = "SELECT * FROM petdraw WHERE memberpairId = :memberpairId AND memberrestime >= :memberrestime", nativeQuery = true)
 	List<PetDrawVO> findByMemberPairIdAndMemberPairResTime(@Param("memberpairId") Integer buyerId,@Param("memberrestime") LocalDateTime afterDate);

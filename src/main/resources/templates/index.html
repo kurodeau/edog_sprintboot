@@ -8,7 +8,7 @@
 <body>
 	<header th:replace="~{/fragment-headerV2}"></header>
 	<!-- ======= Sidebar ======= -->
-	<aside th:replace="front-end/buyer/aside-buyer-search.html"></aside>
+	<aside th:replace="~{/front-end/buyer/aside-buyer-search}"></aside>
 
 	<!-- ======= Main ======= -->
 	<main class="main main-layout">
@@ -222,7 +222,7 @@
 					.join('&');
 
 
-				alert(queryString);
+// 				alert("商品搜尋中，請稍後");
 
 				let url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
 

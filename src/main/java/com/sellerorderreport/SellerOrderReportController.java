@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +68,6 @@ public class SellerOrderReportController {
 			sellerTargetId = sellerVO.getSellerId();
 		}
 
-		System.out.println(sellerTargetId);
 
 		try {
 
@@ -142,39 +144,13 @@ public class SellerOrderReportController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HttpResult<>(500, null, "內部錯誤"));
 		}
 
-//		try {
-//			
-//			SecurityContext secCtx = SecurityContextHolder.getContext();
-//			Authentication authentication = secCtx.getAuthentication();
-//			if (authentication != null && authentication.getPrincipal() instanceof SellerVO) {
-//				SellerVO sellerTargetVO = (SellerVO) authentication.getPrincipal();
-//
-//				Integer sellerTargetId = Integer.valueOf(sellerIdstr); 
-//				
-//				List<ProductOrderVO> productOrderVOs = productOrderService.getAll();
-//
-//				
-//				List<ProductOrderVO> filteredOrders = productOrderVOs.stream()
-//						.filter(order -> order.getSellerId() ==sellerTargetId)
-//						.collect(Collectors.toList());
-//				for (ProductOrderVO filteredOrder : filteredOrders) {
-//					System.out.println(filteredOrder);
-//				}
-//
-//				return ResponseEntity.ok().body(new HttpResult<>(200, null, "正常"));
-//			} else {
-//				return ResponseEntity.badRequest().body(new HttpResult<>(400, null, "請求格式不對"));
-//			}
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HttpResult<>(500, null, "內部錯誤"));
-//		}
 	}
 
 	@Autowired
 	private ResourceLoader resourceLoader;
 
 	@PostMapping("/report/download")
-	public ResponseEntity<?> downloadReport(Model model, @RequestBody String jsonStr) throws IOException {
+	public ResponseEntity<?> downloadReport(Model model, @RequestBody String jsonStr , HttpServletRequest req) throws IOException {
 
 		String startTimeStr = null;
 		String endTimeStr = null;
@@ -192,7 +168,11 @@ public class SellerOrderReportController {
 		LocalDate endTimeDate = LocalDate.parse(endTimeStr, formatter);
 		System.out.println(jsonStr);
 
-		String filename = fileSvc.generateFiles(startTimeDate, endTimeDate, 1);
+		
+		HttpSession session = req.getSession();
+		SellerVO  sellerVO = (SellerVO) session.getAttribute("sellerVO");
+		String filename = fileSvc.generateFiles(startTimeDate, endTimeDate, sellerVO.getSellerId());
+		
 		System.out.println(filename);
 		System.out.println(jsonStr);
 

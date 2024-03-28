@@ -54,7 +54,7 @@ public class SellerProductOrderController {
 		public String shippingProduct(@RequestParam("orderId") String orderId ,ModelMap model) {
 			ProductOrderVO productOrderVO = productOrderSvc.getOneProductOrder(Integer.valueOf(orderId));
 			productOrderVO.setOrderStatus(6);
-			
+			productOrderVO.setIsDelivered(1);
 			long currentTimeMillis = System.currentTimeMillis();
 			   // 使用当前时间的毫秒数创建 Timestamp 对象
 			   Timestamp currentTimestamp = new Timestamp(currentTimeMillis);
